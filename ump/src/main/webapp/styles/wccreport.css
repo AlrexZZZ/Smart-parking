@@ -1,0 +1,247 @@
+@CHARSET "UTF-8";
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	height: auto;
+	font: 16px, "微软雅黑";
+	line-height: 18px;
+	color: #101010;
+	background: #ffffff;
+}
+
+img {
+	border: 0;
+}
+
+ul li {
+	list-style: none;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+em, i {
+	font-style: normal;
+}
+
+textarea {
+	overflow: auto;
+	border: 0
+}
+
+a {
+	color: #444;
+	text-decoration: none;
+}
+/*样式初始化结束*/
+.tabs_box {
+	width: 100%;
+ 	margin: 0px auto; 
+	clear: both;
+	overflow: hidden;
+	/* margin-top: 20px;  */
+}
+
+.tabs {
+	width: 100%;
+	height: 40px;
+	margin: 0px auto;
+	clear: both;
+	line-height: 40px;
+	border-bottom: 1px solid #e5e5e5;
+	margin-bottom: 10px;
+}
+
+.tabs li {
+	background: #FFF;
+	float: left;
+	list-style: none;
+	text-decoration: none;
+	font-family: "微软雅黑";
+	font-size: 14px;
+/* 	margin-left: 15px; */
+}
+
+label {
+	width: auto;
+	font-size: 14px;
+}
+
+input, select {
+	width: 135px;
+	height: 28px;
+	border: 1px solid #e5e5e5;
+	margin-right: 20px;
+}
+
+.tabs li a {
+	text-decoration: none
+}
+
+.tabs li:hover {
+	background: #ffffff;
+	color: #069dd5
+}
+
+.tabs li a:hover {
+	background: #ffffff;
+	color: #069dd5
+}
+
+li.active a {
+	background: #ffffff;
+	color: #069dd5
+}
+
+html body div.tabs_box div.tab-control ul.tabs li.active {
+	display: block;
+	/* border-top: 2px solid #069dd5;  */
+	border-left: 1px solid #e5e5e5;
+	border-right: 1px solid #e5e5e5;
+	/* padding-left: 10px;
+	padding-right: 10px; */
+}
+
+.on-left {
+	float: left;
+	margin-right: 5px;
+}
+
+.pt {
+	width: 99%;
+	height: 30px;
+	/* margin-top: 20px; */
+	font-size: 14px;
+/* 	padding-left: 1% */
+}
+
+.pt_date {
+	width: 99%;
+	height: 55px;
+	background: #f3f3f3;
+	border-top: 5px solid #FFFFFF;
+	border-bottom: 1px solid #e5e5e5;
+	line-height: 40px;
+	padding-left: 1%;
+	font-size: 14px;
+	clear: both
+}
+
+.pt_date_left {
+	float: left;
+}
+.titleDiv{
+	float: left;
+}
+.dateDiv {
+	float: left;
+}
+
+.pt_date_bt {
+	/* width: 70px; */
+	float: left;
+	margin-left: 30px;
+	outline: none
+}
+
+input[type="button"] {
+	background-color: #069dd5;
+	border-radius: 3px;
+	color: #fff;
+	font-family: "微软雅黑";
+	font-size: 14px;
+	height: 28px;
+	width: 64px;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+}
+
+
+
+.hidden {
+	display: none !important;
+	visibility: hidden !important;
+}
+
+
+.buttondiv {
+    height: auto;
+}
+.buttondiv a {
+    background: none repeat scroll 0 0 #fff;
+    border: 1px solid #e4e4e4;
+    border-radius: 3px;
+    color: #333;
+    display: inline;
+    float: left;
+    line-height: 30px;
+    margin-left: 10px;
+    margin-top: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 12px;
+}
+.buttondiv a:hover {
+    background: none repeat scroll 0 0 #fff;
+    border: 1px solid #069dd5;
+    margin-top: 6px;
+}
+
+div.buttondiv a i.on-left img {
+    border: 0 none;
+    height: auto;
+    vertical-align: middle;
+}
+
+.pagination-sm>li:first-child>a, .pagination-sm>li:first-child>span {border-bottom-left-radius: 0;border-top-left-radius: 0;}
+.pagination>li:first-child>a, .pagination>li:first-child>span {margin-left: 0;}
+.pagination>.disabled>span, .pagination>.disabled>span:hover,
+.pagination>.disabled>span:focus, .pagination>.disabled>a, .pagination>.disabled>a:hover,
+.pagination>.disabled>a:focus {
+background-color: #fff;border-color: #ddd;color: #777;cursor: not-allowed;}
+.pagination-sm>li>a, .pagination-sm>li>span {font-size: 11px;padding: 5px 10px;}
+.pagination>li>a, .pagination>li>span {float: left;line-height: 1.42857;position: relative;text-decoration: none;}
+.pagination>li>a, .pagination>li>span {padding: 6px 12px;color: #069dd5;background-color: #FFF;border: 1px solid #DDD;margin-left: -1px;float: left;
+position: relative;text-decoration: none;line-height: 1.42857;}
+.pagination>li {display: inline;}
+.pagination>.active>a, .pagination>.active>span, .pagination>.active>a:hover,
+.pagination>.active>span:hover, .pagination>.active>a:focus,
+.pagination>.active>span:focus {z-index: 2;color: #FFF;background-color:#069dd5;cursor: default;border-color:#069dd5;}
+
+.dt-grid-container.tb_defult{border:1px solid #e5e5e5;width:100%;border-bottom:0px;}
+.dt-grid-container.tb_defult .table{margin-bottom:0px;}
+.dt-grid-container.tb_defult .table>tbody>tr:hover{background:#dcf8ff;}
+.dt-grid-container.tb_defult>.table{max-width:100%;width:100%;margin-top:0px;}
+.dt-grid-container.tb_defult>.table>tr>th{font-size: 12px;height:30px;line-height:30px;padding-left:8px;padding-right:8px;border-bottom: 1px solid #e5e5e5;}
+.dt-grid-container.tb_defult thead th {text-align: left;font-size:12px;font-family:Arial,"微软雅黑";color:#333;background-color:#f8f8f8;border-bottom: 1px solid #e5e5e5;}
+.dt-grid-container.tb_defult .table>tbody>tr>td{padding:0px 8px;height:32px;line-height:32px;font-size:12px;color:#333;}
+.dt-grid-container.tb_defult tbody td {border-bottom:1px solid #e5e5e5;font-size: 12px;padding-left:8px;padding-right:8px;text-align:left;}
+.metro .dt-grid-container.tb_defult thead th, .metro .table.tb_defult thead td{border-bottom: 1px solid #e5e5e5;}
+.metro .text-primary{color:#069dd5;font-size:14px;font-family:Arial,"微软雅黑";}
+.dt-grid-toolbar-container.toolbar_defult .pagination a:hover{color:#069dd5;}
+.dt-grid-toolbar-container.toolbar_defult .pagination>.active>a:hover{color:#fff;}
+
+.dt-grid-toolbar-container .dt-grid-pager .dt-grid-pager-status {
+    color: #069dd5;
+    float: right;
+    font-size: 14px;
+    margin: 12px 20px 0 0;
+}
+
+.report{ width:100%; height:70px; line-height:70px; background:#069dd5; color:#FFF; font-family:"微软雅黑"; margin-bottom:20px;}
+.report_box{ text-align:center}
+.on_left{ float:left}
+.report ul { margin:0px auto}
+.report ul li{  font-size:16px;padding-left:10px; padding-right:10px; display: block; margin:0px auto; text-align:center; float:left;}
+.report ul li a{ color:#FFF}
+.report_box li img{width: 20px;height: 20px;float:left;margin-top: 25px;margin-right: 5px;}
+.actives{ background:#68cdff}

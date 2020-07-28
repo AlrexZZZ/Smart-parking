@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:spring="http://www.springframework.org/tags" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<style>
+	 
+@IMPORT url("/ump/ui/dtGrid/dependents/bootstrap/css/bootstrap.min.css")
+	;
+</style>
+	<style>
+@IMPORT
+	url("/ump/ui/dtGrid/dependents/fontAwesome/css/font-awesome.min.css");
+</style>
+	<style>
+@IMPORT url("/ump/ui/dtGrid/jquery.dtGrid.css");
+</style>
+	<style>
+@IMPORT url("/ump/ui/dtGrid/dependents/datePicker/skin/WdatePicker.css")
+	;
+</style>
+	<style>
+@IMPORT	url("/ump/ui/dtGrid/dependents/datePicker/skin/default/datepicker.css")	;
+</style>
+  <!-- 复选框引用css -->
+  <style>@IMPORT url("/ump/styles/selectTree.css");</style>
+   <style>
+	@IMPORT url("/ump/styles/jquery.customSelect.css");
+	</style> 
+    
+<style type="text/css">
+/*------------弹出框  kate ----------------------*/
+.metro input.ourblue[type="button"]{border-radius: 2px;width: 64px;height: 28px;font-family: "微软雅黑";color: #FFF !important;background-color: #069dd5 !important;}
+.window_shadow{min-width:250px;min-height:150px; width:auto;border:1px solid #e5e5e5; background:#fff;box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3), 0 3px 8px rgba(0, 0, 0, 0.2);padding-bottom:20px; position:absolute; z-index:1000; left:0px; top:0px;}
+.kate_de{width:340px;}
+.window_title{width:100%; height:32px; border-bottom:1px solid #e5e5e5;padding:0px 5px;}
+.metro .window_title_name{float:left; overflow:hidden;font-family: "微软雅黑"; font-size:14px;color:#333;line-height:32px;}
+.window_title_name i img{margin-top:3px;}
+.window_title_close{float:right; overflow:hidden;}
+.window_title_close i img{margin-top:4px; cursor:pointer;}
+.kate_hang{width:300px;height:auto; overflow:hidden; clear:both; margin:0 auto;margin-top:20px;}
+.window_button{width:100%;height:auto;overflow:hidden; text-align:center;margin-top:20px;}
+.blackcover{width:100%; height:100%; position:fixed; left:0px; top:0px; background:rgba(0,0,0,0.7);z-index:500; display:none;}
+/*------------弹出框  kate end-------------------*/
+
+</style>
+
+<style>
+.metro .button {padding: 0px;}
+input,select{width: 135px;height: 28px;background-color: #fff;border: 1px solid #e4e4e4;}
+input[type="checkbox"]{width: 14px;height: 14px;}
+input[type="radio"]{width: 14px;height: 14px;}
+ul.ztree {background: none repeat scroll 0 0 #fff;border: 0px solid #e5e5e5;overflow-x: auto;overflow-y: auto;}
+.alllacation {height: 26px;margin: 12px auto 0;}
+
+</style>
+
+<!-- 复选框引用js -->
+<SCRIPT type="text/javascript" src="/ump/js/selectStoreOrPubTree.js">/*selectTree*/</SCRIPT>
+<SCRIPT type="text/javascript" src="/ump/js/dialogJs.js">/*dialogJs.js*/</SCRIPT>
+	<SCRIPT type="text/javascript">
+		<![CDATA[
+		//定义表格
+		var dtGridColumns_2_1_1 = [ {
+			id : 'brandName',
+			title : '品牌',
+			type : 'string',
+			columnClass : 'text-center',
+			fastQuery : true,
+			fastQueryType : 'eq',
+			headerStyle : 'background:white;text-align:center;'
+		}, {
+		id : 'platformAccount',
+		title : '公众平台',
+		type : 'string',
+		columnClass : 'text-center',
+		fastQuery : true,
+		fastQueryType : 'eq',
+		headerStyle : 'background:white;text-align:center;'
+	}, {
+		id : 'title',
+		title : '文章标题',
+		type : 'string',
+		columnClass : 'text-center',
+		fastQuery : true,
+		fastQueryType : 'eq',
+		headerStyle : 'background:white;text-align:center;',
+	}, {
+		id : 'url',
+		title : '链接地址',
+		type : 'string',
+		columnClass : 'text-center',
+		fastQuery : true,
+		fastQueryType : 'eq',
+		headerStyle : 'background:white;text-align:center;',
+		resolution : function(value, record, column, grid, dataNo,
+					columnNo) {
+				var content = '';
+				content += '<a href="'+value.url+'" target="_blank" style="text-decoration:underline">'+value.url+'</a>';
+			   return content;
+			}
+	}, {
+		id : 'createDate',
+		title : '发布日期',
+		type:'date', 
+		format:'yyyy-MM-dd hh:mm:ss', 
+		columnClass : 'text-center',
+		fastQuery : true,
+		fastQueryType : 'eq',
+		headerStyle : 'background:white;text-align:center;'
+
+	} ];
+
+		var dtGridOption_2_1_1 = {
+			ajaxLoad : true,
+			params : {},
+			//loadAll : true,
+			loadURL : '/ump/reportArticle/queryDataArticleGrid',
+			columns : dtGridColumns_2_1_1,
+			gridContainer : 'dtGridContainer_2_1_1',
+			toolbarContainer : 'dtGridToolBarContainer_2_1_1',
+			tools : '',
+			pageSize : 10
+		};
+
+		var grid_2_1_1 = $.fn.DtGrid.init(dtGridOption_2_1_1);
+		$(function() {
+			var platformUser = $('#platformUser').find("option:selected").text();
+			var startTime = $('#commentStartTimeId1').val();
+			var endTime=$("#commentEndTimeId1").val();
+			var brandName = $('#brandName').val();
+			dtGridOption_2_1_1.params.platformUser = platformUser;
+			dtGridOption_2_1_1.params.brandName = brandName;
+			dtGridOption_2_1_1.params.startTime = startTime;
+			dtGridOption_2_1_1.params.endTime = endTime;
+			grid_2_1_1.load();
+
+		});
+
+		function getExcelData(){
+			var platformUser = $('#platformUser').find("option:selected").text();
+			var brandName = $('#brandName').val();
+			var startTime = $('#commentStartTimeId1').val();
+			var endTime=$("#commentEndTimeId1").val();
+		    var url = '/ump/reportArticle/exportExcelSum?platformUser='+platformUser+'&brandName='+brandName+'&startTime='+startTime+'&endTime='+endTime;	
+	         window.location.href = url;
+		}
+		]]>
+	</SCRIPT>
+    <script	type="text/javascript">
+	<![CDATA[
+					function queryFriend() {
+						var platformUser = $('#platformUser').find("option:selected").text();
+						var startTime = $('#commentStartTimeId1').val();
+						var endTime=$("#commentEndTimeId1").val();
+						var brandName = $('#brandName').val();
+						dtGridOption_2_1_1.params.platformUser = platformUser;
+						dtGridOption_2_1_1.params.brandName = brandName;
+						dtGridOption_2_1_1.params.startTime = startTime;
+						dtGridOption_2_1_1.params.endTime = endTime;
+						grid_2_1_1.load();
+					}
+				
+					function clearAll() {
+						$('#platformUser').val('');
+						 $('#brandName').val('');
+						$('#commentStartTimeId1').val('');
+					    $('#commentEndTimeId1').val('');
+					}
+
+					function exit() {
+						$.Dialog.close();
+					}
+
+					function endTimeFocus() {
+						$('#endTimeId').focus()
+					};
+					function startTimeFocus() {
+						$('#startTimeId').focus()
+					};
+					
+		
+					function checkPlatForm(){
+						var platId = $("#platId").val();
+						if($.trim(platId) == ""){
+							$("#platformMsg").html("请选择公众平台");
+							return false;
+						}
+						$("#platformMsg").html("");
+						return true;
+					}			
+		
+]]>
+				</script>
+	<style>
+th {
+	white-space: nowrap;
+}
+
+td {
+	white-space: nowrap;
+	width: 25px;
+}
+
+span.button.switch {
+	height: 18px;
+	padding: 0;
+	width: 18px;
+}
+/* .metro .table th {
+height: 30px;
+line-height: 20px;
+padding-left: 10px;
+padding-right: 10px;
+font-size: 12px;
+background-color:;
+border-bottom: 1px #e5e5e5 solid;
+} */
+ .metro .table td{
+ background-color:white;
+ height: 30px;
+line-height: 20px;
+padding-left: 10px;
+padding-right: 10px;
+font-size: 12px;
+text-align:left;
+border-bottom: 1px #e5e5e5 solid;
+}
+span.button.ico_docu {
+	background-position: -110px -32px;
+	margin-right: 2px;
+	padding: 0;
+	vertical-align: top;
+}
+
+span.button.ico_open {
+	background-position: -110px -16px;
+	margin-right: 2px;
+	padding: 0;
+	vertical-align: top;
+}
+
+span.button.ico_close {
+	background-position: -110px -16px;
+	margin-right: 2px;
+	padding: 0;
+	vertical-align: top;
+}
+
+.metro .button .ztree {
+	padding: 0px;
+}
+
+#buttons input {
+	padding: 2px;
+	margin: 0 10px;
+}
+
+.span1 {
+	text-align: right;
+	margin-right: 10px;
+	line-height: 30px;
+	height: 30px
+}
+
+.seacher input, select {
+	margin: 0 0px;
+	font-size: 100%;
+	width: 135px;
+	border: 1px solid #e4e4e4;
+	height: 28px;
+}
+
+#buttons {
+	margin-top: 20px;
+}
+
+.showResult input {
+	width: 20px;
+}
+
+.tuwen_listt {
+	width: 40px;
+	height: 40px;
+	float: right;
+	overflow: hidden;
+}
+.tuwen_listw {
+	padding: 0px;
+	width: 120px;
+	height: auto;
+	float: left;
+	overflow: hidden;
+	font-family: Microsoft Yahei;
+}
+.tuwen_listt img{
+	width: 35px;
+	height: 35px;
+}
+
+.tuwen_dandiv_newlist li {
+	list-style: none;
+}
+
+</style>
+
+	<div id="seacher" class="seacher">
+	<div class="grid">
+			<input type="hidden" name="page" value='1' />
+				<div class="row">
+					<div class="span3" style="height: 28px;"> 
+						<SPAN style="font-weight: normal;">品牌:</SPAN> 
+			           <INPUT id="brandName" value="" />
+					</div>
+					<div class="span3" id="platId" style="height: 28px;">
+						<SPAN style="font-weight: normal;">公众平台：</SPAN> 
+				<select name="platformUser"  id="platformUser">
+				<option value="">全部</option>
+							<c:forEach items="${platformUsers}" var="platformUser">
+								<option value="${platformUser.id}">${platformUser.account}</option>
+							</c:forEach>
+						</select>
+					</div>
+					
+				<div class="span3" style="height:28px;">
+						<SPAN style="font-weight: normal;">发布日期：</SPAN>
+						<input type="text" class="Wdate" id="commentStartTimeId1"
+									placeholder="小于结束时间"
+									onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+				&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;至:
+				</div>
+				
+					<div class="span3" style="height:28px;">
+			
+						<input type="text" class="Wdate"  id="commentEndTimeId1"
+									placeholder="大于开始时间"
+									onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+				 </div>
+				 </div>
+				 <div class="row">
+				<div class="span3" > 
+						<input type="button" value="查 询" class="info" onclick="queryFriend();" style="font-family:'微软雅黑';background-color: #069dd5"/>
+						<input class="warning" type="button" value="重 置" onclick="clearAll();" style="font-family:'微软雅黑'"></input>
+				  </div>
+				  </div>
+              </div>
+		</div>
+	<div id="buttons">
+			</div>
+	<div id="under" class="buttondiv"
+		style="height: 46px; background: #edf1f9; border: 1px solid #e4e4e4; border-bottom: none;">
+         <a href="#" onclick="getExcelData();"><img src="/ump/images/export.png" width="14" height="14" />导出</a>
+	</div>
+	<div id="dtGridContainer_2_1_1" style="margin-top: -5px;" class="dt-grid-container">
+		<DIV>
+			<SPAN></SPAN>
+		</DIV>
+	</div>
+	<div id="dtGridToolBarContainer_2_1_1"
+		class="dt-grid-toolbar-container">
+		<SPAN></SPAN>
+	</div>
+</div>

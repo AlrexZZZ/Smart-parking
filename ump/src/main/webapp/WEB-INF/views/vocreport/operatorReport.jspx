@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes"/>
+		<script type="text/javascript"
+		src="/ump/js/nineclient/vocreport/nineclient.js">
+		//---
+	</script>
+<style>
+@IMPORT url("/ump/ui/dtGrid/dependents/bootstrap/css/bootstrap.min.css");
+@IMPORT url("/ump/ui/dtGrid/dependents/fontAwesome/css/font-awesome.min.css");
+@IMPORT url("/ump/ui/dtGrid/jquery.dtGrid.css");
+@IMPORT url("/ump/ui/dtGrid/dependents/datePicker/skin/WdatePicker.css");
+@IMPORT url("/ump/ui/dtGrid/dependents/datePicker/skin/default/datepicker.css");
+</style>
+	<SCRIPT type="text/javascript">
+	var dtGridOption_2_1_4 ;
+	<![CDATA[
+	var optio = {
+	        chart: {
+	            type: 'column',
+	            	renderTo:'container'
+	        },
+	        exporting: { enabled:false },
+	        title: {
+	            text: '坐席工作量报表'
+	        },
+	        subtitle: {
+	            text: ''
+	        },
+	        xAxis: {
+	            categories: []
+	        },
+	        yAxis: {
+	            min: 0,
+	            title: {
+	                text:''
+	            }
+	        },
+	        tooltip: {
+	            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+	            pointFormat: '<tr><td style="color:{series.color};padding:0">回复数量: </td>' +
+	                '<td style="padding:0"><b>{point.y:f}</b></td></tr>',
+	            footerFormat: '</table>',
+	            shared: true,
+	            useHTML: true
+	        },
+	        plotOptions: {
+	            column: {
+	                pointPadding: 0.2,
+	                borderWidth: 0
+	            }
+	        },
+	        series: [{
+	            name: '坐席工作量',
+	            data: []
+
+	        }]
+	    };
+	function queryDataBar(){
+		var operatorName = $("#channelName").val();
+		if (operatorName != -1) {
+			operatorName = $("#channelName").find("option:selected").text();
+		}else{
+			operatorName = "";
+		}
+		var startTime = $("#startTimeStr").val();
+		var endTime = $("#endTimeStr").val();
+		optio.xAxis.categories = [];
+		optio.series[0].data = [];
+		var objs;
+  		$.ajax({
+			url:"/ump/operatorReport/queryOper",
+			type:"Post",
+			data:{
+				'operatorName':operatorName,
+				'startTime':startTime,
+				'endTime':endTime
+				},
+			error:function(msg){
+			},
+			success:function(data){
+				//转为数组
+				 objs = eval('('+data+')');
+					if(objs.length > 0){
+						for(var i = 0;i < objs.length;i++){
+							
+							optio.xAxis.categories.push(objs[i].operatorName);
+							optio.series[0].data.push(objs[i].replyNum);
+						}
+					}
+				
+					var chartBar = new Highcharts.Chart(optio);
+			}
+		});
+  		
+  		dtGridOption_2_1_4.params.operatorName = operatorName;
+  		dtGridOption_2_1_4.params.startTime = startTime;
+  		dtGridOption_2_1_4.params.endTime = endTime;
+  		grid_2_1_4.load();
+	}
+	function selectChannel(id, elementId) {
+		var url = "/ump/vocshops/queryVocShops";
+		var param = {};
+		param.umpChannelId = id;
+		dataAjax(url, param, null, null, createSelect, elementId);
+	}
+	function exportExcel(){
+		var operatorName = $("#channelName").val();
+		if (operatorName != -1) {
+			operatorName = $("#channelName").find("option:selected").text();
+		}else{
+			operatorName = "";
+		}
+		var startTime = $("#startTimeStr").val();
+		var endTime = $("#endTimeStr").val();	
+		
+    var url = "/ump/operatorReport/exportExcel?operatorName="+operatorName+"&startTime="+startTime+"&endTime="+endTime;
+
+		window.location.href = url;
+	}
+	
+	
+	window.onload = queryDataBar;
+	]]>
+	</SCRIPT>
+		<SCRIPT type="text/javascript">
+	//定义表格
+	var dtGridColumns_2_1_4 = [{
+		id : 'operatorName',
+		title : '坐席名称',
+		type : 'string',
+		columnClass : 'text-center',
+		fastQuery : true,
+		fastQueryType : 'eq',
+		headerStyle : 'background:white;text-align:center;'
+	
+	}, {
+		id : 'replyNum',
+		title : '回复数量',
+		type : 'string',
+		columnClass : 'text-center',
+		fastQuery : true,
+		fastQueryType : 'eq',
+		headerStyle : 'background:white;text-align:center;',
+	}];
+	 dtGridOption_2_1_4 = {
+			ajaxLoad : true,
+			params:{
+				
+			},
+			//loadAll : true,
+			loadURL : '/ump/operatorReport/queryDataGrid',
+			columns : dtGridColumns_2_1_4,
+			gridContainer : 'dtGridContainer_2_1_1',
+			tools : '',
+			pageSize : 10
+		};
+	
+		var grid_2_1_4 = $.fn.DtGrid.init(dtGridOption_2_1_4);
+		$(function() {
+			grid_2_1_4.load();
+			
+		});
+
+	</SCRIPT>
+	<div class="grid" style="margin-left: 15px;">
+		<FORM id="queryForm">
+			<DIV class="row">
+				<div class="span4">
+				    <LABEL>坐席：</LABEL>
+					<SELECT id="channelName" name="channelName" class="publicSize">
+						<OPTION value="-1" selected="selected">请选择</OPTION>
+						<c:forEach items="${operList}" var="item">
+							<OPTION value="${item.id}">${item.operatorName}</OPTION>
+						</c:forEach>
+					</SELECT>
+				</div>
+				
+			</DIV>
+	        <DIV class="row">
+	        <div class="span3">
+				<LABEL>时间：</LABEL>
+					<input type="text" name="startTimeStr" class="publicSize"
+						 value="" id="startTimeStr"
+						onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+				</div>
+				<div class="span4" style="margin-left: -50px;">
+				<LABEL>至：</LABEL>
+					<input type="text" name="endTimeStr" class="publicSize"
+						 value="" id="endTimeStr"
+						onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+				</div>
+	        </DIV>
+			<DIV class="row">
+			<div style="margin-left: 20px;" class="span6">
+					<INPUT  type="button" class="button info" onclick="queryDataBar();" value="查询"/>
+					<INPUT  type="button" class="button warning" onclick="exportExcel();" value="导出" />
+			</div>		
+			</DIV>
+		</FORM>
+	</div>
+	<div id="content">
+	<div id="container"
+		style="min-width: 310px; height: 400px; margin: 0 auto">Loading...</div>
+	</div>
+	
+	<div id="dtGridContainer_2_1_1" class="dt-grid-container">
+		<DIV>
+			<SPAN></SPAN>
+		</DIV>
+	</div>
+
+	<style>
+	
+	.metro .table th {
+height: 30px;
+line-height: 20px;
+padding-left: 10px;
+padding-right: 10px;
+font-size: 12px;
+background-color:#f8f8f8;
+border-bottom: 1px #e5e5e5 solid;
+}
+ .metro .table td{
+ background-color:white;
+ height: 30px;
+line-height: 20px;
+padding-left: 10px;
+padding-right: 10px;
+font-size: 12px;
+text-align:left;
+border-bottom: 1px #e5e5e5 solid;
+}
+
+.publicSize{
+	width: 135px;
+	height: 28px;
+	border:1px solid;
+	border-color:#e4e4e4;
+}
+	
+
+.metro label {
+display: block;
+margin: 5px 0;
+font-weight:normal;
+font-size:14px;
+text-align: right;
+}	
+	
+input {
+	width: 100%;
+}
+
+select {
+	width: 100%;
+}
+</style>
+
+	
+</div>

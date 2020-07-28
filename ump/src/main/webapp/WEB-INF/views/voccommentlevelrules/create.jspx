@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_com_nineclient_model_VocCommentLevelRule" modelAttribute="vocCommentLevelRule" path="/voccommentlevelrules" render="${empty dependencies}" z="wVdPm+qodISnyRK7xLUwRStrYfc=">
+        <field:textarea field="name" id="c_com_nineclient_model_VocCommentLevelRule_name" z="cIVkGBdSbbHC93XYlTqvAm9eVTM="/>
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_VocCommentLevelRule_isDeleted" z="7Zg+gRseX8AMrf7hLwniARK0nrA="/>
+        <field:datetime dateTimePattern="${vocCommentLevelRule_createtime_date_format}" field="createTime" id="c_com_nineclient_model_VocCommentLevelRule_createTime" z="XfwrPlWIPC8m1Si/Nfyp/H/QJGs="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_nineclient_model_VocCommentLevelRule" render="${not empty dependencies}" z="jvwtv1/AU6m+O2K59QiOuvZKE60="/>
+</div>

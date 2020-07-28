@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccLotteryActivity" object="${wcclotteryactivity}" path="/wcclotteryactivitys" z="9InYEqGK4uJHlybT/p2A549qtRQ=">
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccLotteryActivity_isDeleted" object="${wcclotteryactivity}" z="+2SgxdC29nOQVGGqBIOyQvG50yo="/>
+        <field:display field="isVisibale" id="s_com_nineclient_model_WccLotteryActivity_isVisibale" object="${wcclotteryactivity}" z="aog4Od5xXPO0Y7b4OdA7vnIDXrc="/>
+        <field:display field="keyword" id="s_com_nineclient_model_WccLotteryActivity_keyword" object="${wcclotteryactivity}" z="KnPlxyyBIVxJuoj7+i6259/0C3g="/>
+        <field:display field="activityName" id="s_com_nineclient_model_WccLotteryActivity_activityName" object="${wcclotteryactivity}" z="zalvvx7Xlmsxcfdb1iUe5Vhjp8g="/>
+        <field:display date="true" dateTimePattern="${wccLotteryActivity_starttime_date_format}" field="startTime" id="s_com_nineclient_model_WccLotteryActivity_startTime" object="${wcclotteryactivity}" z="ZmkDcUq0lmRcANHdahRecA5BUno="/>
+        <field:display date="true" dateTimePattern="${wccLotteryActivity_endtime_date_format}" field="endTime" id="s_com_nineclient_model_WccLotteryActivity_endTime" object="${wcclotteryactivity}" z="lCjmsd4WIb4H4brA8Lpgw+TzcDY="/>
+        <field:display field="activityIntroduction" id="s_com_nineclient_model_WccLotteryActivity_activityIntroduction" object="${wcclotteryactivity}" z="3nDdsddyvsTMWzIObUNc/m60TdM="/>
+        <field:display field="repeatAwardReply" id="s_com_nineclient_model_WccLotteryActivity_repeatAwardReply" object="${wcclotteryactivity}" z="wwtY8kKonKqpAMA+CpABsu+no/E="/>
+        <field:display field="activityType" id="s_com_nineclient_model_WccLotteryActivity_activityType" object="${wcclotteryactivity}" z="0aNUWVJURkCQLyliLQPti3OaxcQ="/>
+        <field:display field="activityRemark" id="s_com_nineclient_model_WccLotteryActivity_activityRemark" object="${wcclotteryactivity}" z="j9bHcNvPFAiFRW/DJ7qBJMAEpAg="/>
+        <field:display field="visitorNumber" id="s_com_nineclient_model_WccLotteryActivity_visitorNumber" object="${wcclotteryactivity}" z="T4qN4zqmn3e1UGIAoyUGwv7H88s="/>
+        <field:display field="effectiveNumber" id="s_com_nineclient_model_WccLotteryActivity_effectiveNumber" object="${wcclotteryactivity}" z="Br+dFK37RlFTGxM+vijFDaEDJTI="/>
+        <field:display field="awardMsg" id="s_com_nineclient_model_WccLotteryActivity_awardMsg" object="${wcclotteryactivity}" z="HQucDKP7keV7egBKbZiNDtOrtVs="/>
+        <field:display field="imageUrl" id="s_com_nineclient_model_WccLotteryActivity_imageUrl" object="${wcclotteryactivity}" z="+HQxxgnQftw2XR/iYR8NrG9cwY4="/>
+        <field:display field="costPoint" id="s_com_nineclient_model_WccLotteryActivity_costPoint" object="${wcclotteryactivity}" z="0ygWUpJWjGgtOnfxXBLVxLWew9Q="/>
+        <field:display field="lotteryNum" id="s_com_nineclient_model_WccLotteryActivity_lotteryNum" object="${wcclotteryactivity}" z="Mr08iLZm/hkceV0erJyI/kY6OcY="/>
+    </page:show>
+</div>

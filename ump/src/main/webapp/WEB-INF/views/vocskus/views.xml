@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default_pub" name="vocskus/list">
+        <put-attribute name="body" value="/WEB-INF/views/vocskus/list.jspx"/>
+    </definition>
+<definition extends="default_pub" name="vocskus/show">
+        <put-attribute name="body" value="/WEB-INF/views/vocskus/show.jspx"/>
+    </definition>
+<definition extends="default_pub" name="vocskus/create">
+        <put-attribute name="body" value="/WEB-INF/views/vocskus/create.jspx"/>
+    </definition>
+<definition extends="default_pub" name="vocskus/update">
+        <put-attribute name="body" value="/WEB-INF/views/vocskus/update.jspx"/>
+    </definition>
+<definition extends="default_pub" name="vocskus/matchSkuGoods">
+        <put-attribute name="body" value="/WEB-INF/views/vocskus/matchSkuGoods.jspx"/>
+    </definition>
+</tiles-definitions>

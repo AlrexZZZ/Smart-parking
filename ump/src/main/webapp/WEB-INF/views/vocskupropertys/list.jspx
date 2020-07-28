@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<page:list id="pl_com_nineclient_model_VocSkuProperty"
+		items="${vocskupropertys}" z="MJky8n/Pi6hyclkZZzUVwYJDkbA=">
+		<table:table data="${vocskupropertys}"
+			id="l_com_nineclient_model_VocSkuProperty" path="/vocskupropertys"
+			z="U90RPxq+vZe5f0CyJXujOOqEybs=">
+			<table:column id="c_com_nineclient_model_VocSkuProperty_name"
+				property="name" z="uPB0A9brYM++s8KwUu1ILxbgHCc=" />
+			<table:column
+				id="c_com_nineclient_model_VocSkuProperty_propertyDetail"
+				property="propertyDetail" z="EEPlK7Kbj/7GIPQVFgWVZ0VwFHk=" />
+			<table:column date="true"
+				dateTimePattern="${vocSkuProperty_createtime_date_format}"
+				id="c_com_nineclient_model_VocSkuProperty_createTime"
+				property="createTime" z="cyuyjFrgj75+4k96+SEPqVjc/Q8=" />
+			<table:column id="c_com_nineclient_model_VocSkuProperty_isVisable"
+				property="isVisable" z="SaHgDkOLpHGrg6x6FATcu8nk4LM=" />
+		</table:table>
+	</page:list>
+</div>

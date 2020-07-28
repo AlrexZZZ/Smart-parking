@@ -1,0 +1,733 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:spring="http://www.springframework.org/tags" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<style>
+	
+@IMPORT url("/ump/ui/dtGrid/dependents/bootstrap/css/bootstrap.min.css")
+	;
+</style>
+	<style>
+@IMPORT
+	url("/ump/ui/dtGrid/dependents/fontAwesome/css/font-awesome.min.css");
+</style>
+	<style>
+@IMPORT url("/ump/ui/dtGrid/jquery.dtGrid.css");
+</style>
+	<style>
+@IMPORT url("/ump/ui/dtGrid/dependents/datePicker/skin/WdatePicker.css")
+	;
+</style>
+	<style>
+@IMPORT	url("/ump/ui/dtGrid/dependents/datePicker/skin/default/datepicker.css")	;
+</style>
+  <!-- 复选框引用css -->
+  <style>@IMPORT url("/ump/styles/selectTree.css");</style>
+<style type="text/css">
+.tipBox {
+	background-color: white;
+/* 	height: 400px;*/
+	/* width: 600px;  */
+	margin-top: -200px;
+	margin-left: -200px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+}
+
+.tipBox2 {
+	background-color: #ccc;
+/* 	height: 400px;*/
+	/* width: 600px;  */
+	margin-top: -200px;
+	margin-left: -200px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+}
+
+</style>
+
+<style>
+.metro .button {padding: 0px;}
+input,select{width: 135px;height: 28px;background-color: #fff;border: 1px solid #e4e4e4;}
+input[type="checkbox"]{width: 14px;height: 14px;}
+input[type="radio"]{width: 14px;height: 14px;}
+ul.ztree {background: none repeat scroll 0 0 #fff;border: 0px solid #e5e5e5;overflow-x: auto;overflow-y: auto;}
+.alllacation {height: 26px;margin: 12px auto 0;}
+
+</style>
+<!-- 复选框引用js -->
+<SCRIPT type="text/javascript" src="/ump/js/selectStoreOrPubTree.js">/*selectTree*/</SCRIPT>
+	<SCRIPT type="text/javascript">
+		<![CDATA[
+		//定义表格
+		var dtGridColumns_2_1_4 = [
+				{
+					id : 'platformUsers',
+					title : '公众平台',
+					type : 'string',
+					columnClass : 'text-center',
+					fastQuery : true,
+					fastQueryType : 'eq',
+					headerStyle : 'background:red;height:20px;',
+				resolution : function(record, value) {
+					var z = value.account;
+				//	cosole.log(value);
+					//return '<input type="button" onclick = "qrecord('"+aa+"')" value="查看记录"/>';
+					return z;
+					
+				}
+				}
+				, {
+					id : 'itemName',
+					title : '项目名称',
+					type : 'string',
+					fastQuery : true,
+					fastQueryType : 'eq',
+					columnClass : 'text-center',
+					headerStyle : 'background:white;text-align:center;',
+					resolution : function(record, value) {
+						return decodeURIComponent(value);
+					}
+				}, {
+					id : 'itemIntro',
+					title : '标题名称',
+					type : 'string',
+					fastQuery : true,
+					fastQueryType : 'eq',
+					columnClass : 'text-center',
+					headerStyle : 'background:white;text-align:center;'
+				}, {
+					id : 'itemAddress',
+					title : '项目地址',
+					type : 'string',
+					fastQuery : true,
+					fastQueryType : 'eq',
+					columnClass : 'text-center',
+					headerStyle : 'background:white;text-align:center;'
+				}, {
+					id : 'itemTime',
+					title : '竣工日期',
+					type : 'date',
+					format : 'yyyy-MM-dd hh:mm:ss',
+					otype : 'string',
+					oformat : 'yyyy-MM-dd hh:mm:ss',
+					columnClass : 'text-center',
+					headerStyle : 'background:white;text-align:center;',
+					fastQuery : true,
+					fastQueryType : 'range',
+					resolution : function(record, value) {
+						var z = value.time;
+					//	cosole.log(value);
+						//return '<input type="button" onclick = "qrecord('"+aa+"')" value="查看记录"/>';
+						return josn_to_String(z).substring(0, 10);
+						
+					}
+				},
+				 {
+					id : 'itemStatus',
+					title : '项目类型',
+					type : 'string',
+					fastQuery : true,
+					fastQueryType : 'eq',
+					columnClass : 'text-center',
+					headerStyle : 'background:white;text-align:center;',
+					resolution : function(record, value) {
+							if(value==1 || value=="1"){
+								return "新";
+							}
+							else{
+								return "旧";
+							}
+					}
+				},/*  {
+					id : 'itemStatus',
+					title : 'url',
+					type : 'string',
+					fastQuery : true,
+					fastQueryType : 'eq',
+					columnClass : 'text-center',
+					headerStyle : 'background:white;text-align:center;',
+					resolution : function(record, value) {
+						if(value==1 || value=="1"){
+							return	"<img onclick='showUrl2();' style='cursor:pointer' title='点击预览url' src='/ump/images/chakan.png' />";
+						}
+						else{
+							return	"<img onclick='showUrl();' style='cursor:pointer' title='点击预览url' src='/ump/images/chakan.png' />";
+						}
+					}
+				}, */
+				{
+					id : 'id',
+					title : '操作',
+					type : 'string',
+					columnClass : 'text-center',
+					fastQuery : true,
+					fastQueryType : 'eq',
+					headerStyle : 'background:white;text-align:center;',
+					resolution : function(record, value) {
+					/**	
+						var aa = "'" + value + "'";
+						var temp = (record.toUserRecord).split("\n");
+						var newstr = "";
+						for (var i = 0; i < temp.length; i++) {
+							newstr += "<br>" + temp[i] + "</br>";
+						}
+						var insTime = josn_to_String(record.insertTime.time);
+						var touserTime = josn_to_String(record.toUserInsertTime.time);
+						var plat = record.platFormAccount;
+						var nicName = decodeURIComponent(record.nickName);
+						var finalystr = nicName + " " + insTime + "<br>"
+								+ value + "</br>" + "<br" + plat + " "
+								+ touserTime + "</br>" + newstr;
+						var bb = "'" + encodeURIComponent(finalystr) + "'";
+						var openid = "'" + record.openId + "'";
+						var timestr = "'" + insTime.substring(0, 10) + "'";
+						*/
+						//return "<img onclick=qrecord(" + bb+ "," + openid + "," +timestr+ ") src='/ump/images/talk.png' />";
+                    //    var bb="'" + record.companyId + "'";
+                       // var insTime = josn_to_String(record.insertTime.time);
+                       // var timestr = "'" + insTime.substring(0, 10) + "'";
+                      //  var openid = "'" + record.openId + "'";
+                        //var platAccount = "'" + record.platFormAccount + "'";
+						//return "<img onclick=qrecord(" + bb+ "," + openid + ","+platAccount+") src='/ump/images/talk.png' />";
+						 var tempId ="'"+ value +"'";
+						return "<img onclick=editorRecord("+tempId+") title='编辑' src='/ump/images/update.png' />"
+					       +" <img onclick=deleteRecord("+tempId+") title='删除' src='/ump/images/delet.png' />";
+					}
+				} ];
+		
+		function deleteRecord(dataId) {
+			
+			//删除一条信息
+			$.ajax({
+				url : "/ump/cdbWccAppartment?delete",
+				type : "Post",
+				data : {
+					'dataId' : dataId
+					
+				},
+				error : function(msg) {
+
+				},
+				success : function(data) {
+					grid_2_1_4.load();
+				}
+			});
+		
+
+	};
+
+	
+	
+	function editorRecord(dataId){
+		
+		window.location.href = "/ump/cdbWccAppartment?form&dataId="+dataId;
+
+	};
+		var dtGridOption_2_1_4 = {
+			ajaxLoad : true,
+			params : {
+				itemName : '',
+				itemIntro : '',
+				itemAddress : '',
+				itemTime : '',
+				itemStatus : '',
+				restart : 'n'
+			},
+			//loadAll : true,
+			loadURL : '/ump/cdbWccAppartment/CdbWccAppartment',
+			exportFileName : '用户列表',
+			columns : dtGridColumns_2_1_4,
+			gridContainer : 'dtGridContainer_2_1_1',
+			toolbarContainer : 'dtGridToolBarContainer_2_1_1',
+			tools : '',
+			pageSize : 10
+		};
+
+		var grid_2_1_4 = $.fn.DtGrid.init(dtGridOption_2_1_4);
+		$(function() {
+			grid_2_1_4.load();
+
+		});
+
+		function josn_to_String(time) {
+			var datetime = new Date();
+			datetime.setTime(time);
+			var year = datetime.getFullYear();
+			var month = datetime.getMonth() + 1;// js从0开始取
+			var date = datetime.getDate();
+			var hour = datetime.getHours();
+			var minutes = datetime.getMinutes();
+			var second = datetime.getSeconds();
+
+			if (month < 10) {
+				month = "0" + month;
+			}
+			if (date < 10) {
+				date = "0" + date;
+			}
+			if (hour < 10) {
+				hour = "0" + hour;
+			}
+			if (minutes < 10) {
+				minutes = "0" + minutes;
+			}
+			if (second < 10) {
+				second = "0" + second;
+			}
+
+			var time = year + "-" + month + "-" + date + " " + hour + ":"
+					+ minutes + ":" + second; // 2009-06-12 17:18:05
+			return time;
+		}
+		function qrecord(a, b, c,d) {
+			var isUcc = "${isUcc}";
+			if(isUcc!=true){
+			}
+				//请求查询用户消息
+				$.ajax({
+					url : "/ump/wccfriends/getGroupByPlatformUser",
+					type : "Post",
+					data : {
+						'openId' : b,
+						'strTime' : c,
+						'companyId' : a,
+						'appArtment':d
+						
+					},
+					error : function(msg) {
+	
+					},
+					success : function(data) {
+						
+					}
+				});
+			
+			if(isUcc!=true){
+				//请求查询多客服消息
+				$.ajax({
+					url : "/ump/friendRecord/dkf",
+					type : "Post",
+					data : {
+						'openId' : b,
+						'insertTime' : c,
+						'pageIndex' : '1',
+						'pageSize' : '500'
+					},
+					error : function(msg) {
+	
+					},
+					success : function(data) {
+						
+						if(data.trim().length == 0){
+						}else{
+						}
+					}
+				});
+			}
+		}
+		]]>
+	</SCRIPT>
+    <script	type="text/javascript">
+	<![CDATA[
+					function queryFriend() {
+						
+						var platformUsers = $('#SelIds').val();
+						var itemName = $('#itemName_').val();
+						var itemStatus = $('#itemStatus').val();
+						var itemIntro = $('#itemIntro_').val();
+						
+						dtGridOption_2_1_4.params.platformUsers = platformUsers;
+						dtGridOption_2_1_4.params.itemName = itemName;
+						dtGridOption_2_1_4.params.itemStatus = itemStatus;
+						dtGridOption_2_1_4.params.itemIntro = itemIntro;
+						dtGridOption_2_1_4.params.restart = 'y';//保证每次重新查询时currentPage置为1
+						grid_2_1_4.load();
+						dtGridOption_2_1_4.params.restart = 'n';
+					}
+					var flag = false;
+					var friendIds = new Array();
+					var underId = "";
+					/*
+					function querySelect(id) {
+						$.ajax({
+							url : "/ump/wccfriends/getGroupByPlatformUser",
+							type : "Post",
+							data : {
+								'id' : id
+							},
+							error : function(msg) {
+
+							},
+							success : function(data) {
+								$('#groupId').html(
+										"<span class='span4' style='line-height: 28px;'>粉丝分组：</span>"
+												+ data);
+							}
+						})
+					}
+                  
+					function checkall() {
+						var acheck = $(":checkbox[class='acheck']");
+						var ischeck = acheck[0].checked;
+						var checks = $(":checkbox[class='fcheck']");
+						var num = checks.length;
+						for (i = 0; i < num; i++) {
+							if (ischeck == true) {
+								checks[i].checked = true;
+							} else if (ischeck == false) {
+								checks[i].checked = false;
+							}
+						}
+					}
+					function saveUnder() {
+						var fids = friendIds.join(',');
+
+						$.ajax({
+							url : "/ump/wccfriends/under",
+							datatype : "text",
+							type : "POST",
+							data : {
+								'underId' : underId,
+								'fids' : fids
+							},
+							error : function(msg) {
+
+							},
+							success : function(data) {
+								if (data == 'true') {
+									$.Dialog.close();
+									queryFriend(pageNum);
+								}
+							}
+
+						});
+					}
+   
+					function saveGroup(pageNum) {
+						var groupId = $('#groups')[0].value;
+						var fids = friendIds.join(',');
+						$.ajax({
+							url : "/ump/wccfriends/group",
+							datatype : "text",
+							type : "POST",
+							data : {
+								'groupId' : groupId,
+								'fids' : fids
+							},
+							error : function(msg) {
+
+							},
+							success : function(data) {
+								if (data == 'true') {
+									$.Dialog.close();
+									$('#groups').val('');
+									queryFriend(pageNum);
+								}
+							}
+
+						});
+					}
+   */
+					function clearAll() {
+						$('#SelVals').val('');
+						$('#itemName_').val('');
+						$('#itemStatus').val('');
+						$('#itemIntro_').val('');
+						
+					}
+
+					function exit() {
+						$.Dialog.close();
+					}
+
+					function endTimeFocus() {
+						$('#endTimeId').focus()
+					};
+					function startTimeFocus() {
+						$('#startTimeId').focus()
+					};
+					
+					function changeState1(url) {
+						if (url.length > 0) {
+							if($("#myaudio").attr("src")==url){
+								var myAuto = document.getElementById('myaudio');
+								$("#myaudio").attr("src", "");
+								myAuto.play();
+							}else{
+								var myAuto = document.getElementById('myaudio');
+								$("#myaudio").attr("src",url);
+								myAuto.play();
+							}
+						}
+					}
+					
+					
+					]]>
+	
+	
+	 function selectShowMenu2() {
+ 		var SelObj = $("#SelVals");
+ 		var SelOffset = $("#SelVals").offset();
+ 		$("#selectMenuContent").css({
+ 		}).slideDown("fast");
+ 		$("body").bind("mousedown", selectOnBodyDown);
+ 	}
+		////
+		function checkPlatForm(){
+			var platId = $("#platId").val();
+			if($.trim(platId) == ""){
+				$("#platformMsg").html("请选择公众平台");
+				return false;
+			}
+			$("#platformMsg").html("");
+			return true;
+		}	
+		  
+		window.onload = function (){
+			loadTree('/ump/wccplatformusers/tree','');
+		}	
+		
+		 function showUrl(){
+			   $("#urlId").show();
+		   }
+		   function hideurl(){
+				  
+			   $("#urlId").hide();
+		   }
+		   function showUrl2(){
+			   $("#urlId2").show();
+		   }
+		   function hideurl2(){
+				  
+			   $("#urlId2").hide();
+		   }
+		
+				</script>
+	<style>
+th {
+	white-space: nowrap;
+}
+
+td {
+	white-space: nowrap;
+	width: 25px;
+}
+
+span.button.switch {
+	height: 18px;
+	padding: 0;
+	width: 18px;
+}
+.metro .table th {
+height: 30px;
+line-height: 20px;
+padding-left: 10px;
+padding-right: 10px;
+font-size: 12px;
+background-color:;
+border-bottom: 1px #e5e5e5 solid;
+}
+ .metro .table td{
+ background-color:white;
+ height: 30px;
+line-height: 20px;
+padding-left: 10px;
+padding-right: 10px;
+font-size: 12px;
+text-align:left;
+border-bottom: 1px #e5e5e5 solid;
+}
+span.button.ico_docu {
+	background-position: -110px -32px;
+	margin-right: 2px;
+	padding: 0;
+	vertical-align: top;
+}
+
+span.button.ico_open {
+	background-position: -110px -16px;
+	margin-right: 2px;
+	padding: 0;
+	vertical-align: top;
+}
+
+span.button.ico_close {
+	background-position: -110px -16px;
+	margin-right: 2px;
+	padding: 0;
+	vertical-align: top;
+}
+
+.metro .button .ztree {
+	padding: 0px;
+}
+
+#buttons input {
+	padding: 2px;
+	margin: 0 10px;
+}
+
+.span1 {
+	text-align: right;
+	margin-right: 10px;
+	line-height: 30px;
+	height: 30px
+}
+
+.seacher input, select {
+	margin: 0 0px;
+	font-size: 100%;
+	width: 135px;
+	border: 1px solid #e4e4e4;
+	height: 28px;
+}
+
+#buttons {
+	margin-top: 20px;
+}
+
+.showResult input {
+	width: 20px;
+}
+
+.tuwen_listt {
+	width: 40px;
+	height: 40px;
+	float: right;
+	overflow: hidden;
+}
+.tuwen_listw {
+	padding: 0px;
+	width: 120px;
+	height: auto;
+	float: left;
+	overflow: hidden;
+	font-family: Microsoft Yahei;
+}
+.tuwen_listt img{
+	width: 35px;
+	height: 35px;
+}
+
+.tuwen_dandiv_newlist li {
+	list-style: none;
+}
+
+</style>
+	<div id="seacher" class="seacher">
+	   <!-- 	<h4>互动记录查询</h4>-->
+		<div>
+			<input type="hidden" name="page" value='1' />
+			<div class="grid">
+				<div class="row">
+				<div class="span3" id="platId" style="height: 28px;">
+						<SPAN style="font-weight: normal;">公众平台： </SPAN> 
+						<!-- <select name="wccPlatformUsers">
+								<c:forEach items="${platformUser}" var="p">
+									<option value="${p.id}">${p.account}</option>
+								</c:forEach>
+							</select> -->
+				<div class="input-control text" style="width: 135px;">
+							<input id="SelVals" type="text" readonly="readonly"
+								value="" style="width: 135px;" onclick="selectShowMenu2();" onblur="checkPlatForm();"/> 
+							<input id="SelIds" name="relatedIssues" type="hidden" value="" />
+							<div id="selectMenuContent" class="menuContent"
+								style="display: none; position: absolute; z-index: 99;">
+								<ul id="selectTreeDemo" class="ztree"
+									style="margin-left: 0px; margin-top: 0;border: 1px solid #e5e5e5;"></ul>
+							</div>
+					</div>
+					</div>
+				
+				
+				<!-- 	<div class="span3" id="platId" style="height: 28px;">
+						<label style="font-weight: normal;">公众平台： </label> <select
+							id="platformUser_" name="platformUserId">
+							<option value="">全部</option>
+							<c:forEach var="data" items="${platformUser}">
+								<option value="${data.id}">${data.account}</option>
+							</c:forEach>
+						</select>
+					</div> -->
+					<div class="span3" style="height: 28px;">
+						<label style="font-weight: normal;">项目名称：</label> <input
+							type="text" id="itemName_" name="itemName" />
+					</div>
+	
+					<div class="span3" id="from" style="height: 28px;">
+						<div class="input-control text">
+							<label style="font-weight: normal;">项目类型：</label>
+							<SELECT class="select_cheally" name="itemStatus" id="itemStatus">
+							<OPTION value="">全部</OPTION>
+                    		<OPTION value="1">新</OPTION>
+                    		<OPTION value="2">旧</OPTION>
+                    </SELECT>
+						</div>
+					</div>
+					
+					<div class="span3" style="height: 28px;">
+						<label style="font-weight: normal;">标题名称：</label> <input
+							type="text" id="itemIntro_" name="itemIntro" />
+					</div>
+
+				
+				</div>
+
+			</div>
+			<div id="buttons" style="margin-left: 20px;">
+				<BUTTON class="button info" onclick="queryFriend()">查 询</BUTTON>
+				<BUTTON class="button warning" onclick="clearAll()">重 置</BUTTON>
+			</div>
+			<div id="buttons"></div>
+			<div id="menuContent" class="menuContent"
+				style="display: none; position: absolute; background: #fff; padding: 20px; border: 1px solid #e4e4e4; box-shadow: -0px 6px 10px #888888;">
+				<ul id="treeDemo" class="ztree"
+					style="margin-top: 0; width: 160px; padding: 0"></ul>
+			</div>
+		</div>
+	</div>
+	<!-- 音乐播放器 -->
+	<audio id="myaudio" src="" controls="controls"
+		hidden="true" style="display: none;">您的浏览器不支持此播放器。
+	</audio>
+	
+	
+	<div id="under" class="buttondiv"
+		style="height: 46px; background: #edf1f9; border: 1px solid #e4e4e4; border-bottom: none;">
+			<a href="/ump/cdbWccAppartment?form"><img src="/ump/images/add.png" width="14" height="14" />添加数据</a>
+	</div>
+	<div id="dtGridContainer_2_1_1" style="margin-top: -5px;" class="dt-grid-container">
+		<DIV>
+			<SPAN></SPAN>
+		</DIV>
+	</div>
+	<div id="dtGridToolBarContainer_2_1_1"
+		class="dt-grid-toolbar-container">
+		<SPAN></SPAN>
+	</div>
+	<div id="urlId"  class="tipBox" style="z-index: 99;display:none; position: absolute;width: 300px;height: 200px;" >
+	<DIV id="titleid" style="background: #ccc;width: 100%;height: 25px;"><span onclick="hideurl();" style="float: right;">关闭</span>
+	</DIV>
+	<div style="margin-top: 30px;height: 200px;">ump/pageCommunity/createCommunity</div>  
+	</div>
+	<div id="urlId2"  class="tipBox" style="z-index: 99;display:none; position: absolute;width: 300px;height: 200px;" >
+	<DIV id="titleid" style="background: #ccc;width: 100%;height: 25px;"><span onclick="hideurl2();" style="float: right;">关闭</span>
+	</DIV>
+	<div style="margin-top: 30px;height: 200px;">ump/pageCommunity/newCreateCommunity</div>  
+	</div>
+	
+	
+	<!-- 复选框div -->
+     <div id="menuContent" class="menuContent"
+		style="display: none;position: absolute;background: #fff;padding: 20px;border: 1px solid #e4e4e4;box-shadow: -0px 6px 10px #888888;">
+		<ul id="treeDemo" class="ztree" style="margin-top: 0;"></ul>
+	</div>
+</div>
+

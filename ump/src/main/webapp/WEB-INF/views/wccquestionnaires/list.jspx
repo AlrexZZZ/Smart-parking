@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_WccQuestionnaire" items="${wccquestionnaires}" z="JU/FmDknx0Yzcqq0B5PVgEeLJ4E=">
+        <table:table data="${wccquestionnaires}" id="l_com_nineclient_model_WccQuestionnaire" path="/wccquestionnaires" z="+Y8/fO/N7jtXbRUT5P+BYyfGM6k=">
+            <table:column id="c_com_nineclient_model_WccQuestionnaire_isDeleted" property="isDeleted" z="cbo/dH8ycsRNk19MoAtRlOEjwqE="/>
+            <table:column id="c_com_nineclient_model_WccQuestionnaire_name" property="name" z="q2C3sfuKBVuKrneiUh1nSXxZhxc="/>
+            <table:column id="c_com_nineclient_model_WccQuestionnaire_questionnaireCode" property="questionnaireCode" z="yzkgosQ5CaiknOYc2qFv1ndXtCE="/>
+            <table:column date="true" dateTimePattern="${wccQuestionnaire_visabletime_date_format}" id="c_com_nineclient_model_WccQuestionnaire_visableTime" property="visableTime" z="J/k+C6b28gtZBfrTq2Jz8mdZ6n0="/>
+            <table:column id="c_com_nineclient_model_WccQuestionnaire_remark" property="remark" z="99K4+Ve/n1xOA/9u+COo3nAKuVI="/>
+            <table:column id="c_com_nineclient_model_WccQuestionnaire_url" property="url" z="VBr+dl2bvmiv4u0VSt55okhI+zM="/>
+        </table:table>
+    </page:list>
+</div>

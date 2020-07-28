@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_UmpBrand" object="${umpbrand}" path="/umpbrands" z="6SSuTrHJVebUFxVJ+0u2ZrV6wvs=" create="false" delete="false" update="false" list="false">
+        <field:display field="brandName" id="s_com_nineclient_model_UmpBrand_BrankName" object="${umpbrand}" z="SFfCVzo2gFNOGEF2ZOwKSnnlorA="/>
+        <field:display field="checkStatus" id="s_com_nineclient_model_UmpBrand_checkStatus" object="${umpbrand}" z="t9ZatPTvyeieV/9Jr2UPtgUn45g="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_UmpBrand_isDeleted" object="${umpbrand}" z="gSa8E5vgSAh6Vq0ePJbNWjdX2Co="/>
+        <field:display date="true" dateTimePattern="${umpBrand_createtime_date_format}" field="createTime" id="s_com_nineclient_model_UmpBrand_createTime" object="${umpbrand}" z="TmVoyp+PhVjogJGqOYu8OGWofpQ="/>
+        <field:display field="keyName" id="s_com_nineclient_model_UmpBrand_keyName" object="${umpbrand}"/>
+        <field:display field="remark" id="s_com_nineclient_model_UmpBrand_remark" object="${umpbrand}" z="b893Uw0FYVg1QY9qX7DZGG1bagE="/>
+    </page:show>
+</div>

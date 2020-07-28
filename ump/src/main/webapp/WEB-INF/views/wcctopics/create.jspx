@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_com_nineclient_model_WccTopic" modelAttribute="wccTopic" path="/wcctopics" render="${empty dependencies}" z="rsoJx04io/f728Ip3uGybceaph4=">
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_WccTopic_isDeleted" z="rmO14F2A8jJSi7HhDANDO9Fxwy4="/>
+        <field:select field="status" id="c_com_nineclient_model_WccTopic_status" items="${wcctopicstatuses}" path="wcctopicstatuses" z="968R3/J/cTbs1WIBPxZeYBnJcHE="/>
+        <field:textarea field="content" id="c_com_nineclient_model_WccTopic_content" required="true" z="PhzFZtHf6yxHIHR+R2jzni6HLfs="/>
+        <field:checkbox field="isOfficial" id="c_com_nineclient_model_WccTopic_isOfficial" z="Vv6O6vm7k7gmlrBuVVAIWqWQ9KI="/>
+        <field:input field="commentCount" id="c_com_nineclient_model_WccTopic_commentCount" z="W4BiaTDIfbeLAEPATPTqXltamjs="/>
+        <field:input field="praiseCount" id="c_com_nineclient_model_WccTopic_praiseCount" z="b6mV5zsKuET14aOt1xHQQlGEpzA="/>
+        <field:textarea field="topicImage" id="c_com_nineclient_model_WccTopic_topicImage" required="true" z="Iu0iCi2o0wL593zPWWADEog7oDU="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_nineclient_model_WccTopic" render="${not empty dependencies}" z="R5M9uRv+TWfZ9AorPsf9MMqWq+c="/>
+</div>

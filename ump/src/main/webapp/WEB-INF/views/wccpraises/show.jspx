@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccPraise" object="${wccpraise}" path="/wccpraises" z="jFA616Bpoi30nvHMTZIZ8bwQLSY=">
+        <field:display field="type" id="s_com_nineclient_model_WccPraise_type" object="${wccpraise}" z="x2C/Ek/250VvbW1wYn0inwOqG+I="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccPraise_isDeleted" object="${wccpraise}" z="yz1RwJ/rzNkAig5Idhx2kpeP3oo="/>
+    </page:show>
+</div>

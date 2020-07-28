@@ -1,0 +1,675 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<style>
+@IMPORT url("/ump/ui/dtGrid/dependents/bootstrap/css/bootstrap.min.css")
+	;
+</style>
+	<style>
+@IMPORT
+	url("/ump/ui/dtGrid/dependents/fontAwesome/css/font-awesome.min.css");
+</style>
+	<style>
+@IMPORT url("/ump/ui/dtGrid/jquery.dtGrid.css");
+</style>
+	<style>
+	@IMPORT url("/ump/styles/url.css");
+	</style>
+	<script type="text/javascript"
+		src="/ump/js/nineclient/vocreport/nineclient.js">
+		//---
+	</script>
+	<div class="grid">
+		<FORM id="queryForm">
+			<DIV class="row">
+				<div class="span3">
+				<label>平台名称：</label>
+					<SELECT id="channelName" name="channelName" class="publicSize"
+						onchange="selectChannel(this.value,'shopName')">
+						<OPTION value="-1" selected="selected">请选择</OPTION>
+						<c:forEach items="${channels}" var="item">
+							<OPTION value="${item.id}">${item.channelName}</OPTION>
+						</c:forEach>
+					</SELECT>
+				</div>
+				<div class="span3">
+				<LABEL>店铺名称：</LABEL>
+					<SELECT id="shopName" name="shopName" class="publicSize" onchange="selectShop(this.value,'brandName')">
+						<OPTION value="-1" selected="selected">请选择</OPTION>
+					</SELECT>
+				</div>
+				<div class="span3">
+				<LABEL>品牌名称：</LABEL>
+					<SELECT id="brandName" name="brandName" class="publicSize" onchange="selectBrand(this.value,'skuName');">
+						<OPTION value="-1" selected="selected">请选择</OPTION>
+					</SELECT>
+				</div>
+				<div class="span3">
+				<LABEL>SKU名称：</LABEL>
+					<SELECT id="skuName" name="skuName" class="publicSize">
+						<OPTION value="-1">请选择</OPTION>
+					</SELECT>
+				</div> 
+			</DIV>
+			<DIV class="row">
+			
+				<div class="span3">
+				<LABEL>统计周期：</LABEL>
+					<SELECT id="timeType" name="timeType" onchange="selectTime(this.value);" class="publicSize">
+						<!-- <OPTION value="0" selected="selected">日</OPTION> -->
+						<OPTION selected="selected" value="1">按天</OPTION>
+						<OPTION value="2">按月</OPTION>
+					</SELECT>
+				</div>
+				
+			</DIV>
+			<DIV class="row">
+				<div class="span3" style="display: none" id="startTimeStrMonth">
+				<LABEL>从</LABEL>
+					<input type="text" name="startTimeStrMonth"
+						class="Wdate publicSize" value="" id="startTimeMonth"
+						onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" onblur="nowDateCompare(this);"/>
+				</div>
+					<div class="span3" style="display: none" id="endTimeStrMonth">
+					<LABEL>至</LABEL>
+					<input type="text" name="endTimeStrMonth"
+						class="Wdate publicSize" value="" id="endTimeMonth"
+						onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" onblur="nowDateCompare(this);"/>
+				</div>
+				<div class="span3" style="display: none;margin-left: -1px;" id="startTimeStrYear">
+				<LABEL>年  份：</LABEL>
+					<input type="text" name="startTimeStrYear"
+						class="Wdate publicSize" value="" id="startTimeYear"
+						onFocus="WdatePicker({dateFmt:'yyyy',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+				</div>
+			
+			</DIV>
+			<DIV class="row">
+			<div style="margin-left: 20px;" class="span6">
+					<input type="button" class="info"  value="查 询" onclick="queryDataPie();" />
+					<input type="button" class="warning" value="导 出" onclick="exportExcel();" />
+			</div>
+			</DIV>
+		</FORM>
+	</div>
+	<div id="content" class="grid">
+		<div class="row">
+		<div id="containerTrend" class="span7"
+			style="width: 60%; height: 300px; margin: 0 auto;">Loading...</div>
+		<div id="container"  class="span5"
+			style="width: 40%; height: 300px; margin: 0 auto;float: left;"><!-- loading --></div>
+		</div>
+	</div>
+	<div id="dtGridContainer" class="dt-grid-container">
+		<!--  -->
+	</div>
+	<div id="dtGridToolBarContainer"
+		class="dt-grid-toolbar-container">
+		<!--  -->
+	</div>
+	
+	
+	
+<style>
+	.metro .table th {
+height: 30px;
+line-height: 20px;
+padding-left: 10px;
+padding-right: 10px;
+font-size: 12px;
+background-color:#f8f8f8;
+border-bottom: 1px #e5e5e5 solid;
+}
+ .metro .table td{
+ background-color:white;
+ height: 30px;
+line-height: 20px;
+padding-left: 10px;
+padding-right: 10px;
+font-size: 12px;
+text-align:left;
+border-bottom: 1px #e5e5e5 solid;
+}
+
+input {
+	width: 100%;
+}
+
+select {
+	width: 100%;
+}
+
+.metro label {
+display: block;
+margin: 5px 0;
+font-weight:normal;
+font-size:12px;
+text-align: right;
+}
+</style>
+	<SCRIPT type="text/javascript">
+	
+		<![CDATA[
+		$(document).ready(
+				function(){
+					initTime();//默认日报
+					queryDataPie();
+					selectTime(1);
+				}
+	     );
+		function selectDefaut(id,elementId){
+			if(id==-1||id==''){
+				$("#"+elementId).val(id);
+			}
+		}
+		function selectTime(a){
+			//document.getElementById("startTimeStr").style.display = 'none';
+			document.getElementById("startTimeStrMonth").style.display = 'none';
+			document.getElementById("endTimeStrMonth").style.display = 'none';
+			document.getElementById("startTimeStrYear").style.display = 'none';
+			if(a == 0){//日
+				//document.getElementById("startTimeStr").style.display = 'block';
+			}if(a == 1){//月
+				document.getElementById("startTimeStrMonth").style.display = 'block';
+				document.getElementById("endTimeStrMonth").style.display = 'block';
+			}if(a == 2){//年
+				document.getElementById("startTimeStrYear").style.display = 'block';
+			}
+		
+		}
+		function initTime(){
+			var startTime=formatData(new Date().getTime()-1000*60*60*24*31,'yyyy-MM-dd');
+			//$("#startTimeStrMonth").find("input").val(startTime);
+			var endTime=formatData(new Date().getTime()-1000*60*60*24,'yyyy-MM-dd');
+			//$("#endTimeStrMonth").find("input").val(endTime);
+		}
+		function createPie(ajaxdata) {
+			var data = eval("(" + ajaxdata + ")");
+			var chart = initHchartPie("好中差评占比",data);
+			$('#container').highcharts(chart);
+		}
+		var  pieChart = {
+			       chart: {
+			            plotBackgroundColor: null,
+			            plotBorderWidth: null,
+			            plotShadow: false,
+			            renderTo:'container'
+			        },
+			        exporting: { enabled:false },
+			        title: {
+			            text: '好中差趋势占比'
+			        },
+			        tooltip: {
+			    	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+			        },
+			        plotOptions: {
+			            pie: {
+			                allowPointSelect: true,
+			                cursor: 'pointer',
+			                dataLabels: {
+			                    enabled: true,
+			                    color: '#000000',
+			                    connectorColor: '#000000',
+			                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+			                }
+			            }
+			        },
+			        series: [{
+			            type: 'pie',
+			            name:'好中差占比',
+			            data: [
+			                
+			            ]
+			        }]
+		};
+		//折线图
+		function createTrend(ajaxdata) {
+			pieChart.series[0].data = [];
+			var data = eval("(" + ajaxdata + ")");
+			var chart =initHlineChart("好中差评趋势图", " ", "数量", data)
+			var a = data.series[0].data.length;
+			var b = data.series[1].data.length;
+			var c = data.series[2].data.length;
+			$('#containerTrend').highcharts(chart);
+			
+			if(a > 0){
+				
+			
+			var good = data.series[0].data[a - 1];
+			var better = data.series[1].data[b - 1];
+			var bad = data.series[2].data[c - 1];
+			
+			var aa = new Array();var bb = new Array();var cc = new Array();
+			aa.push('好评');aa.push(good);
+			bb.push('中评');bb.push(better);
+			cc.push('差评');cc.push(bad);
+				
+			pieChart.series[0].data.push(aa);pieChart.series[0].data.push(bb);pieChart.series[0].data.push(cc);
+			}
+			var chartPieDate = new Highcharts.Chart(pieChart);
+		}
+		var exeFlag = 0;
+		function queryDataPie() {
+			exeFlag ++;
+
+			//点击查询事件
+			
+			if(!comPareStartTimeAndEndTime($("#startTimeMonth").val(),$("#endTimeMonth").val()))
+			{
+				Notify("结束时间要大于开始时间",2000);
+				return;
+			}
+			var url = "/ump/commentratiotrends/queryDataPie";
+			var param = {};
+			var channelName = $("#channelName").val();
+			if (channelName != -1 && channelName) {
+				param.channelName = $("#channelName").find("option:selected")
+						.text();
+			}else{
+				param.channelName = "请选择";
+			}
+			var shopName = $("#shopName").val();
+			if (shopName != -1 && shopName) {
+				param.shopName = $("#shopName").find("option:selected").text();
+			}
+			var brandName = $("#brandName").val();
+			if (brandName != -1 && brandName) {
+				param.brandName = $("#brandName").find("option:selected")
+						.text();
+			}
+	
+			var skuName = $("#skuName").val();
+			if (skuName != -1 && skuName) {
+				param.skuName = $("#skuName").find("option:selected").text();
+			}
+			var dateDay = "";
+			var startTime="";
+			var endTime = "";
+			var dateYear ="";
+			var dateType = $("#timeType").val();
+			 //alert($("#startTimeStrDay").val());
+			param.dateType=dateType;
+	         if(dateType == 0){
+	        	 $("#startTimeMonth").val("");
+			     $("#endTimeMonth").val("");
+			     $("#startTimeYear").val("");
+	        	 dateDay = $("#startTimeStrDay").val();
+	        	 if(dateDay!=''&&dateDay){
+	        		 param.startTimeStr=dateDay+" 00:00:00";
+	        		 param.endTimeStr=dateDay+" 23:59:59";
+	        	 }else{
+	        		 Notify("请选择日期",2000);
+	        		 return;
+	        	 }
+	        	
+	         }
+	         if(dateType == 1){
+	        	 $("#startTimeStrDay").val("");
+			     $("#startTimeYear").val("");
+	        	 startTime = $("#startTimeMonth").val();
+	        	 endTime = $("#endTimeMonth").val();
+	        	 if(startTime!=''&&startTime){
+	        		 param.startTimeStr=startTime+" 00:00:00";
+	        	 }else{
+	        		 // Notify("请选择起始时间",2000);
+	        		// return;
+	        	 }
+	        	 if(endTime!=''&&endTime){
+	        		 param.endTimeStr=endTime+" 23:59:59";
+	        	 }else{
+	        		// Notify("请选择结束时间",2000);
+	        		// return;
+	        	 }
+	        	 var startDate = dateStrToDate(startTime).getTime();;
+	        	 var endDate = dateStrToDate(endTime).getTime();
+	        	 if(endDate-startDate>1000*60*60*24*30){
+	        		 Notify("日期范围不能超过30天", 2000);
+	        		 return; 
+	        	 }
+	        	
+	         } if(dateType == 2){
+	        	 $("#startTimeStrDay").val("");
+			     $("#startTimeMonth").val("");
+			     $("#endTimeMonth").val("");
+	        	 dateYear = $("#startTimeYear").val();
+	        	 if(dateYear!=''){
+	        		 param.startTimeStr=dateYear+"-01-01 00:00:00";
+		        	 param.endTimeStr=dateYear+"-12-31 23:59:59";
+	        	 }
+	        	
+	         }
+				if(exeFlag >= 2){
+					
+				if(channelName == -1 || channelName ==''){
+					Notify("请选择平台");
+					return;
+				}
+	            if(shopName == -1 || shopName ==''){
+	            	Notify("请选择店铺");
+					return;
+				}  if(brandName == -1 || brandName ==''){
+					Notify("请选择品牌");
+					return;
+				} if(skuName == -1 || skuName ==''){
+					Notify("请选择sku名称");
+					return;
+				}   
+			
+				if(dateType == 1){
+					if(startTime == ''){
+						Notify("请选择开始时间");
+						return;
+					}
+	                if(endTime == ''){
+	                	Notify("请选择结束时间");
+						return;
+					}
+				}
+				if(dateType == 2){
+					 if(dateYear == ''){
+						Notify("请选择年份");
+						return; 
+					}
+				}
+			}
+	         
+	         
+	         
+			//饼形图
+			//  dataAjax(url, param, null, null, createPie, null);
+			url="/ump/commentratiotrends/queryDataTrend";
+			dataAjax(url, param, null, null, createTrend, null);
+			queryList();
+		}
+		function selectChannel(id, elementId) {
+			var url = "/ump/vocshops/queryVocShops";
+			var param = {};
+			param.umpChannelId = id;
+			dataAjax(url, param, null, null, createSelect, elementId);
+		}
+		function selectShop(id, elementId) {
+			selectDefaut(id,elementId);
+			var url = "/ump/vocshops/queryVocBrands";
+			var param = {};
+			if(id==''){
+				id=-1;
+			}
+			param.shopId = id;
+			dataAjax(url, param, null, null, createSelect, elementId);
+		}
+		function selectBrand(id, elementId) {
+			selectDefaut(id,elementId);
+			var url = "/ump/vocskus/querySkuGoodsList";
+			var param = {};
+			param.vocBrandId = id;
+			dataAjax(url, param, null, null, createSelect, elementId);
+		}
+		function queryList(page) {
+			var pageNo;
+			if (page) {
+				pageNo = page;
+			} else {
+				pageNo = 1;
+			}
+			var url = "/ump/commentratiotrends/queryData";
+			var param = {};
+			param.page = pageNo;
+			//param.size = 10;
+			dtGridOption.params.page=pageNo;
+			dtGridOption.params.size=10;
+			
+			var channelName = $("#channelName").val();
+			if (channelName != -1 && channelName) {
+				dtGridOption.params.channelName= $("#channelName").find("option:selected").text();
+			}
+			var shopName = $("#shopName").val();
+			if (shopName != -1 && shopName) {
+				param.shopName = $("#shopName").find("option:selected").text();
+				dtGridOption.params.shopName=$("#shopName").find("option:selected").text();
+			}
+			var brandName = $("#brandName").val();
+			if (brandName != -1 && brandName) {
+				param.brandName = $("#brandName").find("option:selected").text();
+						
+				dtGridOption.params.brandName=$("#brandName").find("option:selected").text();
+			}
+			var skuName = $("#skuName").val();
+			if (skuName != -1 && skuName) {
+				param.skuName = $("#skuName").find("option:selected").text();
+				dtGridOption.params.skuName=$("#skuName").find("option:selected").text();
+			}else{
+				dtGridOption.params.skuName="请选择";
+			}
+	
+			var dateDay = "";
+			var startTime="";
+			var endTime = "";
+			var dateYear ="";
+			var dateType = $("#timeType").val();
+			 //alert($("#startTimeStrDay").val());
+			dtGridOption.params.dateType=dateType;
+	         if(dateType == 0){
+	        	 $("#startTimeMonth").val("");
+			     $("#endTimeMonth").val("");
+			     $("#startTimeYear").val("");
+	        	 dateDay = $("#startTimeStrDay").val();
+	        	 if(dateDay!=''){
+	        		dtGridOption.params.startTime=dateDay+" 00:00:00";
+	        		dtGridOption.params.endTime=dateDay+" 23:59:59";
+	        	 }else{
+	        		 Notify("请选择日期", 2000);
+	        		 return;
+	        	 }
+	         }
+	         if(dateType == 1){
+	        	 $("#startTimeStrDay").val("");
+			     $("#startTimeYear").val("");
+	        	 startTime = $("#startTimeMonth").val();
+	        	 endTime = $("#endTimeMonth").val();
+	        	 if(startTime!=''){
+	        		 dtGridOption.params.startTime=startTime+" 00:00:00";
+	        	 }else{
+	        		// Notify("请选择起始日期", 2000);
+	        		 //return; 
+	        	 }
+	        	 if(endTime!=''){
+	        		 dtGridOption.params.endTime=endTime+" 23:59:59";
+	        	 }else{
+	        		// Notify("请选择结束日期", 2000);
+	        		// return; 
+	        	 }
+	        	
+	         } if(dateType == 2){
+	        	// $("#startTimeStrDay").val("");
+			     $("#startTimeMonth").val("");
+			     $("#endTimeMonth").val("");
+	        	 dateYear = $("#startTimeYear").val();
+	        	 if(dateYear!=''){
+	        		 dtGridOption.params.startTime=dateYear+"-01-01 00:00:00";
+	        		 dtGridOption.params.endTime=dateYear+"-12-31 23:59:59";
+	        	 }else{
+	        		 Notify("请选择年份", 2000);
+	        		 return; 
+	        	 }
+	        	
+	         }
+			
+			/* var startTimeStr = $("#startTimeStr").val();
+			if (startTimeStr != -1 && startTimeStr) {
+				//param.startTimeStr=startTimeStr+" 00:00:00";
+				dtGridOption.params.startTimeStr=startTimeStr+" 00:00:00";
+			}
+			var endTimeStr = $("#endTimeStr").val();
+			if (endTimeStr != -1 && endTimeStr) {
+				//param.endTimeStr=endTimeStr+" 23:59:59";
+				dtGridOption.params.endTimeStr=endTimeStr+" 23:59:59";
+			} */
+			dtGridOption.params.restart= 'y';
+			//dtGridOption.loadURL=url;
+			grid.load();
+			dtGridOption.params.restart= '';
+			//dataAjax(url, param, null, null, createGride, null);
+		}
+		function exportExcel() {
+			if(!comPareStartTimeAndEndTime($("#startTimeStr").val(),$("#endTimeStr").val()))
+			{
+				return;
+			}
+		
+			var url = "/ump/commentratiotrends/exportExecl";
+			var param =[];
+			var name=[];
+			var channelName = $("#channelName").val();
+			if (channelName != -1 && channelName) {
+				channelName = $("#channelName").find("option:selected").text();
+				param.push(channelName);
+				name.push('channelName');
+			}
+			var shopName = $("#shopName").val();
+			if (shopName != -1 && shopName) {
+				shopName = $("#shopName").find("option:selected").text();
+				param.push(shopName);
+				name.push('shopName');
+			}
+			var brandName = $("#brandName").val();
+			if (brandName != -1 && brandName) {
+				brandName = $("#brandName").find("option:selected")
+						.text();
+				param.push(brandName);
+				name.push('brandName');
+			}
+			
+			var skuName = $("#skuName").val();
+			if (skuName != -1 && skuName) {
+				skuName = $("#skuName").find("option:selected").text();
+				param.push(skuName);
+				name.push('skuName');
+			}
+			var dateDay = "";
+			var startTime="";
+			var endTime = "";
+			var dateYear ="";
+			var dateType = $("#timeType").val();
+			 //alert($("#startTimeStrDay").val());
+			 param.push(dateType);
+			 name.push('dateType');
+	         if(dateType == 1){
+	        	// $("#startTimeStrDay").val("");
+			     $("#startTimeYear").val("");
+	        	 startTime = $("#startTimeMonth").val();
+	        	 endTime = $("#endTimeMonth").val();
+	        	 if(startTime!=''){
+	        		 startTimeStr=startTime+" 00:00:00";
+	        		 param.push(startTimeStr);
+	    			 name.push('startTimeStr');
+	        	 }else{
+	        		 Notify("请选择起始日期", 2000);
+	        		 return; 
+	        	 }
+	        	 if(endTime!=''){
+	        		 endTimeStr=endTime+" 23:59:59";
+	        		 param.push(endTimeStr);
+	    			 name.push('endTimeStr');
+	        	 }else{
+	        		 Notify("请选择结束日期", 2000);
+	        		 return; 
+	        	 }
+	        	
+	         } if(dateType == 2){
+	        	// $("#startTimeStrDay").val("");
+			     $("#startTimeMonth").val("");
+			     $("#endTimeMonth").val("");
+	        	 dateYear = $("#startTimeYear").val();
+	        	 if(dateYear!=''){
+	        		 startTimeStr=dateYear+"-01-01 00:00:00";
+	        		 endTimeStr=dateYear+"-12-31 23:59:59";
+	        		 param.push(startTimeStr);
+	    			 name.push('startTimeStr');
+	        		 param.push(endTimeStr);
+	    			 name.push('endTimeStr');
+	        	 }else{
+	        		 Notify("请选择年份", 2000);
+	        		 return; 
+	        	 }
+	        	
+	         }
+			
+			var startTimeStr = $("#startTimeStr").val();
+			if (startTimeStr != -1 && startTimeStr) {
+				param.push(startTimeStr+" 00:00:00");
+				name.push('startTimeStr');
+			}
+			var endTimeStr = $("#endTimeStr").val();
+			if (endTimeStr != -1 && endTimeStr) {
+				param.push(endTimeStr+" 23:59:59");
+				name.push('endTimeStr');
+			}
+			var tij="";
+			var fl=true;
+			for(var j=0;j<param.length;j++){
+				if(fl){
+					
+					tij+="?"+name[j]+"="+param[j];
+					
+					fl=false;
+				}else{
+					tij+="&"+name[j]+"="+param[j];
+				}
+				
+			}
+			window.location.href = url+tij;
+		}
+		//列
+		var dtGridColumns = [ {
+			id : 'commentTime',
+			title : '时  间',
+			type:'string', 
+			columnClass:'text-left', 
+			headerStyle : 'background:white;text-align:center;',
+			resolution:function(record, value){
+				var time = value.time;
+				return formatData(time, "yyyy/MM/dd");
+			}
+		
+		}, {
+			id : 'goodComment',
+			title : '好  评',
+			type : 'string',
+			columnClass : 'text-left',
+			headerStyle : 'background:white;text-align:center;'
+		}, {
+			id : 'commonComment',
+			title : '中  评',
+			type : 'string',
+			columnClass : 'text-left',
+			headerStyle : 'background:white;text-align:center;'
+		}, {
+			id : 'negativeComment',
+			title : '差  评',
+			type : 'string',
+			columnClass : 'text-left',
+			headerStyle : 'background:white;text-align:center;'
+		}
+		];
+		var dtGridOption = {
+				ajaxLoad : true,
+				params : {
+				},
+				loadURL : '/ump/commentratiotrends/queryData',
+				exportFileName : '好中差评占比',
+				columns : dtGridColumns,
+				gridContainer : 'dtGridContainer',
+				toolbarContainer : 'dtGridToolBarContainer',
+				tools : '',
+				pageSize : 7
+			};
+		var grid = $.fn.DtGrid.init(dtGridOption);
+		]]>
+	</SCRIPT>	
+	
+</div>

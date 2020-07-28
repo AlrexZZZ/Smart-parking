@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    
+    <script type="text/javascript">
+    <![CDATA[
+    $(document).ready(function() {
+    	queryPubRole(1);
+    	var errmsg ='${errmsg}';
+    	if('null'!=errmsg&&errmsg!=''){
+	    	alert(errmsg);
+    	}
+	});
+    
+    function delRole(id){
+    	var isDelete = confirm('确定删除吗？');
+    	if(isDelete){
+    		window.location.href='/ump/pubroles/delete?id='+id;
+    	}
+    }
+	
+	function visibleSub(){
+	var visible = $('input:radio:checked').val();
+	window.location.href="/ump/pubroles/visible?id="+aid+"&status="+visible;
+	return;
+	}
+	
+	function iscontains(item,o){ 
+		return RegExp("\\b"+item+"\\b").test(o); 
+	}; 	
+	
+	function change(o,id){
+			if(iscontains('ON',o.src)){
+				$(o).attr('src','/ump/images/OFF.png');
+				status = false;
+			}
+			else{
+				$(o).attr('src','/ump/images/ON.png');
+				status = true;
+			}
+			var timestamp = new Date().getTime();
+			$.ajax({
+	            url:"/ump/pubroles/rcheck?timestamp="+timestamp,
+	            datatype :"text",
+	            type: "POST",
+	            data:{'id':id,'status':status},
+	            error: function(msg){
+	            },
+	            success:function(data){
+	            	
+				  }
+	        });
+		}
+	
+	function visible(id,status){
+	console.log('status='+status);
+	if(status){
+		alert('该活动已启用');
+		return;
+	}
+	aid = id;
+	if(!htmlVar){
+		htmlVar = $('#dialog').html();
+	}
+	$.Dialog({
+		width : 500,
+		overlay : true,
+		shadow : true,
+		flat : true,
+		icon : '<img src="/ump/images/excel2013icon.png"/>',
+		title : '审核',
+		content : '',
+		padding : 20,
+		onShow : function(_dialog) {
+			var html = htmlVar;
+			$('#dialog').html('');
+			$.Dialog.content(html);
+			$.Metro.initInputs();
+		}
+	});
+}
+    
+    function goPage(page){
+		var pageStr = $("#pageStr").val();
+    	if($.trim(pageStr) == ""){
+    		alert("请输入需要跳转的页数！");
+    		return;
+    	}
+    	if(isNaN(pageStr)){
+    		alert("格式错误，请输入数字！");
+    		return;
+    	}
+    	if(pageStr > page){
+    		alert("你输入的页数大于最大页数");
+    		return;
+    	}
+    	if(pageStr <= 0){
+    		alert("你输入的页数不符合要求");
+    		return;
+    	}
+    	queryPubRole(pageStr);
+	}
+	
+	function queryPubRole(pageNo) {
+		var start = 0;
+		var limit = $("#limit").val();
+		if (pageNo > 0) {
+			start = (pageNo - 1) * limit;
+		}
+		
+		var parmam = {
+			start : start,
+			limit : limit
+		};
+
+		$.ajax({
+			url : "/ump/pubroles/queryRoles",
+			type : "POST",
+			data : parmam,
+			error : function(msg) {
+				alert("error " + msg);
+			},
+			success : function(text) {
+				$("#showResult").html(text);
+			}
+		});
+	}
+    ]]>
+    </script>
+	<input type="hidden" id="limit" value="${limit}"/>
+	<div id="under" class="buttondiv"
+		style="height: 46px; background: #edf1f9; border: 1px solid #e4e4e4; border-bottom: none;">
+			<a href="/ump/pubroles?form"><img
+			src="/ump/images/add.png" width="14" height="14" />添加权限组</a>
+			</div>
+	<div id="showResult" class="showResult">
+		暂无信息
+	</div>
+	 <div id="dialog" style="display: none;">
+			<div class="grid" style="width: 180px;height:50px; margin-left: 5px;"
+				align="center">
+				<div class="row">
+					<div class="span6">
+						<span>启用：<input id="check_" name="isCheck" type="radio" value="1" checked="checked" />
+						</span> 
+						
+						<span> 禁用：<input id="notCheck_" name="isCheck" type="radio" value="0" />
+						</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span1">
+						<input type="button" value="提交"  onclick="visibleSub();" class="info"/>
+					</div>
+					<div class="span1">
+						<button class="warning"  onclick="$.Dialog.close()">取 消</button>
+					</div>
+				</div>
+			</div>
+ 	</div>
+</div>

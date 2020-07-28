@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_VocEmail" object="${vocemail}" path="/vocemails" z="DpG5a789RDrviWJb9sBvpx9wUA0=">
+        <field:display field="name" id="s_com_nineclient_model_VocEmail_name" object="${vocemail}" z="/aFrAClCj6OEbfW4DtM54gs2S+A="/>
+        <field:display field="email" id="s_com_nineclient_model_VocEmail_email" object="${vocemail}" z="eYDZ289XiIAs0aZ+R1mDDqB59b4="/>
+        <field:display field="remark" id="s_com_nineclient_model_VocEmail_remark" object="${vocemail}" z="PQS7ByWfxZDANHfs8d25l2m+juA="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_VocEmail_isDeleted" object="${vocemail}" z="zMFC9g6ABAKatQ07tgHChsfygxs="/>
+        <field:display field="isVisable" id="s_com_nineclient_model_VocEmail_isVisable" object="${vocemail}" z="n6UoYHxFh4y0kkKvHJxUu/nRexY="/>
+        <field:display date="true" dateTimePattern="${vocEmail_createtime_date_format}" field="createTime" id="s_com_nineclient_model_VocEmail_createTime" object="${vocemail}" z="L0tKWFq6x2UBn2HKOhtFw0DElzQ="/>
+        <field:display field="parentId" id="s_com_nineclient_model_VocEmail_parentId" object="${vocemail}" z="dUWVIVKWyEqjd0cm2nAziMuvW/Y="/>
+    </page:show>
+</div>

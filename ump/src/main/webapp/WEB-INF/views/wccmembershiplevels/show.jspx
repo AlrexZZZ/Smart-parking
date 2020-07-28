@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccMembershipLevel" object="${wccmembershiplevel}" path="/wccmembershiplevels" z="Ch5yElm9kfS7kCv9sHfzlnmDpgA=">
+        <field:display field="name" id="s_com_nineclient_model_WccMembershipLevel_name" object="${wccmembershiplevel}" z="ZB0oQ/uO/XjvhAsa7vxSBNDi2Qk="/>
+        <field:display field="code" id="s_com_nineclient_model_WccMembershipLevel_code" object="${wccmembershiplevel}" z="Om1FfDtI7CAxPpNLbjvH+CeJSlY="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccMembershipLevel_isDeleted" object="${wccmembershiplevel}" z="PnX34Bo1kMNhX9hCID0SkDUo1xI="/>
+        <field:display date="true" dateTimePattern="${wccMembershipLevel_createtime_date_format}" field="createTime" id="s_com_nineclient_model_WccMembershipLevel_createTime" object="${wccmembershiplevel}" z="tEdgGBriu0avL76KHPQxF0HJo1Q="/>
+        <field:display field="isVisable" id="s_com_nineclient_model_WccMembershipLevel_isVisable" object="${wccmembershiplevel}" z="ERXNsM1x7O4HHtRC7jBvjKnvdYU="/>
+    </page:show>
+</div>

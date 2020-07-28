@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<style>
+.metro .button {padding: 0px;}
+input,select{width: 135px;height: 28px;border: 1px solid #e4e4e4;background-color: #fff;}
+.metro label { display: block;font-size: 12px;font-weight: normal; margin: 5px 0;text-align: right;}
+
+</style>
+	<script type="text/javascript">
+	<![CDATA[
+	$(document).ready(function() {
+		ToListByAjax();
+	});
+		//删除
+    	function deleteForm(id){
+		    		$.ajax({
+			            url:"/ump/cherybrands/delete",
+			            dataType:"json",
+			            type:"POST",
+			            data:{'id':id},
+			            error: function(msg){
+			            },
+			            success: function(data) {	
+			            	alert("删除成功！");
+			            	ToListByAjax();
+			            }
+			        });
+    	}
+    	
+		
+		function changeOnOff2(id) {
+				var active = $("#actives"+id).val();
+				if (active == "true") {
+					 if(confirm("是否要禁用?")==true){
+						 $("#activeOn2"+id).hide();
+							$("#activeOff2"+id).show();
+							$("#actives"+id).val("false");
+							$.ajax({
+					            url:"/ump/cherybrands/updateStatus",
+					            dataType:"json",
+					            type:"POST",
+					            data:{'id':id,'active':false},
+					            error: function(msg){
+					            },
+					            success: function(data) { //若Ajax处理成功后的回调函数，text是返回的页面信息
+					            	//alert("操作成功");
+					            }
+					        });
+						}else{
+							return false;
+						}
+					
+					
+				} else {
+					 if(confirm("是否要开启?")==true){
+							$("#activeOn2"+id).show();
+							$("#activeOff2"+id).hide();
+							$("#actives"+id).val("true");
+							 $.ajax({
+					            url:"/ump/cherybrands/updateStatus",
+					            dataType:"json",
+					            type:"POST",
+					            data:{'id':id,'active':true},
+					            error: function(msg){
+					            },
+					            success: function(text) { //若Ajax处理成功后的回调函数，text是返回的页面信息
+					            	//alert("操作成功");
+					            }
+					        }); 
+						}else{
+							return false;
+						}
+					
+				
+					
+				}
+			}
+		
+		//查询分页
+	    function ToListByAjax(page){
+	    	var pageNo;
+			if (page) {
+				pageNo = page
+			} else {
+				pageNo = 1;
+			}
+	    	var param={};
+	    	param.page=pageNo;
+			param.size=10;
+			
+			
+	    	var active = $("#active").val();
+	    	var brand = $("#brand").val();
+	    	
+	    	if(active!=99){ 
+				param.active=active;
+			}
+	    	if(brand!=undefined&&brand!=null&&$.trim(brand)!=""){
+				param.brandName=$.trim(brand);
+			}
+	    
+			var url = "/ump/cherybrands/getBrandList";
+	    	$.ajax({
+				url : url,
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data :param,
+				error : function(msg) {
+				},
+				success : function(data) {
+					createData_Gride(data, "");
+				}
+			});
+		}
+		
+	    function createData_Gride(data) {
+			var model = eval("(" + data + ")");
+			var list = eval(model.dataJson);
+			var table = "";
+			for (var i = 0; i < list.length; i++) {
+				table += "<tr>";
+				table += "<td>";
+				table += list[i].brandName;
+				table += "</td>";
+				
+				if(list[i].active == true){
+					table += "<td>";
+					table +='<input id="actives'+list[i].id+'" type="hidden" name="active" value="true" />'
+						table +='<img id="activeOn2'+list[i].id+'" onclick="changeOnOff2('+list[i].id+')" src="/ump/images/ON.png" />'
+						table +='<img src="/ump/images/OFF.png" id="activeOff2'+list[i].id+'" onclick="changeOnOff2('+list[i].id+');" style="display: none;" />'
+					table += "</td>";
+				}
+				if(list[i].active == false){
+					table += "<td>";
+					table +='<input id="actives'+list[i].id+'" type="hidden" name="active" value="false" />'
+						table +='<img id="activeOn2'+list[i].id+'" onclick="changeOnOff2('+list[i].id+')" src="/ump/images/ON.png" style="display: none;"/>'
+						table +='<img src="/ump/images/OFF.png" id="activeOff2'+list[i].id+'" onclick="changeOnOff2('+list[i].id+');"/>'
+					table += "</td>";
+				}
+			
+					table += "<td>";
+						table += '<a href="javascript:goUpdate('+list[i].id+')" alt="更新 " title="更新 " style="width: 80px;"> <img alt="更新 " class="image"src="/ump/resources/images/update.png" title="更新 "/> </a> '
+						table += '<a href="javascript:deleteForm('+list[i].id+')" alt="删除 " title="删除 "style="width: 80px;" > <img alt="删除 " class="image" src="/ump/resources/images/delete.png" title="删除 "/></a> '
+					table += "</td>";
+				table += "</tr>";
+			}
+			var foot = Page_sku(model);
+			$("#dataBody").html(table);
+			if (model.totalCount > 0) {
+				$("#dataFoot").html(foot);
+			} else {
+				$("#dataBody").html("<tr><td colspan='10'>查无匹配数据</td></tr>");
+			}
+
+		}
+	    
+	    function Page_sku(model) {
+	    	var turnPage = '';
+			if (model.totalCount > 0) {
+				turnPage += '	<tr>';
+				turnPage += '	<td colspan="5" style="float:right">';
+				if (model.pageNo > 1) {
+					turnPage += ' <a class="default" href="javascript:void(0);" onclick="ToListByAjax('+ 1 +')" style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px"><img alt="首页" src="/ump/resources/images/resultset_first.png" title="首页" style="float:left"/></a>';
+					turnPage += ' <a style="float:left;padding-top: 4px;padding-left: 6px" class="default" href="javascript:void(0);" onclick="ToListByAjax('
+							+ (model.pageNo - 1) + ')"><img alt="上一页" src="/ump/resources/images/resultset_previous.png" title="上一页" style="float:left"/></a>';
+				}
+				turnPage += '<span style="color: #069dd5;height: 22px;line-height: 22px;float:left;padding-left: 6px">'+ model.pageNo+'</span><span style="float:left;padding-top: 4px;padding-left: 6px"> /</span> <span style="color: #069dd5;float:left;padding-top: 4px;padding-left:6px">'+model.totalPage+'</span>';
+				turnPage +='<input type="text" value="" style="width: 30px;height:22px;float:left;margin-left:6px" id="pageStr2"/><a  style="width: 28px;height:22px;background-color:#069dd5;color: white;display:inline-block;font-family:Arial;font-size: 10px;line-height: 22px;text-align:center;cursor: pointer;float:left" onclick="goPage2('+model.totalPage+');">GO</a>'
+
+				if (model.pageNo != model.totalPage) {
+					turnPage += '<a class="default" href="javascript:void(0);" onclick="ToListByAjax('
+							+ (model.pageNo + 1)
+							+ ')" style="cursor: hand; cursor: pointer;float:left;padding-top: 2px;padding-left:6px"><img alt="下一页" src="/ump/resources/images/resultset_next.png" title="下一页"/></a>';
+					turnPage += ' <a style="float:left;padding-top: 4px;padding-left: 6px" class="default" href="javascript:void(0);" onclick="ToListByAjax('+ model.totalPage +')" style="cursor: hand; cursor: pointer;"><img alt="首页" src="/ump/resources/images/resultset_last.png" title="首页" style="float:left"/></a>';
+				}
+				turnPage += '<span style="float:left;padding-top: 3px;padding-left: 6px">每页<span  style="color:#069dd5;">10</span>条</span></td>';
+				turnPage += '</tr>';
+				return turnPage;
+			}
+		}
+	    
+	    function goUpdate(id){
+	    	window.location.href = '/ump/cherybrands/'+id+'?form';
+	    }
+	    
+	    function clearAll(){
+	    	$("#brand").val('');
+	    	$("#active").val(99);
+	    	ToListByAjax();
+	    }
+	    
+	    function goPage2(page){
+	    	var pageStr = $("#pageStr2").val();
+	    	if($.trim(pageStr) == ""){
+	    		alert("请输入需要跳转的页数！");
+	    		return false;
+	    	}
+	    	if(isNaN(pageStr)){
+	    		alert("格式错误，请输入数字！");
+	    		return false;
+	    	}
+	    	if(pageStr > page){
+	    		alert("你输入的页数大于最大页数");
+	    		return false;
+	    	}
+	    	if(pageStr <= 0){
+	    		alert("你输入的页数不符合要求");
+	    		return false;
+	    	}
+	    	ToListByAjax(pageStr);
+	    }
+ ]]>		
+ </script>
+	<div class="grid">
+		<form action="/ump/puboperators/getPubOperListByFiled" method="post">
+			<div class="row">
+				<div class="span3">
+					<label>品牌名称：</label><INPUT name="brand" value=" " id="brand"/>
+				</div>
+			<div class="span3">
+					<label>启用状态：</label> <SELECT name="active" style="width: 135px;" id="active">
+						<option value="99" selected="selected"> 全  部</option>
+						<option value="false">禁 用</option>
+						<option value="true">启 用</option>
+					</SELECT>
+				</div>
+				<div class="span6"> 
+					<input type="button" value="查 询" class="info" onclick="ToListByAjax();"/>
+					<input class="warning" type="button" value="重 置" onclick="clearAll();" style="font-family:'微软雅黑'"></input>
+			   </div>
+			</div>
+		</form>
+	</div>
+
+	<div id="menuContent" class="menuContent"
+		style="display: none; position: absolute;background: #fff;padding: 20px;border: 1px solid #e4e4e4;box-shadow: -0px 6px 10px #888888;">
+		<ul id="treeDemo" class="ztree" style="margin-top: 0;"></ul>
+	</div>
+	<!-- 查询分页开始 -->
+	<div class="buttondiv" style="height: 46px; background: #edf1f9; border: 1px solid #e4e4e4; border-bottom: none;">
+		 <a href="/ump/cherybrands?form" >
+		  	<img alt="添加品牌" src="/ump/resources/images/add.png" title="添加品牌"></img>
+			添加品牌
+		</a>
+	</div>		
+	<div>
+		<table class="table striped hovered k_width">
+			<thead>
+				<tr>
+					<th>品牌名称</th>
+					<th>启用状态</th>
+					<th>操作</th>
+				</tr>
+				</thead>
+				<TBODY id="dataBody">
+			
+				</TBODY>
+		</table>
+		 <div style="float: right;">
+		 	<div id="dataFoot"></div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	 xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<SCRIPT type="text/javascript">
+	<![CDATA[
+		$(function(){
+			var mass0 = '${mass0}';
+			var mass1 = '${mass1}';
+			option.series[0].data = [];
+			option.series[1].data = [];
+			option.series[2].data = [];
+			option.series[3].data = [];
+			option.xAxis.categories = [];
+			option2.series[0].data = [];
+			option2.series[1].data = [];
+			option2.series[2].data = [];
+			option2.series[3].data = [];
+			option2.xAxis.categories = [];
+			if(mass0){
+				var objs = [];
+				objs = eval('(' + mass0 + ')');
+				console.log(objs);
+				if (objs.length > 0) {
+				option.title.text = objs[0].title;
+					for(i=0;i<objs.length;i++){
+						option.series[0].data.push(objs[i].intPageReadUser);
+						option.series[1].data.push(objs[i].oriPageReadUser);
+						option.series[2].data.push(objs[i].shareUser);
+						option.series[3].data.push(objs[i].addToFavUser);
+						var d=new Date(objs[i].statDate);   
+						option.xAxis.categories.push(formatDate(d));
+					}
+				}
+				var chartBar = new Highcharts.Chart(option);
+			}
+	 		if(mass1){
+				var objs2 = [];
+				objs2 = eval('(' + mass1 + ')');
+				console.log(objs2);
+				if (objs2.length > 0) {
+					option2.title.text = objs2[0].title;
+					for(i=0;i<objs2.length;i++){
+						option2.series[0].data.push(objs2[i].intPageReadUser);
+						option2.series[1].data.push(objs2[i].oriPageReadUser);
+						option2.series[2].data.push(objs2[i].shareUser);
+						option2.series[3].data.push(objs2[i].addToFavUser);
+						var d2=new Date(objs2[i].statDate);  
+						option2.xAxis.categories.push(formatDate(d2));
+					}
+				}
+				var chartBar = new Highcharts.Chart(option2);
+			} 
+		})
+		
+		function formatDate(now){
+            var year=now.getYear();     
+            var month=now.getMonth()+1;     
+            var date=now.getDate();     
+            var hour=now.getHours();     
+            var minute=now.getMinutes();     
+            var second=now.getSeconds();     
+            return month+'月'+date+'日';     
+            }     
+		]]>
+	</SCRIPT>
+<div style="overflow:auto;">
+<table id="ss" class ="table striped hovered">
+		<tbody>
+			<div id="container" style="min-width:320px; width:100%; height: 400px"></div>
+			<div id="container2" style="min-width:320px;width:100%; height: 400px"></div> 
+		</tbody>
+	</table>
+
+		<div style="float:right;">
+			<input id="pageNum" type="hidden" value="${page}" />
+			<c:if test="${page>1 }">
+				<a class="default" href="#" onclick="massPicTextList(1)"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px">
+					<img alt="首页" src="/ump/resources/images/resultset_first.png" title="首页" style="float:left"/>
+				</a>
+				<a class="default"
+					href="javascript:void(0);" onclick="massPicTextList(${page-1})"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px">
+					<img alt="前一页" src="/ump/resources/images/resultset_previous.png" title="前一页" style="float:left"/>
+				</a>
+			</c:if>
+			<c:if test="${reportMassPicText!= null and fn:length(reportMassPicText) > 0}">
+				<TFOOT>
+					<span style="color: #069dd5; height: 22px; line-height: 22px;float:left;padding-left: 6px">${page}</span>
+					<span style="float:left;padding-top: 4px;padding-left: 6px"> /</span>
+					<span style="color: #069dd5;float:left;padding-top: 4px;padding-left:6px">${maxPages}</span>
+					<input type="text" value="" style="width: 30px; height: 22px;float:left;margin-left:6px" id="pageStr" />
+					<a href="javascript:void(0);"
+						style="width: 28px; height: 22px; background-color: #069dd5; color: white; display: inline-block; font-family: Arial; font-size: 10px; line-height: 22px; text-align: center; cursor: pointer;float:left"
+						onclick="goPage(${maxPages});">GO</a>
+
+				</TFOOT>
+			</c:if>
+			<c:if test="${page!=maxPages}">
+				<a class="default"
+					href="javascript:void(0);" onclick="massPicTextList(${page+1})"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left:6px"> 
+					<img alt="下一页" src="/ump/resources/images/resultset_next.png" title="下一页" style="float:left"/>
+				</a>
+				<a class="default"
+					href="javascript:void(0);" onclick="massPicTextList(${maxPages})"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px">
+					<img alt="末页" src="/ump/resources/images/resultset_last.png" title="末页" style="float:left"/>
+				</a>
+			</c:if>
+			<span style="float:left;padding-top: 3px;padding-left: 6px">每页<span  style="color:#069dd5;">${limit}</span>条</span>
+		</div>
+	</div>
+</div>

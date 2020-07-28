@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_UmpAuthority" object="${umpauthority}" path="/umpauthoritys" z="GCQAwKD+6mif/ZJlTJ9iyX2mWi0=">
+        <field:display field="parentId" id="s_com_nineclient_model_UmpAuthority_parentId" object="${umpauthority}" z="GN1V9rrP+aY8drMFpCxCIDP5BgE="/>
+        <field:display field="displayName" id="s_com_nineclient_model_UmpAuthority_displayName" object="${umpauthority}" z="H0k5cDXtiWjh0/ss6UtBC+zd6Ys="/>
+        <field:display field="url" id="s_com_nineclient_model_UmpAuthority_url" object="${umpauthority}" z="Q0itQkqat59PsVUCyuTGs8nzCh4="/>
+        <field:display field="image" id="s_com_nineclient_model_UmpAuthority_image" object="${umpauthority}" z="oIZujxbtC9YHKgG9qt/Ojufte6Y="/>
+        <field:display field="remark" id="s_com_nineclient_model_UmpAuthority_remark" object="${umpauthority}" z="CpM4+hMXgEQ3FUsus55Klo+DjB8="/>
+        <field:display field="sort" id="s_com_nineclient_model_UmpAuthority_sort" object="${umpauthority}" z="cvmcDZeTf0/f30EUYZuL00/pG7I="/>
+        <field:display field="isVisable" id="s_com_nineclient_model_UmpAuthority_isVisable" object="${umpauthority}" z="EJFkwAQ/04jDTMQalF8dSlLDwNs="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_UmpAuthority_isDeleted" object="${umpauthority}" z="h1FUt+ZS+x6+oQcZ7CV+8+nv1Zg="/>
+        <field:display field="umpRoles" id="s_com_nineclient_model_UmpAuthority_umpRoles" object="${umpauthority}" z="RCkbQ5URjR7KDQHctmile6fXOmY="/>
+    </page:show>
+</div>

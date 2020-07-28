@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default_pub" name="wccutils/list">
+        <put-attribute name="body" value="/WEB-INF/views/wccutils/list.jspx"/>
+    </definition>
+     <definition extends="default_pub" name="wccutils/umpList">
+        <put-attribute name="body" value="/WEB-INF/views/wccutils/umpList.jspx"/>
+    </definition>
+    <definition extends="default_pub" name="wccutils/umpCreate">
+        <put-attribute name="body" value="/WEB-INF/views/wccutils/umpCreate.jspx"/>
+    </definition>
+     <definition extends="default_pub" name="wccutils/umpUpdate">
+        <put-attribute name="body" value="/WEB-INF/views/wccutils/umpUpdate.jspx"/>
+    </definition>
+</tiles-definitions>

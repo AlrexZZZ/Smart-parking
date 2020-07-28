@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_WccGroupMessFriend" items="${wccgroupmessfriends}" z="lDjHJLN0pwHK28Clmjmi6EcZU0w=">
+        <table:table data="${wccgroupmessfriends}" id="l_com_nineclient_model_WccGroupMessFriend" path="/wccgroupmessfriends" z="3y61rQkI7I/JVcN5khvo+XV0oJM=">
+            <table:column id="c_com_nineclient_model_WccGroupMessFriend_isDeleted" property="isDeleted" z="AuC5jaYs1/Pd0WJJW+dsu02SFm4="/>
+            <table:column date="true" dateTimePattern="${wccGroupMessFriend_createtime_date_format}" id="c_com_nineclient_model_WccGroupMessFriend_createTime" property="createTime" z="FOykAqkCiGlwR/V6XpOaYEXGZxk="/>
+        </table:table>
+    </page:list>
+</div>

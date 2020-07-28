@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_UmpChannel" object="${umpchannel}" path="/umpchannels" z="5A0ecsu3OSCviVG5RSXtwluXYBM=">
+        <field:display field="channelName" id="s_com_nineclient_model_UmpChannel_channelName" object="${umpchannel}" z="F9XUSon88oTtcRH5vGXgpYZ4Nfc="/>
+        <field:display field="productPk" id="s_com_nineclient_model_UmpChannel_productPk" object="${umpchannel}" z="qW9DYzt0s7aEntlGjOQW5n+FTPY="/>
+        <field:display field="remark" id="s_com_nineclient_model_UmpChannel_remark" object="${umpchannel}" z="REh5LIVAWS+AYwxcuJg64sAMLzM="/>
+        <field:display field="isVisable" id="s_com_nineclient_model_UmpChannel_isVisable" object="${umpchannel}" z="tYZrBEOAslo45fRN9OItLYaa07o="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_UmpChannel_isDeleted" object="${umpchannel}" z="wGyfAbyY3tV6fkWwGhSzyMEZr6o="/>
+        <field:display date="true" dateTimePattern="${umpChannel_createtime_date_format}" field="createTime" id="s_com_nineclient_model_UmpChannel_createTime" object="${umpchannel}" z="ypv2+dgDHKL8hkqW3CYdmuU19iA="/>
+    </page:show>
+</div>

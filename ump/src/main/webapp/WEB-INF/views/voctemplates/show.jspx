@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_VocTemplate" object="${voctemplate}" path="/voctemplates" z="1tlFsrsQBBk7wPRSYMwtKcZyrLU=">
+        <field:display field="title" id="s_com_nineclient_model_VocTemplate_title" object="${voctemplate}" z="RIrXyrmD6JRVaG7/WcXPiTmaf+Y="/>
+        <field:display field="content" id="s_com_nineclient_model_VocTemplate_content" object="${voctemplate}" z="6kqaqnU12b2IKYCid9i1dblTS1Q="/>
+        <field:display field="isVisable" id="s_com_nineclient_model_VocTemplate_isVisable" object="${voctemplate}" z="I3/Hv6cq67dsF2cCHlFJrvlE+yE="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_VocTemplate_isDeleted" object="${voctemplate}" z="104RjI644S2pHFMigBqmv1mEyt0="/>
+        <field:display date="true" dateTimePattern="${vocTemplate_createtime_date_format}" field="createTime" id="s_com_nineclient_model_VocTemplate_createTime" object="${voctemplate}" z="LFBu0PZLiY4eDbiEXw0JDXOjnlk="/>
+    </page:show>
+</div>

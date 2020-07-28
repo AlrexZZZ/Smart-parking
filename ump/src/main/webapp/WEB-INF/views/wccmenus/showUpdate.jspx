@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" 
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+   <SCRIPT type="text/javascript">
+	function showEmotion(){
+		var emotion = $("#emotionId").html();
+		$("#showPic").html(emotion);
+		showPic('picdiv','fadeId');
+			
+		function showPic(picdiv, fadeId) {
+				$("#" + picdiv).show();
+		}
+		
+		function selectPic(type){
+				sendType = type;
+				$('#msg_').val(picid);
+				$('#msg_').attr('disabled','disabled');
+				$('#picdiv').hide();
+		}
+	}
+    </SCRIPT>
+    		<c:if test="${wccMenu.contentSelect == 1}">
+				<div class="row" id="contents" style="width: 60%;">
+					<div class="span12">
+						<label>回复内容：</label>&#160;&#160;<span style="color: red" id="contentMsg"></span>
+					</div>
+					<div class="input-control textarea">
+						<textarea id="content" name="content" oninput="checkMaxLength(this,'numbertips')"
+							style="resize: none; margin-left: 30px;background: #fff">${wccMenu.content}</textarea>
+						<div style="height: 24px;line-height: 24px;margin-left: 30px;width: 100%;">
+						<a style="padding-left: 0px;margin-top: 10px;" onclick="showEmotion()">
+						<img src="/ump/images/friend/biaoqing.png" title="选择表情"/></a>
+						<span style="float: right;color: #069dd5;">可输入<span id="numbertips">600</span>字</span></div>
+					</div>
+				</div>
+			</c:if>
+			<div class="row" id="contents" style="width: 60%;display: none">
+					<div class="span12">
+						<label>回复内容：</label>&#160;&#160;<span style="color: red" id="contentMsg"></span>
+					</div>
+					<div class="input-control textarea">
+						<textarea id="content" name="content" oninput="checkMaxLength(this,'numbertips')"
+							style="resize: none; margin-left: 30px;background: #fff"><!-- txt --></textarea>
+						<div style="height: 24px;line-height: 24px;margin-left: 30px;width: 100%;">
+						<a style="padding-left: 0px;margin-top: 10px;" onclick="showEmotion()"><img src="/ump/images/friend/biaoqing.png" title="选择表情"/></a>
+						<span style="float: right;color: #069dd5;">可输入<span id="numbertips">600</span>字</span></div>
+					</div>
+				</div>
+			<c:if test="${wccMenu.contentSelect == 2}">
+				<div class="row" id="pictures">
+						<div class="row" id="pictures" style="width: 100%;">
+						<div class="span12">
+							<label>回复图片：</label>
+						</div>
+						<div class="refreshdiv"
+							style="margin-left:20px;border-bottom: none;">
+							<a href="#" onclick="goUrl();"><i class="on-left"><img
+									width="14" height="14" src="/ump/resources/images/add_02.png" /></i>添 加</a>
+							<a href="#" onclick="refresh();"><i class="on-left"><img
+									width="14" height="14" src="/ump/resources/images/refresh_white.png" /></i>刷 新</a>
+						</div>
+						<div class="container-fluid masonry" style="overflow-y: auto; max-height: 450px;">
+							<c:forEach items="${wccPicture}" var="picture">
+								<c:if test="${picture.id == wccMenu.materials.id}">
+									<div id="div_${picture.id}"
+										class="image-container tupian_dandiv_img selected"
+										style="width: 170px; height: 170px;">
+										<img style="width: 170px; height: 170px;"
+											src="${picture.thumbnailUrl}" alt="${picture.title}"
+											onclick="changeState('div_${picture.id}');" />
+											<div class="overlay">
+													<c:if
+														test="${fn:length(picture.title) gt 20}">${fn:substring(picture.title,0,20)}...</c:if>
+													<c:if
+														test="${fn:length(picture.title) le 20}">${picture.title}</c:if>
+											</div>
+									</div>
+								</c:if>
+								<c:if test="${picture.id != wccMenu.materials.id}">
+									<div id="div_${picture.id}"
+										class="image-container tupian_dandiv_img"
+										style="width: 170px; height: 170px;">
+										<img style="width: 170px; height: 170px;"
+											src="${picture.thumbnailUrl}" alt="${picture.title}"
+											onclick="changeState('div_${picture.id}');" />
+											<div class="overlay">
+													<c:if
+														test="${fn:length(picture.title) gt 20}">${fn:substring(picture.title,0,20)}...</c:if>
+													<c:if
+														test="${fn:length(picture.title) le 20}">${picture.title}</c:if>
+											</div>
+									</div>
+								</c:if>
+							</c:forEach>
+						</div>
+					</div>
+				</div>
+			</c:if>
+			<div class="row" id="pictures" style="display: none; width: 100%;">
+						<div class="span12">
+							<label>回复图片：</label>
+						</div>
+						<div class="refreshdiv"
+							style="margin-left:20px;border-bottom: none;">
+							<a href="#" onclick="goUrl();"><i class="on-left"><img
+									width="14" height="14" src="/ump/resources/images/add_02.png" /></i>添 加</a>
+							<a href="#" onclick="refresh();"><i class="on-left"><img
+									width="14" height="14" src="/ump/resources/images/refresh_white.png" /></i>刷 新</a>
+						</div>
+						<div class="container-fluid masonry"  style="overflow-y: auto; max-height: 450px;">
+							<c:forEach items="${wccPicture}" var="picture">
+								<div id="div_${picture.id}"
+									class="image-container tupian_dandiv_img"
+									style="width: 170px; height: 170px;">
+									<img style="width: 170px; height: 170px;"
+										src="${picture.thumbnailUrl}" alt="${picture.title}"
+										onclick="changeState('div_${picture.id}');" />
+										<div class="overlay">
+											<c:if
+												test="${fn:length(picture.title) gt 20}">${fn:substring(picture.title,0,20)}...</c:if>
+											<c:if
+												test="${fn:length(picture.title) le 20}">${picture.title}</c:if>
+									</div>
+								</div>
+							</c:forEach>
+						</div>
+				</div>
+			<c:if test="${wccMenu.contentSelect == 3}">
+				<div class="row" id="images" style="width: 100%;">
+						<div class="span12" style="width: 20%">
+							<label>回复图文：</label>
+						</div>
+						<div class="refreshdiv"
+							style="margin-left:20px;border-bottom: none;">
+							<a href="#" onclick="goUrl();"><i class="on-left"><img
+									width="14" height="14" src="/ump/resources/images/add_02.png" /></i>添 加</a>
+							<a href="#" onclick="refresh();"><i class="on-left"><img
+									width="14" height="14" src="/ump/resources/images/refresh_white.png" /></i>刷 新</a>
+						</div>
+						<div id="masonry" class="container-fluid" style="overflow-y: auto; max-height: 450px;">
+							<c:forEach items="${wccImageText}" var="imageText"
+								varStatus="imageTextIndex">
+								<c:if test="${imageText.id == wccMenu.materials.id}">
+									<div id="div_${imageText.id}"
+										class="boxs image-container selected"
+										style="width: 185px; margin-top: 0px; height: auto; float: left; overflow: hidden; background: #fff; display: black;"
+										onclick="changeState('div_${imageText.id}');">
+										<div class="image-container"
+											style="width: 94%; height: auto; margin: 0px auto; clear: both; overflow: hidden; margin-top: 5px; text-align: center;margin-bottom: 5px;">
+											<img src="${imageText.thumbnailUrl}" />
+										<div class="overlay">${imageText.title}</div>
+										</div>
+										<c:if test="${not empty imageText.children }">
+											<c:forEach items="${imageText.children }" var="child">
+												<div class="tuwen_dandiv_newlist">
+													<ul
+														style="padding-left: 0px; font-family: Microsoft Yahei;">
+														<li>
+															<div class="tuwen_listw">
+																<a>${child.title}</a>
+															</div>
+															<div class="tuwen_listt">
+																<img src="${child.thumbnailUrl}" />
+															</div>
+														</li>
+													</ul>
+												</div>
+
+											</c:forEach>
+										</c:if>
+									</div>
+								</c:if>
+								<c:if test="${imageText.id != wccMenu.materials.id}">
+									<div id="div_${imageText.id}" class="boxs image-container"
+										style="width: 185px; margin-top: 0px; height: auto; float: left; overflow: hidden; background: #fff; display: black;"
+										onclick="changeState('div_${imageText.id}');">
+										<div
+											style="width: 94%; height: auto; margin: 0px auto; clear: both; overflow: hidden; margin-top: 5px; text-align: center;margin-bottom: 5px;">
+											<img src="${imageText.thumbnailUrl}" />
+											<div class="overlay">${imageText.title}</div>
+										</div>
+										<c:if test="${not empty imageText.children }">
+											<c:forEach items="${imageText.children }" var="child">
+												<div class="tuwen_dandiv_newlist">
+													<ul
+														style="padding-left: 0px; font-family: Microsoft Yahei;">
+														<li>
+															<div class="tuwen_listw">
+																<a>${child.title}</a>
+															</div>
+															<div class="tuwen_listt">
+																<img src="${child.thumbnailUrl}" />
+															</div>
+														</li>
+													</ul>
+												</div>
+
+											</c:forEach>
+										</c:if>
+									</div>
+								</c:if>
+							</c:forEach>
+						</div>
+					</div>
+			</c:if>
+			<div class="row" id="images" style="display: none; width: 100%;">
+						<div class="span12" style="width: 20%">
+							<label>回复图文：</label>
+						</div>
+						<div class="refreshdiv"
+							style="margin-left:20px;border-bottom: none;">
+							<a href="#" onclick="goUrl();"><i class="on-left"><img
+									width="14" height="14" src="/ump/resources/images/add_02.png" /></i>添 加</a>
+							<a href="#" onclick="refresh();"><i class="on-left"><img
+									width="14" height="14" src="/ump/resources/images/refresh_white.png" /></i>刷 新</a>
+						</div>
+						<div id="masonry" class="container-fluid" style="overflow-y: auto; max-height: 450px;">
+							<c:forEach items="${wccImageText}" var="imageText"
+								varStatus="imageTextIndex">
+								<div id="div_${imageText.id}" class="boxs image-container"
+									style="width: 185px; margin-top: 0px; height: auto; float: left; overflow: hidden; background: #fff; display: black;"
+									onclick="changeState('div_${imageText.id}');">
+									<div class="image-container"
+										style="width: 94%; height: auto; margin: 0px auto; clear: both; overflow: hidden; margin-top: 5px; text-align: center;margin-bottom: 5px;">
+										<img src="${imageText.thumbnailUrl}" />
+										<div class="overlay">${imageText.title}</div>
+									</div>
+									<c:if test="${not empty imageText.children }">
+										<c:forEach items="${imageText.children }" var="child">
+											<div class="tuwen_dandiv_newlist">
+												<ul style="padding-left: 0px; font-family: Microsoft Yahei;">
+													<li>
+														<div class="tuwen_listw">
+															<a>${child.title}</a>
+														</div>
+														<div class="tuwen_listt">
+															<img src="${child.thumbnailUrl}" />
+														</div>
+													</li>
+												</ul>
+											</div>
+										</c:forEach>
+									</c:if>
+								</div>
+							</c:forEach>
+						</div>
+					</div>
+			<c:if test="${wccMenu.contentSelect == 4}">
+				<div class="row" id="sounds" style="width: 100%;">
+						<div class="span12">
+							<label>回复语音：</label>
+						</div>
+						<div class="refreshdiv"
+							style="margin-left:20px;border-bottom: none;">
+							<a href="#" onclick="goUrl();"><i class="on-left"><img
+									width="14" height="14" src="/ump/resources/images/add_02.png" /></i>添 加</a>
+							<a href="#" onclick="refresh();"><i class="on-left"><img
+									width="14" height="14" src="/ump/resources/images/refresh_white.png" /></i>刷 新</a>
+						</div>
+						<div class="container-fluid masonry" style="overflow-y: auto; max-height: 450px;">
+							<c:forEach items="${wccSounds}" var="sounds">
+								<c:if test="${sounds.id == wccMenu.materials.id}">
+									<div id="div_${sounds.id}"
+										class="image-container tupian_dandiv_img selected"
+										style="width: 170px; height: 170px;">
+										<img style="width: 170px; height: 170px;"
+											src="/ump/resources/images/sound_03.png"
+											onclick="changeState('div_${sounds.id}','${sounds.thumbnailUrl}');" />
+											<div class="overlay">
+												<c:if test="${fn:length(sounds.title) gt 20}">${fn:substring(sounds.title,0,20)}...</c:if>
+												<c:if test="${fn:length(sounds.title) le 20}">${sounds.title}</c:if>
+											</div>
+									</div>
+								</c:if>
+								<c:if test="${sounds.id != wccMenu.materials.id}">
+									<div id="div_${sounds.id}"
+										class="image-container tupian_dandiv_img"
+										style="width: 170px; height: 170px;">
+										<img style="width: 170px; height: 170px;"
+											src="/ump/resources/images/sound_03.png"
+											onclick="changeState('div_${sounds.id}','${sounds.thumbnailUrl}');" />
+											<div class="overlay">
+												<c:if test="${fn:length(sounds.title) gt 20}">${fn:substring(sounds.title,0,20)}...</c:if>
+												<c:if test="${fn:length(sounds.title) le 20}">${sounds.title}</c:if>
+											</div>
+									</div>
+								</c:if>
+							</c:forEach>
+						</div>
+				</div>
+			</c:if>
+			<div class="row" id="sounds" style="width: 100%; display: none;">
+						<div class="span12">
+							<label>回复语音：</label>
+						</div>
+						<div class="refreshdiv"
+							style="margin-left:20px;border-bottom: none;">
+							<a href="#" onclick="goUrl();"><i class="on-left"><img
+									width="14" height="14" src="/ump/resources/images/add_02.png" /></i>添 加</a>
+							<a href="#" onclick="refresh();"><i class="on-left"><img
+									width="14" height="14" src="/ump/resources/images/refresh_white.png" /></i>刷 新</a>
+						</div>
+						<div class="container-fluid masonry" style="overflow-y: auto; max-height: 450px;">
+							<c:forEach items="${wccSounds}" var="sounds">
+								<div id="div_${sounds.id}"
+									class="image-container tupian_dandiv_img"
+									style="width: 170px; height: 170px;">
+									<img style="width: 170px; height: 170px;"
+										src="/ump/resources/images/sound_03.png"
+										onclick="changeState('div_${sounds.id}','${sounds.thumbnailUrl}');" />
+										<div class="overlay">
+											<c:if test="${fn:length(sounds.title) gt 20}">${fn:substring(sounds.title,0,20)}...</c:if>
+											<c:if test="${fn:length(sounds.title) le 20}">${sounds.title}</c:if>
+										</div>
+								</div>
+							</c:forEach>
+							<!-- 音乐播放器 -->
+							<audio id="myaudio" src="" controls="controls" loop="false"
+								hidden="true" style="display: none;">您的浏览器不支持此播放器。
+							</audio>
+						</div>
+					</div>
+			
+			<c:if test="${wccMenu.contentSelect == 5}">
+				<div class="row" id="video" style="width: 100%;">
+						<div class="span12">
+							<label>回复视频：</label>
+						</div>
+						<div class="refreshdiv"
+							style="margin-left:20px;border-bottom: none;">
+							<a href="#" onclick="goUrl();"><i class="on-left"><img
+									width="14" height="14" src="/ump/resources/images/add_02.png" /></i>添 加</a>
+							<a href="#" onclick="refresh();"><i class="on-left"><img
+									width="14" height="14" src="/ump/resources/images/refresh_white.png" /></i>刷 新</a>
+						</div>
+						<div class="container-fluid masonry" style="overflow-y: auto; max-height: 450px;">
+							<c:forEach items="${wccVideo}" var="video">
+								<c:if test="${video.id == wccMenu.materials.id}">
+									<div id="div_${video.id}"
+										class="image-container tupian_dandiv_img selected"
+										style="width: 170px; height: 170px;">
+										<video style="width: 170px; height: 170px;"
+											controls="controls" src="${video.thumbnailUrl}"
+											onclick="changeState('div_${video.id}');">您的浏览器不支持此种视频格式。
+										</video>
+										<div class="overlay">
+												<c:if test="${fn:length(video.title) gt 20}">${fn:substring(video.title,0,20)}...</c:if>
+												<c:if test="${fn:length(video.title) le 20}">${video.title}</c:if>
+										</div>
+									</div>
+								</c:if>
+								<c:if test="${video.id != wccMenu.materials.id}">
+									<div id="div_${video.id}"
+										class="image-container tupian_dandiv_img"
+										style="width: 170px; height: 170px;">
+										<video style="width: 170px; height: 170px;"
+											controls="controls" src="${video.thumbnailUrl}"
+											onclick="changeState('div_${video.id}');">您的浏览器不支持此种视频格式。
+										</video>
+										<div class="overlay">
+												<c:if test="${fn:length(video.title) gt 20}">${fn:substring(video.title,0,20)}...</c:if>
+												<c:if test="${fn:length(video.title) le 20}">${video.title}</c:if>
+										</div>
+									</div>
+								</c:if>
+							</c:forEach>
+						</div>
+					</div>
+			</c:if>
+			
+			<div class="row" id="video" style="width: 100%; display: none;">
+						<div class="span12">
+							<label>回复视频：</label>
+						</div>
+						<div class="refreshdiv"
+							style="margin-left:20px;border-bottom: none;">
+							<a href="#" onclick="goUrl();"><i class="on-left"><img
+									width="14" height="14" src="/ump/resources/images/add_02.png" /></i>添 加</a>
+							<a href="#" onclick="refresh();"><i class="on-left"><img
+									width="14" height="14" src="/ump/resources/images/refresh_white.png" /></i>刷 新</a>
+						</div>
+						<div class="container-fluid masonry" style="overflow-y: auto; max-height: 450px;">
+							<c:forEach items="${wccVideo}" var="video">
+								<div id="div_${video.id}"
+									class="image-container tupian_dandiv_img"
+									style="width: 170px; height: 170px;">
+									<video style="width: 170px; height: 170px;" controls="controls"
+										src="${video.thumbnailUrl}"
+										onclick="changeState('div_${video.id}');">
+										您的浏览器不支持此种视频格式。
+									</video>
+									<div class="overlay">
+											<c:if test="${fn:length(video.title) gt 20}">${fn:substring(video.title,0,20)}...</c:if>
+											<c:if test="${fn:length(video.title) le 20}">${video.title}</c:if>
+									</div>
+								</div>
+							</c:forEach>
+						</div>
+				</div>
+		<div class="myPic" id="picdiv" style="display: none;" >
+			<div class="close">
+				<img src="/ump/images/close.png" width="29" height="29" onclick="javascript:closeAll();" style="cursor: pointer;" />
+			</div>
+			<div id="showPic">
+			</div>
+		</div>
+		
+		<div id="emotionId" style="display: none;">
+			<c:forEach items="${emotions}" var="data" varStatus="status">
+				<c:if test="${status.index%10==0 }">
+					<br/>
+				</c:if>
+				<img onclick="selectEmotion(this)" style="cursor: pointer;" src="${data.url}" alt="${data.content }" title="${data.content }"/>
+			</c:forEach>
+		</div>		
+</div>

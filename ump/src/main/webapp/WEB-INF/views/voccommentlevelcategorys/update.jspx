@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_nineclient_model_VocCommentLevelCategory" modelAttribute="vocCommentLevelCategory" path="/voccommentlevelcategorys" versionField="Version" z="y82qPBMT1uDEXwFjBo4cL5wxpow=">
+        <field:textarea field="name" id="c_com_nineclient_model_VocCommentLevelCategory_name" required="true" z="X17nrSo4T56D8nKq0vazKLGobZ0="/>
+        <field:input field="parentId" id="c_com_nineclient_model_VocCommentLevelCategory_parentId" z="0cJNrG3PYVm6L0Th0wGCPNJFqms="/>
+        <field:datetime dateTimePattern="${vocCommentLevelCategory_createtime_date_format}" field="createTime" id="c_com_nineclient_model_VocCommentLevelCategory_createTime" z="Oqbd2+EuQFv2CpwSa8gfpcu5EDY="/>
+    </form:update>
+</div>

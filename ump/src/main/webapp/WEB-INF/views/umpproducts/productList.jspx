@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+ 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<SCRIPT type="text/javascript">
+		var htmlL="";
+	</SCRIPT>
+	<style>
+	@IMPORT url("/ump/styles/validation.css");
+	</style>
+		<SCRIPT type="text/javascript"
+		src="/ump/ui/jquery-validation/jquery.validate.js">
+		//--
+	</SCRIPT>
+	<DIV style="margin-top: 20px; margin-left: 30px; margin-bottom: 10px;">
+		<input type="button" class="warning" style="width: 80px;" id="createChannleBtn" value="添加渠道"/>
+	</DIV>
+	<DIV style="margin-left: 30px;">
+		<style>
+.metro .treeview {
+	background-color: #fdfdfd;
+	color: #555555;
+	display: block;
+	list-style: outside none none;
+	margin: 0;
+	padding: 30px;
+}
+
+.metro .treeview .node-toggle {
+	display: inline-block;
+	float: none;
+	height: 10px;
+	margin-right: 3px;
+	position: relative;
+	width: 10px;
+}
+
+.metro .treeview .node-toggle:before {
+	border-bottom: 7px solid #1d1d1d;
+	border-left: 7px solid transparent;
+	border-top: 7px solid transparent;
+	content: "";
+	left: -18px;
+	position: absolute;
+	top: 0;
+	width: 0;
+}
+</style>
+			<c:set var="count" value="${fn:length(productList)}"/>
+			<c:set var="num" value="0"/>
+			<c:forEach items="${productList}" var="product" varStatus="status">
+			<UL class="treeview" data-role="treeview" style="width: 50%;display:inline-block;">
+					<LI class="node" ><a href="#"><span
+							class="node-toggle"></span>${product.productName}</a>
+						<UL style="float: left;">
+							<c:forEach items="${product.channels}" var="channel"
+								varStatus="index">
+								<LI class="node"
+									style="float: left; width: 100%; margin-top: 15px;"><label>
+										${channel.channelName}</label> <c:if test="${channel.isVisable}">
+											<img class='switchClass_${channel.id}'
+												onclick='switchImg(this,false,${channel.id})'
+												src='/ump/images/ON.png' />
+											<img class='switchClass_${channel.id}'
+												onclick='switchImg(this,true,${channel.id})'
+												src='/ump/images/OFF.png' style='display: none;' />
+										</c:if> <c:if test="${!channel.isVisable}">
+											<img class='switchClass_${channel.id}'
+												onclick='switchImg(this,false,${channel.id})'
+												src='/ump/images/ON.png' style='display: none;' />
+											<img class='switchClass_${channel.id}'
+												onclick='switchImg(this,true,${channel.id})'
+												src='/ump/images/OFF.png' />
+										</c:if>
+								</LI>
+							</c:forEach>
+						</UL></LI>
+						</UL>
+			</c:forEach>
+		
+	</DIV>
+	<DIV id="channleForm" style="display: none;">
+		<form id="form1" action="" method="post" style="width: 300px;">
+			<div class="grid">
+				<div class="row">
+					<div class="span1">选择产品:</div>
+					<div class=" span2">
+						<SELECT name="product.id" style="width: 100%;">
+							<c:forEach items="${productList}" var="product" varStatus="index">
+								<option value="${product.id}">${product.productName}</option>
+							</c:forEach>
+						</SELECT>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span1">渠道名称:</div>
+					<div class="span2">
+						<input id="channelName" type="text" name="channelName"
+							style="width: 100%;" value="" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="span1">是否启用:</div>
+					<div class="span1" style="width: 180px;">
+						<input name="isVisable" type="hidden" value="true" /> 
+					<img
+							class="switchClass" style="cursor: pointer;"
+							onclick="_switchImg(this,false,'isVisable')" src='/ump/images/ON.png' />
+						<img class="switchClass"
+							onclick="_switchImg(this,true,'isVisable')"
+							style="display: none; cursor: pointer;" src='/ump/images/OFF.png' />
+					</div>
+				</div>
+				<div class="row">
+					<div class="span1">
+						<a id="subbtn" class="button info" onclick="submit();"
+							style="margin-right: 30px;">确定</a>
+					</div>
+					<div class="span1">
+						<button class="button warning" onclick="$.Dialog.close()">取消</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</DIV>
+	<SCRIPT type="text/javascript">
+		$("#createChannleBtn").on('click', function() {
+			$.Dialog({
+				overlay : true,
+				shadow : true,
+				flat : true,
+				draggable:true,
+				icon : '<img src="/ump/images/add.png"/>',
+				title : 'Flat window',
+				content : '',
+				width:160,
+				padding : 10,
+				onShow : function(_dialog) {
+					if(htmlL==""){
+						htmlL = $("#channleForm").html();
+						$("#channleForm").remove();
+					}
+					var content = htmlL;
+					$.Dialog.title("添加渠道");
+					$.Dialog.content(content);
+					$.Metro.initInputs();
+					$("#form1").validate({
+						rules : {
+							channelName :{required:true,remote:{
+								 url:"/ump/commentvalidata/validataUniqueId",
+								 type: "post", 
+								 data: {
+									field:'channelName',
+									value:function(){
+										return $("#channelName").val();
+									},
+									table:"UmpChannel"
+								 }
+								}}
+						},
+
+						messages : {
+							channelName : {required:"请输入渠道名称",remote:"渠道名不能重复"}
+						},
+						errorElement:"em",
+						focusCleanup:true,
+						errorClass:"invalid",
+						errorPlacement:function(error, element){
+							error.appendTo($(element).parent().find("span"));
+						}
+					});
+					
+				}
+			});
+		})
+		function updateStatus(id){
+			  $.ajax({
+		            url:"/ump/umpproducts/updateStatus",
+		            dataType:"json",
+		            type:"POST",
+		            data:{'id':id},
+		            error: function(msg){
+		            },
+		            success: function(text) { //若Ajax处理成功后的回调函数，text是返回的页面信息
+		            }
+		        });
+		}
+		function submit(){
+				if(!$("#form1").valid()){
+					return;
+				}
+	            $.ajax({
+	                type: "post",
+	                url: "/ump/umpchannels/createChannel",     
+	                data: $("#form1").serialize(),    
+	                success: function(data) {
+	                var msg=eval("("+data+")");
+               		$.Notify({
+               			caption: "",
+               			content: msg.msg,
+               			timeout: 10000 // 10 seconds
+               			});
+	                	window.location.href="/ump/umpproducts/productList";
+	                	$.Dialog.close();
+	                },
+	                error: function(data) {
+	                	$.Dialog.close();
+	                }
+	            })
+		}
+		function _switchImg(obj,value,elementId){
+			$("#"+elementId).val(value);
+			$(".switchClass").toggle();
+	}
+
+		function switchImg(obj, vl, id) {
+			$.ajax({
+				url : "/ump/umpproducts/updateStatus",
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data : {
+					id : id
+				},
+				error : function(msg) {
+				},
+				success : function(data) {
+					$(".switchClass_" + id).toggle();
+				}
+			});
+		
+		}
+	</SCRIPT>
+</div>

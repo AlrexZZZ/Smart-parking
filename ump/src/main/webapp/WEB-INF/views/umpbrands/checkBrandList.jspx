@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<form:form action="/ump/umpbrands/querCheckList"
+					modelAttribute="umpBrand" method="post">
+					<TABLE>
+						<THEAD>
+							<TR>
+								<TH colspan="4">查询条件</TH>
+							</TR>
+						</THEAD>
+						<TBODY>
+							<TR>
+								<TD>公司ID</TD>
+								<TD></TD>
+								<TD>所在行业</TD>
+								<TD><form:select items="${umpbusinesstypes}"
+										multiple="false" itemValue="id" path="businesses"></form:select></TD>
+							</TR>
+							<TR>
+								<TD>品牌</TD>
+								<TD><form:input path="brankName" /></TD>
+							</TR>
+						</TBODY>
+						<TFOOT>
+							<TR>
+								<TD colspan="4"><BUTTON type="submit">查询</BUTTON></TD>
+							</TR>
+						</TFOOT>
+					</TABLE>
+				</form:form>
+				<page:list id="pl_com_nineclient_model_UmpBrand"
+					items="${umpbrands}" z="MKw6PvtyIIJWHNK2ctbcYhs6kMI=">
+					<table:table data="${umpbrands}"
+						id="l_com_nineclient_model_UmpBrand"
+						path="/umpbrands/checkStatusForm" show="false" create="false"
+						delete="false" update="false" z="QdS2OTHh+wrPlnKecHaoM/LGkzg=">
+						<table:column id="c_com_nineclient_model_UmpBrand_BrankName"
+							property="brankName" z="NKcVfGIr+J0nmf+BlK+3ijcIaRg=" />
+						<table:column id="c_com_nineclient_model_UmpBrand_checkStatus"
+							property="checkStatus" z="u7CbzozYz0Mzhuywy2WbpIqHsHg=" />
+						<table:column id="c_com_nineclient_model_UmpBrand_isDeleted"
+							property="isDeleted" z="0T0s+zD1mBZxZj+dPbka+0HmrL8=" />
+						<table:column date="true"
+							dateTimePattern="${umpBrand_createtime_date_format}"
+							id="c_com_nineclient_model_UmpBrand_createTime"
+							property="createTime" z="RAmiuurY42tB1BW4BrD1O5dNS+k=" />
+						<table:column id="c_com_nineclient_model_UmpBrand_remark"
+							property="remark" z="lHEx3L03GijIcDHUBUhJiUcVRZc=" />
+					</table:table>
+				</page:list>
+	
+</div>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccContent" object="${wcccontent}" path="/wcccontents" z="rDFBUyJd0i6XUwLa6GpFY7f3cTA=">
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccContent_isDeleted" object="${wcccontent}" z="hsXwabZ/VkrqRJ7gg76N2TAiJDM="/>
+        <field:display field="title" id="s_com_nineclient_model_WccContent_title" object="${wcccontent}" z="M+nH9Ouq+npINCrf8UQnyfkfSvo="/>
+        <field:display field="userName" id="s_com_nineclient_model_WccContent_userName" object="${wcccontent}" z="PtlX9HPrBQTHnE82twdH5GslVkU="/>
+        <field:display field="isPrizeCommit" id="s_com_nineclient_model_WccContent_isPrizeCommit" object="${wcccontent}" z="22Pnew/3PVJ4sXGT6NryH35nPFc="/>
+        <field:display field="isCheck" id="s_com_nineclient_model_WccContent_isCheck" object="${wcccontent}" z="WKX9ad7KoEojFJEIlteE5rhgzcc="/>
+        <field:display field="contentUrl" id="s_com_nineclient_model_WccContent_contentUrl" object="${wcccontent}" z="q0paUfVgJgIjy9LpL+PXfrPfz6s="/>
+        <field:display field="content" id="s_com_nineclient_model_WccContent_content" object="${wcccontent}" z="TcAp3/95nrre2el9dG96mBZPGzA="/>
+        <field:display field="praiseCount" id="s_com_nineclient_model_WccContent_praiseCount" object="${wcccontent}" z="PBqs+/+JC28xtfscyEOYGvO7u1g="/>
+        <field:display field="clickCount" id="s_com_nineclient_model_WccContent_clickCount" object="${wcccontent}" z="TCl4s84u+cQS9BJVkdzVlNEgrEU="/>
+        <field:display field="platformUser" id="s_com_nineclient_model_WccContent_PlatformUser" object="${wcccontent}" z="OMdFEeLon4pvga9SsiuvKypz8vc="/>
+        <field:display date="true" dateTimePattern="${wccContent_inserttime_date_format}" field="insertTime" id="s_com_nineclient_model_WccContent_insertTime" object="${wcccontent}" z="EPnqfCuAg57ev68GKsGxCSjEP3A="/>
+        <field:display field="isVisible" id="s_com_nineclient_model_WccContent_isVisible" object="${wcccontent}" z="+aiRLtAwsKTGJaFi1FGufCAapIM="/>
+    </page:show>
+</div>

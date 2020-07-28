@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:spring="http://www.springframework.org/tags" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<spring:url value="/styles/mystyle.css" var="mycss"></spring:url>
+
+	<link rel="stylesheet" type="text/css" href="${mycss}" />
+	
+	<link rel="stylesheet" href="/ump/ui/artDialog/ui-dialog.css" />
+	<script src="/ump/ui/artDialog/dialog-plus.js"><!-- required for FF3 and Opera --></script>
+
+	<spring:url value="/ui/kindeditor/kindeditor.js" var="kind"></spring:url>
+	<script src="${kind}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+
+<style>
+.metro table {
+	border: 0;
+	background: transparent;
+}
+</style>
+<style>
+@IMPORT url("/ump/styles/selectTree.css");
+</style>
+<SCRIPT type="text/javascript" src="/ump/js/selectTree_materials.js">
+	//selectTree;
+</SCRIPT>
+
+	<script>
+<![CDATA[
+	   $(function(){
+		   loadTree("/ump/wccautokbses/treePlatform");
+			 
+			 //var values = $("select").val();
+			 
+		   $('.delete').on('click',function(){
+			   var id = $(this).attr('id');
+			   var url = "/ump/wccmaterialses/ajaxdelete?id="+id;
+			   
+			   $.post("/ump/wccmaterialses/checkUsed", {
+					"id" : id
+				}, function(data) {
+					if(data==0){
+					   if(window.confirm("确定要删除吗?")){
+						   $.get(url,function(){
+							   window.location.reload();
+						   });
+					   }
+					}else{
+						alert("有关联数据，无法删除");
+					}
+				});
+			   
+			   
+
+// 			   $.get("ajaxdelete",{},function{
+// 				   $(this).parent().parent().remove();
+// 			   });
+		   });
+
+			var d = dialog({align: 'top'});
+				
+			$(".opt").hover(function(){
+				var content = $(this).children('img').attr("alt");
+				d.content(content);
+				d.show(this);
+			},function(){
+				d.close();
+			});
+
+
+		   
+			KindEditor.ready(function(K) {
+					var uploadbutton = K.uploadbutton({
+						button : K('#uploadButton')[0],
+						fieldName : 'imgFile',
+						url : '/ump/ui/kindeditor/jsp/upload_json.jsp?dir=wx_image&maxSize=1024',
+						afterUpload : function(data) {
+							if (data.error === 0) {
+								var platform =  $('#wccPlatformUsers').val() 
+								if(platform.length==0){
+									alert("请先选择平台");
+									return false;
+								}
+								var url = K.formatUrl(data.url,'absolute');
+								$.ajax({
+									url:'/ump/wccmaterialses/ajaxupload?url='+url+'&title='+data.fileName +'&plat='+platform,
+									success:function(){
+									location.reload();
+									}
+								});
+							} else {
+								alert(data.message);
+							}
+						},
+						afterError : function(str) {
+							alert('自定义错误信息: ' + str);
+						}
+					});
+					
+					$("input[name='imgFile']").css("top","-30px").css('width','120px').css('cursor','pointer');
+					uploadbutton.fileBox.change(function(e) {
+						uploadbutton.submit();
+					});
+				});
+			});
+	   
+	  		function show_edit(obj,id){
+	  			var title = $(obj).parent().parent().find('.tupian_dandiv_tit')[0];
+	  			var matitle = $("#title_"+id).html();
+	  			var user = window.prompt("文件名",matitle);
+				if(user!=null){
+	  			$.get('/ump/wccmaterialses/ajaxUpdateTitle?id='+ id +'&title='+user,function(){
+	  				$(title).text(user);
+	  			});
+					
+				}
+	  		}
+	  		function toTop() {
+				location.hash="top";
+			}
+ ]]>  
+	</script>
+
+
+	<div class="containout" id="containout" style="position: relative; z-index: 0;">
+		<div class="contain" id="contain">
+								<a name="top"></a>
+			<div class="topic">素材管理</div>
+			<div class="top_menu">
+				<div class="menu">
+					<ul>
+						<![CDATA[
+							<li><a href="?WccMaterialsType=IMAGETEXT&sortFieldName=insertTime&sortOrder=DESC">图文消息</a></li>
+							<li style="border-bottom: 5px solid #069dd5;"><a href="?WccMaterialsType=PICTURE&sortFieldName=insertTime&sortOrder=DESC">图片</a></li>
+							<li><a href="?WccMaterialsType=SOUNDS&sortFieldName=insertTime&sortOrder=DESC">语音</a></li>
+							<li><a href="?WccMaterialsType=VIDEO&sortFieldName=insertTime&sortOrder=DESC">视频</a></li>
+						]]>
+					</ul>
+				</div>
+				<input type="hidden" id="WccMaterialsType" value="PICTURE"/>	
+				<div class="top_search">
+					<div class="top_search_lr">
+						<span>公众平台：</span>
+						<div class="input-control text" style="width: 270px;float: right;">
+							<input id="SelVals" type="text" readonly="readonly"
+								style="width: 270px;background: url('/ump/resources/images/sanjiao.png') no-repeat scroll 98% center rgba(0, 0, 0, 0);cursor: pointer;" placeholder="全部"
+								onclick="selectShowMenu();" value="${selVal}"/> <input id="SelIds"
+								name="platformUser" type="hidden" value="${SelIds}"/>
+							<div id="selectMenuContent" class="menuContent"
+								style="display: none; position: absolute; z-index: 99;">
+								<ul id="selectTreeDemo" class="ztree"
+									style="margin-top: 0; width: 270px; max-height: 300px; padding-left: 0px; margin-left: 0px;"></ul>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+
+			<div class="count_list">
+				<div class="middle_search_lr2">
+					公众平台：<select id="wccPlatformUsers" name="wccPlatformUsers">
+							<c:forEach items="${plats}" var="p">
+								<option value="${p.id }">${p.account}</option>
+							</c:forEach>
+						</select>
+				</div>
+
+				<div class="middle_sc">
+					<div class="form_wenben_tk">
+						<input type="button" id="uploadButton" value="上传" />
+					</div>
+				</div>
+
+				<div style="float: left; line-height:40px;margin-left:30px;color: #7d7d7d;">大小:≤1M，格式:jpg</div>
+			</div>
+			<div>
+				<c:forEach var="v" items="${wccmaterialses}">
+					<div class="tupian_dandiv">
+						<!--图片消息展示-->
+						<div class="tupian_dandiv_img">
+							<img src="${v.thumbnailUrl}" id="saveImage" />
+						</div>
+						<div class="tupian_dandiv_tit" id="title_${v.id}">${v.title }</div>
+						<div class="tupian_dandiv_gongju">
+							<div class="tupian_dandiv_gongjulr opt" style="border-right: 1px solid #e5e5e5;" onClick="window.open('download/${v.id}')">
+								<img src="/ump/resources/images/tuwen_index_42.png" alt="下载" />
+							</div>
+							<div class="tupian_dandiv_gongjulr opt" style="border-right: 1px solid #e5e5e5;" onClick="show_edit(this,${v.id})">
+								<img src="/ump/resources/images/tuwen_index_27.png" alt="编辑" />
+							</div>
+							<div class="tupian_dandiv_gongjulr delete opt" id="${v.id}">
+								<img src="/ump/resources/images/tuwen_index_29.png" alt="删除" style="border: none;" />
+							</div>
+						</div>
+					</div>
+				</c:forEach>
+			</div>
+			<img src="/ump/resources/images/tuwen_index_33_27.png" width="40" height="26" alt="" class="eidor" id="eidor" /> <img src="/ump/resources/images/tuwen_index_33_31.png" width="40" height="26" alt="" class="delet" id="delet" />
+		</div>
+	</div>
+	<img src="/ump/resources/images/back_top.png" onclick="toTop();" style="cursor: pointer; right:15px;position: fixed;width: 20px;height: 20px;overflow: hidden;bottom: 35px;"></img>
+</div>

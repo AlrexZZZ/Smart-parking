@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default_pub" name="voctagses/list">
+        <put-attribute name="body" value="/WEB-INF/views/voctagses/list.jspx"/>
+    </definition>
+    <definition extends="pub" name="voctagses/result">
+        <put-attribute name="body" value="/WEB-INF/views/voctagses/result.jspx"/>
+    </definition>
+   
+<definition extends="default_pub" name="voctagses/show">
+        <put-attribute name="body" value="/WEB-INF/views/voctagses/show.jspx"/>
+    </definition>
+<definition extends="default_pub" name="voctagses/create">
+        <put-attribute name="body" value="/WEB-INF/views/voctagses/create.jspx"/>
+    </definition>
+<definition extends="default_pub" name="voctagses/update">
+        <put-attribute name="body" value="/WEB-INF/views/voctagses/update.jspx"/>
+    </definition>
+</tiles-definitions>

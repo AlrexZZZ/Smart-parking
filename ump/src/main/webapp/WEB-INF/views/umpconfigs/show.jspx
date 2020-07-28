@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_UmpConfig" object="${umpconfig}" path="/umpconfigs" z="dMWV4Y8krSeo1XtqwT/FwdsOYig=">
+        <field:display field="name" id="s_com_nineclient_model_UmpConfig_name" object="${umpconfig}" z="cnipzKS1kCiDggLWvPh/IuZ62CM="/>
+        <field:display field="keyValue" id="s_com_nineclient_model_UmpConfig_keyValue" object="${umpconfig}" z="cR+ljXLR1Q5MUHRqn9G5mLhq9to="/>
+        <field:display field="remarks" id="s_com_nineclient_model_UmpConfig_remarks" object="${umpconfig}" z="jRqRzWXI/XLOXr5A1ouk6OTmugg="/>
+    </page:show>
+</div>

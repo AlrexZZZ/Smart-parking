@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccAnswer" object="${wccanswer}" path="/wccanswers" z="EYbZb/5ya7usDuyZ+0FdSK6vY94=">
+        <field:display field="answer" id="s_com_nineclient_model_WccAnswer_answer" object="${wccanswer}" z="ujjR7zV0AjVI0fWPUOW4aeuxe2A="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccAnswer_isDeleted" object="${wccanswer}" z="Vy4NbMTvFLfa92HFBznQx1OxHCE="/>
+        <field:display field="userName" id="s_com_nineclient_model_WccAnswer_userName" object="${wccanswer}" z="VmVel1mBKWkiO/pMe6NQ6ggXk10="/>
+        <field:display field="userPhone" id="s_com_nineclient_model_WccAnswer_userPhone" object="${wccanswer}" z="lnArjZQfPPnqMLY4hjDOKt0/gIE="/>
+    </page:show>
+</div>

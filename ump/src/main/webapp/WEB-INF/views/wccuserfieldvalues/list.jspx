@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_WccUserFieldValue" items="${wccuserfieldvalues}" z="qzw0LgU4OcDUE1TVuYpqqDyh67I=">
+        <table:table data="${wccuserfieldvalues}" id="l_com_nineclient_model_WccUserFieldValue" path="/wccuserfieldvalues" z="LWo+WKG1jXRtcaZqCE3Big9X4tE=">
+            <table:column id="c_com_nineclient_model_WccUserFieldValue_isDeleted" property="isDeleted" z="b5jFvQcd6QxQd7qnw5Jr4dgvy2g="/>
+            <table:column id="c_com_nineclient_model_WccUserFieldValue_isVisable" property="isVisable" z="Vm7R0SEzROMRm8ifJfkF43Y+pJg="/>
+            <table:column date="true" dateTimePattern="${wccUserFieldValue_createtime_date_format}" id="c_com_nineclient_model_WccUserFieldValue_createTime" property="createTime" z="5u4ZSntgNZXrFoT1xBEoOJABiXM="/>
+            <table:column id="c_com_nineclient_model_WccUserFieldValue_remark" property="remark" z="CqVPah44h2Y8kl/bqagq0ctcwXg="/>
+            <table:column id="c_com_nineclient_model_WccUserFieldValue_userFieldValue" property="userFieldValue" z="8XQGxcGTnRdIOzE87ioxDp1tpPI="/>
+        </table:table>
+    </page:list>
+</div>

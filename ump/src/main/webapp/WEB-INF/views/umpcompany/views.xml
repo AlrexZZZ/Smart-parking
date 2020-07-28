@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+ <definition extends="default_pub" name="umpcompanys/companyRegisterList">
+        <put-attribute name="body" value="/WEB-INF/views/umpcompany/companyRegisterList.jspx"/>
+ </definition>
+    
+ <definition extends="pub" name="umpcompanys/result">
+        <put-attribute name="body" value="/WEB-INF/views/umpcompany/result.jspx"/>
+ </definition>
+  <definition extends="default_pub" name="umpcompanys/list">
+        <put-attribute name="body" value="/WEB-INF/views/umpcompany/list.jspx"/>
+    </definition>
+<definition extends="default_pub" name="umpcompanys/show">
+        <put-attribute name="body" value="/WEB-INF/views/umpcompany/show.jspx"/>
+    </definition>
+<definition extends="register" name="umpcompanys/register">
+        <put-attribute name="body" value="/WEB-INF/views/umpcompany/register.jspx"/>
+    </definition>
+<definition extends="register" name="umpcompanys/registerSuccess">
+        <put-attribute name="body" value="/WEB-INF/views/umpcompany/registerSuccess.jspx"/>
+    </definition>
+<definition extends="register" name="umpcompanys/tmallRegisterFail">
+        <put-attribute name="body" value="/WEB-INF/views/umpcompany/tmallRegister.jspx"/>
+    </definition>
+<definition extends="default_pub" name="umpcompanys/update">
+        <put-attribute name="body" value="/WEB-INF/views/umpcompany/update.jspx"/>
+    </definition>
+    
+    
+</tiles-definitions>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+
+<definition extends="default_pub" name="tailong/sa_qrCodeList">
+ <put-attribute name="body" value="/WEB-INF/views/tailong/serviceAdvisor/sa_qrCodeList.jspx"/>
+</definition>
+
+<definition extends="default_pub" name="tailong/sa_qrCodeCreate">
+ <put-attribute name="body" value="/WEB-INF/views/tailong/serviceAdvisor/sa_qrCodeCreate.jspx"/>
+</definition>
+
+
+</tiles-definitions>

@@ -1,0 +1,973 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:spring="http://www.springframework.org/tags" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<style>
+		@IMPORT url("/ump/styles/url.css");
+	</style>
+	<script type="text/javascript">
+		var audMenu = ${audMenu};
+		function closePage(id){
+			dilogCenter(id);
+			$("#"+id).toggle();
+			$("#fade").toggle();
+		}
+	</script>
+	<script type="text/javascript" src="/ump/js/nineclient/vocreport/nineclient.js"><!--ss--></script>
+	<div id="fade" class="black_overlay">锁屏div</div>
+	<DIV style="display: none;" class="search" id="key_div" >
+				<div class="close">
+					<img src="/ump/images/close.png" width="24" height="24"
+					onclick="javascript:closePage('key_div');" style="cursor: pointer;" />
+				</div>
+				<div class="mtitle">
+					<i class="on-left"><img src="/ump/images/search.png" width="14" height="14"/></i>查询
+				</div>
+				<FORM id="query_key_form">
+				<div class="grid">
+					<div class="row">
+						<DIV class="span gridTitle">分类名称：</DIV>
+						<DIV class="span4">
+							<select id="parentName" class="publicSize" onchange="childeSelect(this.value)">
+								<option value="-1">请选择</option>'
+							</select>
+						</DIV>
+					</div>
+					<div class="row">
+					<DIV class="span gridTitle">子行业：</DIV>
+						<DIV class="span4">
+							<select id="childeName" class="publicSize">
+								<option value="-1">请选择</option>
+							</select>
+						</DIV>
+					</div>
+					<div class="row">
+					<DIV class="span gridTitle">关键词：</DIV>
+						<DIV class="span4">
+							<INPUT id="_keyWord" class="publicSize" type="text"/>
+						</DIV>
+					</div>
+				</div>
+				</FORM>
+				<DIV class="btnCenterNoP">
+					<BUTTON class="info" onclick="loadKeyList();closePage('key_div');">查询</BUTTON>
+					<BUTTON class="warning" onclick="$('#query_key_form')[0].reset();">重置</BUTTON>
+				</DIV>
+	</DIV>
+			<div style="width: 20%;float: left;border: 1px solid #e4e4e4;">
+						<div style="height: 46px;line-height:46px; background: #edf1f9; border-bottom: none;">
+							<span style="margin-left: 30px;text-align: center;font-family:Microsoft Yahei">词库分类管理</span>
+						</div>
+						<div class="zTreeDemoBackground left"
+						style="border: 0px solid;">
+						<ul id="treeDemo" class="ztree"></ul>
+						</div>
+			</div>
+			<div style="width: 78%;margin-left:2%;float: left;">
+				<div class="buttondiv" style="height: 46px;margin-top:0px; background: #edf1f9; border: 1px solid #e4e4e4; border-bottom: none;">
+						<a style="cursor: pointer;" onclick="queryKey();">
+							<i class="on-left"><img src="/ump/images/search.png" width="14" height="14" /></i>查询关键词
+						</a>&#160;&#160;
+						<a style="cursor: pointer;" onclick="addWordCatagory();">
+						<i class="on-left"><img src="/ump/images/add.png" width="14" height="14" /></i>
+						添加分类</a>&#160;&#160;
+						<a style="cursor: pointer;" onclick="editNode();">
+							<i class="on-left"><IMG src="/ump/images/editor.png"  width="14" height="14" /></i>编辑分类
+						</a>&#160;&#160;
+						<a style="cursor: pointer;" onclick="addKeyWordWindow();">
+							<i class="on-left"><img src="/ump/images/add.png" width="14" height="14" /></i>添加关键词
+						</a>&#160;&#160;
+						<a style="cursor: pointer;" onclick="editKeyWordWindow();">
+							<i class="on-left"><img src="/ump/images/editor.png" width="14" height="14" /></i>编辑关键词
+						</a>&#160;&#160;
+						<a style="cursor: pointer;" onclick="deleteNode();">
+							<i class="on-left"><img src="/ump/images/delete.png" width="14" height="14" /></i>删 除
+						</a>&#160;&#160;
+					</div>
+					<div>
+						<TABLE class="table striped hovered">
+							<THEAD>
+								<TR>
+									<TH></TH>
+									<TH>关键词名称</TH>
+									<TH>添加时间</TH>
+									<TH>审核状态</TH>
+									<TH>操作</TH>
+								</TR>
+							</THEAD>
+							<TBODY id="dataBoday"></TBODY>
+						</TABLE>
+						<div align="right" style="text-align: right;" id="dataFoot"><!--  --></div>
+				  </div>
+			</div>
+
+		<DIV id="addCatagory" style="display: none;">
+			<form id="formCatagory" action="" method="post" style="width: 200px;">
+				<label>名称</label>
+				<div class="input-control select" style="width: 180px;">
+					<input id="catagoryName" type="text" name="name" value="" />
+				</div>
+				<button id="subbtn" type="button" class="info"
+					style="margin-right: 30px;">确定</button>
+				<button class="button" type="button" onclick="$.Dialog.close()">取消</button>
+			</form>
+
+		</DIV>
+	<style>
+.metro .button {
+	padding: 0px;
+}
+
+.zTreeDemoBackground {
+	overflow-x: auto;
+	white-space: nowrap;
+}
+</style>
+	<SCRIPT type="text/javascript">
+		<![CDATA[
+		$(document).ready(function() {
+			loadKeyList(1);
+			parentSelect("parentName");
+		})
+		$(document).ready(function() {
+			loadTree();
+		});
+		function zTreeOnClick(){
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+			var sNodes = zTree.getSelectedNodes();
+			var pNode;
+			var param={};
+			if (sNodes.length > 0) {
+				pNode = sNodes[0].getParentNode();
+			}else{
+				return;
+			}
+			param.page=1;
+			param.size=10;
+			var parentId="";
+			if(pNode){
+				parentId=pNode.id;
+				if(sNodes[0].isParent){
+					//是父节点 加载所有关键词
+					param.pId=sNodes[0].id;
+				}else{
+				//
+					var childId=sNodes[0].id;
+					var keyWord="";
+					if(parentId!=-1){ 
+						param.pId=parentId;
+					}
+					if(childId!=-1){
+						param.cId=childId;
+					}
+				}
+				$("#parentName").val(parentId);
+				$("#childeName").val(childId);
+				var url = "/ump/vocwordcategorys/keyWordList";
+				dataAjax(url, param, null, null, createData_Gride);
+				
+			}else{
+				//点击全部
+				var url = "/ump/vocwordcategorys/keyWordList";
+				$("#parentName").val(0);
+				$("#childeName").val(1);
+				$("#_keyWord").val('');
+				dataAjax(url, {}, null, null, createData_Gride);
+				return;
+			}
+		}
+		function validate() {
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+			var nodess = zTree.getSelectedNodes();
+			if (nodess == null || nodess.length < 1) {
+				var not = $.Notify({
+					caption : "",
+					content : "请选择一个节点",
+					timeout : 5000
+				// 10 seconds
+				});
+				return false;
+			}
+			if (nodess != null && nodess.length > 1) {
+				var not = $.Notify({
+					caption : "",
+					content : "请选择分类名称",
+					timeout : 5000
+				// 10 seconds
+				});
+				return false;
+			}
+			return true;
+		}
+		function addBusinessType(){
+			if (!validate()) {
+				return;
+			}
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+			var nodess = zTree.getSelectedNodes();
+			var pN=nodess[0].getParentNode();
+			var content = '';
+			if(!pN){//是根节点
+				//添加子行业
+			 content = '<form id="formCatagory" width="400px;">'
+					+ '<input id="pId" type="hidden" name="pId">'
+					+ '<input id="pLevel" type="hidden" name="pLevel">'
+					+'<div class="grid">'
+					+'<div class="row" style="margin-top: 15px;">'
+						+ '<div class="span gridTitle" style="text-align:right;line-height:28px;">上级分类：</div>'
+						+ '<div class="span1 gridValueSpan"><span id="pName" style="text-align:right;line-height:28px;"></span></div>'
+					+'</div>'
+					+'<div class="row">'	
+						+ '<div class="span gridTitle" style="text-align:right;line-height:28px;">子行业：</div>'
+						+ '<div class="span2" ><select id="businessId" name="businessId" class="publicSize"></select>'
+						+ '</div> '
+					+ '</div> '
+					+ '</div>' 
+					+ '<div class="btnCenterNoP">'
+					+ '<input class="info" type="button" onclick="addCatagorySubmit();" value="确定"></input>'
+					+ '<button class="warning" type="button" onclick="$.Dialog.close()">取消</button>'
+				+ '</div>' 
+					+ '</form>';
+					
+			}else{
+				return;
+			}
+			dilogWind("add",content,nodess[0],"添加子行业");
+			//加载子行业
+			loadBusinessType("businessId");
+		}
+		function loadBusinessType(id){
+			var url = "/ump/umpbusinesstypes/queryCompanyBusinessTypes";
+			dataAjax(url, {}, null, null, createSelect, id,"businessName");
+		}
+		function addWordCatagory() {
+			if (!validate()) {
+				return;
+			}
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+			var nodess = zTree.getSelectedNodes();
+			var pN=nodess[0].getParentNode();
+			var nodeI;
+			if(pN!=null){
+				nodeI=pN.id;
+			}
+			if (nodess[0].isParent||nodeI==1) {
+			}else{
+				$.Notify({
+					caption : "",
+					content : "此节点不可添加子节点",
+					timeout : 3000
+				});
+				return;
+			}
+			var content = '<form id="formCatagory" width="400px;">'
+				+ '<input id="pId" type="hidden" name="pId">'
+				+ '<input id="pLevel" type="hidden" name="pLevel">'
+				+'<div class="grid">'
+				+'<div class="row" style="margin-top: 15px;">'
+					+ '<div class="span gridTitle" style="text-align:right;line-height:28px;">上级分类：</div>'
+					+ '<div class="span1 gridValueSpan"><span id="pName" style="text-align:right;line-height:28px;"></span></div>'
+				+'</div>'
+				+'<div class="row">'	
+					+ '<div class="span gridTitle" style="text-align:right;line-height:28px;">子类名称：</div>'
+					+ '<div class="span2" ><input id="nodeName" type="text" class="publicSize" maxlength="10"><span style="color: red;">*</span>'
+					+ '</div> '
+				+ '</div> '
+				+ '</div>' 
+				+ '<div class="btnCenterNoP">'
+				+ '<input class="info" type="button" onclick="addCatagorySubmit();" value="确定"></input>'
+				+ '<button class="warning" type="button" onclick="$.Dialog.close()">取消</button>'
+			+ '</div>' 
+				+ '</form>';
+			dilogWind("add",content,nodess[0],"添加词库分类");
+		}
+		function dilogWind(imageName,content,node,title){
+			$
+			.Dialog({
+				overlay : true,
+				shadow : true,
+				flat : true,
+				draggable : true,
+				icon : '<img src="/ump/images/'+imageName+'.png"/>',
+				title : 'Flat window',
+				content : '',
+				width : 400,
+				padding : 10,
+				onShow : function(_dialog) {
+					$.Dialog.title(title);
+					$.Dialog.content(content);
+					$.Metro.initInputs();
+				}
+			});
+		$("#pName").html(node.name);
+		$("#pId").val(node.id);
+		$("#pLevel").val(node.level);
+		}
+		function addCatagorySubmit() {
+			var nodeName = $("#nodeName").val();
+			var pId = $("#pId").val();
+			var levela = $("#pId").val();
+			if (nodeName == "") {
+				$.Notify({
+					caption : "",
+					content : "节点名称不能为空",
+					timeout : 5000
+				// 10 seconds
+				});
+				return;
+			}
+			var nodesName = strlen(nodeName);
+			if(nodesName > 10){
+				$.Notify({
+					caption : "",
+					content : "最多支持10个字符",
+					timeout : 5000
+				// 10 seconds
+				});
+				return;
+			}
+			
+			if (pId == "") {
+				$.Notify({
+					caption : "",
+					content : "请选择父节点",
+					timeout : 5000
+				// 10 seconds
+				});
+				return;
+			}
+			$.ajax({
+				url : "/ump/vocwordcategorys/addNode",
+				dataType : "text",
+				type : "POST",
+				data : {
+					pId : pId,
+					name : nodeName,
+					level:parseInt($("#pLevel").val())+1
+				},
+				error : function(msg) {
+				},
+				success : function(data) {
+					$.Notify({
+						caption : "",
+						content : data,
+						timeout : 5000
+					// 10 seconds
+					});
+					loadTree();
+					$.Dialog.close();
+				}
+			});
+		}
+		function editNode() {
+			if (!validate()) {
+				return;
+			}
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+			var nodess = zTree.getSelectedNodes();
+			if (nodess[0].isDefault) {
+				$.Notify({
+					caption : "",
+					content : "系统默认分类不可编辑！",
+					timeout : 2000
+				// 10 seconds
+				});
+				return;
+			}
+			$
+					.Dialog({
+						overlay : true,
+						shadow : true,
+						flat : true,
+						draggable : true,
+						icon : '<img src="/ump/images/editor.png"/>',
+						title : 'Flat window',
+						content : '',
+						width : 400,
+						padding : 10,
+						onShow : function(_dialog) {
+							var content = '<form id="formCatagory" width="400px;">'
+									+ '<input id="nodeId" type="hidden" name="nodeId">'
+									+ '<input id="edit_level" type="hidden" name="level">'
+								+'<div class="grid">'
+									+'<div class="row" style="margin-top: 15px;">'
+									+ '<div class="span gridTitle">上级分类：</div>'
+									+ '<div class="span1 gridValueSpan"><span id="pName"></span></div>'
+									+ '</div>'
+									+'<div class="row">'
+									+ '<div class="span gridTitle">子类名称：</div>'
+									+ '<div class="span2"><input id="edit_nodeName" type="text" class="publicSize" maxlength="10"><span style="color: red;">*</span>'
+									+ '</div> '
+									+'</div>'
+								+ '</div>'
+								+ '<div class="btnCenterNoP">'
+								+ '<input class="info" type="button" onclick="editNodeSubmit();" value="确定"></input> '
+								+ '<button class="warning" type="button" onclick="$.Dialog.close()">取消</button>'
+								+ '</div>'
+									+ '</form>';
+							$.Dialog.title("编辑分类");
+							$.Dialog.content(content);
+							$.Metro.initInputs();
+						}
+					});
+			$("#pName").html(nodess[0].getParentNode().name);
+			$("#nodeId").val(nodess[0].id);
+			$("#edit_level").val(nodess[0].level);
+			$("#edit_nodeName").val(nodess[0].name);
+
+		}
+		function editNodeSubmit() {
+			var nodeName = $("#edit_nodeName").val();
+			var nodeId = $("#nodeId").val();
+			if (nodeName == "") {
+				$.Notify({
+					caption : "",
+					content : "节点名称不能为空",
+					timeout : 5000
+				// 10 seconds
+				});
+				return;
+			}
+			var nodesName2 = strlen(nodeName);
+			if(nodesName2 > 10){
+				$.Notify({
+					caption : "",
+					content : "最多支持10个字符",
+					timeout : 5000
+				// 10 seconds
+				});
+				return;
+			}
+			if (nodeId == "") {
+				$.Notify({
+					caption : "",
+					content : "请选择节点",
+					timeout : 5000
+				// 10 seconds
+				});
+				return;
+			}
+			var param={nodeId : nodeId,
+					level:$("#edit_level").val(),
+					nodeName : nodeName};
+			var url="/ump/vocwordcategorys/editNode";
+			dataAjax(url, param, Notify, loadTree);
+			$.Dialog.close();
+		}
+		function deleteNode() {
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+			var nodess = zTree.getSelectedNodes();
+			if (nodess[0]!=undefined&&nodess != null && nodess[0].children != null
+					&& nodess[0].children.length != null
+					&& nodess[0].children.length > 0) {
+				var not = $.Notify({
+					caption : "",
+					content : "该分类下有数据，不得删除！",
+					timeout : 5000
+				// 10 seconds
+				});
+				return false;
+			}
+			
+			if (nodess == null || nodess.length < 1) {
+				var not = $.Notify({
+					caption : "",
+					content : "请选择分类名称",
+					timeout : 5000
+				// 10 seconds
+				});
+				return false;
+			}
+			if (nodess[0].isDefault) {
+				$.Notify({
+					caption : "",
+					content : "系统默认分类不可删除！",
+					timeout : 5000
+				// 10 seconds
+				});
+				return;
+			}
+			var pNode;
+			var param={};
+			if (nodess.length > 0) {
+				pNode = nodess[0].getParentNode();
+			}else{
+				return;
+			}
+			param.page=1;
+			param.size=10;
+			var parentId="";
+			if(pNode){
+				parentId=pNode.id;
+				if(nodess[0].isParent){
+					//是父节点 加载所有关键词
+					param.pId=nodess[0].id;
+				}else{
+				//
+					var childId=nodess[0].id;
+					var keyWord="";
+					if(parentId!=-1){ 
+						param.pId=parentId;
+					}
+					if(childId!=-1){
+						param.cId=childId;
+					}
+				}
+			}
+			var url = "/ump/vocwordcategorys/keyWordList";
+			var keyList = ajaxJsonReturn(url, param);
+			var keys = eval("("+keyList+")");
+			if(keys.totalCount>0){
+			    Notify("该分类下有数据，不得删除！",2000);
+			    return;
+			}
+			if (confirm("是否要删除此分类名称？")) {
+				$.ajax({
+					url : "/ump/vocwordcategorys/deleteNode",
+					dataType : "text",
+					type : "POST",
+					data : {
+						nodeId : nodess[0].id
+					},
+					error : function(msg) {
+					},
+					success : function(data) {
+						var msg = eval(data);
+						$.Notify({
+							caption : "",
+							content : msg,
+							timeout : 5000
+						// 10 seconds
+						});
+						loadTree();
+						$.Dialog.close();
+					}
+				});
+			}
+		}
+		function loadTree() {
+			var setting = {
+				view: {
+					showIcon:true,
+					selectedMulti: false
+					//addHoverDom: addDiyDom,
+					//removeHoverDom: removeHoverDom
+					},
+				data : {
+					simpleData : {
+						enable : true
+					}
+				},
+				callback: {
+					onClick: zTreeOnClick
+				}
+			/* 	edit:{
+					enable: true,
+					editNameSelectAll: true,
+					removeTitle: "删除",
+					renameTitle:'编辑',
+					showRemoveBtn:setOptBtn,
+					showRenameBtn:setOptBtn
+				} */
+			};
+			$.ajax({
+				url : "/ump/vocwordcategorys/loadCategoryList",
+				dataType : "text",
+				type : "POST",
+				data : {},
+				error : function(msg) {
+				},
+				success : function(data) {
+					zNodes = eval('(' + data + ')');
+					$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+				}
+			});
+		}
+		function addKeyWordWindow() {
+			if (!validate()) {
+				return;
+			}
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+			var nodess = zTree.getSelectedNodes();
+			if (nodess[0].level!=2) {
+				$.Notify({
+					caption : "",
+					content : "此节点不可添加关键词！",
+					timeout : 5000
+				// 10 seconds
+				});
+				return;
+			}
+			$
+					.Dialog({
+						overlay : true,
+						shadow : true,
+						flat : true,
+						draggable : true,
+						icon : '<img src="/ump/images/add.png"/>',
+						title : 'Flat window',
+						content : '',
+						width : 400,
+						padding : 10,
+						onShow : function(_dialog) {
+							var content = '<form id="formCatagory" width="400px;">'
+									+ '<input id="nodeId" type="hidden" name="nodeId">'
+								+'<div class="grid">'
+								+'<div class="row">'
+									+ '<div class="span gridTitleBig">上级分类：</div>'
+									+ '<div class="span1"><span id="pName" class="fontLine"></span></div>'
+								+'</div>'	
+								+'<div class="row">'
+									+'<div class="span gridTitleBig">子类名称：</div>'
+									+ '<div class="span1"><span id="nodeName" class="fontLine"></span></div>'
+								+'</div>'	
+								+'<div class="row">'
+								+'<div class="span gridTitleBig">关键词名称：</div>'
+									+ '<div class="span2"><input id="keyWord" type="text" class="publicSize" name="keyWord"><span style="color: red;">*</span>'
+									+ '</div>'
+									+ '</div>'
+								+ '</div>' 
+								+'<div class="btnCenterNoP">'
+								+ '<input class="info" type="button" onclick="addKeyWord();" value="确定"></a>'
+								+ '<input class="warning" type="button" onclick="$.Dialog.close()" value="取消"/>'
+								+ '</div>' 
+								+ '</form>';
+							$.Dialog.title("添加关键词");
+							$.Dialog.content(content);
+							$.Metro.initInputs();
+						}
+					});
+			$("#pName").html(nodess[0].getParentNode().name);
+			$("#nodeName").html(nodess[0].name);
+			$("#nodeId").val(nodess[0].id);
+
+		}
+		function addKeyWord() {
+			if ($("#nodeId").val() == "" || $("#nodeId").val() == null) {
+				$.Notify({
+					caption : "",
+					content : "请选择词库分类",
+					timeout : 5000
+				// 10 seconds
+				});
+				return;
+			}
+			if ($("#keyWord").val() == "" || $("#keyWord").val() == null
+					|| $.trim($("#keyWord").val()) == "") {
+				Notify("关键词不能为空", 2000);
+				return;
+			}
+			var url="/ump/vocwordcategorys/addKeyWord";
+			var param={
+					nodeId : $("#nodeId").val(),
+					keyWord : $("#keyWord").val()
+				};
+			dataAjax(url, param, Notify, zTreeOnClick);
+			$.Dialog.close();
+		}
+		function editKeyWordWindow() {
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+			var arr = new Array();
+			var val = "";
+			$('input[name="checkBoxName"]:checked').each(function() {
+				arr.push($(this).val());
+			});
+			if (arr.length != 1) {
+				Notify("请选择一条记录",
+					2000
+				);
+				return;
+			}
+			var keyWordData;
+			$
+					.ajax({
+						url : "/ump/vocwordcategorys/queryKeyWordById",
+						dataType : "text",
+						type : "POST",
+						data : {
+							id : arr[0]
+						},
+						error : function(msg) {
+						},
+						success : function(data) {
+							keyWordData = eval("(" + data + ")");
+							$
+									.Dialog({
+										overlay : true,
+										shadow : true,
+										flat : true,
+										draggable : true,
+										icon : '<img src="/ump/images/editor.png"/>',
+										title : 'Flat window',
+										content : '',
+										width : 400,
+										padding : 10,
+										onShow : function(_dialog) {
+											var content = '<div>'
+													+ '<input id="nodeId" type="hidden" name="nodeId">'
+													+ '<input id="keyId" type="hidden" name="keyId">'
+											+'<div class="grid">'		
+													+'<div class="row">'
+													+ '<div class="span gridTitleBig">上级分类：</div>'
+													+ '<div class="span2 gridValueSpan"><span id="pName"></span></div>'
+													+'</div>'
+													+'<div class="row">'
+													+ '<div class="span gridTitleBig">子类名称：</div>'
+													+ '<div class="span2 gridValueSpan"><span id="nodeName"></span></div>'
+													+'</div>'
+													+'<div class="row">'
+													+ '<div class="span gridTitleBig">关键词名称：</div>'
+													+ '<div class="span2"><input id="keyWord" class="publicSize" type="text" name="keyWord"><span style="color: red;">*</span>'
+													+ '</div>'
+													+ '</div>'
+													+ '<div class="row">'
+													+ '<div class="span1">'
+													+ '<input class=" info" type="button" onclick="editKeySubmit();" value="确定"></input></div>'
+													+ '<div class="span1">'
+													+ '<button class="warning"  onclick="$.Dialog.close()">取消</button> '
+													+ '</div>'
+													+ '</div>'
+											+ '</div>'
+											+ '</div>';
+											$.Dialog.title("编辑关键词");
+											$.Dialog.content(content);
+											$.Metro.initInputs();
+										}
+									});
+							var nodeId = keyWordData.vocWordCatagory.id;
+							var node = zTree.getNodeByParam("id", nodeId, null);
+							$("#pName").html(node.getParentNode().name);
+							$("#keyWord").val(keyWordData.name);
+							$("#keyId").val(keyWordData.id);
+							$("#nodeName").html(node.name);
+							$("#nodeId").val(nodeId);
+						}
+					});
+
+		}
+		function editKeySubmit() {
+			var nodeId = $("#nodeId").val();
+			if ($("#keyWord").val() == "" || $("#keyWord").val() == null
+					|| $("#keyWord").val() == undefined
+					|| $.trim($("#keyWord").val()) == "") {
+				Notify(
+					 "关键词不能为空",
+					2000
+				);
+				return;
+			}
+			var url="/ump/vocwordcategorys/editKeyWord";
+			var param={	nodeId:nodeId,
+					keyId : $("#keyId").val(),
+					keyWord : $("#keyWord").val()};
+			dataAjax(url, param, Notify, zTreeOnClick);
+			$.Dialog.close();
+			loadKeyList(1);
+		}
+		function queryKey() {
+			dilogCenter('key_div');
+			parentSelect("parentName");
+			$("#key_div").toggle();
+			$("#fade").toggle();
+		}
+		function parentSelect(id){
+			var url="/ump/vocwordcategorys/selectCategory";
+			var param={pId:1};
+			dataAjax(url, param,null, null, createSelect, id);
+		}
+		function childeSelect(pid){
+			var url="/ump/vocwordcategorys/selectCategory";
+			var param={pId:pid};
+			dataAjax(url, param,null, null, createSelect, "childeName");
+		}
+		function ajaxLoadData(url, param, id) {
+			$.ajax({
+				url : url,
+				async:false,
+				dataType : "text",
+				type : "POST",
+				data : param,
+				error : function(msg) {
+				},
+				success : function(data) {
+					var dataList = eval(data);
+					createSelect(dataList, id);
+				}
+			});
+		}
+
+		function loadKeyList(pageNo) {
+			var page;
+			if(pageNo==undefined){
+				page=1;
+			}else{
+				page=pageNo;
+			}
+			var param={};
+			param.page=page;
+			param.size=10;
+			var parentId=$("#parentName").val();
+			var childId=$("#childeName").val();
+			var keyWord=$("#_keyWord").val();
+			if(parentId!=-1){
+				param.pId=parentId;
+			}
+			
+			if(childId!=-1){
+				param.cId=childId;
+			}
+			if(keyWord!=undefined&&keyWord!=null&&$.trim(keyWord)!=""){
+				param.keyName=keyWord;
+			}
+			var url = "/ump/vocwordcategorys/keyWordList";
+			dataAjax(url, param, null, null, createData_Gride);
+		}
+		function createData_Gride(data) {
+			var model = eval("(" + data + ")");
+			var list = eval(model.dataJson);
+			var table = "";
+			for (var i = 0; i < list.length; i++) {
+				table += "<tr>";
+				table += "<td>";
+				table += "<input type='checkBox' name='checkBoxName' value='"+list[i].id+"'/>";
+				table += "</td>";
+				table += "<td>";
+				table += list[i].name;
+				table += "</td>";
+				table += "<td>";
+				table += formatData(list[i].createTime);
+				table += "</td>";
+				table += "<td>";
+				table += list[i].auditStatus
+				table += "</td>";
+				table += "<td>";
+				table += '<a href="javascript:deleteObject('
+						+ list[i].id
+						+ ','
+						+ model.pageNo
+						+ ')" alt="删除" title="删除"><img alt="删除" class="image" src="/ump/images/delete.png" title="删除"></a>';
+						if(audMenu){
+							table += list[i].auditStatus == '审核通过' ? ''
+							: '<a href="javascript:checkStatusWindow('
+									+ list[i].id
+									+ ','
+									+ model.pageNo
+									+ ');" alt="审核" title="审核"><img alt="审核" class="image" src="/ump/images/swatch.png" title="审核"></a>';
+						}else{
+							table +='';
+						}
+				table += "</td>";
+				table += "</tr>";
+			}
+			$("#dataBoday").html(table);
+			//if (model.totalCount > 0) {
+				var foot = Page(model, 'loadKeyList', 5,false);
+				$("#dataFoot").html(foot);
+			///} else {
+			//	$("#dataFoot")
+			//			.html(
+			//					'<tr><td  colspan="5"></td></tr>');
+			//}
+		}
+		function deleteObject(id, page) {
+			if (!confirm("确定删除吗?")) {
+				return;
+			}
+			$.ajax({
+				url : "/ump/vocwordexpressionses/delete",
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data : {
+					id : id
+				},
+				error : function(msg) {
+				},
+				success : function(data) {
+					$.Notify({
+						caption : "",
+						content : data,
+						timeout : 5000
+					});
+					loadKeyList(page);
+				}
+			});
+		}
+		function checkStatusWindow(id, page) {
+			if(!audMenu){
+				alert("无审核权限");
+				return;
+			}
+			$.Dialog({
+					overlay : true,
+					shadow : true,
+					flat : true,
+					icon : '<img src="images/swatch.png">',
+					title : '',
+					content : '',
+					width:240,
+					height:150,
+					padding : 10,
+					onShow : function(_dialog) {
+							var content = '<div class="grid">'
+									+ '<div class="row">'
+									+ '<div class="span0.5">'
+									+ '<input type="radio" name="status" checked="checked" value="1"/></div>'
+									+ '<div class="span1">'
+									+ '审核通过</div>'
+									+ '<div class="span0.5">'
+									+ '<input type="radio" name="status" value="2"/></div>'
+									+ '<div class="span1">'
+									+ '审核不通过</div>'
+									+ '</div>'
+								    + '</div>'
+								    + '<div class="btnCenterNoP">'
+									+ '<input class="info" type="button" value="确定" onclick="checkStatus('
+									+ id
+									+ ','
+									+ page
+									+ ')"/> '
+									+ '<button class="warning" type="button" onclick="$.Dialog.close()">取消</button> '
+								    + '</div>' 
+								    ;
+							$.Dialog.title("请选择");
+							$.Dialog.content(content);
+							$.Metro.initInputs();
+						}
+					});
+		}
+		function checkStatus(id, page) {
+			var status = $("input[name='status']:checked").val();
+			$.ajax({
+				url : "/ump/vocwordexpressionses/checkStatus",
+				dataType : "text",
+				type : "POST",
+				data : {
+					id : id,
+					status : status
+				},
+				error : function(msg) {
+				},
+				success : function(data) {
+					//刷新数据
+					loadKeyList(page);
+					$.Notify({
+						caption : "",
+						content : data,
+						timeout : 3000
+					});
+					$.Dialog.close();
+				}
+			});
+		}
+		
+		]]>
+	</SCRIPT>
+
+</div>

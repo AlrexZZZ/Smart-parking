@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	 xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	 xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	 xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+     <jsp:output omit-xml-declaration="yes"/>
+     <style>
+     	.teStr{
+     		float: left;
+     	}
+     	 input,select{
+			width: 135px;
+			height: 28px;
+			background-color: #fff;border: 1px solid #e4e4e4;
+		}
+     </style>
+    <script type="text/javascript">
+	<![CDATA[
+	     //查询分页
+		 function ToListByAjax(page){
+			var param={};
+		    if(page==undefined){
+				page=1;
+			}
+		    param.page=page;
+			param.size=10;
+		    var accountStr = $("#accountStr").val();
+	    	var starTime = $("#loginTime2").val();
+	    	var endTime = $("#loginOutTime2").val();
+	    	if(starTime!=undefined&&starTime!=null&&$.trim(starTime)!=""){
+				param.starTime=starTime;
+			}
+			if(endTime!=undefined&&endTime!=null&&$.trim(endTime)!=""){
+				param.endTime=endTime;
+			}
+			if(accountStr!=undefined&&accountStr!=null&&$.trim(accountStr)!=""){
+				param.account=accountStr;
+			}
+			
+			if(starTime!=null&&$.trim(starTime)!=""){
+				if(endTime!=null&&$.trim(endTime)!=""){
+					if(starTime >= endTime){
+						alert("开始时间不能大于结束时间!");
+						return;
+					}
+				}
+			}
+			var url = "/ump/umplogs/findListByFiled";
+			$.ajax({
+				url : url,
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data :param,
+				error : function(msg) {
+				},
+				success : function(data) {
+					$("#table1").hide();
+					$("#table2").show();
+					createData_Gride(data, "");
+				}
+			});
+		 }
+			function createData_Gride(data) {
+				var model = eval("(" + data + ")");
+				var list = eval(model.dataJson);
+				var table = "";
+				for (var i = 0; i < list.length; i++) {
+					table += "<tr>";
+						table += "<td>";
+						table += list[i].account;
+						table += "</td>";
+						table += "<td>";
+						table += list[i].loginIp;
+						table += "</td>";
+						table += "<td>";
+						table += formatData(list[i].loginTime);
+						table += "</td>";
+						table += "<td>";
+						if(list[i].loginOutTime == "" || list[i].loginOutTime == null){
+							table += "";
+						}else{
+							table += formatData(list[i].loginOutTime);
+						}
+						table += "</td>";
+					table += "</tr>";
+				}
+				var foot = Page_sku(model);
+				$("#dataBoday").html(table);
+				if (model.totalCount > 0) {
+					$("#dataFoot").html(foot);
+				} else {
+					$("#dataFoot").html("<tr><td colspan='5'>查无匹配数据</td></tr>");
+				}
+			}
+			 function Page_sku(model) {
+					var turnPage = '';
+					if (model.totalCount > 0) {
+						turnPage += '	<tr>';
+						turnPage += '	<td colspan="5">';
+						if (model.pageNo > 1) {
+							turnPage += ' <a class="default" href="#" onclick="ToListByAjax('+ 1 +')" style="cursor: hand; cursor: pointer;"><img alt="首页" src="/ump/resources/images/resultset_first.png" title="首页"/></a>';
+							turnPage += ' <a class="default" href="#" onclick="ToListByAjax('
+									+ (model.pageNo - 1) + ')"><img alt="上一页" src="/ump/resources/images/resultset_previous.png" title="上一页"/></a>&nbsp;&nbsp;';
+						}
+
+						turnPage += '<span style="color: #069dd5;height: 22px;line-height: 22px;">'+ model.pageNo+'</span> / <span style="color: #069dd5;">'+model.totalPage+'</span>&nbsp;&nbsp;';
+						turnPage +='<input type="text" value="" style="width: 30px;height:22px" id="pageStr2"/><a  style="width: 28px;height:22px;background-color:#069dd5;color: white;display:inline-block;font-family:Arial;font-size: 10px;line-height: 22px;text-align:center;cursor: pointer;" onclick="goPage2('+model.totalPage+');">GO</a>&nbsp;&nbsp;'
+						
+						if (model.pageNo != model.totalPage) {
+							turnPage += '<a class="default" href="#" onclick="ToListByAjax('
+									+ (model.pageNo + 1)
+									+ ')" style="cursor: hand; cursor: pointer;"><img alt="下一页" src="/ump/resources/images/resultset_next.png" title="下一页"/></a>';
+							turnPage += ' <a class="default" href="#" onclick="ToListByAjax('+ model.totalPage +')" style="cursor: hand; cursor: pointer;"><img alt="首页" src="/ump/resources/images/resultset_last.png" title="首页"/></a>';
+						}
+						turnPage += '&nbsp;每页<span style="color:#069dd5">10</span>条</td>';
+						turnPage += '</tr>';
+						return turnPage;
+					}
+				}
+	     //处理时间
+		 Date.prototype.Format = function(fmt) { //author: meizz   
+				var o = {
+					"M+" : this.getMonth() + 1, //月份   
+					"d+" : this.getDate(), //日   
+					"h+" : this.getHours(), //小时   
+					"m+" : this.getMinutes(), //分   
+					"s+" : this.getSeconds(), //秒   
+					"q+" : Math.floor((this.getMonth() + 3) / 3), //季度   
+					"S" : this.getMilliseconds()
+				//毫秒   
+				};
+				if (/(y+)/.test(fmt))
+					fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "")
+							.substr(4 - RegExp.$1.length));
+				for ( var k in o)
+					if (new RegExp("(" + k + ")").test(fmt))
+						fmt = fmt.replace(RegExp.$1,
+								(RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k])
+										.substr(("" + o[k]).length)));
+				return fmt;
+			}
+			function formatData(time) {
+				var date = new Date(time);
+				var str = date.Format("yyyy-MM-dd hh:mm:ss");
+				return str;
+			}
+			
+			function goPage(page){
+				var pageStr = $("#pageStr").val();
+		    	if($.trim(pageStr) == ""){
+		    		alert("请输入需要跳转的页数！");
+		    		return false;
+		    	}
+		    	if(isNaN(pageStr)){
+		    		alert("格式错误，请输入数字！");
+		    		return false;
+		    	}
+		    	if(pageStr > page){
+		    		alert("你输入的页数大于最大页数");
+		    		return false;
+		    	}
+		    	if(pageStr <= 0){
+		    		alert("你输入的页数不符合要求");
+		    		return false;
+		    	}
+		    	window.location.href="/ump/umplogs?page="+pageStr+"&amp;size=10";
+			}
+			function goPage2(page){
+		    	var pageStr = $("#pageStr2").val();
+		    	if($.trim(pageStr) == ""){
+		    		alert("请输入需要跳转的页数！");
+		    		return false;
+		    	}
+		    	if(isNaN(pageStr)){
+		    		alert("格式错误，请输入数字！");
+		    		return false;
+		    	}
+		    	if(pageStr > page){
+		    		alert("你输入的页数大于最大页数");
+		    		return false;
+		    	}
+		    	if(pageStr <= 0){
+		    		alert("你输入的页数不符合要求");
+		    		return false;
+		    	}
+		    	ToListByAjax(pageStr);
+		    }
+			
+			function checkLogTime(){
+				$("#loginTime2").focus();
+			}
+			
+			function checkEndTime(){
+				$("#loginOutTime2").focus();
+			}
+	 ]]>  
+	</script>         
+    <div class="grid">
+    	<form action="/ump/umplogs/findListByFiled" method="post" id="logsId">
+	    	<div class="row">
+	    		<div class="span4">
+	    			 <span>账号：</span>&#160;<INPUT name="account" value="" id="accountStr"/>
+	    		</div>
+	    		<div class="span4">
+	    			<span>登录时间：</span>&#160;
+					<input type="text" name="loginTime2" value="" id="loginTime2" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})"/>
+	    			<img onclick="checkLogTime();" style="margin-left: -22px;" src="././js/date/skin/datePicker.gif" width="20" height="20" />
+	    			
+	    			<span id="loginStr" style="color: red"></span>
+	    		</div>
+	    		<div class="span4">
+	    			 <span>至：</span>&#160;
+					 <input type="text" name="loginOutTime2" value="" id="loginOutTime2" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})"/>
+	    			 <img onclick="checkEndTime();" style="margin-left: -22px;" src="././js/date/skin/datePicker.gif" width="20" height="20"/>
+	    		</div>
+	    	</div>
+	    	<div class="row">
+	    		<div class="span3"> 
+					<input type="button" value="查 询" class="info" onclick="ToListByAjax();" style="font-family:'微软雅黑'"/>
+					<input class="warning" type="reset" value="重 置" style="font-family:'微软雅黑'"></input>
+			    </div>
+	    	</div>
+    	</form>
+    </div>
+   <div style="text-align: center;" id="table1">
+        <TABLE class="table striped hovered">
+        	<THEAD>
+	            <tr>
+	                <th style="text-align: center;">账号</th>
+	                <th style="text-align: center;">登录IP</th>
+	                <th style="text-align: center;">登录时间</th>
+	                <th style="text-align: center;">退出时间</th>
+	            </tr>
+            </THEAD>
+            <c:if test="${empty umplogs}">
+            	<tr>
+            		<td colspan='5'>查无匹配数据</td>
+            	</tr>
+            </c:if>
+            <c:forEach items="${umplogs}" var="lu" varStatus="index">
+                <tr>
+                    <td>${lu.account}</td>
+                    <td>${lu.loginIp}</td>
+                    <td><fmt:formatDate value="${lu.loginTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
+                    <td><fmt:formatDate value="${lu.loginOutTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
+                </tr>
+            </c:forEach>
+        </TABLE>
+        <div style="float: right;">
+			<c:if test="${umplogs!= null and fn:length(umplogs) > 0}">
+				<tr>
+					<td colspan="4">
+					    <c:if test="${page>1 }">
+					    	<a class="default" href="/ump/umplogs?page=1&amp;size=10"
+								style="cursor: hand; cursor: pointer;">
+									<img alt="首页" src="/ump/resources/images/resultset_first.png" title="首页	"/>
+							</a>&#160;&#160;
+							<a class="default" href="/ump/umplogs?page=${page-1}&amp;size=10"
+								style="cursor: hand; cursor: pointer;">
+									<img alt="前一页" src="/ump/resources/images/resultset_previous.png" title="前一页"/>
+							</a>
+						</c:if>
+						 &#160;&#160;<span style="color: #069dd5;height: 22px;line-height: 22px;"> ${page} </span> / <span style="color: #069dd5;">${maxPages}</span>&#160;&#160;
+						<input type="text" value="" style="width: 30px;height:22px" id="pageStr"/><a  style="width: 28px;height:22px;background-color:#069dd5;color: white;display:inline-block;font-family:Arial;font-size: 10px;line-height: 22px;text-align:center;cursor: pointer;" onclick="goPage(${maxPages});">GO</a>&#160;&#160;
+						<c:if test="${page!=maxPages}">
+							<a class="default" href="/ump/umplogs?page=${page + 1}&amp;size=10" style="cursor: hand; cursor: pointer;">
+								<img alt="下一页" src="/ump/resources/images/resultset_next.png" title="下一页"/>
+							</a>&#160;&#160;
+							<a class="default" href="/ump/umplogs?page=${maxPages}&amp;size=10" style="cursor: hand; cursor: pointer;">
+								<img alt="末页" src="/ump/resources/images/resultset_last.png" title="末页"/>
+							</a>&#160;&#160;
+						</c:if>
+						<SPAN>每页 <span style="color: #069dd5;">10</span> 条</SPAN>
+					</td>
+				</tr>
+			</c:if>
+		</div>
+    </div>
+    
+     <div style="text-align: center;display: none;" id="table2">
+        <TABLE class="table striped hovered">
+        	<THEAD>
+	            <tr>
+	                <th style="text-align: center;">账号</th>
+	                <th style="text-align: center;">登录IP</th>
+	                <th style="text-align: center;">登录时间</th>
+	                <th style="text-align: center;">退出时间</th>
+	            </tr>
+            </THEAD>
+            <TBODY id="dataBoday">
+		    </TBODY>
+		   <!--  <TFOOT  id="dataFoot">
+		    </TFOOT> -->
+        </TABLE>
+        <div>
+        	<div id="dataFoot" style="float: right;"></div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    
+    function returnForm(){
+    	document.getElementById('logsId').submit();
+    }
+    </script>
+</div>

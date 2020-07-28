@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_UmpAuthority" items="${umpauthoritys}" z="OCtvLAR5SGKQu1N8nl86oXj/1Qg=">
+        <table:table data="${umpauthoritys}" id="l_com_nineclient_model_UmpAuthority" path="/umpauthoritys" z="IGcBsxSv74Ut88nmi4C+W8ke4As=">
+            <table:column id="c_com_nineclient_model_UmpAuthority_displayName" property="displayName" z="lURp9GIE3ENXpcRyI0WzZrWCGAs="/>
+            <table:column id="c_com_nineclient_model_UmpAuthority_parentId" property="parentId" z="PmYX52sr6t7uQletQq4RPuglO/g="/>
+            <table:column id="c_com_nineclient_model_UmpAuthority_url" property="url" z="kXI6y9OexIGLzEWkQDp2jNSjlr4="/>
+            <table:column id="c_com_nineclient_model_UmpAuthority_image" property="image" z="PfvDzH/WbUGmInh4xxP5E1MnVc0="/>
+            <table:column id="c_com_nineclient_model_UmpAuthority_remark" property="remark" z="+qACaFZRy9w9gOj8icOhnR3v614="/>
+            <table:column id="c_com_nineclient_model_UmpAuthority_sort" property="sort" z="PovAmQJZZK/ORsT28rw8/B5pfvA="/>
+        </table:table>
+    </page:list>
+</div>

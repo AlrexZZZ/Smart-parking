@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_nineclient_model_WccAutokbs" modelAttribute="wccAutokbs" path="/wccautokbses" versionField="Version" z="d+a+ZDessISIASzsoBm6Bm0bGJY=">
+        <field:textarea field="title" id="c_com_nineclient_model_WccAutokbs_title" z="cBVc74/lwmthG/x9pPCd74graLs="/>
+        <field:textarea field="keyWord" id="c_com_nineclient_model_WccAutokbs_keyWord" z="lUauhfxiASDZMSgNNC19yNfLmOA="/>
+        <field:textarea field="content" id="c_com_nineclient_model_WccAutokbs_content" z="lXmQPSllfAnWvyK7TThLVKB1bGw="/>
+        <field:select field="showWay" id="c_com_nineclient_model_WccAutokbs_showWay" items="${wccautokbsshowways}" path="wccautokbsshowways" z="YavdSu1VqmXuOEYX+p5obS+osfY="/>
+        <field:checkbox field="active" id="c_com_nineclient_model_WccAutokbs_active" z="+DZvGuw+MLQ87p4NoM2Z8ftMkhk="/>
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_WccAutokbs_isDeleted" z="H9GwfP/VOMG/klkhXkXZo5/vgN8="/>
+        <field:datetime dateTimePattern="${wccAutokbs_inserttime_date_format}" field="insertTime" id="c_com_nineclient_model_WccAutokbs_insertTime" z="QoGSrfR+JNUXilfW/f/tRJZdhpQ="/>
+        <field:select field="matchWay" id="c_com_nineclient_model_WccAutokbs_matchWay" items="${wccautokbsmatchways}" path="wccautokbsmatchways" z="17Ag+A2Qcma2sk5Lxxxq9wUGl0k="/>
+        <field:select field="replyType" id="c_com_nineclient_model_WccAutokbs_replyType" items="${wccautokbsreplytypes}" path="wccautokbsreplytypes" z="+vlolfeYJleZ1xig8XkoO8dF8UQ="/>
+        <field:textarea field="relatedIssues" id="c_com_nineclient_model_WccAutokbs_relatedIssues" z="bxHUlbx6XXH/Sbqf1CVo/aW+6b8="/>
+    </form:update>
+</div>

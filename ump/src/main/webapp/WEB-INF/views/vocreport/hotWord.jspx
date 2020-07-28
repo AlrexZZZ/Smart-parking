@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+
+	<script type="text/javascript"
+		src="/ump/js/nineclient/vocreport/nineclient.js">
+		//---
+	</script>
+	<style>
+	@IMPORT url("/ump/styles/url.css");
+	</style>
+	<div class="grid">
+		<FORM id="queryForm">
+			<DIV class="row">
+				<div class="span3">
+				<label>平台名称：</label>
+					<SELECT id="channelName" name="channelName" 
+						onchange="selectChannel(this.value,'shopName')" class="publicSize">
+						<OPTION value="-1" selected="selected">请选择</OPTION>
+						<c:forEach items="${channels}" var="item" varStatus="num">
+						<OPTION value="${item.id}">${item.channelName}</OPTION>
+						</c:forEach>
+					</SELECT>
+				</div>
+				<div class="span3">
+				<LABEL>店铺名称：</LABEL>
+					<SELECT id="shopName" name="shopName" class="publicSize" onchange="selectShop(this.value,'brandName')">
+						<OPTION value="-1" selected="selected">请选择</OPTION>
+					</SELECT>
+				</div>
+				<div class="span3">
+				<LABEL>品牌名称：</LABEL>
+					<SELECT id="brandName" name="brandName" class="publicSize" onchange="selectBrand(this.value,'skuName');">
+						<OPTION value="-1" selected="selected">请选择</OPTION>
+					</SELECT>
+				</div>
+				<div class="span3">
+				<LABEL>SKU名称：</LABEL>
+					<SELECT id="skuName" name="skuName" class="publicSize">
+						<OPTION value="-1">请选择</OPTION>
+					</SELECT>
+				</div> 
+			</DIV>
+			<DIV class="row">
+				<div class="span3">
+				<LABEL>时 间：</LABEL>
+					<input type="text" name="startTimeStr"
+						class="Wdate publicSize" value="" id="startTimeStr"
+						onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+				</div>
+				<div class="span3">
+				<LABEL>至</LABEL>
+					<input type="text" name="endTimeStr"
+						class="Wdate publicSize" value="" id="endTimeStr"
+						onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+				</div>
+			</DIV>
+			<DIV class="row">
+			<div style="margin-left: 20px;" class="span6">
+					<input  type="button" class="info" onclick="queryDataPie();" value="查询" />
+					<input  type="button" class="warning" onclick="exportExcel();" value="导出" />
+			</div>	
+			</DIV>
+		</FORM>
+	</div>
+	<div id="content">
+	<div id="container"
+		style="min-width: 310px; height: 400px; margin: 0 auto">Loading...</div>
+	</div>
+	
+	<DIV>
+<!-- 	
+		<div class="grid">
+			<div class="row">
+				<div class="span12">数据详情</div>
+			</div>
+		</div>
+   -->		
+		<TABLE class="table striped hovered">
+			<THEAD>
+				<tr>
+					<th>热  词</th>
+					<th>数  量</th>
+					<th>占  比</th>
+				</tr>
+			</THEAD>
+			<TBODY id="tbody">
+
+			</TBODY>
+		</TABLE>
+		<div align="right" style="text-align: right;" id="tfoot"><!--  --></div>
+	</DIV>
+	<style>
+input {
+	width: 100%;
+}
+
+select {
+	width: 100%;
+}
+
+	.metro .table th {
+height: 30px;
+line-height: 20px;
+padding-left: 10px;
+padding-right: 10px;
+font-size: 12px;
+background-color:#f8f8f8;
+border-bottom: 1px #e5e5e5 solid;
+}
+ .metro .table td{
+ background-color:white;
+ height: 30px;
+line-height: 20px;
+padding-left: 10px;
+padding-right: 10px;
+font-size: 12px;
+text-align:left;
+border-bottom: 1px #e5e5e5 solid;
+}
+
+.publicSize{
+	width: 135px;
+	height: 28px;
+	border:1px solid;
+	border-color:#e4e4e4;
+}
+	
+.metro label {
+display: block;
+margin: 5px 0;
+font-weight:normal;
+font-size:12px;
+text-align: right;
+}
+</style>
+	<SCRIPT type="text/javascript">
+		<![CDATA[
+		$(document).ready(
+				function(){
+					initTime();
+					queryDataPie();
+				}
+	     );
+		function initTime(){
+			var yesterday_milliseconds=new Date().getTime()-1000*60*60*48;
+			var startTime=formatData(yesterday_milliseconds,'yyyy-MM-dd');
+			var endTime=formatData(new Date().getTime()-1000*60*60*24,'yyyy-MM-dd');
+			$("#endTimeStr").val(endTime);
+			$("#startTimeStr").val(startTime);
+		}
+		function createPie(ajaxdata) {
+			var data = eval("(" + ajaxdata + ")");
+			var chart = initHchartPie("产品热词占比",data);
+			$('#container').highcharts(chart);
+		}
+		var f = 0;
+		function queryDataPie() {
+			++ f;
+			if(!comPareStartTimeAndEndTime($("#startTimeStr").val(),$("#endTimeStr").val()))
+			{
+				Notify("结束时间要大于开始时间",2000);
+				return;
+			}
+			var url = "/ump/hotwordreports/queryDataPie";
+			var param = {};
+			var channelName = $("#channelName").val();
+			if (channelName != -1 && channelName) {
+				param.channelName = $("#channelName").find("option:selected")
+						.text();
+			}
+			var shopName = $("#shopName").val();
+			if (shopName != -1 && shopName) {
+				param.shopName = $("#shopName").find("option:selected").text();
+			}
+			var brandName = $("#brandName").val();
+			if (brandName != -1 && brandName) {
+				param.brandName = $("#brandName").find("option:selected")
+						.text();
+			}else{
+				param.brandName = '请选择';
+			}
+			 var skuName = $("#skuName").val();
+			if (skuName != -1 && skuName) {
+				param.skuName = $("#skuName").find("option:selected").text();
+			}
+			var skuName = $("#skuName").val();
+			if (skuName != -1 && skuName) {
+				param.skuName = $("#skuName").find("option:selected").text();
+			} 
+			var startTimeStr = $("#startTimeStr").val();
+			if (startTimeStr != -1 && startTimeStr) {
+				param.startTimeStr=startTimeStr+" 00:00:00";
+			}
+			var endTimeStr = $("#endTimeStr").val();
+			if (endTimeStr != -1 && endTimeStr) {
+				param.endTimeStr=endTimeStr+" 23:59:59";
+			}
+			if(f >= 2){
+				
+				if(channelName == -1 ||channelName == "" ){
+					Notify("请选择平台");
+					return;
+				}
+				if(shopName == -1 || shopName == ""){
+					Notify("请选择店铺");
+					return;
+				}
+				if(brandName == -1 || brandName==""){
+					Notify("请选择品牌");
+					return;
+				}
+				if(skuName == -1 ||skuName == '请选择' ||skuName =="" ){
+					Notify("请选择SKU");
+					return;
+				}
+			}
+			dataAjax(url, param, null, null, createPie, null);
+			queryList();
+		}
+		function selectDefaut(id,elementId){
+			if(id==-1||id==''){
+				$("#"+elementId).val(id);
+			}
+		}
+		function selectChannel(id, elementId) {
+			var url = "/ump/vocshops/queryVocShops";
+			var param = {};
+			param.umpChannelId = id;
+			dataAjax(url, param, null, null, createSelect, elementId);
+		}
+		function selectShop(id, elementId) {
+			selectDefaut(id,elementId);
+			var url = "/ump/vocshops/queryVocBrands";
+			var param = {};
+			if(id==''){
+				id=-1;
+			}
+			param.shopId = id;
+			dataAjax(url, param, null, null, createSelect, elementId);
+		}
+		function selectBrand(id, elementId) {
+			var url = "/ump/vocskus/querySkuGoodsList";
+			var param = {};
+			param.vocBrandId = id;
+			dataAjax(url, param, null, null, createSelect, elementId);
+		}
+		function queryList(page) {
+		
+			var pageNo;
+			if (page) {
+				pageNo = page;
+			} else {
+				pageNo = 1;
+			}
+			var url = "/ump/hotwordreports/queryData";
+			var param = {};
+			param.page = pageNo;
+			param.size = 10;
+			var channelName = $("#channelName").val();
+			if (channelName != -1 && channelName) {
+				param.channelName = $("#channelName").find("option:selected")
+						.text();
+			}
+			var shopName = $("#shopName").val();
+			if (shopName != -1 && shopName) {
+				param.shopName = $("#shopName").find("option:selected").text();
+			}
+			var brandName = $("#brandName").val();
+			if (brandName != -1 && brandName) {
+				param.brandName = $("#brandName").find("option:selected")
+						.text();
+			}else{
+				param.brandName ='请选择';
+			}
+			 var skuName = $("#skuName").val();
+			if (skuName != -1 && skuName) {
+				param.skuName = $("#skuName").find("option:selected").text();
+			}
+			var skuName = $("#skuName").val();
+			if (skuName != -1 && skuName) {
+				param.skuName = $("#skuName").find("option:selected").text();
+			} 
+			var startTimeStr = $("#startTimeStr").val();
+			if (startTimeStr != -1 && startTimeStr) {
+				param.startTimeStr=startTimeStr+" 00:00:00";
+			}
+			var endTimeStr = $("#endTimeStr").val();
+			if (endTimeStr != -1 && endTimeStr) {
+				param.endTimeStr=endTimeStr+" 23:59:59";
+			}
+			dataAjax(url, param, null, null, createGride, null);
+		}
+		function exportExcel() {
+			if(!comPareStartTimeAndEndTime($("#startTimeStr").val(),$("#endTimeStr").val()))
+			{
+				return;
+			}
+			 var skuName = $("#skuName").val();
+	 
+			var url = "/ump/hotwordreports/exportExecl";
+			var param =[];
+			var name=[];
+			if (skuName != -1 && skuName) {
+				var skuNameText = $("#skuName").find("option:selected").text();
+				param.push(skuNameText);
+				name.push('skuName');
+			}else{
+				Notify("请选择SKU");
+				return;
+			}
+			var channelName = $("#channelName").val();
+			if (channelName != -1 && channelName) {
+				channelName = $("#channelName").find("option:selected").text();
+				param.push(channelName);
+				name.push('channelName');
+			}
+			var shopName = $("#shopName").val();
+			if (shopName != -1 && shopName) {
+				param.push($("#shopName").find("option:selected").text());
+				name.push('shopName');
+			}
+			var brandName = $("#brandName").val();
+			if (brandName != -1 && brandName) {
+				brandName = $("#brandName").find("option:selected")
+						.text();
+				param.push(brandName);
+				name.push('brandName');
+			}
+			var startTimeStr = $("#startTimeStr").val();
+			if (startTimeStr != -1 && startTimeStr) {
+				param.push(startTimeStr+" 00:00:00");
+				name.push('startTimeStr');
+			}
+			var endTimeStr = $("#endTimeStr").val();
+			if (endTimeStr != -1 && endTimeStr) {
+				param.push(endTimeStr+" 23:59:59");
+				name.push('endTimeStr');
+			}
+			var tij="";
+			var fl=true;
+			for(var j=0;j<param.length;j++){
+				if(fl){
+					
+					tij+="?"+name[j]+"="+param[j];
+					
+					fl=false;
+				}else{
+					tij+="&"+name[j]+"="+param[j];
+				}
+				
+			}
+			window.location.href = url+tij;
+		}
+		function createGride(data) {
+			var model = eval("(" + data + ")");
+			var list = eval(model.dataJson);
+			var table = "";
+			for (var i = 0; i < list.length; i++) {
+				table += "<tr>";
+				table += "<td>";
+				table += list[i].hotWordName;
+				table += "</td>";
+				table += "<td>";
+				table += list[i].increment;
+				table += "</td>";
+				table += "<td>";
+				table += Math
+						.round((list[i].increment / model.sumNum) * 100 * 100)
+						/ 100 + "%";
+				table += "</td>";
+			//	table += "<td>";
+			//	table += formatData(list[i].commentTime);
+			//	table += "</td>";
+				table += "</tr>";
+			}
+			var foot = Page(model, 'queryList',3);
+			$("#tbody").html(table);
+			if (model.totalCount > 0) {
+			// $("#tfoot").html(foot);
+			} else {
+			//	$("#tfoot").html("<tr><td colspan='4'>无匹配数据</td></tr>");
+			}
+		}
+		
+		]]>
+	</SCRIPT>
+</div>

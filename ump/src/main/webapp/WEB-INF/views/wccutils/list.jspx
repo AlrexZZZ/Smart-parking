@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<SCRIPT type="text/javascript" src="/ump/js/ZeroClipboard.js"><!--test --></SCRIPT>
+	<script type="text/javascript">
+	<![CDATA[
+	$(document).ready(function() {
+		ZeroClipboard.setMoviePath( '/ump/js/ZeroClipboard.swf' );
+		var clip_tag = new ZeroClipboard.Client();
+    	clip_tag.setHandCursor( true );
+    	clip_tag.setText($("#copyMe").attr("title"));
+    	clip_tag.glue('copyMe');
+    	clip_tag.addEventListener('complete', function (client, text) {
+    		alert("复制成功，请粘贴到您需要的地方");
+		});
+    	clip_tag.addEventListener('mouseOver', function (client) {});
+    	
+    	var clip_tag2 = new ZeroClipboard.Client();
+    	clip_tag2.setHandCursor( true );
+    	clip_tag2.setText($("#copyMe2").attr("title"));
+    	clip_tag2.glue('copyMe2');
+    	clip_tag2.addEventListener('complete', function (client, text) {
+    		alert("复制成功，请粘贴到您需要的地方");
+		});
+    	clip_tag2.addEventListener('mouseOver', function (client) {});
+    	
+    	var clip_tag3 = new ZeroClipboard.Client();
+    	clip_tag3.setHandCursor( true );
+    	clip_tag3.setText($("#copyMe3").attr("title"));
+    	clip_tag3.glue('copyMe3');
+    	clip_tag3.addEventListener('complete', function (client, text) {
+    		alert("复制成功，请粘贴到您需要的地方");
+		});
+    	clip_tag3.addEventListener('mouseOver', function (client) {});
+    	
+    	var clip_tag4 = new ZeroClipboard.Client();
+    	clip_tag4.setHandCursor( true );
+    	clip_tag4.setText($("#copyMe4").attr("title"));
+    	clip_tag4.glue('copyMe4');
+    	clip_tag4.addEventListener('complete', function (client, text) {
+    		alert("复制成功，请粘贴到您需要的地方");
+		});
+    	clip_tag4.addEventListener('mouseOver', function (client) {});
+    	
+    	var clip_tag5 = new ZeroClipboard.Client();
+    	clip_tag5.setHandCursor( true );
+    	clip_tag5.setText($("#copyMe5").attr("title"));
+    	clip_tag5.glue('copyMe5');
+    	clip_tag5.addEventListener('complete', function (client, text) {
+    		alert("复制成功，请粘贴到您需要的地方");
+		});
+    	clip_tag5.addEventListener('mouseOver', function (client) {});
+    	
+    	var clip_tag6 = new ZeroClipboard.Client();
+    	clip_tag6.setHandCursor( true );
+    	clip_tag6.setText($("#copyMe6").attr("title"));
+    	clip_tag6.glue('copyMe6');
+    	clip_tag6.addEventListener('complete', function (client, text) {
+    		alert("复制成功，请粘贴到您需要的地方");
+		});
+    	clip_tag6.addEventListener('mouseOver', function (client) {});
+    	
+    	var clip_tag7 = new ZeroClipboard.Client();
+    	clip_tag7.setHandCursor( true );
+    	clip_tag7.setText($("#copyMe7").attr("title"));
+    	clip_tag7.glue('copyMe7');
+    	clip_tag7.addEventListener('complete', function (client, text) {
+    		alert("复制成功，请粘贴到您需要的地方");
+		});
+    	clip_tag7.addEventListener('mouseOver', function (client) {});
+    	
+    	var clip_tag8 = new ZeroClipboard.Client();
+    	clip_tag8.setHandCursor( true );
+    	clip_tag8.setText($("#copyMe8").attr("title"));
+    	clip_tag8.glue('copyMe8');
+    	clip_tag8.addEventListener('complete', function (client, text) {
+    		alert("复制成功，请粘贴到您需要的地方");
+		});
+    	clip_tag8.addEventListener('mouseOver', function (client) {});
+    	
+    	var clip_tag9 = new ZeroClipboard.Client();
+    	clip_tag9.setHandCursor( true );
+    	clip_tag9.setText($("#copyMe9").attr("title"));
+    	clip_tag9.glue('copyMe9');
+    	clip_tag9.addEventListener('complete', function (client, text) {
+    		alert("复制成功，请粘贴到您需要的地方");
+		});
+    	clip_tag9.addEventListener('mouseOver', function (client) {});
+    	
+    	var clip_tag10 = new ZeroClipboard.Client();
+    	clip_tag10.setHandCursor( true );
+    	clip_tag10.setText($("#copyMe10").attr("title"));
+    	clip_tag10.glue('copyMe10');
+    	clip_tag10.addEventListener('complete', function (client, text) {
+    		alert("复制成功，请粘贴到您需要的地方");
+		});
+    	clip_tag10.addEventListener('mouseOver', function (client) {});
+    	
+    	var clip_tag11 = new ZeroClipboard.Client();
+    	clip_tag11.setHandCursor( true );
+    	clip_tag11.setText($("#copyMe11").attr("title"));
+    	clip_tag11.glue('copyMe11');
+    	clip_tag11.addEventListener('complete', function (client, text) {
+    		alert("复制成功，请粘贴到您需要的地方");
+		});
+    	clip_tag11.addEventListener('mouseOver', function (client) {});
+    	
+    	var clip_tag12 = new ZeroClipboard.Client();
+    	clip_tag12.setHandCursor( true );
+    	clip_tag12.setText($("#copyMe12").attr("title"));
+    	clip_tag12.glue('copyMe12');
+    	clip_tag12.addEventListener('complete', function (client, text) {
+    		alert("复制成功，请粘贴到您需要的地方");
+		});
+    	clip_tag12.addEventListener('mouseOver', function (client) {});
+    	
+    	var clip_tag13 = new ZeroClipboard.Client();
+    	clip_tag13.setHandCursor( true );
+    	clip_tag13.setText($("#copyMe13").attr("title"));
+    	clip_tag13.glue('copyMe13');
+    	clip_tag13.addEventListener('complete', function (client, text) {
+    		alert("复制成功，请粘贴到您需要的地方");
+		});
+    	clip_tag13.addEventListener('mouseOver', function (client) {});
+    	
+    	var clip_tag14 = new ZeroClipboard.Client();
+    	clip_tag14.setHandCursor( true );
+    	clip_tag14.setText($("#copyMe14").attr("title"));
+    	clip_tag14.glue('copyMe14');
+    	clip_tag14.addEventListener('complete', function (client, text) {
+    		alert("复制成功，请粘贴到您需要的地方");
+		});
+    	clip_tag14.addEventListener('mouseOver', function (client) {});
+    	
+    	var clip_tag15 = new ZeroClipboard.Client();
+    	clip_tag15.setHandCursor( true );
+    	clip_tag15.setText($("#copyMe15").attr("title"));
+    	clip_tag15.glue('copyMe15');
+    	clip_tag15.addEventListener('complete', function (client, text) {
+    		alert("复制成功，请粘贴到您需要的地方");
+		});
+    	clip_tag15.addEventListener('mouseOver', function (client) {});
+    	
+	});
+	     
+	]]>
+	</script>
+	<div style="width:auto; height:600px; overflow-y:scroll; clear:both;">
+		<table class="table striped hovered" style="table-layout:fixed;">
+			<thead>
+				<tr>
+					<th>名称</th>
+					<th>简介</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+					<tbody>
+					<!--<c:forEach items="${wccutils}" var="data">
+					</c:forEach> -->
+						<tr>
+							<td>宠物连连看</td>
+							<td>连接相同的两个图片</td>
+							<td><div style="width: 70px;float: left;" class="cl_bt">
+									  <a href="javascript:void(0)" id="copyMe" title="http://m.edianyou.com/h5game/petlink.html" >
+									  	<img src="/ump/images/wccImg/copy.png" alt="复制"/>
+									  </a>
+							</div></td>
+						</tr>
+						<tr>
+							<td>魔力方块</td>
+							<td>按箭头移动方块并消除后得分</td>
+							<td><div style="width: 70px;float: left;" class="cl_bt">
+									  <a href="javascript:void(0)" id="copyMe2" title="http://m.edianyou.com/h5game/mayamojo.htm" >
+									  	<img src="/ump/images/wccImg/copy.png" alt="复制"/>
+									  </a>
+							</div></td>
+						</tr>
+						<tr>
+							<td>推箱子</td>
+							<td>推动箱子到指定地点完成游戏</td>
+							<td><div style="width: 70px;float: left;" class="cl_bt">
+									  <a href="javascript:void(0)" id="copyMe3" title="http://m.edianyou.com/h5game/bokoban.html" >
+									  	<img src="/ump/images/wccImg/copy.png" alt="复制"/>
+									  </a>
+							</div></td>
+						</tr>
+						<tr>
+							<td>贪食蛇</td>
+							<td>越吃越长，尽可能吃到更多的水果</td>
+							<td><div style="width: 70px;float: left;" class="cl_bt">
+									  <a href="javascript:void(0)" id="copyMe4" title="http://m.edianyou.com/h5game/fruit/index.html" >
+									  	<img src="/ump/images/wccImg/copy.png" alt="复制"/>
+									  </a>
+							</div></td>
+						</tr>
+						
+						<tr>
+							<td>水管工</td>
+							<td>点水管变换位置和方向将水管接通</td>
+							<td><div style="width: 70px;float: left;" class="cl_bt">
+									  <a href="javascript:void(0)" id="copyMe5" title="http://m.edianyou.com/h5game/mypipe.html " >
+									  	<img src="/ump/images/wccImg/copy.png" alt="复制"/>
+									  </a>
+							</div></td>
+						</tr>
+						
+						<tr>
+							<td>大家来找同</td>
+							<td>找出2幅图的4个相同之处</td>
+							<td><div style="width: 70px;float: left;" class="cl_bt">
+									  <a href="javascript:void(0)" id="copyMe6" title="http://m.edianyou.com/h5game/sameclick.html" >
+									  	<img src="/ump/images/wccImg/copy.png" alt="复制"/>
+									  </a>
+							</div></td>
+						</tr>
+						
+						<tr>
+							<td>天气预报</td>
+							<td>一周天气预报、天气资讯</td>
+							<td><div style="width: 70px;float: left;" class="cl_bt">
+									  <a href="javascript:void(0)" id="copyMe7" title="http://m.weather.com.cn/mweather/101020100.shtml" >
+									  	<img src="/ump/images/wccImg/copy.png" alt="复制"/>
+									  </a>
+							</div></td>
+						</tr>
+						
+						<tr>
+							<td>快递查询</td>
+							<td>快递单号在线查询</td>
+							<td><div style="width: 70px;float: left;" class="cl_bt">
+									  <a href="javascript:void(0)" id="copyMe8" title="http://m.kuaidi100.com/#input" >
+									  	<img src="/ump/images/wccImg/copy.png" alt="复制"/>
+									  </a>
+							</div></td>
+						</tr>
+						
+						<tr>
+							<td>火车余票查询</td>
+							<td>火车票余票在线查询</td>
+							<td><div style="width: 70px;float: left;" class="cl_bt">
+									  <a href="javascript:void(0)" id="copyMe9" title="http://wap.tieyou.com/sina/index_yupiao.html?pos=63&amp;vt=4" >
+									  	<img src="/ump/images/wccImg/copy.png" alt="复制"/>
+									  </a>
+							</div></td>
+						</tr>
+						
+						<tr>
+							<td>个税计算</td>
+							<td>各省市的个税计算工具</td>
+							<td><div style="width: 70px;float: left;" class="cl_bt">
+									  <a href="javascript:void(0)" id="copyMe10" title="http://dp.sina.cn/dpool/tools/money/single.php?city_id=1&amp;flag=per_tax&amp;pos=63&amp;vt=4" >
+									  	<img src="/ump/images/wccImg/copy.png" alt="复制"/>
+									  </a>
+							</div></td>
+						</tr>
+						
+						<tr>
+							<td>房贷计算</td>
+							<td>多种房贷计算工具</td>
+							<td><div style="width: 70px;float: left;" class="cl_bt">
+									  <a href="javascript:void(0)" id="copyMe11" title="http://house.sina.cn/touch/tools/house_loan.html" >
+									  	<img src="/ump/images/wccImg/copy.png" alt="复制"/>
+									  </a>
+							</div></td>
+						</tr>
+						
+						<tr>
+							<td>医疗保险计算</td>
+							<td>各省市的医疗保险计算工具</td>
+							<td><div style="width: 70px;float: left;" class="cl_bt">
+									  <a href="javascript:void(0)" id="copyMe12" title="http://dp.sina.cn/dpool/tools/money/single.php?flag=health_per&amp;pos=63&amp;vt=4" >
+									  	<img src="/ump/images/wccImg/copy.png" alt="复制"/>
+									  </a>
+							</div></td>
+						</tr>
+						
+						<tr>
+							<td>养老保险计算</td>
+							<td>各省市的养老保险计算工具</td>
+							<td><div style="width: 70px;float: left;" class="cl_bt">
+									  <a href="javascript:void(0)" id="copyMe13" title="http://dp.sina.cn/dpool/tools/money/single.php?flag=old_per&amp;pos=63&amp;vt=4" >
+									  	<img src="/ump/images/wccImg/copy.png" alt="复制"/>
+									  </a>
+							</div></td>
+						</tr>
+						
+						<tr>
+							<td>住房公积金计算</td>
+							<td>各省市的住房公积金计算工具</td>
+							<td><div style="width: 70px;float: left;" class="cl_bt">
+									  <a href="javascript:void(0)" id="copyMe14" title="http://dp.sina.cn/dpool/tools/money/single.php?flag=house_per&amp;pos=63&amp;vt=4" >
+									  	<img src="/ump/images/wccImg/copy.png" alt="复制"/>
+									  </a>
+							</div></td>
+						</tr>
+						
+						<tr>
+							<td>彩票开奖查询</td>
+							<td>福彩、足彩开奖信息在线查询</td>
+							<td><div style="width: 70px;float: left;" class="cl_bt">
+									  <a href="javascript:void(0)" id="copyMe15" title="http://loto.sina.cn/i/open.do?label=1&amp;sid=fc055b3a-d72c-41bf-96bc-b8e436ea79ea&amp;agentId=233258&amp;vt=3" >
+									  	<img src="/ump/images/wccImg/copy.png" alt="复制"/>
+									  </a>
+							</div></td>
+						</tr>
+						
+					</tbody>
+		</table>
+	</div>
+</div>

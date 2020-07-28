@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<div style="width: 100%; background-color: #fff;margin-bottom: 10px;">
+		<div class="frame" id="_page_1" style="display: block;">
+			<div class="buttondiv"
+				style="height: 46px; background: #edf1f9; border: 1px solid #e4e4e4; border-bottom: none;">
+				<a href="#" onclick="goEditUrl();"><i class="on-left"><img
+						width="14" height="14" src="/ump/resources/images/add.png" /></i>添加问题</a>
+				<c:if test="${audMenu == true}">
+					<a href="#" onclick="reviewDialog(0);"><i class="on-left"><img
+							width="14" height="14" src="/ump/resources/images/swatch.png" /></i>批量审核</a>
+				</c:if>
+			</div>
+			<table class="table striped hovered">
+				<thead>
+					<tr>
+						<th><input name="checkboxAll" id="checkboxAll"
+							style="box-sizing: content-box; border: 0px;" type="checkbox"
+							value="all" onclick="javascript:checkBoxAll();" /></th>
+						<th>公众平台</th>
+						<th>标题</th>
+						<th>关键词</th>
+						<th>启用状态</th>
+						<th>展示方式</th>
+						<th>添加者</th>
+						<th>发布时间</th>
+						<th>审核状态</th>
+						<th>操作</th>
+
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach items="${wccautokbses}" var="wccautokbs">
+						<tr>
+							<td><c:if test="${wccautokbs.isReview eq unReview}">
+									<input name="checkbox" type="checkbox" id="${wccautokbs.id}"
+										value="${wccautokbs.id}"
+										style="box-sizing: content-box; border: 0px;" />
+								</c:if> <c:if test="${wccautokbs.isReview ne unReview}">
+									<input name="checkbox" type="checkbox" id="${wccautokbs.id}"
+										value="${wccautokbs.id}"
+										style="box-sizing: content-box; border: 0px;" />
+								</c:if></td>
+							<td>${wccautokbs.platformUser.account}</td>
+							<td>${wccautokbs.title}</td>
+							<td>${wccautokbs.keyWord}</td>
+							<td><c:if test="${wccautokbs.active ==true}">启用</c:if> <c:if
+									test="${wccautokbs.active ==false}">未启用</c:if></td>
+							<td>${wccautokbs.showWay}</td>
+							<td>${wccautokbs.author.account}</td>
+							<td><fmt:formatDate value="${wccautokbs.insertTime}"
+									type="both" /></td>
+							<td>${wccautokbs.isReview}</td>
+							<td class="utilbox"><a
+								href="/ump/wccautokbses/${wccautokbs.id}?form" alt="编辑"
+								title="编辑"><img alt="编辑" class="image"
+									src="/ump/resources/images/update.png" title="编辑" /></a> <img
+								alt="删除" class="image"
+								src="/ump/resources/images/delete.png" style="cursor: pointer;"
+								onclick="deleteAuto(${wccautokbs.id});" title="删除"
+								value="删除" /> 
+								<c:if test="${audMenu == true}">
+								<c:if
+									test="${wccautokbs.isReview eq unReview}">
+									<img alt="审核" class="image" style="cursor: pointer;"
+										src="/ump/resources/images/swatch.png" title="审核"
+										value="审核" onclick="reviewDialog(${wccautokbs.id});" />
+								</c:if> 
+								<c:if test="${wccautokbs.isReview ne unReview}">
+									<img type="image" alt="审核" class="image"
+										style="cursor: pointer;"
+										src="/ump/resources/images/swatch.png" title="审核"
+										value="审核" onclick="isReviewed();" />
+								</c:if>
+								</c:if>
+								</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</div>
+		<div style="float: right;">
+			<c:if test="${wccautokbses!= null and fn:length(wccautokbses) > 0}">
+				<c:if test="${page>1 }">
+					<a class="default" onclick="fuzzy(1);"
+						style="cursor: hand; cursor: pointer; float: left; margin-left: 10px;">
+						<img alt="首页" src="/ump/resources/images/resultset_first.png"
+						title="首页	" />
+					</a>
+					<a class="default" onclick="fuzzy(${page-1});"
+						style="cursor: hand; cursor: pointer; float: left; margin-left: 10px;">
+						<img alt="前一页" src="/ump/resources/images/resultset_previous.png"
+						title="前一页" />
+					</a>
+				</c:if>
+				<span
+					style="color: #069dd5; height: 22px; line-height: 22px; float: left; margin-left: 10px;">
+					${page} <span style="color: black;">/</span> ${maxPages}
+				</span>
+				<input type="text" value=""
+					style="width: 30px; height: 22px; float: left; border: 1px solid #e4e4e4; margin-left: 10px;"
+					id="pageStr" />
+				<a
+					style="width: 28px; height: 22px; background-color: #069dd5; color: white; display: inline-block; font-family: Arial; float: left; font-size: 10px; line-height: 22px; text-align: center; cursor: pointer;"
+					onclick="goPage(${maxPages});">GO</a>
+				<c:if test="${page!=maxPages}">
+					<a class="default" onclick="fuzzy(${page+1});"
+						style="cursor: hand; cursor: pointer; float: left; margin-left: 10px;">
+						<img alt="下一页" src="/ump/resources/images/resultset_next.png"
+						title="下一页" />
+					</a>
+					<a class="default" onclick="fuzzy(${maxPages});"
+						style="cursor: hand; cursor: pointer; float: left; margin-left: 10px;">
+						<img alt="末页" src="/ump/resources/images/resultset_last.png"
+						title="末页" />
+					</a>
+				</c:if>
+				<span
+					style="margin-left: 10px; float: left; height: 22px; line-height: 22px;">
+					每页 <span style="color: #069dd5;">10</span> 条
+				</span>
+			</c:if>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_UmpRole" object="${umprole}" path="/umproles" z="sstmqYauYW/Pus7M1XLZpI41B54=">
+        <field:display field="roleName" id="s_com_nineclient_model_UmpRole_roleName" object="${umprole}" z="Q8DJitxmOBghR0he2vB42z+1H6c="/>
+        <field:display field="remark" id="s_com_nineclient_model_UmpRole_remark" object="${umprole}" z="MficxW1H0l/Gp9BId7VycMdszwc="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_UmpRole_isDeleted" object="${umprole}" z="TW6hiU/Dn09/Qx5RWiu/79abVNw="/>
+        <field:display field="isVisable" id="s_com_nineclient_model_UmpRole_isVisable" object="${umprole}" z="6kYUSiDO36UMOSKBX6/eN6LDiio="/>
+        <field:display date="true" dateTimePattern="${umpRole_starttime_date_format}" field="startTime" id="s_com_nineclient_model_UmpRole_startTime" object="${umprole}" z="r6e9u7l3EWP7YbkcB0YT6SA8MvM="/>
+        <field:display date="true" dateTimePattern="${umpRole_createtime_date_format}" field="createTime" id="s_com_nineclient_model_UmpRole_createTime" object="${umprole}" z="J7pUtogYKtFklizhOrM3CQoPs2I="/>
+        <field:display field="parentId" id="s_com_nineclient_model_UmpRole_parentId" object="${umprole}" z="LO9M+nDzJoh0pWhcFA+vKhuziMU="/>
+        <field:display field="umpAuthoritys" id="s_com_nineclient_model_UmpRole_umpAuthoritys" object="${umprole}" z="SSuWNKf39rkMDdz/bV+d5XbxH18="/>
+    </page:show>
+</div>

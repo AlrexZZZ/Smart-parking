@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default_pub" name="vocshops/list">
+        <put-attribute name="body" value="/WEB-INF/views/vocshops/list.jspx"/>
+    </definition>
+    
+     <definition extends="pub" name="vocshops/result">
+        <put-attribute name="body" value="/WEB-INF/views/vocshops/result.jspx"/>
+     </definition>
+    
+	<definition extends="default_pub" name="vocshops/show">
+	        <put-attribute name="body" value="/WEB-INF/views/vocshops/show.jspx"/>
+	    </definition>
+	<definition extends="default_pub" name="vocshops/create">
+	        <put-attribute name="body" value="/WEB-INF/views/vocshops/create.jspx"/>
+	    </definition>
+	<definition extends="default_pub" name="vocshops/update">
+	        <put-attribute name="body" value="/WEB-INF/views/vocshops/update.jspx"/>
+	    </definition>
+	</tiles-definitions>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_com_nineclient_model_UmpRole" modelAttribute="umpRole" path="/umproles" render="${empty dependencies}" z="gCCJkgX4aDnyXzxUdojyR58TzF0=">
+        <field:input field="roleName" id="c_com_nineclient_model_UmpRole_roleName" max="30" required="true" z="EZqL93D6bxpwclkqPy4jEcPnG3o="/>
+        <field:textarea field="remark" id="c_com_nineclient_model_UmpRole_remark" z="JXbJ9McPbyfcWsiM6M929Zb1jqU="/>
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_UmpRole_isDeleted" z="LaJIlNabp7QyBBKTiUhrz3BYEsc="/>
+        <field:checkbox field="isVisable" id="c_com_nineclient_model_UmpRole_isVisable" z="FxPv8WYgMafV6ZDC5Y8QjHAt1HI="/>
+        <field:datetime dateTimePattern="${umpRole_starttime_date_format}" field="startTime" id="c_com_nineclient_model_UmpRole_startTime" required="true" z="lhJMZ1FcSNzeF98sRgeDAFtjsdA="/>
+        <field:datetime dateTimePattern="${umpRole_createtime_date_format}" field="createTime" id="c_com_nineclient_model_UmpRole_createTime" required="true" z="1jVvM1VJaTTkvHocnB8YO875wP4="/>
+        <field:textarea field="parentId" id="c_com_nineclient_model_UmpRole_parentId" z="qHKGxhJqIolcfPI+tcOnVLjUo/o="/>
+        <field:select field="umpAuthoritys" id="c_com_nineclient_model_UmpRole_umpAuthoritys" itemValue="id" items="${umpauthoritys}" multiple="true" path="/umpauthoritys" z="FapV8kkrtk5zViAZPEGjoC6DOS8="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_nineclient_model_UmpRole" render="${not empty dependencies}" z="N2xk9I/eo5loLXwk1G6Mw5Tug88="/>
+</div>

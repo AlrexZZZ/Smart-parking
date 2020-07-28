@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default_pub" name="wccfriends/list">
+        <put-attribute name="body" value="/WEB-INF/views/wccfriends/list.jspx"/>
+    </definition>
+<definition extends="default_pub" name="wccfriends/show">
+        <put-attribute name="body" value="/WEB-INF/views/wccfriends/show.jspx"/>
+    </definition>
+<definition extends="default_pub" name="wccfriends/create">
+        <put-attribute name="body" value="/WEB-INF/views/wccfriends/create.jspx"/>
+    </definition>
+<definition extends="default_pub" name="wccfriends/update">
+        <put-attribute name="body" value="/WEB-INF/views/wccfriends/update.jspx"/>
+    </definition>
+    <definition extends="pub" name="wccfriends/result">
+        <put-attribute name="body" value="/WEB-INF/views/wccfriends/result.jspx"/>
+    </definition>
+    <definition extends="pub" name="wccfriends/picResult">
+        <put-attribute name="body" value="/WEB-INF/views/wccfriends/picResult.jspx"/>
+    </definition>
+    <definition extends="pub" name="wccfriends/picTextResult">
+        <put-attribute name="body" value="/WEB-INF/views/wccfriends/picTextResult.jspx"/>
+    </definition>
+    <definition extends="pub" name="wccfriends/templateResult">
+        <put-attribute name="body" value="/WEB-INF/views/wccfriends/templateResult.jspx"/>
+    </definition>
+    <definition extends="pub" name="wccfriends/recordResult">
+        <put-attribute name="body" value="/WEB-INF/views/wccfriends/recordResult.jspx"/>
+    </definition>
+     <definition extends="pub" name="wccfriends/videoResult">
+        <put-attribute name="body" value="/WEB-INF/views/wccfriends/videoResult.jspx"/>
+    </definition>
+     <definition extends="pub" name="wccfriends/voiceResult">
+        <put-attribute name="body" value="/WEB-INF/views/wccfriends/voiceResult.jspx"/>
+    </definition>
+     <definition extends="pub" name="wccfriends/massResult">
+        <put-attribute name="body" value="/WEB-INF/views/wccfriends/massResult.jspx"/>
+    </definition>
+</tiles-definitions>

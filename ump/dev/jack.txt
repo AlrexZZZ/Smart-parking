@@ -1,0 +1,8 @@
+#Updated at Thu Nov 06 14:55:31 CST 2014
+#Thu Nov 06 14:55:31 CST 2014
+database.driverClassName=com.mysql.jdbc.Driver
+database.url=jdbc\:mysql\://localhost\:3306\/ump?useUnicode=true&characterEncoding=UTF-8
+database.username=root
+database.password=
+
+

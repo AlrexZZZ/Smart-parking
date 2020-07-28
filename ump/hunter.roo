@@ -1,0 +1,136 @@
+//hunter 2014-11-06
+entity jpa --class ~.model.UmpBrand
+entity jpa --class ~.model.UmpBusinessType
+focus --class ~.model.UmpBrand
+field string --fieldName BrankName --notNull --unique true --sizeMax 30
+enum type --class ~.constant.UmpCheckStatus
+enum constant --name WAITCHECK
+enum constant --name CHECKSUCCESS
+enum constant --name CHECKFAILED
+focus --class ~.model.UmpBrand
+field enum --fieldName checkStatus --type ~.constant.UmpCheckStatus 
+field boolean --fieldName isDeleted
+field date --type java.util.Date --fieldName createTime --notNull
+field string --fieldName remark --sizeMax 4000
+focus --class ~.model.UmpBusinessType
+field string --fieldName businessName --notNull --unique true --sizeMax 30
+field number --type int --fieldName sort --notNull
+field string --fieldName remark --sizeMax 4000
+field boolean --fieldName isDeleted
+field date --fieldName createTime --type java.util.Date --notNull
+field boolean --fieldName isVisable
+entity jpa --class ~.model.UmpRole
+entity jpa --class ~.model.UmpAuthority
+focus --class ~.model.UmpRole
+field string --fieldName roleName --notNull --unique true --sizeMax 30
+field string --fieldName remark --sizeMax 4000
+field boolean --fieldName isDeleted
+field boolean --fieldName isVisable
+field date --type java.util.Date --fieldName startTime --notNull
+field date --type java.util.Date --fieldName createTime --notNull
+field string --fieldName parentId --sizeMax 32
+focus --class ~.model.UmpAuthority
+field string --fieldName parentId --sizeMax 32
+field string --fieldName displayName --sizeMax 50 --notNull --unique true
+field string --fieldName url --notNull --sizeMax 255
+field string --fieldName image --sizeMax 255
+field string --fieldName remark --sizeMax 4000
+field number --type int --fieldName sort --notNull 
+field boolean --fieldName isVisable
+field boolean --fieldName isDeleted
+//hunter end
+//2014-11-07
+entity jpa --class ~.model.WccUserPagetemp
+field string --fieldName pageTitle --notNull --unique true --sizeMax 200
+field string --fieldName proName --notNull --unique true --sizeMax 4000
+field string --fieldName temImage --sizeMax 4000
+field string --fieldName remark --sizeMax 4000
+field date --type java.util.Date --fieldName createTime --notNull 
+field boolean --fieldName isDeleted
+field boolean --fieldName isVisable
+entity jpa --class ~.model.WccQrcode
+field string --fieldName codeUrl --sizeMax 4000
+field string --fieldName codeId --sizeMax 4000
+field boolean --fieldName isUse
+field number --type float --fieldName expireSeconds
+enum type --class ~.constant.WccActionType
+enum constant --name TEMPORARYTYPE
+enum constant --name FOREVERTYPE
+field enum --fieldName actionType --class ~.model.WccQrcode --type ~.constant.WccActionType
+field string --fieldName useType --notNull --sizeMax 30
+field boolean --fieldName isDeleted
+field date --type java.util.Date --fieldName createTime
+entity jpa --class ~.model.WccUserName
+field boolean --fieldName isDeleted
+field date --type java.util.Date --fieldName createTime
+field string --fieldName tabName --notNull --unique true --sizeMax 30
+field string --fieldName remark --sizeMax 4000
+entity jpa --class ~.model.WccMembershipLevel
+field string --fieldName name  --sizeMin 1 --sizeMax 100
+field string --fieldName code --sizeMin 1 --sizeMax 100
+field boolean --fieldName isDeleted
+field date --fieldName createTime --type java.util.Date
+field boolean --fieldName isVisable
+entity jpa --class ~.model.WccUserFieldValue
+field boolean --fieldName isDeleted
+field boolean --fieldName isVisable
+field date --type java.util.Date --fieldName createTime
+field string --fieldName remark --sizeMax 4000
+field string --fieldName userFieldValue --sizeMin 1 --sizeMax 4000
+entity jpa --class ~.model.WccUserFields
+field boolean --fieldName isDeleted
+field boolean --fieldName isVisable
+field date --type java.util.Date --fieldName createTime
+field string --fieldName fieldNameCh --regexp (^[\x80-\xff]+$) --sizeMax 400 
+field string --fieldName fieldNameEN --regexp (^[A-Za-z]+$) --sizeMax 400
+field string --fieldName remark --sizeMax 4000
+field boolean --fieldName isEmail
+field boolean --fieldName isKey
+field boolean --fieldName isQueryType
+field boolean --fieldName isCombox
+field boolean --fieldName isComBoxValue
+entity jpa --class ~.model.WccGroupMessage
+field boolean --fieldName isDeleted
+field date --type java.util.Date --fieldName createTime
+enum type --class ~.constant.WccSendMssageStatus
+enum constant --name SENT
+enum constant --name SENDSUCCESS
+enum constant --name SENDFAILD
+field enum --type ~.constant.WccSendMssageStatus --fieldName sendStatus --class ~.model.WccGroupMessage
+field string --fieldName title --sizeMax 400 --notNull
+field string --fieldName author --sizeMax 200
+field string --fieldName content --sizeMax 4000
+field string --fieldName digest --sizeMax 4000
+field string --fieldName url --sizeMax 200
+enum type --class ~.constant.UmpSexValue
+enum constant --name MAN
+enum constant --name WOMAN
+field enum --fieldName sex --type ~.constant.UmpSexValue --class ~.model.WccGroupMessage
+field string --fieldName area --sizeMax 400
+field string --fieldName mediaUrl --sizeMax 400
+field number --type int --fieldName msgNum
+entity jpa --class ~.model.WccGroupMessFriend
+field boolean --fieldName isDeleted
+field date --type java.util.Date --fieldName createTime
+//hunter end
+//2014-11-11
+//产品渠道关系 一对多
+field set --type ~.model.UmpChannel --fieldName channels --cardinality ONE_TO_MANY --mappedBy product --class ~.model.UmpProduct
+field reference --type ~.model.UmpProduct --fieldName product --cardinality MANY_TO_ONE --class ~.model.UmpChannel
+//产品-版本 一对多
+field set --type ~.model.UmpVersion --fieldName versions --cardinality ONE_TO_MANY --mappedBy product --class ~.model.UmpProduct
+field reference --type ~.model.UmpProduct --fieldName product --cardinality MANY_TO_ONE --class ~.model.UmpVersion
+field string --fieldName versionName --notNull --sizeMax 40 --class ~.model.UmpVersion
+field date --type java.util.Date --fieldName createTime --class ~.model.UmpVersion
+//行业-品牌
+field set --type ~.model.UmpBrand --fieldName brands --cardinality MANY_TO_MANY --mappedBy businesses --class ~.model.UmpBusinessType
+field set --type ~.model.UmpBusinessType --fieldName businesses --cardinality MANY_TO_MANY --class ~.model.UmpBrand
+//公司-产品 多对多
+field set --type ~.model.UmpProduct --fieldName products --cardinality MANY_TO_MANY --mappedBy companys --class ~.model.UmpCompany
+field set --type ~.model.UmpCompany --fieldName companys --cardinality MANY_TO_MANY --class ~.model.UmpProduct
+//品牌--公司 多对多  需删除
+//field set --type ~.model.UmpBrand --fieldName brands --cardinality MANY_TO_MANY --mappedBy companys --class ~.model.UmpCompany
+//field set --type ~.model.UmpCompany --fieldName companys --cardinality MANY_TO_MANY --class ~.model.UmpBrand
+//增加关键字
+field string --fieldName keyName --sizeMax 4000 --class --~.model.UmpBrand
+field boolean --fieldName isVisable --class --~.model.UmpBrand

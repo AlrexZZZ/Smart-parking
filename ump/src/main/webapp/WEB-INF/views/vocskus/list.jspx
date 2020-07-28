@@ -1,0 +1,1779 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<div class="tab-control" data-role="tab-control">
+		<style>
+.spanRight {
+	margin-right: 0px;
+}
+</style>
+<style>
+	@IMPORT url("/ump/styles/validation.css");
+	@IMPORT url("/ump/styles/url.css");	
+	</style>
+	<SCRIPT type="text/javascript"
+		src="/ump/ui/jquery-validation/jquery.validate.js">
+		//--
+	</SCRIPT>
+<SCRIPT type="text/javascript" src="/ump/js/nineclient/vocreport/nineclient.js"><!--ss--></SCRIPT>
+		<SCRIPT type="text/javascript">
+			<![CDATA[
+			$(document).ready(function() {
+				var msg = $("#msg_id").val();
+				if (msg) {
+					Notify(msg);
+				}
+				$(".trimeClass").blur(function (){
+					var obj=$(this);
+					var val=$(this).val();
+					if(val){
+						$(this).val($.trim(val));
+					}
+				});
+				//querySkuDataBoday();
+				openSkuProperty();
+				//标准SKu添加form
+				$("#addGoodsForm").validate({
+					rules : {
+						businessTypeId: {required:true},
+						vocBrandId:{required:true},
+						goodsName:"required",
+						skuCode:"required"
+					},
+
+					messages : {
+						businessTypeId:{
+							required:"请选择行业"
+						},
+						vocBrandId:{required:"请选择品牌"},
+						goodsName:"请输入商品名称",
+						skuCode:"请输入SKU编号"
+					},
+					errorElement:"em",
+					focusCleanup:true,
+					errorClass:"invalid"
+				});
+			});
+			
+			]]>
+		</SCRIPT>
+		
+		<INPUT type="hidden" id="msg_id" value="${importmsg}" />
+		<ul class="tabs">
+			<li class="active" style="display: none;"><a href="#_page_1" onclick="querySkuDataBoday();">标准sku管理</a></li>
+			<li class="active" ><a href="#_page_2" onclick="openSkuProperty();">sku属性管理</a></li>
+			<li><a href="#_page_3" onclick="openERPSku();">电商sku管理</a></li>
+		</ul>
+		<div class="frames">
+			<div class="frame" style="margin-left: 20px;" id="_page_1">
+				<SCRIPT type="text/javascript">
+					<![CDATA[
+					function selectParentBusiness(id, businesselemId,
+							brandelemId) {
+						//加载子行业
+						loadBusiness(id, businesselemId);
+						//加载品牌
+						loadVocBrands(id, brandelemId);
+					}
+					function businessTypeSelectId(id, goodsPropertyId) {
+						//加载属性
+						loadGoodsProperty(id, goodsPropertyId);
+
+					}
+					function addbusinessTypeSelectId(id, goodsPropertyId) {
+						//加载属性
+						$
+								.ajax({
+									url : "/ump/vocgoodspropertys/queryGoodspropertyByBusinessId",
+									dataType : "text",
+									type : "POST",
+									data : {
+										umpBusinessTypeId : id
+									},
+									error : function(msg) {
+									},
+									success : function(data) {
+										var dataList = eval(data);
+										var str = createSkuProperty(dataList);
+										$("#add_propertyListALl").html(str);
+									}
+								});
+
+					}
+					function createSkuProperty(dataList) {
+						var skuProperty = "";
+						for (var i = 0; i < dataList.length; i++) {
+							skuProperty += "<div class='row'>";
+							skuProperty += "<div class='span1' style='margin-left:0px;'>"
+									+ dataList[i].name
+									+ ":</div><div class='span1' style='margin-left:0px;'>";
+							skuProperty += '<input  type="hidden" name="skuName" value="'+dataList[i].name+'"><input type="text" name="goodsPropertyValue"></div><div class="span1"></div>'
+							skuProperty += "</div>";
+						}
+						return skuProperty;
+					}
+					function loadGoodsProperty(id, goodsPropertyId) {
+						var url = "/ump/vocgoodspropertys/queryGoodspropertyByBusinessId";
+						var param = {
+							umpBusinessTypeId : id
+						};
+					//	ajaxLoadData(url, param, goodsPropertyId);
+						dataAjax(url, param, null, null, createSelect, goodsPropertyId)
+					}
+					function loadVocBrands(id, brandelemId) {
+						if (id == '' || id == undefined || id == null) {
+							id = $("#parentBusinessTypeId").val();
+						}
+						var url = "/ump/vocbrands/queryVocBrandByBusinessId";
+						var param = {
+							id : id
+						};
+						//ajaxLoadData(url, param, brandelemId);
+						dataAjax(url, param, null, null, createSelect, brandelemId)
+					}
+					function loadBusiness(id, elemId) {
+						if (id == '' || id == undefined || id == null) {
+							id = $("#parentBusinessTypeId").val();
+						}
+						var url = "/ump/umpbusinesstypes/queryBusinessByParentId";
+						var param = {
+							id : id
+						};
+					//	ajaxLoadData(url, param, elemId);
+						dataAjax(url, param, null, null, createSelect, elemId)
+					}
+					//选择品牌
+					function onselectBrand(brandId, goodsElementId) {
+						var url = "/ump/vocskupropertys/loadSkuProperty";
+						var param = {
+							vocBrandId : brandId
+						};
+						//ajaxLoadData(url, param, goodsElementId);
+						dataAjax(url, param, null, null, createSelect, goodsElementId)
+
+					}
+
+					function addGoodsPropertyWindow() {
+						if ($("#parentBusinessTypeId").val() == -1) {
+							Notify("请选择商品类别")
+							return;
+						}
+						if ($("#businessTypeId").val() == -1) {
+							Notify("请选择商品子类");
+							return;
+						}
+
+						$
+								.Dialog({
+									overlay : true,
+									shadow : true,
+									flat : true,
+									draggable : true,
+									icon : '<img src="/ump/images/add.png"/>',
+									title : 'Flat window',
+									content : '',
+									width : 160,
+									padding : 10,
+									onShow : function(_dialog) {
+										var content = '<form id="formGoodsProperty" width="160px;">'
+												+ '<input id="_businessTypeId" type="hidden" value="">'
+												+ '<label>参数名称</label>'
+												+ '<div class="input-control text"><input id="propertyName" type="text" name="name">'
+												+ '<button class="btn-clear"></button></div> '
+												+ '<label>参数类型</label>'
+												+ '<div class="input-control select">'
+												+ '<select id="valueType" name="valueType">'
+												+ '<option value="number">数字</option>'
+												+ '<option value="string">字符串</option>'
+												+ '</select>'
+												+ '<label>单位</label>'
+												+ '<div class="input-control text"><input id="unit" type="text" name="unit">'
+												+ '<button class="btn-clear"></button></div> '
+												+ '</div> '
+												+ '<div class="form-actions">'
+												+ '<input type="button" class="info" value="保存"  onclick="addGoodsProperty();"></input> '
+												+ '<button class="default" type="button" onclick="$.Dialog.close()">取消</button> '
+												+ '</div>' + '</form>';
+										$.Dialog.title("注意：参数添加后不可编辑及删除");
+										$.Dialog.content(content);
+										$.Metro.initInputs();
+										metroOverFlow('',true);
+										$("#_businessTypeId").val(
+												$("#businessTypeId").val());
+									}
+								});
+
+					}
+					function addGoodsProperty() {
+						$
+								.ajax({
+									url : '/ump/vocgoodspropertys/addGoodsproperty',
+									dataType : "text",
+									type : "POST",
+									data : {
+										umpBusinessTypeId : $(
+												"#_businessTypeId").val(),
+										propertyName : $("#propertyName").val(),
+										valueType : $("#valueType").val(),
+										unit : $("#unit").val()
+									},
+									error : function(msg) {
+									},
+									success : function(data) {
+										var msg = eval(data);
+										$.Notify({
+											caption : "",
+											content : msg,
+											timeout : 5000
+										// 5 seconds
+										});
+										//加载属性
+										loadGoodsProperty($("#businessTypeId")
+												.val(), "vocGoodsPropertyId");
+									}
+								});
+					}
+					function addSkuGoods() {
+						if(!$("#addGoodsForm").valid()){
+							return;
+						}
+						$.ajax({
+							type : "post",
+							url : "/ump/vocskus/addSkuGoods",
+							data : $("#addGoodsForm").serialize(),
+							success : function(msg) {
+								Notify(msg, 2000);
+								querySkuDataBoday();
+								//$.Dialog.close();
+								closePage('add_sku_div');
+							},
+							error : function(data) {
+								//$.Dialog.close();
+							}
+						})
+					}
+					//添加商品
+					function addGoodsWindow() {
+						$("#add_sku_div").toggle();
+						$("#fade").toggle();
+						loadBusiness(null, "add_businessTypeId");
+						//加载品牌
+						loadVocBrands(null, "add_umpBrandId");
+						//加载sku属性
+						loadSkuProperty("add_vocSkuPropertyId");
+
+						/**
+						$
+								.Dialog({
+									overlay : true,
+									shadow : true,
+									flat : true,
+									draggable : true,
+									icon : '<img src="/ump/images/add.png"/>',
+									title : 'Flat window',
+									content : '',
+									width : 500,
+									height : 200,
+									padding : 10,
+									onShow : function(_dialog) {
+										var content = '<form id="addGoodsForm" action="" width="400px;">'
+												+ '<div class="grid">'
+												+ '<div class="row"  style="margin-top:5px;">'
+												//+ '<div class="span1" style="margin-right: 0px;">'
+												//+ '商品类别:'
+												//+"</div>"
+												//+ '<div class="span1" style="margin-right: 0px;margin-left:0px;">'
+												//+ '<select style="width:100px;" id="add_businessParentTypeId" name="businessParentTypeId" onchange="selectParentBusiness(this.value,\'add_businessTypeId\',\'add_umpBrandId\');">'
+												//+ '<option select="selected" value="-1">请选择</option>'
+												//+ '</select>'
+												//+ '</div>'
+												+ '<div class="span1" style="margin-right: 0px;margin-left:0px;">'
+												+ '子行业:</div>'
+												+ '<div class="span2" style="margin-right: 0px;margin-left:0px;">'
+												//+ '<SELECT  style="width:100px;" name="businessTypeId" id="add_businessTypeId" style="float: left; width: 100px; height: 25px;" onchange="addbusinessTypeSelectId(this.value,\'add_vocGoodsPropertyId\');">'
+												+ '<SELECT  style="width:100%;" name="businessTypeId" id="add_businessTypeId" style="float: left; width: 100px; height: 25px;">'
+												+ '<OPTION selected="selected" value="-1">请选择</OPTION>'
+												+ '</SELECT>'
+												+ '</div>'
+												+ '<div class="span1"  style="margin-left:60px;">'
+												+ '品牌:</div>'
+												+ '<div class="span2" style="margin-right: 0px;margin-left:0px;">'
+												+ '<SELECT  style="width:100%;" name="vocBrandId" id="add_umpBrandId" style="float: left; width: 100px; height: 25px;">'
+												+ '<OPTION selected="selected" value="-1">请选择</OPTION>'
+												+ '</SELECT>'
+												+ '</div>'
+												+ '</div>'
+												+ '<div class="row" style="margin-top:5px;">'
+												+ '<div class="span1" style="margin-left:0px;">'
+												+ '商品名称:</div>'
+												+ '<div class="span2" style="margin-right: 0px;margin-left:0px;">'
+												+ '<input  style="width:100%;" id="add_goodsName" type="text" name="goodsName">'
+												+ '</div>'
+												+ '<div class="span1" style="margin-left:60px;">'
+												+ 'sku编码:</div>'
+												+ '<div class="span2" style="margin-right: 0px;margin-left:0px;">'
+												+ '<input  style="width:100%;" id="add_skuCode" type="text" name="skuCode">'
+												+ '</div>'
+												+ '</div>'
+												+ '<div class="row" style="margin-top:5px;">'
+												+ '<div class="span1" style="margin-left:0px;">'
+												+ '型号:</div>'
+												+ '<div class="span2" style="margin-right: 0px;margin-left:0px;">'
+												+ '<input  style="width:100%;" id="add_skuModel" type="text" name="skuModel">'
+												+ '</div>'
+												+ '<div class="span1" style="margin-left:60px;">'
+												+ 'sku属性:</div>'
+												+ '<div class="span2" style="margin-right: 0px;margin-left:0px;">'
+												+ '<SELECT  style="width:100%;" name="skuPropertyId" id="add_vocSkuPropertyId" style="float: left; width: 100px; height: 25px;">'
+												+ '<OPTION selected="selected" value="-1">请选择</OPTION>'
+												+ '</SELECT>'
+												+ '</div>'
+												+ '</div>'
+												+ '<div class="row" style="margin-top:5px;">'
+												+ '<div class="span1" style="margin-left:0px;">'
+												+ '类型:</div>'
+												+ '<div class="span2" style="margin-right: 0px;margin-left:0px;">'
+												+ '<input  style="width:100%;" id="add_skuType" type="text" name="skuType">'
+												+ '</div>'
+												+ '<div class="span1" style="margin-left:60px;">'
+												+ '包装:</div>'
+												+ '<div class="span2" style="margin-right: 0px;margin-left:0px;">'
+												+ '<input  style="width:100%;" id="add_skuPackage" type="text" name="skuPackage">'
+												+ '</div>'
+												+ '</div>'
+												+ '<div class="row" style="margin-top:5px;">'
+												+ '<div class="span1" style="margin-left:0px;">'
+												+ '产地:</div>'
+												+ '<div class="span2" style="margin-right: 0px;margin-left:0px;">'
+												+ '<input  style="width:100%;" id="add_skuOrigin" type="text" name="skuOrigin">'
+												+ '</div>'
+												+ '<div class="span1" style="margin-left:60px;">'
+												+ '商品毛重:</div>'
+												+ '<div class="span2" style="margin-right: 0px;margin-left:0px;">'
+												+ '<input  style="width:100%;" id="add_skuWeight" type="text" name="skuWeight">'
+												+ '</div>'
+												+ '</div>'
+												//+ '<div id="add_propertyListALl" class="row" style="margin-top:5px;">'
+												//+'</div>'
+												+ '<div class="form-actions" style="margin-top:100px;">'
+												+ '<input type="button" class="info" value="保存"  onclick="addSkuGoods();"></input> '
+												+ '<button class="warning" type="button" onclick="$.Dialog.close()">取消</button> '
+												+ '</div>' + '</form>';
+										$.Dialog.title("添加sku");
+										$.Dialog.content(content);
+										$.Metro.initInputs();
+										//$("#add_businessParentTypeId").html(
+										//		$("#parentBusinessTypeId")
+										//				.html());
+										//加载子行业
+										//loadBusiness(null,"add_businessTypeId");
+										//加载品牌
+										//loadVocBrands(null,"add_umpBrandId");
+										//加载sku属性
+										//loadSkuProperty("add_vocSkuPropertyId");
+									}
+								});
+						 **/
+
+					}
+					function deleteObjet(id, page) {
+						if (!confirm("确定删除?")) {
+							return;
+						}
+						var param={id:id};
+						var url="/ump/vocskus/delete";
+						dataAjax(url, param, Notify, null, null, null);
+						querySkuDataBoday(page);
+					}
+					function createSkuDataGride(data, field) {
+						var model = eval("(" + data + ")");
+						var list = eval(model.dataJson);
+						//var businessPropertyList =eval(model.dataHtml);
+						//var propertyValueList=eval(model.otherJsonData);
+						//添加表头
+						var th = "";
+						//动态列
+						//$(".th_add").remove();
+						//for(var j=0;j<businessPropertyList.length;j++){
+						//	th+="<th class='th_add'>";
+						//	th+=businessPropertyList[j].propertyName;
+						//	th+="</th>";
+						//}
+						//$("#appendTh").after(th);
+						var table = "";
+						for (var i = 0; i < list.length; i++) {
+							table += "<tr>";
+							table += "<td>";
+							table += '<a href="/ump/vocskus/'
+									+ list[i].id
+									+ '?form" alt="更新 " title="更新 "><img alt="修改" class="image" src="/ump/resources/images/update.png" title="修改"></a>';
+							//table += '<a href="javascript:deleteObjet('+list[i].id+','+model.pageNo+');" alt="更新 " title="更新 "><img alt="删除" class="image" src="/ump/resources/images/delete.png" title="删除"></a>';
+							table += "</td>";
+							//table += "<td>";
+							//table += list[i].umpBusinessType.parentBusinessType.businessName;
+							//table += "</td>";
+							table += "<td>";
+							table += list[i].umpBusinessType.businessName;
+							table += "</td>";
+							table += "<td>";
+							table += list[i].vocBrand.brandName;
+							table += "</td>";
+							table += "<td>";
+							table += list[i].skuCode;
+							table += "</td>";
+							table += "<td>";
+							table += list[i].vocSkuProperty==null?"":list[i].vocSkuProperty.name;
+							table += "</td>";
+							table += "<td>";
+							table += list[i].name;
+							table += "</td>";
+							table += "<td>";
+							table += formatData(list[i].createTime);
+							table += "</td>";
+							//动态列
+							//var skuPropertyValues;
+							//	for(var l=0;l<propertyValueList.length;l++){
+							//		if(propertyValueList[l].skuId==list[i].id){
+							//			skuPropertyValues=propertyValueList[l].propertyValueList;
+							//			break;
+							//		}
+							//	}
+							//for(var j=0;j<businessPropertyList.length;j++){
+							//	for(var m=0;m<skuPropertyValues.length;m++){
+							//		if(businessPropertyList[j].propertyName==skuPropertyValues[m].name){
+							//			table += "<td>";
+							//			table += skuPropertyValues[m].propertyValue;
+							//			table += "</td>";
+							//			break;
+							//		}
+							//	}
+							//}
+							table += "<td>";
+							table += list[i].skuModel;
+							table += "</td>";
+							table += "<td>";
+							table += list[i].skuType;
+							table += "</td>";
+							table += "<td>";
+							table += list[i].skuOrigin;
+							table += "</td>";
+							table += "</tr>";
+						}
+						$("#skuDataBoday").html(table);
+						var foot = SkuPage(model);
+					}
+					function SkuPage(model) {
+						if (model.totalCount > 0) {
+							var foot = Page(model, 'querySkuDataBoday', 10);
+							$("#querySkuDataBoday").html(foot);
+						} else {
+							$("#querySkuDataBoday").html("<tr><td  colspan='10'></td></tr>");
+						}
+					}
+					function dowloadExcel() {
+						$
+								.Dialog({
+									overlay : true,
+									shadow : true,
+									flat : true,
+									draggable : true,
+									icon : '<img src="/ump/images/excel2013icon.png"/>',
+									title : '模板下载',
+									content : '',
+									width : 300,
+									height : 100,
+									padding : 10,
+									onShow : function(_dialog) {
+										var content = '<form>'
+												+ '<div class="grid">'
+												+ '<div class="row">'
+												+ '<lable>子行业:</lable>'
+												+ '<select id="businessTypeDowload">'
+												+ '<option value="-1">请选择</option>'
+												+ '</select>'
+												+ '</div>'
+												+ '<div class="form-actions row">'
+												+ '<input class="info" type="button" onclick="dowloadSkuGoodsExcel();" value="确定"></input> '
+												+ '<button class="warning" type="button" onclick="$.Dialog.close()">取消</button> '
+												+ '</div>' + '</div>'
+												+ '</form>';
+										$.Dialog.content(content);
+										metroOverFlow(true);
+									}
+								});
+						//加载商品子类
+						$("#businessTypeDowload").html(
+								$("#businessTypeId").html());
+					}
+					function dowloadSkuGoodsExcel() {
+						//var businessId = $("#businessTypeDowload").val();
+						//if(businessId==-1){
+						//	alert("请选择子行业");
+						//	return;
+						///}
+						window.location.href = '/ump/vocgoodses/exportExecl';
+					}
+					function importExcel() {
+						$
+								.Dialog({
+									overlay : true,
+									shadow : true,
+									flat : true,
+									draggable : true,
+									icon : '<img src="/ump/images/excel2013icon.png"/>',
+									title : '请选择导入信息',
+									content : '',
+									width : 300,
+									height : 100,
+									padding : 10,
+									onShow : function(_dialog) {
+										var content = '<form id="importForm" action="/ump/vocgoodses/importExcel" method="POST"  enctype="multipart/form-data">'
+												+ '<div class="grid">'
+												+ '<div class="row"><input type="file" name="importFile"/>'
+												+ '</div>'
+												+ '<div class="form-actions row">'
+												+ '<button class="button primary" onclick="importToDb();">确定</button> '
+												+ '<button class="warning" type="button" onclick="$.Dialog.close()">取消</button> '
+												+ '</div>'
+												+ '</div>'
+												+ '</form>';
+										$.Dialog.content(content);
+									}
+								});
+					}
+					function importToDb() {
+						$.ajax({
+							url : "/ump/vocgoodses/importExcel",
+							type : "POST",
+							data : $('#importForm').serialize(),
+							error : function(msg) {
+							},
+							success : function(data) {
+								$.Notify({
+									caption : "",
+									content : data,
+									timeout : 5000
+								// 10 seconds
+								});
+							}
+						});
+					}
+
+					var skuHtml = "";
+					function popSkuQuery() {
+						$("#sku_div").toggle();
+						dilogCenter('sku_div');
+						/**
+						$.Dialog({
+							overlay : true,
+							shadow : true,
+							flat : true,
+							draggable:true,
+							icon : '<img src="/ump/images/excel2013icon.png"/>',
+							title : '',
+							content : '',
+							width:850,
+							height:400,
+							padding : 10,
+							onShow : function(_dialog) {
+								if(skuHtml==""){
+									skuHtml = $("#sku_div").html();
+									$("#sku_div").remove();
+								}
+								var content = skuHtml;
+								$.Dialog.title("查询");
+								$.Dialog.content(content);
+								$.Metro.initInputs();
+							}
+						});
+						 **/
+						$("#fade").toggle();
+					}
+					function closePage(id) {
+						dilogCenter(id);
+						$("#" + id).toggle();
+						$("#fade").toggle();
+					}
+					function querySkuDataBoday(page) {
+						var id = $("#businessTypeId").val();
+						var vocBrandId = $("#vocBrandId").val();
+						var skuGoodsName = $("#skuGoodsName").val();
+						var vocSkuPropertyId = $("#vocGoodsPropertyId").val();
+						var startTimeStr = $("#startTimeStr").val();
+						var endTimeStr = $("#endTimeStr").val();
+						var param = {};
+						if (id != -1) {
+							param.businessTypeId = id;
+						}
+						if (vocBrandId != -1) {
+							param.vocBrandId = vocBrandId;
+						}
+						if (skuGoodsName != '' && skuGoodsName != null) {
+							param.skuGoodsName = skuGoodsName;
+						}
+						if (vocSkuPropertyId != -1) {
+							param.vocSkuPropertyId = vocSkuPropertyId;
+						}
+						if (startTimeStr != '' && startTimeStr != undefined) {
+							param.startTimeStr = startTimeStr;
+						}
+						if (endTimeStr != '' && endTimeStr != undefined) {
+							param.endTimeStr = endTimeStr;
+						}
+						param.page = page;
+						param.size = 10;
+						$.ajax({
+							url : "/ump/vocskus/skuGoodsList",
+							dataType : "text",
+							type : "POST",
+							data : param,
+							error : function(msg) {
+							},
+							success : function(data) {
+								createSkuDataGride(data, "");
+							}
+						});
+
+					}
+					]]>
+				</SCRIPT>
+				<INPUT id="parentBusinessTypeId" type="hidden"
+					value="${parentBusinessType.id}" />
+					<!-- 添加sku弹出 -->
+					<DIV style="display: none; width: 740px;" class="search"
+					id="add_sku_div">
+					<div class="close">
+						<img src="/ump/images/close.png" width="24" height="24"
+							onclick="javascript:closePage('add_sku_div');"
+							style="cursor: pointer;" />
+					</div>
+					<DIV class="mtitle">
+						<img src="/ump/images/add.png" width="14" height="14"
+							style="cursor: pointer;" />添加
+					</DIV>
+					<form id="addGoodsForm" action="" method="post">
+						<div class="grid">
+							<div class="row">
+								<div class="span2">
+									<span style="color: red;">*</span>子行业:</div>
+								<div class="span4">
+									<SELECT class="publicSize" name="businessTypeId" required="required" id="add_businessTypeId">
+										<OPTION selected="selected" value="-1">请选择</OPTION>
+
+									</SELECT>
+								</div>
+								<div class="span2"><span style="color: red;">*</span>品牌:</div>
+								<div class="span4">
+									<SELECT class="publicSize"  name="vocBrandId" required="required"
+										id="add_umpBrandId">
+										<OPTION selected="selected" value="-1">请选择</OPTION>
+									</SELECT>
+								</div>
+							</div>
+							<div class="row">
+								<div class="span2"><span style="color: red;">*</span>商品名称:</div>
+								<div class="span4">
+									<input class="publicSize trimeClass" id="add_goodsName" required="required" type="text"
+										name="goodsName" />
+								</div>
+								<div class="span2"><span style="color: red;">*</span>sku编号:</div>
+								<div class="span4">
+									<input class="publicSize trimeClass"  id="add_skuCode" type="text" required="required"
+										name="skuCode" />
+								</div>
+							</div>
+							<div class="row">
+								<div class="span2">型号:</div>
+								<div class="span4">
+									<input class="publicSize trimeClass"  id="add_skuModel" type="text"
+										name="skuModel" />
+								</div>
+								<div class="span2">sku属性:</div>
+								<div class="span4">
+									<SELECT class="publicSize"  name="skuPropertyId"
+										id="add_vocSkuPropertyId">
+										<OPTION selected="selected" value="-1">请选择</OPTION>
+									</SELECT>
+								</div>
+							</div>
+							<div class="row">
+								<div class="span2">类型:</div>
+								<div class="span4">
+									<input class="publicSize trimeClass"  id="add_skuType" type="text"
+										name="skuType" />
+								</div>
+								<div class="span2">包装:</div>
+								<div class="span4">
+									<input class="publicSize trimeClass"  id="add_skuPackage" type="text"
+										name="skuPackage" />
+								</div>
+							</div>
+							<div class="row">
+								<div class="span2">产地:</div>
+								<div class="span4">
+									<input class="publicSize trimeClass"  id="add_skuOrigin" type="text"
+										name="skuOrigin" />
+								</div>
+								<div class="span2">商品毛重:</div>
+								<div class="span4">
+									<input class="publicSize trimeClass"  id="add_skuWeight" type="text"
+										name="skuWeight" />
+								</div>
+							</div>
+							<div class="row">
+							<DIV class="span2">
+							<SPAN></SPAN>
+							</DIV>
+								<DIV class="span1">
+								<input type="button" class="info" value="保存"
+									onclick="addSkuGoods();"></input>
+								</DIV>
+								<DIV class="span1">
+								<button class="warning" type="button" onclick="javascript:closePage('add_sku_div');">取消</button>
+								</DIV>
+							</div>
+						</div>
+					</form>
+				</DIV>
+				<!-- 查询sku -->
+				<DIV style="display: none; width: 580px;" class="search"
+					id="sku_div">
+					<div class="close">
+						<img src="/ump/images/close.png" width="24" height="24"
+							onclick="javascript:closePage('sku_div');"
+							style="cursor: pointer;" />
+					</div>
+					<DIV class="mtitle" style="border-bottom: solid 1px;">
+						<img src="/ump/images/search.png" width="14" height="14"
+							style="cursor: pointer;" />查询
+					</DIV>
+					<DIV class="grid">
+						<FORM action="">
+							<div class="row">
+								<!-- <div class="span1" style="margin-right: 0px;">商品类型 :</div>
+							<div class="span1" style="margin-left: 0px;">
+									<SELECT name="parentBusinessTypeId" id="parentBusinessTypeId"
+										style="float: left; width: 100%; height: 25px;"
+										onchange="selectParentBusiness(this.value,'businessTypeId','umpBrandId');">
+										<OPTION selected="selected" value="-1">请选择</OPTION>
+										<c:forEach items="${umpparentbusinesstypes}" var="item"
+											varStatus="index">
+											<OPTION value="${item.id}">${item.businessName}</OPTION>
+										</c:forEach>
+									</SELECT>
+							</div> -->
+								<div class="span2">子行业 :</div>
+								<DIV class="span4">
+									<SELECT name="businessTypeId" id="businessTypeId"
+										class="publicSize">
+										<OPTION selected="selected" value="-1">请选择</OPTION>
+										<c:forEach items="${umpbusinesstypes}" var="item"
+											varStatus="index">
+											<OPTION value="${item.id}">${item.businessName}</OPTION>
+										</c:forEach>
+									</SELECT>
+								</DIV>
+								<div class="span2">品牌名称 :</div>
+								<div class="span4">
+									<SELECT name="vocBrandId" id="vocBrandId"
+										class="publicSize">
+										<OPTION selected="selected" value="-1">请选择</OPTION>
+										<c:forEach items="${vocbrands}" var="item" varStatus="index">
+											<OPTION value="${item.id}">${item.brandName}</OPTION>
+										</c:forEach>
+									</SELECT>
+								</div>
+
+
+							</div>
+							<div class="row">
+								<div class="span2">商品名称:</div>
+								<DIV class="span4">
+									<INPUT name="skuGoodsName" id="skuGoodsName" type="text"
+										class="publicSize"/>
+								</DIV>
+								<div class="span2">sku属性 :</div>
+								<DIV class="span4">
+									<SELECT name="vocGoodsPropertyId" id="vocGoodsPropertyId"
+										class="publicSize">
+										<OPTION selected="selected" value="-1">请选择</OPTION>
+										<c:forEach items="${vocskupropertys}" var="item"
+											varStatus="index">
+											<OPTION value="${item.id}">${item.name}</OPTION>
+										</c:forEach>
+									</SELECT>
+								</DIV>
+							</div>
+							<div class="row">
+								<div class="span2">添加时间:</div>
+								<DIV class="span4">
+									<input type="text" name="startTimeStr" value=""
+										id="startTimeStr" class="Wdate publicSize"
+										onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+								</DIV>
+								<DIV class="span2">
+									<span style="width: 100%">至: </span>
+								</DIV>
+								<DIV class="span4">
+									<input type="text" name="endTimeStr"
+										class="Wdate publicSize" value="" id="endTimeStr"
+										onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+								</DIV>
+							</div>
+							<div class="row">
+								<DIV class="span2">
+									<span></span>
+								</DIV>
+								<DIV class="span1">
+									<a class="button info" onclick="querySkuDataBoday();closePage('sku_div');">查询</a>
+								</DIV>
+								<DIV class="span1">
+									<INPUT type="reset" class="warning" value="重置" />
+								</DIV>
+							</div>
+						</FORM>
+					</DIV>
+				</DIV>
+					<div class="buttondiv" style="height: 46px; background: #edf1f9; border: 1px solid #e4e4e4; border-bottom: none;">
+						<a style="cursor: pointer;" onclick="popSkuQuery();">
+						<i class="on-left"><img src="/ump/images/search.png" width="14" height="14" /></i>
+						查询</a>&#160;&#160;
+						<a style="cursor: pointer;" onclick="addGoodsWindow();">
+							<i class="on-left"><IMG src="/ump/images/add.png"  width="14" height="14" /></i>添加
+						</a>&#160;&#160;
+						<a style="cursor: pointer;" onclick="importExcel();">
+							导入
+						</a>&#160;&#160;
+						<a style="cursor: pointer;" onclick="dowloadSkuGoodsExcel();">
+							模板下载
+						</a>&#160;&#160;
+					</div>
+				<DIV class="list">
+					<TABLE class="table striped hovered">
+						<THEAD>
+							<TR>
+								<TH>操作</TH>
+								<TH>商品子类</TH>
+								<TH>品牌名称</TH>
+								<TH>sku编码</TH>
+								<TH>sku属性</TH>
+								<TH>商品名称</TH>
+								<TH id="appendTh">添加时间</TH>
+								<!-- <TH>
+									<button class="info" onclick="addGoodsPropertyWindow();">+</button>
+								</TH> -->
+								<TH>型号</TH>
+								<TH>类型</TH>
+								<TH>商品产地</TH>
+							</TR>
+						</THEAD>
+						<TBODY id="skuDataBoday">
+
+						</TBODY>
+						<TFOOT id="skuDataFoot"></TFOOT>
+					</TABLE>
+				</DIV>
+			</div>
+			<!-- sku属性 -->
+			<div class="frame grid" id="_page_2">
+				<SCRIPT type="text/javascript">
+					<![CDATA[
+					function openSkuProperty() {
+						//加载sku属性
+						loadSkuProperty("sku_PropertyName");
+						listSkuProperty(1);
+					}
+					//加载属性
+					function loadSkuProperty(id) {
+						var url = "/ump/vocskupropertys/loadSkuProperty";
+						var param = {};
+						//ajaxLoadData(url, param, id);
+						dataAjax(url, param, null, null, createSelect, id);
+					}
+					function putValidate(id){
+						$("#editSkuPropertyForm").validate({
+							rules : {
+								name:{required:true,remote:{
+											 url:"/ump/commentvalidata/validataUniqueJoin",
+											 type: "post", 
+											 data: {
+												field:'name',
+												value:function(){
+													return $("#ed_skuPropertyName").val();
+												},
+												table:"VocSkuProperty",
+												id:id,
+												companyField:"umpCompany"
+											 }
+								}},
+								propertyDetail:{required:true}
+							},
+
+							messages : {
+								propertyDetail:{required:"属性定义不可为空"},
+								name:{required:"属性名称不可为空",remote:"属性名称要唯一"}
+							},
+							errorElement:"em",
+							focusCleanup:true,
+							errorClass:"invalid",
+							errorPlacement:function(error, element){
+								error.appendTo($(element).parent().find("span"));
+							}
+						});
+						$(".trimeClass").blur(function (){
+							var obj=$(this);
+							var val=$(this).val();
+							if(val){
+								$(this).val($.trim(val));
+							}
+						});
+					}
+					function createEditePage(id,name,detail){
+						dilogCenter('skuProperty_edit');
+						$("#editSkuPropertyForm").find(":input[name='id']").val(id);
+						$("#editSkuPropertyForm").find(":input[name='name']").val(name);
+						$("#editSkuPropertyForm").find("TEXTAREA").val(detail);
+						$("#skuProperty_edit").toggle();
+						$("#fade").toggle();
+						putValidate(id);
+					}
+					function updateProperty(){
+						if(!$("#editSkuPropertyForm").valid()){
+							return;
+						}
+						var url="/ump/vocskupropertys/update";
+						var param=$("#editSkuPropertyForm").serialize();
+						dataAjax(url, param, Notify);
+						listSkuProperty();
+						$("#skuProperty_edit").toggle();
+						$("#fade").toggle();
+					}
+					//添加属性
+					function createSkuProperyWindow() {
+						$
+								.Dialog({
+									overlay : true,
+									shadow : true,
+									flat : true,
+									draggable : true,
+									icon : '<img src="/ump/images/add.png"/>',
+									title : 'Flat window',
+									content : '',
+									width : 600,
+									padding : 10,
+									onShow : function(_dialog) {
+										var content = '<form id="formAddSkuProperty" width="600px;">'
+										+'<div class="grid">'
+											+'<div class="row">'
+												+ '<div class="span gridTitle">属性名称：</div>'
+												+ '<div class="span4"><input class="publicSize" id="add_skuPropertyName" type="text" name="name" maxlength="10"/><span class="hintSpan" style="color: red;">*</span>'
+												+ '</div> '
+											+ '</div> '		
+											+'<div class="row">'	
+												+ '<div class="span gridTitle">属性定义：</div>'
+												+ '<div class="span6"><TEXTAREA class="gridTextArea" class="dilogtrimeClass" id="add_skuPropertyDetail" type="text" name="propertyDetail"></TEXTAREA><span class="hintSpan"  style="color: red;">*</span>'
+												+ '</div> '
+											+'</div>'	
+										+ '</div>'		
+												+ '</form>'
+												+ '<div style="margin:0 auto;text-align: center;">'
+												+ '<a  class="button info" onclick="createSkuPropery();">确定</a> '
+												+ '<button class="warning" type="button" onclick="$.Dialog.close()">取消</button> '
+												+ '</div>';
+										$.Dialog.title("添加sku属性");
+										$.Dialog.content(content);
+										$.Metro.initInputs();
+										metroOverFlow(true);
+										$(".dilogtrimeClass").blur(function(){
+											var obj=$(this);
+											var val=obj.val();
+											if(val){
+												obj.val($.trim(val));
+											}
+										});
+										$("#formAddSkuProperty").validate({
+											rules : {
+												name : {required:true,maxlength:10,remote:{
+													 url:"/ump/commentvalidata/validataUniqueJoin",
+													 type: "post", 
+													 data: {
+														field:'name',
+														value:function(){
+															return $("#add_skuPropertyName").val();
+														},
+														table:"VocSkuProperty",
+														companyField:"umpCompany"
+													 }
+													}},
+												propertyDetail:{required:true}
+											},
+
+											messages : {
+												name : {required:"属性名称不可为空",
+												maxlength : "属性名称不能超过10个字",
+												remote:"属性名称重复"},
+												propertyDetail: {required:"属性定义不可为空"}
+											},
+											errorElement:"em",
+											focusCleanup:true,
+											errorClass:"invalid",
+											errorPlacement:function(error, element){
+												//error.appendTo(element.parent());  
+												error.appendTo($(element).parent().find("span"));
+											}
+										});
+										$("#formAddSkuProperty").valid();
+									}
+								});
+					}
+					function createSkuPropery() {
+						if(!$("#formAddSkuProperty").valid()){
+							return;
+						}
+						var url = "/ump/vocskupropertys/addVocSkuProperty";
+						var param={
+								name : $.trim($("#add_skuPropertyName").val()),
+								propertyDetail : $.trim($("#add_skuPropertyDetail").val())
+										
+							};
+						dataAjax(url, param, Notify, listSkuProperty, null, null);
+						$.Dialog.close();
+					}
+					function listSkuProperty(page) {
+						var param = {};
+						var skuPropertyId = $("#sku_PropertyName").val();
+						var isVisable = $("#skuPropertyStatus").val();
+						var stime = $("#sp_startTimeStr").val();
+						var etime = $("#sp_endTimeStr").val();
+						if (skuPropertyId != -1) {
+							param.id = skuPropertyId;
+						}
+						if (isVisable != -1) {
+							param.isVisable = isVisable == 1 ? true : false;
+						}
+						if (stime != '' && stime != undefined) {
+							param.startTimeStr = stime;
+						}
+						if (etime != '' && etime != undefined) {
+							param.endTimeStr = etime;
+						}
+						if(page){
+							param.page = page;
+						}else{
+							param.page = 1
+						}
+						param.size = 10;
+						var url="/ump/vocskupropertys/listSkuProperty";
+						dataAjax(url, param, null, null, createDataGride)
+					}
+					function deleteSkuProperty(id, page) {
+						if (!confirm("确定删除?")) {
+							return;
+						}
+						var param={id:id};
+						var url ="/ump/vocskupropertys/delete";
+						dataAjax(url, param, Notify);
+						listSkuProperty(page);
+					}
+					function createDataGride(data, field) {
+						var model = eval("(" + data + ")");
+						var list = eval(model.dataJson);
+						var table = "";
+						for (var i = 0; i < list.length; i++) {
+							table += "<tr>";
+							table += "<td>";
+							table += list[i].name;
+							table += "</td>";
+							table += "<td title='"+list[i].propertyDetail+"'>";
+							if(list[i].propertyDetail.length > 30){
+								table += list[i].propertyDetail.substring(0,30) +".....";
+							}else{
+								table += list[i].propertyDetail;
+							}
+							table += "</td>";
+							table += "<td>";
+							table += formatData(list[i].createTime);
+							table += "</td>";
+							table += "<td>";
+							if(list[i].isVisable){
+								table +="<img class='switchClass_"+list[i].id+"' onclick='switchImg(this,1,"+list[i].id+")' src='/ump/images/ON.png' />";
+								table +="<img class='switchClass_"+list[i].id+"' onclick='switchImg(this,0,"+list[i].id+")' src='/ump/images/OFF.png' style='display:none;'/>";
+							}else{
+								table +="<img class='switchClass_"+list[i].id+"' onclick='switchImg(this,1,"+list[i].id+")' src='/ump/images/ON.png' style='display:none;'/>";
+								table +="<img class='switchClass_"+list[i].id+"' onclick='switchImg(this,0,"+list[i].id+")' src='/ump/images/OFF.png' />";
+							}
+							table += "</td>";
+							table += "<td>";
+							table += '<a style="cursor: pointer" onclick="createEditePage('
+									+ list[i].id+",'"+list[i].name+"','"+list[i].propertyDetail+"'"
+									+ ');" alt="编辑 " title=""><img alt="编辑" class="image" src="/ump/images/update.png" title="编辑"></a>';
+							table += '<a href="javascript:deleteSkuProperty('
+									+ list[i].id
+									+ ','
+									+ model.pageNo
+									+ ');" alt="" title=""><img alt="删除" class="image" src="/ump/images/delete.png" title="删除"></a>';
+							table += "</td>";
+							table += "</tr>";
+						}
+						//if (model.totalCount > 0) {
+							$("#skuPropertyListDataGride").html(table);
+							var foot = Page(model, 'listSkuProperty', 5,false);
+							$("#skuPropertyListFoot").html(foot);
+						///} else {
+						///	$("#skuPropertyListDataGride").html("");
+						///	$("#skuPropertyListFoot")
+						///			.html(
+						//					'<tr><td  colspan="5"></td></tr>');
+						//}
+					}
+					var skuPropertyHtml = "";
+					function popSkuPropertyQuery() {
+						dilogCenter('skuProperty_div');
+						$("#skuProperty_div").toggle();
+						$("#fade").toggle();
+						/**
+						$.Dialog({
+							overlay : true,
+							shadow : true,
+							flat : true,
+							draggable:true,
+							icon : '<img src="/ump/images/excel2013icon.png"/>',
+							title : '',
+							content : '',
+							width:850,
+							height:400,
+							padding : 10,
+							onShow : function(_dialog) {
+								if(skuPropertyHtml==""){
+									skuPropertyHtml = $("#skuProperty_div").html();
+									$("#skuProperty_div").remove();
+								}
+								var content = skuPropertyHtml;
+								$.Dialog.title("查询");
+								$.Dialog.content(content);
+								$.Metro.initInputs();
+							}
+						});
+						 **/
+					}
+					function switchImg(obj, vl, id) {
+						var visable = vl == 1 ? 0 : 1;
+						$.ajax({
+							url : "/ump/vocskupropertys/updateVisable",
+							async : false,
+							dataType : "text",
+							type : "POST",
+							data : {
+								id : id,
+								visable : visable
+							},
+							error : function(msg) {
+							},
+							success : function(data) {
+								$(".switchClass_" + id).toggle();
+							}
+						});
+
+					}
+					]]>
+				</SCRIPT>
+					<DIV style="display: none; width: 600px;" class="search"
+						id="skuProperty_div">
+						<div class="close">
+							<img src="/ump/images/close.png" width="24" height="24"
+								onclick="javascript:closePage('skuProperty_div');"
+								style="cursor: pointer;" />
+						</div>
+						<DIV class="mtitle">
+							<i class="on-left"><img src="/ump/images/search.png" width="14" height="14" style="margin-left:10px;"/></i>查 询
+						</DIV>
+						<div class="grid">
+							<form id="addSkuPPForm">
+								<DIV class="row">
+									<div class="span gridTitle">属性名称 ：</div>
+									<div class="span4">
+										<SELECT name="sku_PropertyName" id="sku_PropertyName" class="publicSize">
+											<OPTION selected="selected" value="-1">请选择</OPTION>
+										</SELECT>
+									</div>
+									<div class="span gridTitle">属性状态 ：</div>
+									<DIV class="span4">
+										<SELECT name="skuPropertyStatus" id="skuPropertyStatus"
+											class="publicSize"
+											onchange="businessTypeSelectId(this.value,'vocGoodsPropertyId');">
+											<OPTION selected="selected" value="-1">全部</OPTION>
+											<OPTION value="1">启用</OPTION>
+											<OPTION value="0">停用</OPTION>
+										</SELECT>
+									</DIV>
+								</DIV>
+								<DIV class="row">
+									<div class="span gridTitle">添加时间：</div>
+									<DIV class="span4">
+										<input type="text" name="startTime" value="" id="sp_startTimeStr"
+											class="Wdate publicSize"
+											onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+									</DIV>
+									<DIV class="span gridTitle">
+										<span>至： </span>
+									</DIV>
+									<DIV class="span4">
+										<input type="text" name="endTime"
+											class="Wdate publicSize" value="" id="sp_endTimeStr"
+											onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+									</DIV>
+								</DIV>
+							</form>
+							<DIV class="btnCenter">
+										<INPUT type="button" class="info"
+											onclick="listSkuProperty(1);closePage('skuProperty_div');" value="查询" />
+										<INPUT type="button" class="warning" onclick="$('#addSkuPPForm')[0].reset();"
+											value="重置" />
+								</DIV>
+						</div>
+					</DIV>
+					<div style="display: none; width: 600px;" class="search" id="skuProperty_edit">
+						<div class="close">
+							<img src="/ump/images/close.png" width="24" height="24"
+								onclick="javascript:closePage('skuProperty_edit');"
+								style="cursor: pointer;" />
+						</div>
+						<DIV class="mtitle">
+							<i class="on-left"><img src="/ump/images/editor.png" width="14" height="14"
+								style="cursor: pointer;" /></i>编辑
+						</DIV>
+						<div class="grid">
+							<form id="editSkuPropertyForm" action="/ump/vocskupropertys/update" method="POST"  width="400px;">
+							<INPUT type="hidden" id="propertyId" name="id" value=""/>
+							<div class="row">
+							<div class="span gridTitle">属性名称：</div>
+								<div class="span10"><input id="ed_skuPropertyName" class="trimeClass publicSize" type="text" name="name" value="" maxlength="10"/><span class="hintSpan" style="color: red;">*</span></div>
+							</div>
+							<DIV class="row">
+								<div class="span gridTitle">属性定义：</div>
+							<div class="span10">
+								<![CDATA[<TEXTAREA class="trimeClass gridTextArea" name="propertyDetail"></TEXTAREA>]]><span class="hintSpan" style="color: red;">*</span>
+							</div>
+							</DIV>
+							</form>
+						</div>
+						<div class="btnCenter">
+								<button class="info" onclick="updateProperty();">确定</button>
+								<button class="warning" style="margin-left: 30px;" type="button" onclick="cancel();">取消</button>
+						</div>
+					</div>
+					<div class="buttondiv" style="height: 46px; background: #edf1f9; border: 1px solid #e4e4e4; border-bottom: none;">
+						<a style="cursor: pointer;" onclick="popSkuPropertyQuery();">
+						<i class="on-left"><img src="/ump/images/search.png" width="14" height="14" /></i>
+						查 询</a>&#160;&#160;
+						<a style="cursor: pointer;" onclick="createSkuProperyWindow();">
+							<i class="on-left"><IMG src="/ump/images/add.png"  width="14" height="14" /></i>添 加
+						</a>&#160;&#160;
+					</div>
+					<div id="skuPropertyList">
+						<TABLE class="table striped hovered">
+							<THEAD>
+								<TR>
+									<TH>属性名称</TH>
+									<TH>属性定义</TH>
+									<TH>添加时间</TH>
+									<TH>属性状态</TH>
+									<TH>操作</TH>
+								</TR>
+							</THEAD>
+							<TBODY id="skuPropertyListDataGride">
+
+							</TBODY>
+						</TABLE>
+						<div align="right" style="text-align: right;" id="skuPropertyListFoot">
+							<!--  -->
+ 						</div>
+					</div>
+			</div>
+			<div class="frame grid" id="_page_3">
+				<SCRIPT type="text/javascript">
+					<![CDATA[
+					function openERPSku() {
+						//加载平台
+						loadChannels();
+						//加载sku商品
+						//加载品牌
+						//加载商品状态
+						queryMatchGoodsList(1);
+
+					}
+					function loadChannels() {
+						var url = "/ump/umpchannels/loadChannelsSelect";
+						var param = {};
+						var elementId = "skugoods_channelName";
+						//ajaxLoadData(url, param, elementId);
+						dataAjax(url, param, null, null, createSelect, elementId);
+					}
+					//根据品牌加载sku
+					function loadSkuGoods(barndIds) {
+						var url = "/ump/vocskus/querySkuGoodsList";
+						var param = {
+							vocBrandId : barndIds
+						};
+						var elementId = "_sku_vocSku";
+					//	ajaxLoadData(url, param, elementId);
+						dataAjax(url, param, null, null, createSelect, elementId);
+					}
+					function ercloadVocBrand(id) {
+						var url = "/ump/vocbrands/selectVocBrand";
+						var param = {
+							umpChannelId : id
+						};
+						var elementId = "_sku_umpBrandId";
+						//ajaxLoadData(url, param, elementId);//加载品牌
+						dataAjax(url, param, null, null, createSelect, elementId);
+						//加载所有商品
+						/* var barndIds = "";
+						var arr = new Array();
+
+						$("#_sku_umpBrandId option").each(function() {
+
+							if ($(this).val() == -1) {
+
+							} else {
+								arr.push($(this).val());
+							}
+
+						});
+						barndIds = arr.join(",");
+						loadSkuGoods(barndIds) */
+					}
+					//查询所有商品
+					function queryMatchGoodsList(page) {
+						var param = {};
+						if ($("#skugoods_channelName").val() != -1
+								&& $("#skugoods_channelName").val() != undefined) {
+							param.channelId = $("#skugoods_channelName").val();
+						}
+						if ($("#_sku_vocSku").val() != ''
+								&& $("#_sku_vocSku").val() != undefined) {
+							param.goodsName = $("#_sku_vocSku").val();
+						}
+						if ($("#skuERP_startTime").val() != ''
+								&& $("#skuERP_startTime").val() != null
+								&& $("#skuERP_startTime").val() != undefined) {
+							param.startTimeStr = $("#skuERP_startTime").val();
+						}
+						if ($("#skuERP_endTime").val() != ''
+								&& $("#skuERP_endTime").val() != null
+								&& $("#skuERP_endTime").val() != undefined) {
+							param.endTimeStr = $("#skuERP_endTime").val();
+						}
+						if ($("#_sku_umpBrandId").val() != -1
+								&& $("#_sku_umpBrandId").val() != undefined) {
+							param.vocBrandId = $("#_sku_umpBrandId").val();
+						}
+						if ($("#_skuGoodsStatus").val() != -1) {
+							param.goodsStatus = $("#_skuGoodsStatus").val();
+						}
+						if(page){
+							param.page = page;
+						}else{
+							param.page = 1;
+						}
+						param.page = page;
+						param.size = 10;
+						$.ajax({
+							url : "/ump/vocgoodses/queryVocGoodsList",
+							dataType : "text",
+							type : "POST",
+							data : param,
+							error : function(msg) {
+							},
+							success : function(data) {
+								createData_Gride(data);
+							}
+						});
+					}
+					function createData_Gride(data) {
+						var model = eval("(" + data + ")");
+						var list = eval(model.dataJson);
+						var table = "";
+						for (var i = 0; i < list.length; i++) {
+							table += "<tr>";
+							table += "<td>";
+							if (list[i].status != '通过') {
+								table += "<input type='checkBox' name='selectVocGood' class='matchBox' value='"+list[i].id+"'/>";
+							} else {
+								table += "<input type='checkBox' class='matchBox_Dis' name='selectVocGood' value='"+list[i].id+"'/>";
+							}
+							table += "</td>";
+							table += "<td>";
+							table += list[i].channel.channelName;
+							table += "</td>";
+							table += "<td>";
+							table += list[i].vocBrand.brandName;
+							table += "</td>";
+							table += "<td>";
+							table += list[i].goodsNumber;
+							table += "</td>";
+							table += "<td>";
+							table += list[i].name;
+							table += "</td>";
+							table += "<td>";
+							table += list[i].vocSku==null?"":(list[i].vocSku.vocSkuProperty==null?"":list[i].vocSku.vocSkuProperty.name);
+							table += "</td>";
+							table += "<td>";
+							table +=  list[i].vocSku==null?"":list[i].vocSku.skuCode;
+							table += "</td>";
+							table += "<td>";
+							table += list[i].macthScore == undefined ? ""
+									: list[i].macthScore;
+							table += "</td>";
+							table += "<td>";
+							table += list[i].status;
+							table += "</td>";
+							table += "<td>";
+							table += list[i].matchTime == undefined ? ""
+									: formatData(list[i].matchTime);
+							table += "</td>";
+							table += "<td>";
+							var time=list[i].createTime==null?"":list[i].createTime;
+							table += formatData(time);
+							table += "</td>";
+							table += "<td>";
+							table += list[i].goodsShelvesStatus == null ? ""
+									: list[i].goodsShelvesStatus;
+							table += "</td>";
+							table += "<td>";
+							table += list[i].goodsIsDeleted == null ? ""
+									: list[i].goodsIsDeleted;
+							table += "</td>";
+							table += "<td>";
+							/* if (list[i].status != '通过') {
+								table += '<a href="javascript:approveVocGoods('
+										+ list[i].id
+										+ ','
+										+ model.pageNo
+										+ ');" alt="审批" title="审批"><img alt="审批" class="image" src="/ump/images/swatch.png" title="审批"></a>';
+							}else{
+								table +='<a><img alt="审批" class="image" src="/ump/images/swatch_02.png" title="审批"></a>';
+							} */
+							table += '<a href="javascript:deleteVocGoods('
+									+ list[i].id
+									+ ','
+									+ model.pageNo
+									+ ');" alt="" title=""><img alt="删除" class="image" src="/ump/resources/images/delete.png" title="删除"></a>';
+							table += "</td>";
+							table += "</tr>";
+						}
+						$("#skuGoodsListId").html(table);
+						//if (model.totalCount > 0) {
+							var foot = Page(model, 'queryMatchGoodsList', 14,false);
+							$("#skuGoodsTfood").html(foot);
+						//} else {
+						//	$("#skuGoodsTfood")
+						//			.html(
+						//					'<tr><td  colspan="14"></td></tr>');
+						//}
+
+					}
+					function macthFunction() {
+						var vocGoods = $("input[name ='selectVocGood']:checked");
+						if (vocGoods == undefined || vocGoods.length != 1) {
+							$.Notify({
+								caption : "",
+								content : "请选择一行记录",
+								timeout : 5000
+							// 10 seconds
+							});
+							return;
+						}
+						window.location.href = "/ump/vocgoodses/macthPage?skuGoodsId="
+								+ vocGoods[0].value;
+					}
+					function approveVocGoods(id, page) {
+						if (page == null || page == undefined) {
+							page = 1
+						}
+						if (isNaN(id)) {
+							var selecGoods = $("input[name='selectVocGood']:checked");
+							var arr = [];
+							if (selecGoods != null && selecGoods.length > 0) {
+
+								for (var j = 0; j < selecGoods.length; j++) {
+									if (selecGoods[j].classList[0] == 'matchBox_Dis') {
+										continue;
+									}
+									arr.push(selecGoods[j].value);
+								}
+								if (arr.length > 0) {
+									id = "\'" + arr.join(",") + "\'";
+								}
+							}
+							if (id != '' && id != undefined) {
+							} else {
+								alert("请选择一行未审批的记录");
+								return;
+							}
+
+						}
+						$
+								.Dialog({
+									overlay : true,
+									shadow : true,
+									flat : true,
+									icon : '<img src="images/swatch.png">',
+									title : 'Flat window',
+									content : '',
+									width:200,
+									padding : 10,
+									onShow : function(_dialog) {
+										var content = '<div class="grid">'
+												+ '<div class="row">'
+												+ '<div class="span1">'
+												+ '<label><input type="radio" name="status" checked="checked" value="2"/>'
+												+ '审核通过</label></div>'
+												+ '<div class="span1">'
+												+ '<label><input type="radio" name="status" value="3"/>'
+												+ '审核不通过</label></div>'
+												+ '</div>'
+												+ '<div class="row">'
+												+ '<div class="span1">'
+												+ '<a class="button info" onclick="approve('
+												+ id
+												+ ','
+												+ page
+												+ ')">确定</a> '
+												+ '</div>'
+												+ '<div class="span1">'
+												+ '<button class="warning" type="button" onclick="$.Dialog.close()">取消</button> '
+												+ '</div>' + '</div>'
+												+ '</div>';
+										$.Dialog.title("请选择");
+										$.Dialog.content(content);
+										$.Metro.initInputs();
+										metroOverFlow('',true);
+									}
+								});
+					}
+					function approve(id, page) {
+						var status = $("input[name='status']:checked").val();
+						$.ajax({
+							url : "/ump/vocgoodses/approveVocGoods",
+							dataType : "text",
+							type : "POST",
+							data : {
+								id : id,
+								status : status
+							},
+							error : function(msg) {
+							},
+							success : function(data) {
+								$.Notify({
+									caption : "",
+									content : data,
+									timeout : 3000
+								});
+								$.Dialog.close();
+								//刷新数据
+								queryMatchGoodsList(page);
+							}
+						});
+					}
+					function deleteVocGoods(id, page) {
+						if (!confirm("确定删除?")) {
+							return;
+						}
+						$.ajax({
+							url : "/ump/vocgoodses/deleteVocGoods",
+							dataType : "text",
+							type : "POST",
+							data : {
+								id : id
+							},
+							error : function(msg) {
+							},
+							success : function(data) {
+								//刷新数据
+								queryMatchGoodsList(page);
+							}
+						});
+					}
+					function selectAll(obj) {
+						var arr = document.getElementsByName("selectVocGood");
+						if (obj.checked) {
+							for (var j = 0; j < arr.length; j++) {
+								if (arr[j].classList[0] == 'matchBox_Dis') {
+
+								} else {
+									arr[j].checked = true;
+								}
+
+							}
+						} else {
+							for (var j = 0; j < arr.length; j++) {
+								if (arr[j].classList[0] == 'matchBox_Dis') {
+
+								} else {
+									arr[j].checked = false;
+								}
+
+							}
+						}
+
+					}
+					var erpHtml = "";
+					function popErpQuery() {
+						dilogCenter('erp_div');
+						$("#erp_div").toggle();
+						$("#fade").toggle()
+						//加载品牌
+						loadVocBrands(null, "_sku_umpBrandId");
+						/**
+						$.Dialog({
+							overlay : true,
+							shadow : true,
+							flat : true,
+							draggable:true,
+							icon : '<img src="/ump/images/excel2013icon.png"/>',
+							title : '',
+							content : '',
+							width:850,
+							height:400,
+							padding : 10,
+							onShow : function(_dialog) {
+								if(erpHtml==""){
+									erpHtml = $("#erp_div").html();
+									$("#erp_div").remove();
+								}
+								var content = erpHtml;
+								$.Dialog.title("查询");
+								$.Dialog.content(content);
+								$.Metro.initInputs();
+							}
+						});
+						 **/
+					}
+					]]>
+				</SCRIPT>
+					<div style="display: none;width: 600px;" class="search" id="erp_div">
+						<div class="close">
+							<img src="/ump/images/close.png" width="24" height="24"
+								onclick="javascript:closePage('erp_div');"
+								style="cursor: pointer;" />
+						</div>
+						<div class="mtitle">
+							<I class="on-left"><img src="/ump/images/search.png" width="14" height="14"
+								style="cursor: pointer;" /></I>查询
+						</div>
+						<div class="grid">
+							<FORM action="" id="erp_search_form">
+								<DIV class="row">
+									<div class="span gridTitle">平台名称 ：</div>
+									<div class="span4">
+										<SELECT name="skugoods_channelName" id="skugoods_channelName"
+											class="publicSize">
+										<!-- onchange="ercloadVocBrand(this.value);" -->
+											<OPTION selected="selected" value="-1">请选择</OPTION>
+										</SELECT>
+									</div>
+									<div class="span gridTitle">商品名称 ：</div>
+									<DIV class="span4">
+										<input name="_sku_vocSku" id="_sku_vocSku" class="publicSize"/>
+									</DIV>
+								</DIV>
+								<div class="row">
+									<div class="span gridTitle">品牌名称 ：</div>
+									<div class="span4">
+										<SELECT name="_sku_umpBrandId" id="_sku_umpBrandId"
+											class="publicSize">
+											<OPTION selected="selected" value="-1">请选择</OPTION>
+										</SELECT>
+									</div>
+									<div class="span gridTitle">商品状态：</div>
+									<DIV class="span4">
+										<SELECT name="skuGoodsStatus" id="_skuGoodsStatus"
+											class="publicSize">
+											<OPTION selected="selected" value="-1">请选择</OPTION>
+											<OPTION value="0">未匹配</OPTION>
+											<OPTION value="1">未审批</OPTION>
+											<OPTION value="2">通过</OPTION>
+											<OPTION value="3">未通过</OPTION>
+										</SELECT>
+									</DIV>
+								</div>
+								<div class="row">
+									<div class="span gridTitle">导入时间：</div>
+									<DIV class="span4">
+										<input type="text" name="skuERP_startTime" value=""
+											id="skuERP_startTime" class="Wdate publicSize"
+											onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+									</DIV>
+									<div class="span gridTitle">
+										至：
+									</div>
+									<DIV class="span4">
+										<input type="text" name="skuERP_endTime"
+											class="Wdate publicSize" value="" id="skuERP_endTime"
+											onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+									</DIV>
+								</div>
+							</FORM>
+							<div class="btnCenter">
+										<INPUT type="button" class="info"
+											onclick="queryMatchGoodsList(1);closePage('erp_div');" value="查询" />
+										<INPUT type="button" class="warning" value="重置" onclick="$('#erp_search_form')[0].reset();" />
+								</div>
+						</div>
+					</div>
+					<style>
+th {
+	white-space: nowrap;
+}
+
+td {
+	white-space: nowrap;
+}
+</style>
+			<div class="buttondiv" style="height: 46px; background: #edf1f9; border: 1px solid #e4e4e4; border-bottom: none;">
+								<a style="cursor: pointer;" onclick="popErpQuery();">
+								<i class="on-left"><img src="/ump/images/search.png" width="14" height="14" /></i>
+									查 询</a>&#160;&#160;
+								<!-- <a style="cursor: pointer;" onclick="macthFunction();">
+								<IMG src="/ump/images/add.png"  width="14" height="14" />匹配
+								</a>&#160;&#160; -->
+								<!--<a style="cursor: pointer;" onclick="approveVocGoods();">
+									<i class="on-left"><img src="/ump/images/search.png" width="14" height="14" /></i>审 批
+								</a>-->
+			</div>
+					<div style="overflow: auto;">
+						<TABLE class="table striped hovered">
+							<THEAD>
+								<TR>
+									<TH><INPUT type="checkbox" onclick="selectAll(this);" /></TH>
+									<TH>平台名称</TH>
+									<TH>品牌名称</TH>
+									<TH>商品编码</TH>
+									<TH>商品名称</TH>
+									<TH>商品属性</TH>
+									<TH>sku编码</TH>
+									<TH>匹配分值</TH>
+									<TH>审批状态</TH>
+									<TH>匹配时间</TH>
+									<TH>导入时间</TH>
+									<TH>上架状态</TH>
+									<TH>商品状态</TH>
+									<TH>操作</TH>
+								</TR>
+							</THEAD>
+							<TBODY id="skuGoodsListId">
+
+							</TBODY>
+						</TABLE>
+					</div>
+					<div align="right" style="text-align: right;" id="skuGoodsTfood"><!--  --></div>
+			</div>
+		</div>
+	</div>
+	<DIV id="fade" class="black_overlay"></DIV>
+</div>

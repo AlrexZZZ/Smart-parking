@@ -1,0 +1,334 @@
+<html xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:tiles="http://tiles.apache.org/tags-tiles"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>xxxxxxx管理平台</title>
+</head>
+
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:spring="http://www.springframework.org/tags" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<style>
+a {
+	text-decoration: none;
+}
+
+.contain {
+	width: 100%;
+	min-width: 992px;
+	max-width: 1200px;
+	margin: 0 auto;
+	height: auto;
+	overflow: hidden;
+	clear: both;
+}
+
+.logo {
+	width: 100%;
+	height: auto;
+	overflow: hidden;
+	clear: both;
+	text-align: center;
+	margin-top: 100px;
+}
+
+.logo img {
+	width: 13%;
+	height: auto;
+	max-width: 410px;
+}
+
+.form_con {
+	width: 400px;
+	margin: 0 auto;
+	height: auto;
+	overflow: hidden;
+	clear: both;
+	margin-top: 25px;
+}
+
+.form_list1 {
+	width: 380px;
+	margin: 0 auto;
+	height: auto;
+	overflow: hidden;
+	clear: both;
+	padding-bottom: 30px;
+	text-align: center;
+}
+
+.form_list1 input {
+	width: 350px;
+	margin: 0 auto;
+	height: 35px;
+	appearance: none;
+	-webkit-appearance: none;
+	border: 0px;
+	border-radius: 2px;
+	font-family: "微软雅黑";
+	font-size: 15px;
+	background: url(/ump/images/loginImages/login1_07.png) no-repeat 1%
+		center #fff;
+	background-size: 22px 20px;
+	padding-left: 30px;
+	color: #333;
+}
+
+.form_list2 {
+	width: 380px;
+	margin: 0 auto;
+	height: auto;
+	overflow: hidden;
+	clear: both;
+	padding-bottom: 30px;
+	text-align: center;
+}
+
+.form_list2 input {
+	width: 350px;
+	margin: 0 auto;
+	height: 35px;
+	appearance: none;
+	-webkit-appearance: none;
+	border: 0px;
+	border-radius: 2px;
+	font-family: "微软雅黑";
+	font-size: 15px;
+	background: url(/ump/images/loginImages/login1_10.png) no-repeat 1%
+		center #fff;
+	background-size: 22px 20px;
+	padding-left: 30px;
+	color: #333;
+}
+
+.form_list3 {
+	width: 380px;
+	margin: 0 auto;
+	height: auto;
+	overflow: hidden;
+	clear: both;
+	padding-bottom: 30px;
+	text-align: center;
+}
+
+.form_list3 input {
+	width: 350px;
+	margin: 0 auto;
+	height: 35px;
+	appearance: none;
+	-webkit-appearance: none;
+	border: 0px;
+	border-radius: 2px;
+	font-family: "微软雅黑";
+	font-size: 15px;
+	background: url(/ump/images/loginImages/login1_05.png) no-repeat 1%
+		center #fff;
+	background-size: 22px 20px;
+	padding-left: 30px;
+	color: #333;
+}
+
+.rem {
+	width: 350px;
+	margin: 0 auto;
+	height: auto;
+	overflow: hidden;
+	clear: both;
+	padding-bottom: 15px;
+}
+
+.remL {
+	width: 49%;
+	height: auto;
+	overflow: hidden;
+	float: left;
+	font-family: "微软雅黑";
+	font-size: 12px;
+	color: #fff;
+	text-align: left;
+}
+
+.remL input[type='checkbox'] {
+	margin-top: 1px;
+	vertical-align: middle;
+}
+
+.remR {
+	width: 49%;
+	height: auto;
+	overflow: hidden;
+	float: right;
+	font-family: "微软雅黑";
+	font-size: 12px;
+	color: #fff;
+	text-align: right;
+}
+
+.remR a {
+	color: #fff;
+}
+
+.anniu {
+	width: 380 px;
+	margin: 0 auto;
+	height: auto;
+	overflow: hidden;
+	clear: both;
+	text-align: center;
+}
+
+.anniu input {
+	width: 350px;
+	height: 35px;
+	border: 0px;
+	border-radius: 5px;
+	text-align: center;
+	background: #006d95;
+	color: #fff;
+	font-family: "微软雅黑";
+	font-size: 16px;
+	cursor: pointer;
+	outline: none;
+	width: 380px\9\0;
+	width: 380px\9;
+}
+
+.yz {
+	width: 30%;
+	height: auto;
+	float: right;
+	overflow: hidden;
+	text-align: right;
+	width: 100px\9\0;
+}
+
+.yz img {
+	width: 100%;
+	height: auto;
+	max-width: 89px;
+	margin-top: 1px;
+}
+
+.form_list4 {
+	clear: both;
+	height: auto;
+	margin: 0 auto;
+	overflow: hidden;
+	padding-bottom: 10px;
+	text-align: center;
+	width: 355px;
+	width: 385px\9\0;
+}
+
+.form_list4 input {
+	background: url("/ump/images/loginImages/login1_03-02.png") no-repeat
+		scroll 2.5% center/22px 20px #FFF;
+	border: 0px none;
+	border-radius: 2px;
+	color: #333;
+	float: left;
+	font-family: "微软雅黑";
+	font-size: 15px;
+	height: 35px;
+	margin-left: 3px;
+	padding-left: 8.5%;
+	width: 240px;
+}
+</style>
+
+	<script type="text/javascript">
+		function submitForm() {
+			var companyCode = document.getElementById("companyCode").value;
+			if (companyCode == "") {
+				document.getElementById('msg').innerHTML = "请输入公司ID";
+				return;
+			}
+			var account = document.getElementById("account").value;
+			if (account == "") {
+				document.getElementById('msg').innerHTML = "请输入账号";
+				return;
+			}
+			var password = document.getElementById("password").value;
+			if (password == "") {
+				document.getElementById('msg').innerHTML = "请输入密码";
+				return;
+			}
+			//ajax 验证码
+			var code = document.getElementById("code").value;
+			if (code == "") {
+				document.getElementById('msg').innerHTML = "请输入验证码";
+				return;
+			}
+			document.getElementById("loginForm").submit();
+		}
+
+		function keyDown(e) {
+			var ev = window.event || e;
+			if (ev.keyCode == 13) {
+				submitForm();
+			}
+		}
+
+		function refresh(obj) {
+			obj.src = "/ump/verCode?time=" + Math.random();
+		};
+	</script>
+	<body style="background: #069dd5;">
+		<div class="contain">
+			<!--contain-->
+			<div class="logo">
+				<img src="/ump/images/loginImages/login1_03.png" alt="" />
+			</div>
+			<div class="form_con">
+				<!--form-->
+				<FORM action="/ump/umps" method="post" id="loginForm">
+					<div class="form_list3">
+						<input type="text" id="companyCode" name="companyCode"
+							autocomplete="off" placeholder="请输入公司ID" value="" />
+					</div>
+					<div class="form_list1">
+						<input type="text" name="account" id="account" autocomplete="off"
+							placeholder="请输入帐号" value="${account}" />
+					</div>
+					<div class="form_list2">
+						<input type="password" name="password" id="password"
+							autocomplete="off" placeholder="请输入密码" />
+					</div>
+					<div class="form_list4">
+						<input type="text" placeholder="请输入验证码" id="code" name="code"
+							autocomplete="off" onkeydown="keyDown(event);" />
+						<div class="yz">
+							<img title="点击更换" onclick="javascript:refresh(this);"
+								src="/ump/verCode" />
+						</div>
+					</div>
+					<div class="rem">
+						<div class="remL">
+							<span id="msg"
+								style="color: #f8f301; font-size: 12px; font-family: Microsoft Yahei; font-weight: bold;">${msg}</span>
+						</div>
+						<div class="remR">
+							<a href="/ump/forgetPass">忘记密码</a> | <a href="/ump/register">立即注册</a>
+						</div>
+					</div>
+					<div class="anniu">
+						<input type="button" value="登  录" onclick="submitForm();" />
+					</div>
+				</FORM>
+			</div>
+			<!--form end-->
+		</div>
+		<div class="footer"
+			style="color: white; font-size: 12px; width: 100%; height: 20px; font-family: Arial; position: fixed; bottom: 10px; text-align: center;">
+			xxxxxxx</div>
+		<!--contain end-->
+	</body>
+</div>
+</html>

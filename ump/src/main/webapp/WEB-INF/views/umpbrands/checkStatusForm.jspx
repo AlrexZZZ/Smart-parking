@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_nineclient_model_UmpBrand" modelAttribute="umpBrand" path="/umpbrands/checkStatus" versionField="Version" z="73t/lbQ8Sapc25kWLQ9IMw9KVU4=">
+        <field:select id="c_com_nineclient_model_UmpBrand_businesses" items="${umpbusinesstypes}" field="businesses" itemValue="id" path="/umpbusinesstypes"></field:select>
+        <field:input field="BrankName" id="c_com_nineclient_model_UmpBrand_BrankName" max="30" required="true"  z="y8+7x1kRDe92FBuCYaXoWMpECN8="/>
+        <field:select field="checkStatus" id="c_com_nineclient_model_UmpBrand_checkStatus" items="${umpcheckstatuses}" path="umpcheckstatuses" z="w7j3R+n8CvJATUaHaiKJBmsGQyM="/>
+        <field:checkbox field="isDeleted"  id="c_com_nineclient_model_UmpBrand_isDeleted" z="XBQNKbnzXOCjRDFnLkiCuF1Bo0E="/>
+        <field:datetime dateTimePattern="${umpBrand_createtime_date_format}" field="createTime" id="c_com_nineclient_model_UmpBrand_createTime" required="true" z="rCuVdEJ/c2Py+f+j0uPt4M1OlrQ="/>
+        <field:textarea field="remark" id="c_com_nineclient_model_UmpBrand_remark"   z="h6IcIQMjt8Z0HNwrN/5f17qZFSw="/>
+    </form:update>
+</div>

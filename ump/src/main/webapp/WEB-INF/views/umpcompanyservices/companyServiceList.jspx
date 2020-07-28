@@ -1,0 +1,942 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<style>
+	@IMPORT url("/ump/styles/css.css");
+	@IMPORT url("/ump/styles/jquery.customSelect.css");
+	</style>
+	<SCRIPT type="text/javascript" src="/ump/js/jquery.customSelect.js"><!----></SCRIPT> 
+	<style>
+	@IMPORT url("/ump/styles/url.css");
+	</style>
+	<style>
+    @IMPORT url("/ump/styles/selectTree.css");
+	 </style>
+ <script type="text/javascript" src="/ump/js/selectTree.js"><!----></script>
+ 
+	<SCRIPT type="text/javascript">
+	 <![CDATA[
+		//下拉复选
+		var setting1 = {
+			check : {
+				enable : true,
+				chkboxType : {
+					"Y" : "",
+					"N" : ""
+				}
+			},
+			view : {
+				showLine : false,
+				dblClickExpand : false
+			},
+			data : {
+				simpleData : {
+					enable : true
+				}
+			},
+			callback : {
+				beforeClick : beforeClick,
+				onCheck : onCheck
+			}
+		};
+		
+		
+		/**
+		*下拉复选
+		*/
+		function createMultSelected(treeDemoId,zNodes1){
+			//$.fn.zTree.init($("#"+treeDemoId), setting1, zNodes1);
+			$("#"+treeDemoId).html(createOption(zNodes1));
+			$('#'+treeDemoId).customSelect({});
+		} 
+		function createOption(data){
+			var op="<option value=''>请选择</option>";
+			for(var i=0;i<data.length;i++){
+				op+="<option value='"+data[i].id+"'>"+data[i].name+"</option>";
+			}
+			return op;
+		}
+		function beforeClick(treeId, treeNode) {
+			var zTree = $.fn.zTree.getZTreeObj(treeId);
+			zTree.checkNode(treeNode, !treeNode.checked, null, true);
+			return false;
+		}
+		
+		function onCheck(e, treeId, treeNode) {
+			var zTree = $.fn.zTree.getZTreeObj(treeId), nodes = zTree
+					.getCheckedNodes(true), v = "", vid = "";
+			for (var i = 0, l = nodes.length; i < l; i++) {
+				v += nodes[i].name + ",";
+				vid += nodes[i].id + ",";
+			}
+		 if (v.length > 0)
+		   v = v.substring(0, v.length - 1);
+			vid = vid.substring(0, vid.length - 1);
+			 $("#"+globalInputId).attr("value", v);
+			 $("#"+globalInputId.replace("_","")).attr("value", vid);
+			 if($("#"+globalInputId).val() == ""){
+			   $("#"+globalInputId).attr("value","请选择");
+			 }
+		}
+		
+		/**
+		*隐藏下拉复选
+		*/
+		function slelctHideMenu() {
+			 if("" != globalMenuContentId){
+				$("#"+globalMenuContentId).fadeOut("fast");
+				$("body").unbind("mousedown", selectOnBodyDown);
+				globalMenuContentId = "";
+				globalInputId = "";
+			 }
+		}
+		
+		function selectOnBodyDown(event) {
+			if(event.target.id == ""){
+				slelctHideMenu();
+			}
+			
+		}
+		
+		function showMenu(inputId,menuContentId) {
+			globalMenuContentId = menuContentId;
+			globalInputId = inputId;
+			var SelObj = $("#"+inputId);
+			var SelOffset = $("#"+inputId).offset();
+			$("#"+menuContentId).css({
+			}).slideDown("fast");
+		
+			$("body").bind("mousedown", selectOnBodyDown);
+		}       
+		          
+	          
+		$(document).ready(function() {
+			queryCompanyService();
+		 });
+	
+	
+	function queryCompanyService(pageNo) {
+		var start = 0;
+		var limit = 10;
+		if (pageNo > 0) {
+		  start = (pageNo - 1) * limit;
+		}
+		
+		var companyCode = $("#companyCodeId").val();
+		var companyServiceStatus = $("#serviceStatusId").val();
+		var productId = $("#productId").val();
+		var versionId = $("#queryVersionId").val();
+		var channelId = $("#queryChannelId").val();
+		var serviceStartTime  = $("#queryServiceStartTimeId").val();
+		var serviceEndTime  = $("#queryServiceEndTimeId").val();
+		
+		var parmam = {
+			start : start,
+			limit : limit,
+			companyCode:companyCode,
+			companyServiceStatus:companyServiceStatus,
+			productId:productId,
+			versionId:versionId,
+			channelId:channelId,
+			serviceStartTime:serviceStartTime,
+			serviceEndTime:serviceEndTime
+		};
+
+		$.ajax({
+			url : "/ump/umpcompanyservices/queryCompanyService",
+			type : "POST",
+			data : parmam,
+			error : function(msg) {
+				alert("error " + msg);
+			},
+			success : function(text) {
+				$("#showResult").html(text);
+			}
+		});
+	}
+	
+	/**
+	 *重置
+	 */
+	function reset(){
+	  $("#companyCodeId").val('');
+	  $("#serviceStatusId").val('');
+	  $("#productId").val('');
+	  $("#versionId").val('');
+	  $("#channelsId").val('');
+	  $("#serviceStartTimeId").val('');
+	  $("#serviceEndTimeId").val('');
+	  
+	}
+	
+	  var html ="";
+	 function showAddCompanyService() {
+		 var companyCode = $('input:radio:checked').val();
+		 if(companyCode==undefined||companyCode==null||companyCode==""){
+			 alert("请选择一行");
+			 return;
+		 }
+		
+		   $.Dialog({
+				overlay : true,
+				shadow : true,
+				flat : true,
+				icon : '<img src="/ump/images/excel2013icon.png"/>',
+				title : '添加服务',
+				content : '',
+				padding : 20,
+				height : 300,
+				width : 500,
+				onShow : function(_dialog) {
+					if(html==""){
+					  html = $("#addDialog").html();
+					  $("#addDialog").remove();
+					}
+					$.Dialog.content(html);
+					$.Metro.initInputs();
+					$("#companyCode").val(companyCode);
+				}
+			});
+		   
+		   //根据公司code获取公司的服务
+			  getAddableProductByCompanyCode(companyCode);
+		}
+	 
+	
+	 /**
+	  *根据公司id获取可以可以添加的产品 
+	  *
+	  */
+	 function getAddableProductByCompanyCode(companyCode){
+		 var parmam = {companyCode:companyCode};
+		 $.ajax({
+				url : "/ump/umpcompanyservices/queryAddableProductByCompanyCode",
+				type : "POST",
+				async: false, 
+				data : parmam,
+				error : function(msg) {
+					alert("操作失败 !");
+				},
+				success : function(text) {
+				 var jsonStr = eval("("+text+")");
+				 
+				 if (jsonStr.length > 0) {
+						$("#addProductId").empty();
+						var defaultId = "";
+						$("#addProductId").append(
+								"<option value="+defaultId+" >请选择</option>");
+						$.each(jsonStr, function(id, product) {
+						 $("#addProductId").append("<option value="+product.id+">" + product.name+ "</option>");
+						});
+					}
+					
+					
+				}
+			});
+		 
+	 }
+	 
+	 /**
+	  *添加服务
+	  */
+	 function addService(){
+		 var companyCode = $("#companyCode").val();
+		 var productId=$("#addProductId").val();
+		 var versionId=$("#addVersionId").val();
+		 var channelIds=$("#add_Channel_Id").val();
+		 var maxAccount=$("#maxAccount").val();;
+		 var serviceStartTime = $("#serviceStartTimeId").val();
+		 var serviceEndTime = $("#serviceEndTimeId").val();
+		 var startDate = Date.parse(serviceStartTime.replace(/-/g,"/"));
+		 var endDate = Date.parse(serviceEndTime.replace(/-/g,"/"));
+		 
+		 if(null == productId || '' == productId){
+			 alert("请选择产品!");
+			 return;
+		 }
+		 
+		 if(null == versionId || '' == versionId){
+			 alert("请选择版本!");
+			 return;
+		 }
+		 
+		 if(null == channelIds || '' == channelIds){
+			 alert("请选择渠道!");
+			 return;
+		 }
+		 
+		 if(null == maxAccount || '' == maxAccount){
+			 alert("请输入最大账号数!");
+			 return;
+		 }else{
+		    if(!/^[0-9]*$/.test(maxAccount)){
+			   alert("开通账号数请输入数字!");
+			   return;
+			}
+		 }
+		 
+		 if(null == serviceStartTime || '' == serviceStartTime){
+			 alert("请输入服务开始时间!");
+			 return;
+		 }
+		 
+		 if(null == serviceEndTime || '' == serviceEndTime){
+			 alert("请输入服务结束时间!");
+			 return;
+		 }
+		 
+		 
+		 if(startDate > endDate){
+			alert("服务结束时间必须大于开始时间!");
+			return;
+		 }
+		 
+		 var parmam = {
+			 companyCode: companyCode,
+			 productId:productId,
+			 channelIds:channelIds.join(','),
+			 versionId:versionId,
+			 maxAccount:maxAccount,
+			 serviceStartTime:serviceStartTime,
+			 serviceEndTime:serviceEndTime
+		 };
+		 
+		 $.ajax({
+				url : "/ump/umpcompanyservices/addService",
+				type : "POST",
+				data : parmam,
+				error : function(msg) {
+					alert("操作失败 !");
+					
+				},
+				success : function(text) {
+					var jsonStr = eval("("+text+")");
+					if(jsonStr.success){
+					  queryCompanyService();
+					}
+					
+					$.Dialog.close()
+				}
+			});
+		 
+		 
+	 }
+	 
+	 
+	 /**
+		 *生成下拉框，针对查询
+		 */
+		function createSelectQuery(id, channelId, versionId,div) {
+			
+			$.ajax({
+				url : "/ump/umpcompanyservices/getUmpChanelByProduct",
+				type : "POST",
+				data : {
+					'id' : id
+				},
+				error : function(msg) {
+					alert("msg " + msg);
+				},
+				success : function(text) {
+					var data = eval("("+text+")");
+					createSelectElem(data,channelId,div+"_Channel");
+				}
+			});
+			
+
+			$.ajax({
+				url : "/ump/umpcompanyservices/getUmpVersionByProduct",
+				//dataType:"json",
+				type : "POST",
+				data : {
+					'id' : id
+				},
+				error : function(msg) {
+					alert("msg " + msg);
+				},
+				success : function(text) { //若Ajax处理成功后的回调函数，text是返回的页面信息
+					var data = eval("("+text+")");
+					createSelectElem(data,versionId,div+"_Version")
+				}
+			});
+
+		}
+		
+	 
+		/**
+		 *生成下拉框
+		 */
+		function createSelect(id, channelId, versionId,div) {
+			if(id==2){//voc
+				$.ajax({
+					url : "/ump/umpcompanyservices/getUmpChanelByProduct",
+					type : "POST",
+					data : {
+						'id' : id
+					},
+					error : function(msg) {
+						alert("msg " + msg);
+					},
+					success : function(text) {
+					  var data = eval("("+text+")");
+					  var jsonStr = '[';
+					  var flag = true;
+					   for(var i=0;i<data.length;i++){
+                           if(flag){
+                        	 jsonStr += '{"id":"'+data[i].id+'","name":"'+data[i].name+'","pid":"0","open":"true"}';   
+                        	 flag = false;
+                           }else{
+                        	 jsonStr += ',{"id":"'+data[i].id+'","name":"'+data[i].name+'","pid":"0","open":"true"}';
+                           }						   
+						   
+					   }
+					  jsonStr += ']';
+					  createMultSelected("add_Channel_Id",eval("("+jsonStr+")"));
+					}
+				});
+				
+			}else{
+				$.ajax({
+					url : "/ump/umpcompanyservices/getUmpChanelByProduct",
+					type : "POST",
+					data : {
+						'id' : id
+					},
+					error : function(msg) {
+						alert("msg " + msg);
+					},
+					success : function(text) {
+						var data = eval("("+text+")");
+						 createMultSelected("add_Channel_Id",data);
+					}
+				});
+			}
+			
+
+			$.ajax({
+				url : "/ump/umpcompanyservices/getUmpVersionByProduct",
+				//dataType:"json",
+				type : "POST",
+				data : {
+					'id' : id
+				},
+				error : function(msg) {
+					alert("msg " + msg);
+				},
+				success : function(text) { //若Ajax处理成功后的回调函数，text是返回的页面信息
+					var data = eval("("+text+")");
+					createSelectElem(data,versionId,div+"_Version")
+				}
+			});
+
+		}
+		
+		
+		function showCompany(id){
+			$.ajax({
+				url : "/ump/umpcompanyservices/getUmpCompanyByCode",
+				//dataType:"json",
+				type : "POST",
+				data : {
+					'companyCode' : id
+				},
+				error : function(msg) {
+					alert("msg " + msg);
+				},
+				success : function(text) { //若Ajax处理成功后的回调函数，text是返回的页面信息
+					var jsonStr = eval("("+text+")");
+				var showCompanyStr ="";
+				showCompanyStr += "<div class='grid'>";
+				showCompanyStr += "<div class='row'>";
+				showCompanyStr += " <div class='span1'>公司ID:</div>";
+				showCompanyStr += " <div class='span2'>"+jsonStr.id+"</div>";
+				showCompanyStr += " </div>";
+				showCompanyStr += " <div class='row'>";
+				showCompanyStr += " <div class='span1'>公司名称:</div>";
+				showCompanyStr += " <div class='span2'>"+jsonStr.name+"</div>";
+				showCompanyStr += " </div>";
+				showCompanyStr += " <div class='row'>";
+				showCompanyStr += " <div class='span1'>账 号:</div>";
+				showCompanyStr += " <div class='span2'>"+jsonStr.account+"</div>";
+				showCompanyStr += " </div>";
+				showCompanyStr += " <div class='row'>";
+				showCompanyStr += " <div class='span1'>邮 箱:</div>";
+				showCompanyStr += " <div class='span2'>"+jsonStr.email+"</div>";
+				showCompanyStr += " </div>";
+				showCompanyStr += " <div class='row'>";
+				showCompanyStr += " <div class='span1'>电 话:</div>";
+				showCompanyStr += " <div class='span2'>"+jsonStr.mobile+"</div>";
+				showCompanyStr += " </div>";
+				showCompanyStr += "  <div class='row'>";
+				showCompanyStr += " <div class='span1'>公司网址:</div>";
+				showCompanyStr += " <div class='span2'>"+jsonStr.url+"</div>";
+				showCompanyStr += " </div>";
+				showCompanyStr += " <div class='row'>";
+				showCompanyStr += " <div class='span1'>地 址:</div>";
+				showCompanyStr += " <div class='span2'>"+jsonStr.address+"</div>";
+				showCompanyStr += " </div>";
+				showCompanyStr += "</div>";
+				showTable(showCompanyStr);
+				}
+			});
+		}
+		
+		
+		function showTable(html){
+			$.Dialog({
+				overlay : true,
+				shadow : true,
+				flat : true,
+				icon : '<img src="/ump/images/excel2013icon.png"/>',
+				title : '公司信息',
+				content : '',
+				padding : 20,
+				height : 300,
+				width : 500,
+				onShow : function(_dialog) {
+					$.Dialog.content(html);
+					$.Metro.initInputs();
+				}
+			});
+		}
+		
+		/**
+		 *编辑
+		 */
+		var html_ ="";
+		function showUpdateService (companyCode,id,productId,versionId,maxAccount,serviceStartTime,serviceEndTime,companyServiceStatus) {
+			
+			 if(companyCode==undefined||companyCode==null||companyCode==""){
+				 alert("数据异常");
+				 return;
+			 }
+				$.Dialog({
+					overlay : true,
+					shadow : true,
+					flat : true,
+					icon : '<img src="/ump/images/excel2013icon.png"/>',
+					title : '编辑服务',
+					content : '',
+					padding : 20,
+					height : 300,
+					width : 500,
+					onShow : function(_dialog) {
+						if(html_==""){
+							html_ = $("#updateDialog").html();
+						  $("#updateDialog").remove();
+						}
+						$.Dialog.content(html_);
+						$.Metro.initInputs();
+						$(".window-overlay").unbind('click');
+						$("#companyCodeId_").val(companyCode);
+						$("#productId_").val(productId);
+						$("#companyServiceId").val(id);
+						$("#maxAccountId").val(maxAccount);
+						$("#updateServiceStartTimeId").val(serviceStartTime.replace(" 00:00:00.0",""));
+						$("#updateServiceEndTimeId").val(serviceEndTime.replace(" 00:00:00.0",""));
+						//$("#updateCompanyServiceStatusId option[value !='"+companyServiceStatus+"']").remove();
+						
+						$("#updateCompanyServiceStatusId option").each(function(){ //状态只保留自带的，开通和停止
+							if(!($(this).val() == companyServiceStatus|$(this).val() ==2|$(this).val() ==4)){
+							   $(this).remove();
+							 }
+						  });
+						 
+						 $("#updateCompanyServiceStatusId").val(companyServiceStatus);
+						$("#companyServiceId").val(id);
+						
+						$.ajax({
+							url : "/ump/umpcompanyservices/getProductById",
+							type : "POST",
+							data : {
+								'productId' : productId
+							},
+							error : function(msg) {
+								alert("msg " + msg);
+							},
+							success : function(text) {
+								var data = eval("("+text+")");
+								//createSelectElem(data,'productId_',"updateDiv_Product",true);
+								//$("#productId_").val(productId);
+								for(var i=0;i<data.length;i++){
+									$("#show_productId_").attr("value",data[i].name);
+									$("#productId_").val(data[i].id);
+								}
+								
+							}
+						});
+						
+						$.ajax({
+							url : "/ump/umpcompanyservices/getVersionById",
+							type : "POST",
+							data : {
+								'versionId' : versionId
+							},
+							error : function(msg) {
+								alert("msg " + msg);
+							},
+							success : function(text) {
+								var data = eval("("+text+")");
+								//createSelectElem(data,'updateVersionId',"updateDiv_Version");
+								$("#show_updateVersionId").val(data[0].name);
+								$("#updateVersionId").val(data[0].id);
+							}
+						});
+						
+						 var selectedChannel ;
+						 var allChannels;
+							$.ajax({
+								url : "/ump/umpcompanyservices/getCheckedMultSelect",
+								type : "POST",
+								data : {
+									'companyServiceId':id,
+									'productId' : productId
+								},
+								error : function(msg) {
+									alert("msg " + msg);
+								},
+								success : function(text) {
+								  var data = eval("("+text+")");
+								  selectedChannel = data.selectedChannels;
+								  allChannels = data.allChannels;
+								  createMultSelected("update_Channel_id",allChannels);
+								  //选中
+									 var seaHtml="";
+									 var idarr=[];
+									 for(var n=0;n<selectedChannel.length;n++){
+										 idarr.push(selectedChannel[n].id);
+										 $("#update_Channel_id_customSelect_"+selectedChannel[n].id)[0].checked=true;
+										 seaHtml+=$("#update_Channel_id_customSelect_"+selectedChannel[n].id).parent().find('span').html();
+										if(n!=selectedChannel.length-1){
+											seaHtml+=",";
+										}
+									 }
+									 $(".ui-customSelect-window").find('span').html(seaHtml);
+									 $("#update_Channel_id").val(idarr);
+								
+								}
+							});
+							
+						
+					}
+				});
+			}
+		
+		
+		/**
+		 * 修改服务
+		 */
+	   function updateService(){
+			 var companyCode = $("#companyCode").val();
+			 var productId=$("#productId_").val();
+			 var versionId=$("#updateVersionId").val();
+			 var channelIds=$("#update_Channel_id").val();
+			 var maxAccount=$("#maxAccountId").val();;
+			 var serviceStartTime = $("#updateServiceStartTimeId").val();
+			 var serviceEndTime = $("#updateServiceEndTimeId").val();
+			 var companyServiceStatus = $("#updateCompanyServiceStatusId").val();
+			 var startDate = Date.parse(serviceStartTime.replace(/-/g,"/"));
+			 var endDate = Date.parse(serviceEndTime.replace(/-/g,"/"));
+			 var id =  $("#companyServiceId").val();
+			 
+			 if(null == productId || '' == productId){
+				 alert("请选择产品!");
+				 return;
+			 }
+			 
+			 if(null == versionId || '' == versionId){
+				 alert("请选择版本!");
+				 return;
+			 }
+			 
+			 if(null == channelIds || '' == channelIds){
+				 alert("请选择渠道!");
+				 return;
+			 }
+			 
+			 if(null == maxAccount || '' == maxAccount){
+				 alert("请输入最大账号数!");
+				 return;
+			 }else{
+			    if(!/^[0-9]*$/.test(maxAccount)){
+				   alert("最大账号数必须为数字!");
+				   return;
+				}
+			 }
+			 
+			 if(null == serviceStartTime || '' == serviceStartTime){
+				 alert("请输入服务开始时间!");
+				 return;
+			 }
+			 
+			 if(null == serviceEndTime || '' == serviceEndTime){
+				 alert("请输入服务结束时间!");
+				 return;
+			 }
+			 
+			 if(startDate > endDate){
+				alert("到期时间不能小于开通时间!");
+				return;
+			 }
+			
+			 if(null == companyServiceStatus || '' == companyServiceStatus){
+				 alert("请选择服务状态!");
+				 return;
+			 }
+			 
+			 var parmam = {
+				  id:id,
+				 companyCode: companyCode,
+				 productId:productId,
+				 channelIds:channelIds.join(','),
+				 versionId:versionId,
+				 maxAccount:maxAccount,
+				 serviceStartTime:serviceStartTime,
+				 serviceEndTime:serviceEndTime,
+				 companyServiceStatus:companyServiceStatus
+			 };
+			 
+			 $.ajax({
+					url : "/ump/umpcompanyservices/updateService",
+					type : "POST",
+					data : parmam,
+					error : function(msg) {
+						alert("操作失败 !");
+					},
+					success : function(text) {
+						queryCompanyService();
+						$.Dialog.close();
+					}
+				});
+			
+			
+		}
+		
+		
+	function createSelectElem(data,seleName,div,defaultVal){
+				var id_=seleName;
+				var div_=div;
+				var sel="<select id="+id_+" name="+id_+" class='publicSize'>";
+				if(!defaultVal){
+				  var defaultId = "";
+				  sel += "<option value="+defaultId+" >请选择</option>";
+				}
+				for(var i=0;i<data.length;i++){
+					sel+="<option value="+data[i].id+">"+data[i].name+"</option>";
+				}
+				sel+="</select>";
+				$("#"+div_).html("");
+				$("#"+div_).html(sel);
+			}
+	
+	 ]]>
+	</SCRIPT>
+
+
+
+	 <DIV id="addDialog" style="display: none">
+		<FORM action="/ump/umpcompanyservices/addService" method="post" style="width: 100%">
+		<div class="grid">
+	    <div class="row">
+			  <div class="span gridTitleBig">公司ID：</div>
+			  <div class="span2"> <input id="companyCode" class="publicSize" name="companyCode" readonly="true"/> </div>
+		 </div>
+		 <div class="row">
+		    <div class="span gridTitleBig">申请产品：</div>
+			<div class="span2">
+			   <select id="addProductId" class="publicSize"  onchange="createSelect(this.value,'addChannelId','addVersionId','addDiv')">
+				  <option value="">请选择</option>
+				</select>
+			 </div>
+		  </div>
+		 
+		 <div class="row">
+		   <div class="span gridTitleBig">版本选择：</div>
+		   <div class="span2">
+		    <div id="addDiv_Version">
+			  <select id="addVersionId" name="addVersionId" class="publicSize">
+				<option value="">请选择</option>
+			 </select>				
+			 </div>
+		   </div>
+		   </div>
+		   
+         <div class="row">
+         <div class="span gridTitleBig">渠道选择：</div>
+		  <div class="span2">
+		  	<div class="example-container">
+		  	<SELECT id="add_Channel_Id" multiple="multiple">
+		  		<!--  -->
+		  	</SELECT>
+		  	</div>
+			 </div>
+		  </div>
+	  <div class="row">
+		   <div class="span gridTitleBig"> 开通账号数 ：</div>
+		   <div class="span2"><input name="maxAccount" id="maxAccount" class="publicSize"/></div>
+		  </div>
+		   <div class="row">
+		  <div class="span gridTitleBig">开通时间：</div>
+		  <div class="span2"><input  name="serviceStartTimeId" id="serviceStartTimeId"  type="text" class="Wdate publicSize"  onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" /></div>
+		  </div>
+		   <div class="row">
+		   <div class="span gridTitleBig">到期时间：</div>
+		    <div class="span2"><input name="serviceEndTimeId" id="serviceEndTimeId" type="text" class="Wdate publicSize"  onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" /> </div> 
+		 </div>
+	  </div>
+	   <div class="btnCenter">
+		   <input type="button" value="确认" onclick="javascript:addService()" class="info" />
+		   <input type="button" value="取消" onclick="$.Dialog.close()" class="warning"/>
+		</div>
+	</FORM>
+	</DIV>
+
+
+ <div id="updateDialog" style="display: none">
+ <input type="hidden" id="companyServiceId" />
+  <div class="grid">
+    <div class="row">
+     <div class="span gridTitleBig">公司ID：</div>
+     <div class="span2">
+       <input  id="companyCodeId_" name="companyCode" readonly="true" />
+     </div>
+    </div>
+    
+    <div class="row">
+     <div class="span gridTitleBig">申请产品：</div>
+     <div class="span2">
+      <input type="text" id="show_productId_" readonly="true"/>
+      <input type="hidden"  id="productId_"/>
+     </div>
+    </div>
+    
+    
+     <div class="row">
+     <div class="span gridTitleBig">版本选择：</div>
+     <div class="span2">
+     <!-- 
+       <div id="updateDiv_Version">
+         <select id="updateVersionId">
+         <option value="">请选择</option>
+		 </select>      
+       </div>
+       -->
+       <input type="text" id="show_updateVersionId" readonly="true"/>
+      <input type="hidden"  id="updateVersionId"/>
+       
+     </div>
+    </div>
+    
+    <div class="row">
+     <div class="span gridTitleBig">渠道选择：</div>
+     <div class="span2">
+     		<select id="update_Channel_id" multiple="multiple">
+     		<!--  -->
+     		</select>
+	  </div>
+    </div>
+    
+    <div class="row">
+      <div class="span gridTitleBig">开通账号数：</div>
+      <div class="span2"><input id="maxAccountId" class="publicSize" name="maxAccount"/></div>
+    </div>
+    
+    <div class="row">
+     <div class="span gridTitleBig">开通时间：</div>
+     <div class="span2"> <input  id="updateServiceStartTimeId"   type="text" class="Wdate publicSize"   readonly="readonly"/> </div>
+    </div>
+    
+    <div class="row">
+     <div class="span gridTitleBig">到期时间：</div>
+     <div class="span2"><input  id="updateServiceEndTimeId"   type="text" class="Wdate publicSize"  onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" /></div>
+    </div>
+    
+    <div class="row">
+     <div class="span gridTitleBig">状态：</div>
+      <div class="span2">
+             <select id="updateCompanyServiceStatusId">
+			       <c:forEach var="operatorServiceStatus" items="${operatorServiceStatus}">
+			       <option value="${operatorServiceStatus.id}">${operatorServiceStatus.name}</option> 
+			       </c:forEach>
+			     </select>
+      </div>
+    </div>
+  </div>
+  <div class="btnCenter">
+     <input type="button" value="确认" onclick="javascript:updateService()" class="info"/>
+     <input type="button" value="取消" onclick="$.Dialog.close()" class="warning"/>
+    </div>
+ </div>
+	
+	
+	<DIV align="center">
+		查询条件
+		<FORM action="">
+		 <div class="grid">
+         <div class="row">
+          <div class="span gridTitle">公司ID：</div>
+          <div class="span2"><input id="companyCodeId" name="companyCode" class="publicSize"/></div>
+           <div class="span gridTitle">申请版本：</div>
+         <div class="span2">
+          <div id="queryDiv_Version">
+            <select id="versionId" name="version" class="publicSize">
+			 <option value="">请选择</option>
+		   </select>
+          </div>
+		  </div>
+          <div class="span gridTitle">状态：</div>
+          <div class="span2">
+            <select id="serviceStatusId" class="publicSize">
+			<option value="">请选择</option>
+			<c:forEach var="serviceStatus" items="${serviceStatus}">
+			<option value="${serviceStatus.id}">${serviceStatus.name}</option>	
+			</c:forEach>
+		   </select>              
+          </div>
+         
+         
+         </div>		 
+         <div class="row">
+           <div class="span gridTitle">申请产品：</div>
+          <div class="span2">
+           <select id="productId" name="productId" class="publicSize" onchange="createSelectQuery(this.value,'queryChannelId','queryVersionId','queryDiv')" >
+		    <option value="">请选择</option>
+		    <c:forEach var="products" items="${productList}">
+		    <option value="${products.id}">${products.productName}</option>
+			</c:forEach>
+		   </select>
+          </div>
+         <div class="span gridTitle">接入渠道：</div>
+         <div class="span2">
+            <div id="queryDiv_Channel">
+				<select id="channelsId" name="channels" class="publicSize">
+				  <option value="">请选择</option>
+				</select>
+			 </div>
+         </div>
+         <div class="span gridTitle">开通时间：</div>
+         <div class="span2"><input  id="queryServiceStartTimeId" name="queryServiceStartTimeId"  type="text" class="Wdate publicSize"  onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})"/></div>
+         <div class="span gridTitle">结束时间：</div>
+         <div class="span1"><input  id="queryServiceEndTimeId" name="queryServiceEndTimeId"  type="text" class="Wdate publicSize"  onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})"/></div>
+       </div>
+		<div class="row">
+		 <input type="button" class="info" value="查询"  onclick="queryCompanyService()"/>
+		 <input type="button" class="warning" value="重置"  onclick="reset()"/>
+		</div>
+		 </div>
+		</FORM>
+
+	</DIV> 
+	<div id="showResult">查无匹配数据</div>
+</div>
+
+

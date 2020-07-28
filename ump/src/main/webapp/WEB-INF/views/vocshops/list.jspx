@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <style>
+	.divcss{margin:0 auto;text-align: center;}
+	.hintSpan {
+	    height: 13px;
+	    margin-left: 5px;
+	    width: 8px;
+	}
+    </style>
+    <style>
+		@IMPORT url("/ump/styles/css.css");
+		@IMPORT url("/ump/styles/jquery.customSelect.css");
+	</style>
+	<SCRIPT type="text/javascript" src="/ump/js/jquery.customSelect.js"><!----></SCRIPT> 
+	<style>
+	@IMPORT url("/ump/styles/url.css");
+	</style>
+    <div id="editShopId" style="display: none">
+    <input type="hidden" id="shopId"/>
+	 <div class="grid">
+	 <div class="row">
+		 <div class="span gridTitle">平台名称：</div>
+		 <div class="span2.5">
+			 <select id="channelId" class="publicSize">
+			 <option value="">请选择</option>
+			 <c:forEach var="channel" items="${channels}">
+			 <option value="${channel.id}">${channel.channelName}</option>
+			 </c:forEach>
+			 </select><span class="hintSpan" style="color: red;">*</span>
+		 </div>
+		 
+		 <div class="span gridTitle">品牌名称：</div>
+		 <div class="span2.5">
+		 	<div style="float: left;">
+			    <select id="brandId" class="publicSize" multiple="multiple">
+					 <option value="">请选择</option>
+					 <c:forEach var="brand" items="${brands}">
+					 	<option value="${brand.id}">${brand.brandName}</option>
+					 </c:forEach>
+				 </select>
+			 </div>
+			 <span class="hintSpan" style="color: red;">*</span>
+		 </div>
+	 </div>
+	 <div class="row"><div class="span gridTitle">店铺名称：</div><div class="span2.5"><input id="nameId" type="text" class="publicSize"/><span class="hintSpan" style="color: red;">*</span></div><div class="span gridTitle">店铺地址：</div><div class="span2.5"><input id="urlId" type="text" class="publicSize"/><span class="hintSpan" style="color: red;">*</span></div></div>
+	 <div class="row"><div class="span gridTitle">是否启用：</div><div class="span2"> <img id="isVisableId" src="images/ON.png" onclick="changeImage('isVisableId')"/> </div></div>
+	 <div class="row"><div class="span gridTitle">备 注：</div><div class="span5"> <![CDATA[<textarea id="remarkId" style="width:100%;"></textarea> ]]> </div></div>
+	 </div>
+	 <DIV class="divcss">
+	 	<input type="button" class="info" value="确定" onclick="editShop()"/>
+	 	<input type="button" class="warning" value="取消" onclick="$.Dialog.close()"/>
+	 </DIV>
+	</div>
+<SCRIPT type="text/javascript">
+<![CDATA[
+	function createMultSelected(treeDemoId,dateList){
+		//$.fn.zTree.init($("#"+treeDemoId), setting1, zNodes1);
+		$("#"+treeDemoId).html(createOption(zNodes1));
+		$('#'+treeDemoId).customSelect({});
+	} 
+	function createOption(data){
+		var op="<option value=''>请选择</option>";
+		for(var i=0;i<data.length;i++){
+			op+="<option value='"+data[i].id+"'>"+data[i].name+"</option>";
+		}
+		return op;
+	}
+$(document).ready(function() {
+	queryShops();
+});
+
+function checkBoxAll() {
+	  if ($('#checkboxAll').prop('checked')) {
+		$("[name = checkbox]:checkbox").prop("checked", true);
+	  } else {
+		 $("[name = checkbox]:checkbox").prop("checked", false);
+	  }
+}
+
+/**
+ * 查询店铺
+ */
+function queryShops(pageNo){
+	var start = 0;
+	var limit = 10;
+	if (pageNo > 0) {
+		start = (pageNo - 1) * limit;
+	}
+	var parmam = {start:start,limit:limit};
+		$.ajax({
+			url : "/ump/vocshops/queryShops",
+			type : "POST",
+			data : parmam,
+			error : function(msg) {
+				alert("error " + msg);
+			},
+			success : function(text) {
+				$("#showResult").html(text);
+			}
+	});
+	
+}
+
+
+function checkUniqueBrandShop(brandId,channelId,shopId) {
+	var method = "post";
+	var url = "/ump/vocshops/checkUniqueShopBrand?brandId="+brandId+"&channelId="+channelId;
+	if(shopId){
+		url+="&shopId="+shopId
+	}
+	var str = requestMethod(method,url);
+	var result = eval("("+str+")");
+	return result.success;
+}
+
+/**
+ * 同步请求方法
+ * @param method 指定请求方式 ： get / post
+ * @param url  请求的url
+ * @returns 请求后的返回值
+ */
+function requestMethod(method,url) { 
+	  var xmlhttp ;
+	  if (window.XMLHttpRequest) { 
+	  //isIE = false; 
+	  xmlhttp = new XMLHttpRequest(); 
+	 } 
+	  else if (window.ActiveXObject) { 
+	 //isIE = true; 
+	  xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); 
+	 } 
+	 if(null != url ){
+		 var d=new Date();
+		 url = url+"&time="+d.getTime();
+	 } 
+	 xmlhttp.open(method,url, false); 
+	 xmlhttp.send(null); 
+
+	 var result = xmlhttp.status; 
+	 var returnVal = null;
+	  //OK 
+	  if(result==200) 
+		returnVal =  xmlhttp.responseText;
+		
+	  xmlhttp = null; 
+	  return returnVal;
+	} 
+
+/**
+ * 删除店铺
+ */
+function deleteShop(shopId){
+  if(confirm('您确定要删除此项?')){
+	  var parmam = {id:shopId};
+		$.ajax({
+			url : "/ump/vocshops/deleteShop",
+			type : "POST",
+			data : parmam,
+			error : function(msg) {
+				alert("error " + msg);
+			},
+			success : function(text) {
+				var jsonStr = eval("("+text+")");
+				if(!jsonStr.success){
+					alert("添加失败。。。");
+				}
+				 queryShops();
+				$.Dialog.close();
+			}
+		}); 
+	  
+  }
+}
+
+
+/**
+ * 根据店铺获取品牌
+ */
+function getBrandByShopId(shopId,selectId){
+	   var parmam = {shopId:shopId};
+		$.ajax({
+			url : "/ump/vocshops/getBrandByShopId",
+			type : "POST",
+			data : parmam,
+			error : function(msg) {
+				alert("error " + msg);
+			},
+			success : function(text) {
+			 	 var idarr = [];
+				 var selectedBrand = eval("("+text+")");	
+				 var seaHtml="";
+				 for(var n=0;n<selectedBrand.length;n++){
+					 idarr.push(selectedBrand[n].id);
+					 $("#"+selectId+"_customSelect_"+selectedBrand[n].id)[0].checked=true;
+					 seaHtml+=$("#"+selectId+"_customSelect_"+selectedBrand[n].id).parent().find('span').html();
+					if(n!=selectedBrand.length-1){
+						seaHtml+=",";
+					}
+				 }
+				 $(".ui-customSelect-window").find('span').html(seaHtml);
+				$("#"+selectId).val(idarr);
+			}
+		}); 
+	
+}
+
+
+var editHtml = "";
+function showEditDialog(title,id,name,url,remark,channelId) {
+		$.Dialog({
+			overlay : true,
+			shadow : true,
+			flat : true,
+			icon : '<img src="images/editor.png"/>',
+			title : title,
+			content : '',
+			padding : 20,
+			height : 300,
+			width : 560,
+			onShow : function(_dialog) {
+				if(editHtml == ""){
+					editHtml = $("#editShopId").html();
+				  $("#editShopId").remove();
+				}
+				$.Dialog.content(editHtml);
+				$.Metro.initInputs();
+			}
+		});
+		$("#shopId").val(id);
+		$("#nameId").val(name);
+		$("#urlId").val(url);
+		$("#remarkId").val(remark);
+		$("#channelId").val(channelId);
+		var imgSwitch = $("#"+id);
+		$("#isVisableId").attr("src",imgSwitch.attr("src"));
+		getBrandByShopId(id,'brandId');
+		$('#brandId').customSelect({});
+		
+	}
+
+
+
+ function showAddDialog(title) {
+		$.Dialog({
+			overlay : true,
+			shadow : true,
+			flat : true,
+			icon : '<img src="images/add.png"/>',
+			title : title,
+			content : '',
+			padding : 20,
+			height : 300,
+			width : 560,
+			onShow : function(_dialog) {
+				if(editHtml==""){
+					editHtml = $("#editShopId").html();
+				  $("#editShopId").remove();
+				}
+				$.Dialog.content(editHtml);
+				$.Metro.initInputs();
+				$('#brandId').customSelect({});
+			}
+		});
+		
+	}
+ 
+ function checkUniqueName(shopName){ 
+		var url = "/ump/vocshops/queryShopName?name="+shopName ;
+		var method = "GET"; // http get or post method
+		var returnVal = null;
+		returnVal = requestMethod(method,url);
+		  if(null !=returnVal ){
+			 var respText = eval('('+returnVal+')');
+		  	 return respText.success;
+		  }
+			return false;
+	}
+ 
+ /**
+  *编辑店铺
+  */
+ function editShop(){
+	 var id= $("#shopId").val();
+	 var name=$("#nameId").val();
+	 var url=$("#urlId").val();
+	 var remark=$("#remarkId").val();
+	 var channelId=$("#channelId").val();
+	 var brandIds=$("#brandId").val();
+	 var isVisable = getSwitchState("isVisableId");
+	 
+	 if(!name){
+		 alert("请输入店铺名称！");
+		 return;
+	 }/* else if(checkUniqueName(name)){
+		alert("店铺名称 不允许重复！");
+		return;
+	 }*/
+	 if(name.length > 10){
+		 alert("店铺名称不能超过10个字符！");
+		 return; 
+	 }
+	 
+	 
+	 if(null == url || "" == url){
+		 alert("请输店铺地址！");
+		 return;	 
+	  }else{
+		  var reg = new RegExp("http:\/\/[A-Za-z0-9\.-]{3,}\.[A-Za-z]{3}");
+		  if(!reg.test(url)){
+			  alert("url地址不满足条件...");
+			  return;
+		  }
+	  }
+	 
+	 
+	 if(null == channelId || channelId == ""){
+		 alert("请选择平台！");
+		 return; 
+		 }
+		 
+	 
+	 if(null == brandIds || brandIds == ""){
+		 alert("请选择品牌！");
+		 return;
+	 }
+ 
+	/*  if(checkUniqueBrandShop(brandIds, channelId,id)){
+		 alert("同一个渠道下只能有一个品牌店!");
+		 return;
+	 } */
+	 
+	var parmam = {
+			id:id,
+			name:name,
+			url:url,
+			remark:remark,
+			channelId:channelId,
+			brandIds:brandIds.join(","),
+			isVisable:isVisable
+	        };
+	
+	$.ajax({
+		url : "/ump/vocshops/editShop",
+		type : "POST",
+		data : parmam,
+		error : function(msg) {
+			alert("error " + msg);
+		},
+		success : function(text) {
+			Notify(text, 2000);
+			$.Dialog.close();
+			var pageNo = $("#pageNoId").val();
+			queryShops(pageNo);
+		}
+	});
+}
+
+ function Notify(msg, time) {
+		var t;
+		if (time) {
+			t = time;
+		} else {
+			t = 5000;
+		}
+		$.Notify({
+			caption : "",
+			content : msg,
+			timeout : t
+		});
+	}
+ /**
+  * 切换图片
+  */
+ function changeImage(switchId){
+	 var isVisable;
+	    var imgSwitch = $("#"+switchId);
+		var id = imgSwitch.val();
+		 if(imgSwitch.attr("src") == "images/ON.png"){
+		   imgSwitch.attr("src","images/OFF.png");
+		   isVisable = false;
+		 }else{
+		   imgSwitch.attr("src","images/ON.png");
+		   isVisable = true;
+		 } 
+		 
+	return isVisable;	 
+ }
+ 
+ /**
+  *获取图片对应的开关状态
+  */
+ function getSwitchState(switchId){
+	 var isVisable;
+	    var imgSwitch = $("#"+switchId);
+		var id = imgSwitch.val();
+		 if(imgSwitch.attr("src") == "images/ON.png"){
+		   isVisable = true;
+		 }else{
+		   isVisable = false;
+		 } 
+		 
+	return isVisable;	 
+	 
+ }
+ 
+ /**
+  *启用不启用
+  */
+ function changeState(switchId){
+	var isVisable = changeImage(switchId);
+	var parmam = {
+	     id:switchId,
+	     isVisable:isVisable			
+		 };
+		$.ajax({
+			url : "/ump/vocshops/changeState",
+			type : "POST",
+			data : parmam,
+			error : function(msg) {
+				alert("error " + msg);
+			},
+			success : function(text) {
+			  var jsonStr = eval("("+text+")");
+			  if(jsonStr.success){
+				 
+			  }else{
+				  
+			  }
+			}
+		});
+ }
+ function imageMouseOn(obj){
+		$(obj).attr('src','/ump/images/w_add.png')
+	}
+	function imageMouseOut(obj){
+		$(obj).attr('src','/ump/images/w_add_02.png')
+	}
+ ]]>
+</SCRIPT>
+ <div id="showResult"></div>
+ 
+</div>

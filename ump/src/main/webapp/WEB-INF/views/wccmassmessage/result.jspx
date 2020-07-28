@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	 xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<style>
+		.imgc{
+			width:60px;
+			height:60px;
+			margin-top: 20px;
+			margin-bottom: 20px
+		}
+	</style>
+	<script src="/ump/js/jquery.widget.min.js" type="text/javascript"><!-- required for FF3 and Opera --></script>
+	<script src="/ump/ui/metro/js/metro.min.js" type="text/javascript"><!-- required for FF3 and Opera --></script>
+	<SCRIPT type="text/javascript">
+	function changeState2(url) {
+		var myAuto = document.getElementById('myaudio');
+		$("#myaudio").attr("src", url);
+		myAuto.play();
+	}
+	
+	
+/*  function search(){
+		$("#form1").submit();
+	}  */
+	
+	//根据公众号查询粉丝分组
+	function querySelectType(type){
+		$.ajax({
+			url:"/ump/wccmassmessage/getPlatformUser",
+			type:"Post",
+			data:{'type':type},
+			error:function(msg){
+				
+			},
+			success:function(data){
+				$('#platformid').html("<label>公众平台 ：</label>"+ data);
+			}
+		})
+	}
+	
+ function search(pageNo) {
+		var start = 0;
+		var limit = 10;
+		if (pageNo > 0) {
+			start = (pageNo - 1) * limit;
+		}
+		var parmam = {
+				platType:$("#plattypeId").val(),
+				platformUser : $('#msgplatformUser_').val(),
+				state:$("#state").val(),
+		        insertStartTime:$("#insertStartTime").val(),
+		        insertEndTime:$("#insertEndTime").val(),
+		        start : start,
+				limit : limit
+				};
+		
+		$.ajax({
+			url : "/ump/wccmassmessage/massMessageList",
+			type : "POST",
+			data :parmam,
+			error : function(msg) {
+				alert("error " + msg);
+			},
+			success : function(text) {
+				$("#_page_2").html(text);
+			}
+		});
+	} 
+	</SCRIPT>
+<!-- <form action="/ump/wccmassmessage/massMessageList" method="post" id="form1">  -->
+<div style="overflow:auto;">
+<div class="grid">
+        		<div class="row">
+        		<div class="span3">
+        				<label>公众帐号类型：</label>
+        				<select id = "plattypeId" name = "plattype" class="publicSize" onchange="javascript:querySelectType(this.value);">
+				<option value="">全部</option>
+				 <c:forEach var="data" items="${platformArr}">
+					<option value="${data}">${data}</option>
+				</c:forEach> 
+			</select>
+						</div>
+        		<div class="span3" id="platformid">
+        				<label>公众平台：</label>
+        				<div style="float: left;" >
+	        				<select id="msgplatformUser_" name="platformUser" class="publicSize">
+								<option value="">请选择</option>
+								<!-- <c:forEach items="${msgplatformUser }" var="msgplatform">
+								<option value="${msgplatform.id }">${msgplatform.account }</option>
+							</c:forEach> -->
+							</select>
+						</div>
+        			</div> 
+        			
+        			<div class="span3">
+        				<label>发送状态：</label>
+        				<select id="state" name="state" class="publicSize" >
+							<option value="">请选择</option>
+							<option value="1">发送中</option>
+							<!-- <option value="4">待发送</option> -->
+							<option value="5">已发送</option>		
+						</select>
+        			</div>
+        		
+        		</div>
+        		<div class="row">
+        			<!-- <div class="span3">
+        				<label>最近操作时间：</label >
+        				<div style="width: 380px;">
+								<input type="text" class="Wdate" id="commentStartTimeId1"  name="insertStartTime"
+									placeholder="小于结束时间"
+									onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />至：
+									<input type="text" class="Wdate" id="commentEndTimeId1"
+									placeholder="大于开始时间" name="insertEndTime"
+									onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+						</div>
+        			</div> -->
+        			<div class="span3">
+						<LABEL>最近操作时间：</LABEL><input type="text" id="insertStartTime" name="insertStartTime" value="" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})"/>
+						<IMG onclick="startTimeFocus();" style="margin-left: -22px;" src="../js/date/skin/datePicker.gif" width="20" height="20" />
+					</div>
+					<div class="span3">
+						<LABEL>至：</LABEL><input type="text" id="insertEndTime" name="insertEndTime" value="" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})"/>
+						<IMG onclick="endTimeFocus();" style="margin-left: -22px;" src="../js/date/skin/datePicker.gif" width="20" height="20" />
+					</div>
+        			 <div class="span3" >
+								<button type="button" class="info" onclick="search(1);">查询</button>
+					 </div> 
+        		</div>
+        	</div>       	
+<table id="ss" class ="table striped hovered">
+<thead>
+    <tr>
+      <th>公众平台</th>
+      <th>群发消息</th>
+      <th>发送状态</th>
+      <th>最近操作时间</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+		<tbody>
+			<c:if test="${empty wccMassMessage}">
+				<tr>
+					<td colspan="5" align="center">没有群发信息</td>
+				</tr>
+			</c:if>
+			<c:forEach var="massMsg" items="${wccMassMessage}">
+				<tr>
+				<td>${massMsg.platformUser.account}</td>
+					<c:if test="${massMsg.type == 1 }">
+						<td>
+							<div style="float: left;">
+								<img src="/ump/images/text.png" class="imgc" />
+							</div>
+							<div style="float: left;margin-top: 20px">
+								<ul>
+									
+									<li>
+										<c:if test="${fn:length(massMsg.content) gt 20 }"><div class="text-center" style="word-wrap : break-word; 
+word-break: break-all;" data-hint="[文字]|${massMsg.content}">${fn:substring(massMsg.content,1,20)}...</div></c:if>
+										<c:if test="${fn:length(massMsg.content) lt 20 }">${massMsg.content}</c:if>
+									</li>
+								</ul>
+							</div>
+						</td>
+					</c:if>
+					<c:if test="${massMsg.type == 2 }">
+						<td>
+							<div style="float: left;">
+								<img src="${massMsg.material.thumbnailUrl }" class="imgc" />
+							</div>
+							<div style="float: left;margin-top: 20px">
+								<ul>
+									<li>[图片]${massMsg.material.title }</li>
+								</ul>
+							</div>
+						</td>
+					</c:if>
+					<c:if test="${massMsg.type == 3 }">
+						<td>
+							<div style="float: left;">
+								<video class="imgc" controls="controls" src="${massMsg.material.thumbnailUrl }">您的浏览器不支持此种视频格式。</video>
+							</div>
+							<div style="float: left;margin-top: 20px">
+								<ul>
+									<li>[视频]${massMsg.material.title }</li>
+								</ul>
+							</div>
+						</td>
+					</c:if>
+					<c:if test="${massMsg.type == 4 }">
+						<td>
+							<div style="float: left;">
+								<div onclick="changeState2('${massMsg.material.thumbnailUrl}');">
+									<img class="imgc" src="/ump/resources/images/sound_03.png"/>
+								</div>
+							</div>
+							<div style="float: left;margin-top: 20px">
+								<ul>
+									<li>[语音]${massMsg.material.title }</li>
+								</ul>
+							</div>
+						</td>
+					</c:if>
+					<c:if test="${massMsg.type == 5 }">
+						<td>
+							<div style="float: left;">
+								<img src="${massMsg.material.thumbnailUrl }" class="imgc" />
+							</div>
+							<div style="float: left;margin-top: 20px">
+								<ul>
+									<a target="_blank" class="ztw_title" href="/ump/wccmaterialses/showdetail/${massMsg.material.id}"><li>[图文消息]${massMsg.material.title }</li></a>
+									<c:forEach items="${massMsg.material.children }" var="child">
+										<a target="_blank" class="ztw_title" href="/ump/wccmaterialses/showdetail/${child.id}"><li>[图文消息]${child.title }</li></a>
+									</c:forEach>
+								</ul>
+							</div>
+						</td>
+					</c:if>
+						<td>
+							<!-- <c:if test="${massMsg.state == 1}"><div class="text-left">待发送</div></c:if>
+							<c:if test="${massMsg.state == 2}"><div class="text-left" data-hint="提交中|消消息正在提交到，请耐心等候。">提交中</div></c:if>
+							<c:if test="${massMsg.state == 3}"><div class="text-left" data-hint="提交失败|消息提交失败，原因为：${massMsg.remark }">提交失败</div></c:if>
+							<c:if test="${massMsg.state == 4}">
+								<div class="text-left" data-hint="发送中|消息正在处理，可能需要10-20分钟。">发送中</div>
+							</c:if>
+							<c:if test="${massMsg.state == 5}"><div class="text-left" data-hint="发送成功|发送人数：${massMsg.filterCount } 成功人数：${massMsg.sendCount } 失败人数：${massMsg.errorCount } ">发送成功</div></c:if>
+							<c:if test="${massMsg.state == 6}"><div class="text-left" data-hint="发送失败|消息发送失败，原因为：${massMsg.remark }">发送失败</div></c:if> -->
+						
+						     <c:if test="${massMsg.state == 1}"><div class="text-left">待发送</div></c:if>
+						     <c:if test="${massMsg.state == 5}"><div class="text-left">已发送</div></c:if>
+						</td>
+						<td>
+							<fmt:formatDate value="${massMsg.insertTime }" pattern="MM月dd号 HH:mm" />
+						</td>
+						<td>
+							<!-- <c:if test="${massMsg.state != 4 and massMsg.state != 2}">
+								<div class="text-center"> -->
+									<a href="javascript:void(0);" onclick="dele(${massMsg.id })"><img src="/ump/resources/images/delete.png" alt="删除" title="删除"/></a>
+								<!-- </div>
+							</c:if> -->
+						</td>			
+				</tr>
+			</c:forEach>
+			<audio id="myaudio" src="" controls="controls"
+										hidden="true" style="display: none;">您的浏览器不支持此播放器。
+									</audio>
+		</tbody>
+	</table>
+
+		<div style="float:right;">
+			<input id="pageNum" type="hidden" value="${page}" />
+			<c:if test="${page>1 }">
+				<a class="default" href="#" onclick="massMessageList(1)"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px">
+					<img alt="首页" src="/ump/resources/images/resultset_first.png" title="首页" style="float:left"/>
+				</a>
+				<a class="default"
+					href="javascript:void(0);" onclick="massMessageList(${page-1})"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px">
+					<img alt="前一页" src="/ump/resources/images/resultset_previous.png" title="前一页" style="float:left"/>
+				</a>
+			</c:if>
+			<c:if test="${wccMassMessage!= null and fn:length(wccMassMessage) > 0}">
+				<TFOOT>
+					<span style="color: #069dd5; height: 22px; line-height: 22px;float:left;padding-left: 6px">${page}</span>
+					<span style="float:left;padding-top: 4px;padding-left: 6px"> /</span>
+					<span style="color: #069dd5;float:left;padding-top: 4px;padding-left:6px">${maxPages}</span>
+					<input type="text" value="" style="width: 30px; height: 22px;float:left;margin-left:6px" id="pageStr" />
+					<a href="javascript:void(0);"
+						style="width: 28px; height: 22px; background-color: #069dd5; color: white; display: inline-block; font-family: Arial; font-size: 10px; line-height: 22px; text-align: center; cursor: pointer;float:left"
+						onclick="goPage(${maxPages});">GO</a>
+
+				</TFOOT>
+			</c:if>
+			<c:if test="${page!=maxPages}">
+				<a class="default"
+					href="javascript:void(0);" onclick="massMessageList(${page+1})"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left:6px"> 
+					<img alt="下一页" src="/ump/resources/images/resultset_next.png" title="下一页" style="float:left"/>
+				</a>
+				<a class="default"
+					href="javascript:void(0);" onclick="massMessageList(${maxPages})"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px">
+					<img alt="末页" src="/ump/resources/images/resultset_last.png" title="末页" style="float:left"/>
+				</a>
+			</c:if>
+			<span style="float:left;padding-top: 3px;padding-left: 6px">每页<span  style="color:#069dd5;">${limit}</span>条</span>
+		</div>
+	</div>
+<!-- </form> -->
+<style>
+		.metro .button .ztree{
+ 			padding: 0px;
+ 		}
+ 		box-sizing:content-box;
+ 		 input[type="checkbox"]{
+ 	width:20px;
+ }
+	</style>
+</div>

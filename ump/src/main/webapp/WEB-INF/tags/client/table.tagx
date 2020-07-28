@@ -1,0 +1,228 @@
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" xmlns:spring="http://www.springframework.org/tags" xmlns:form="http://www.springframework.org/tags/form" xmlns:fmt="http://java.sun.com/jsp/jstl/fmt" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+  <jsp:directive.tag import="java.util.ArrayList" />
+  <jsp:output omit-xml-declaration="yes" />
+  <spring:url value="/styles/9client.css" var="client" />
+  <link rel="stylesheet" href="${client}" />
+  <spring:url value="/ui/dtGrid/jquery.dtGrid.css" var="dtgrid" />
+  <link rel="stylesheet" href="${dtgrid}" />
+  <spring:url value="/ui/dtGrid/dependents/fontAwesome/css/font-awesome.min.css" var="dtfont" />
+  <link rel="stylesheet" href="${dtfont}" />
+  <jsp:directive.attribute name="id" type="java.lang.String" required="true" rtexprvalue="true" description="The identifier for this tag (do not change!)" />
+  <jsp:directive.attribute name="path" type="java.lang.String" required="true" rtexprvalue="true" description="Specify the URL path" />
+  <jsp:directive.attribute name="create" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'create' link into table (default true)" />
+  <jsp:directive.attribute name="createURL" type="java.lang.String" required="false" rtexprvalue="true" description="Used for checking if element has been modified (to recalculate simply provide empty string value)" />
+  <jsp:directive.attribute name="createLabel" type="java.lang.String" required="false" rtexprvalue="true" description="Used for checking if element has been modified (to recalculate simply provide empty string value)" />
+  <jsp:directive.attribute name="update" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'update' link into table (default true)" />
+  <jsp:directive.attribute name="updateURL" type="java.lang.String" required="false" rtexprvalue="true" description="Used for checking if element has been modified (to recalculate simply provide empty string value)" />
+  <jsp:directive.attribute name="delete" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Include 'delete' link into table (default true)" />
+  <jsp:directive.attribute name="deleteURL" type="java.lang.String" required="false" rtexprvalue="true" description="Used for checking if element has been modified (to recalculate simply provide empty string value)" />
+  <jsp:directive.attribute name="deleteClick" type="java.lang.String" required="false" rtexprvalue="true" description="Used for checking if element has been modified (to recalculate simply provide empty string value)" />
+  <jsp:directive.attribute name="render" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Indicate if the contents of this tag and all enclosed tags should be rendered (default 'true')" />
+  <jsp:directive.attribute name="loadURL" type="java.lang.String" required="true" rtexprvalue="true" description="Used for checking if element has been modified (to recalculate simply provide empty string value)" />
+  <jsp:directive.attribute name="check" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Indicate if the contents of this tag and all enclosed tags should be rendered (default 'true')" />
+  
+  <c:if test="${empty render or render}">
+
+    <c:set var="columnProperties" scope="request" />
+    <c:set var="columnLabels" scope="request" />
+    <c:set var="columnMaxLengths" scope="request" />
+    <c:set var="columnTypes" scope="request" />
+    <c:set var="columnDatePatterns" scope="request" />
+    <c:set var="columnSortProperties" scope="request" />
+    
+    <jsp:doBody />
+
+    <c:if test="${empty update}">
+      <c:set var="update" value="true" />
+    </c:if>
+    <c:if test="${empty delete}">
+      <c:set var="delete" value="true" />
+    </c:if>
+    <c:if test="${empty check}">
+      <c:set var="check" value="false" />
+    </c:if>
+    <c:if test="${empty create}">
+      <c:set var="create" value="true" />
+    </c:if>
+    <c:if test="${empty createLabel}">
+      <c:set var="createLabel" value="新增" />
+    </c:if>
+    <c:set var="lengths" value="${fn:split(columnMaxLengths, '&#9999;')}" scope="request" />
+    <c:set var="types" value="${fn:split(columnTypes, '&#9999;')}" scope="request" />
+    <c:set var="patterns" value="${fn:split(columnDatePatterns, '&#9999;')}" scope="request" />
+    <c:set var="properties" value="${fn:split(columnProperties, '&#9999;')}" scope="request" />
+    <c:set var="sortProperties" value="${fn:split(columnSortProperties, '&#9999;')}" scope="request" />
+    
+     <script type="text/javascript">
+		<![CDATA[
+	var columnLabels = "${columnLabels}";
+	var columnLabelsStr = columnLabels.split("✏");
+	var columnTypes = "${columnTypes}";
+	var columnTypesStr = columnTypes.split("✏");
+	var columnProperties = "${columnProperties}";
+	var columnPropertiesStr = columnProperties.split("✏");
+	
+		var dtGridColumns_${id} = [{
+			id : 'id',
+			title : 'id',
+			type : 'string',
+			hide : true ,
+			columnClass : 'text-left',
+			fastQuery : true,
+			fastQueryType : 'eq',
+			headerStyle : 'background:red;height:20px;'
+		}];
+		for(i=0;i<columnTypesStr.length ;i++){
+			if(columnTypesStr[i]!='date'){
+				var column = {
+					id : columnPropertiesStr[i],
+					title : columnLabelsStr[i],
+					type : 'string',
+					columnClass : 'text-left',
+					fastQuery : true,
+					fastQueryType : 'eq',
+					headerStyle : 'background:red;height:20px;'
+				}
+			}else{
+				var column ={
+						id : columnPropertiesStr[i],
+						title : columnLabelsStr[i],
+						type : 'date',
+						format : 'yyyy-MM-dd hh:mm:ss',
+						otype : 'string',
+						oformat : 'yyyy-MM-dd hh:mm:ss',
+						columnClass : 'text-left',
+						headerStyle : 'background:white;text-align:center;',
+						fastQuery : true,
+						fastQueryType : 'range',
+						resolution : function(record, value) {
+							var z = value.time;
+							//return '<input type="button" onclick = "qrecord('"+aa+"')" value="查看记录"/>';
+							return josn_to_String(z).substring(0, 10);
+							
+						}
+					}
+			}
+			
+			dtGridColumns_${id}.push(column);
+		}
+		if(${update} || ${delete} ){
+			
+		var oper = {id:'operation', title:'操作', type:'string', columnClass:'text-left', resolution:function(value, record, column, grid, dataNo, columnNo){
+	        var content = '';
+	        content = '<div class="tb_imgcon">'
+	        if(${update}){
+	        	if(${empty updateURL}){
+		      		content +='<a href="${path}/'+value.id+'?form"><i class="on-left"><img src="images/editor.png"  alt=""/></i></a>'
+	        	}else{
+		      		content +='<a href="${updateURL}?id='+value.id+'"><i class="on-left"><img src="images/editor.png"  alt=""/></i></a>'
+	        	}
+	        }
+	        if(${delete}){
+	        	if(${empty deleteURL}){
+	        			if(${empty deleteClick}){
+				      		content +='<a onclick="deleteOne(\'${path}/delete?'+value.id+'\')"><i class="on-left"><img src="images/delete.png"  alt=""/></i></a>'
+	        			}else{
+				      		content +='<a onclick="${deleteClick}"><i class="on-left"><img src="images/delete.png"  alt=""/></i></a>'
+	        			}
+	        	}else{
+	        		if(${empty deleteClick}){
+			      		content +='<a onclick="deleteOne(\'${deleteURL}?'+value.id+'\')"><i class="on-left"><img src="images/delete.png"  alt=""/></i></a>'
+        			}else{
+			      		content +='<a onclick="${deleteClick}"><i class="on-left"><img src="images/delete.png"  alt=""/></i></a>'
+        			}
+	        	}
+	        }
+	        content +='</div>';
+	        return content;
+	    }}
+		dtGridColumns_${id}.push(oper);
+		}
+		//定义表格
+		var dtGridOption_${id} = {
+			ajaxLoad : true,
+			params : {
+			},
+			//loadAll : true,
+			check : ${check},
+			loadURL : '${loadURL}',
+// 			exportFileName : '用户列表',
+			columns : dtGridColumns_${id},
+			gridContainer : 'dtGridContainer_${id}',
+			toolbarContainer : 'dtGridToolBarContainer_${id}',
+			tools : '',
+			pageSize : 5
+		};
+		var grid_${id} = $.fn.DtGrid.init(dtGridOption_${id});
+		$(function() {
+// 			document.getElementById("_page_1").innerHTML = "";
+			grid_${id}.load();
+		});
+		
+		function josn_to_String(time) {
+			var datetime = new Date();
+			datetime.setTime(time);
+			var year = datetime.getFullYear();
+			var month = datetime.getMonth() + 1;// js从0开始取
+			var date = datetime.getDate();
+			var hour = datetime.getHours();
+			var minutes = datetime.getMinutes();
+			var second = datetime.getSeconds();
+
+			if (month < 10) {
+				month = "0" + month;
+			}
+			if (date < 10) {
+				date = "0" + date;
+			}
+			if (hour < 10) {
+				hour = "0" + hour;
+			}
+			if (minutes < 10) {
+				minutes = "0" + minutes;
+			}
+			if (second < 10) {
+				second = "0" + second;
+			}
+
+			var time = year + "-" + month + "-" + date + " " + hour + ":"
+					+ minutes + ":" + second; // 2009-06-12 17:18:05
+			return time;
+		}
+		
+		function deleteOne(url) {
+			if (confirm('确定删除么？')) {
+				window.location.href=url;
+			}
+		}
+		]]>
+	</script>
+		<c:if test="${create}">
+			<div
+				style="height: 46px; background: #edf1f9; border: 1px solid #e4e4e4; border-bottom: none;"
+				class="buttondiv">
+				<c:if test="${empty createURL}">
+				<a style="cursor: pointer;" href="${path}?form"><i
+					class="on-left"><img width="14" height="14"
+						src="/ump/resources/images/add.png"/></i>${createLabel} </a>
+				</c:if>
+				<c:if test="${not empty createURL}">
+				<a style="cursor: pointer;" href="${path}${createURL}"><i
+					class="on-left"><img width="14" height="14"
+						src="/ump/resources/images/add.png"/></i>${createLabel} </a>
+				</c:if>
+				
+			</div>
+		</c:if>
+		<div id="dtGridContainer_${id}" class="dt-grid-container">
+		<DIV>
+			<SPAN></SPAN>
+		</DIV>
+	</div>
+	<div id="dtGridToolBarContainer_${id}"
+		class="dt-grid-toolbar-container">
+		<SPAN></SPAN>
+	</div>
+  </c:if>
+
+</jsp:root>

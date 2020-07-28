@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_WccMessage" items="${wccmessages}" z="CAZz52CIopfKqcrr3VYV7ryCPk8=">
+        <table:table data="${wccmessages}" id="l_com_nineclient_model_WccMessage" path="/wccmessages" z="Hj8RQxZO9KJdUAfmDJx9L15AXgc=">
+            <table:column id="c_com_nineclient_model_WccMessage_MsgType" property="msgType" z="9UGVDOKT1Kahz0rSHnv9Jeja2+I="/>
+            <table:column id="c_com_nineclient_model_WccMessage_contentType" property="contentType" z="EwVESYFYxsc+eM1ohUKwosaM6+w="/>
+            <table:column id="c_com_nineclient_model_WccMessage_content" property="content" z="PfJ6D8bCwgAk2wzGGaohn/v/+hU="/>
+            <table:column id="c_com_nineclient_model_WccMessage_status" property="status" z="st7TFXkH0u1AIkMF2Dx+EliQics="/>
+            <table:column id="c_com_nineclient_model_WccMessage_dateTime" property="dateTime" z="JSG0wLLlASS8G94wM3MZCkx6Re4="/>
+            <table:column id="c_com_nineclient_model_WccMessage_Msg" property="msg" z="HvTxwaKuuzM0Fp7VMHF1VXBb0q8="/>
+        </table:table>
+    </page:list>
+</div>

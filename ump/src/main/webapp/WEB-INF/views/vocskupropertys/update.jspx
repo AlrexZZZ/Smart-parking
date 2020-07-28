@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<style>
+	@IMPORT url("/ump/styles/validation.css");
+	@IMPORT url("/ump/styles/url.css");
+	</style>
+	<SCRIPT type="text/javascript"
+		src="/ump/ui/jquery-validation/jquery.validate.js">
+		//--
+	</SCRIPT>
+	<SCRIPT type="text/javascript" src="/ump/js/nineclient/vocreport/nineclient.js"><!--ss--></SCRIPT>
+	<div class="grid">
+	<form id="addSkuPropertyForm" action="/ump/vocskupropertys/update" method="POST"  width="400px;">
+		<INPUT type="hidden" id="propertyId" name="id" value="${vocSkuProperty.id}"/>
+			<div class="row">
+				<div class="span1">属性名称:</div>
+				<div class="span3"><input id="add_skuPropertyName" class="trimeClass" type="text" name="name" value="${vocSkuProperty.name}"/></div>
+			</div>
+			<DIV class="row">
+				<div class="span1">属性定义:</div>
+				<div class="span6">
+					<div class="input-control textarea">
+					<![CDATA[<TEXTAREA class="trimeClass" name="propertyDetail">${vocSkuProperty.propertyDetail}</TEXTAREA>]]>
+					</div>	
+				</div>
+			</DIV>
+	</form>
+	</div>
+	<div class="btnCenter">
+					<button class="info" onclick="update();">确定</button>
+					<button class="warning" style="margin-left: 30px;" type="button" onclick="cancel();">取消</button>
+	</div>
+	<SCRIPT type="text/javascript">
+		<![CDATA[
+		$(document).ready(function(){
+			$("#addSkuPropertyForm").validate({
+				rules : {
+					name:{required:true,remote:{
+								 url:"/ump/commentvalidata/validataUniqueCompany",
+								 type: "post", 
+								 data: {
+									field:'name',
+									value:function(){
+										return $("#add_skuPropertyName").val();
+									},
+									table:"VocSkuProperty",
+									id:function (){
+										return $("#propertyId").val();
+									},
+									isCompany:true,
+									companyField:"umpCompany"
+								 }
+					}},
+					propertyDetail:{required:true}
+				},
+
+				messages : {
+					propertyDetail:{required:"请输入属性定义"},
+					name:{required:"请输入属性名称",remote:"属性名称要唯一"}
+				},
+				errorElement:"em",
+				focusCleanup:true,
+				errorClass:"invalid"
+			});
+			$(".trimeClass").blur(function (){
+				var obj=$(this);
+				var val=$(this).val();
+				if(val){
+					$(this).val($.trim(val));
+				}
+			});
+		});	
+		
+		
+		function update(){
+			if(!$("#addSkuPropertyForm").valid()){
+				return;
+			}
+			var url="/ump/vocskupropertys/update";
+			var param=$("#addSkuPropertyForm").serialize();
+			dataAjax(url, param, Notify);
+		    window.location.href = "/ump/vocskus?page=1&size=10";
+		}
+		function cancel() {
+			window.location.href = "/ump/vocskus?page=1&size=10";
+		}
+		]]>
+	</SCRIPT>
+</div>

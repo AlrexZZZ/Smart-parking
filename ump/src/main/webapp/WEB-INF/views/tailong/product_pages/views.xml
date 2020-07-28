@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+ 
+<definition extends="cbdwcc_culture" name="page/showTLProductList">
+   <put-attribute name="body"  value="/WEB-INF/views/tailong/product_pages/appointment.jsp"/>
+</definition>
+<definition extends="cbdwcc_culture" name="page/showTLProductDetail">
+   <put-attribute name="body"  value="/WEB-INF/views/tailong/product_pages/appointmentDetail.jsp"/>
+</definition>
+<definition extends="cbdwcc_culture" name="page/showProductStroe">
+<put-attribute name="body"  value="/WEB-INF/views/tailong/product_pages/storeInfo.jsp"/>
+</definition>
+
+<definition extends="cbdwcc_culture"  name="page/showProductStroeMap">
+<put-attribute name="body"  value="/WEB-INF/views/tailong/product_pages/showMap.jsp"/>
+</definition>
+</tiles-definitions>

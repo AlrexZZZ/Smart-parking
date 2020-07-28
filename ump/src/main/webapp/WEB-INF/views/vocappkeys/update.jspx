@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<style>
+	@IMPORT url("/ump/styles/validation.css");
+	@IMPORT url("/ump/styles/url.css");
+	</style>
+	<SCRIPT type="text/javascript"
+		src="/ump/ui/jquery-validation/jquery.validate.js">
+		//--
+	</SCRIPT>
+	<SCRIPT type="text/javascript">
+	<![CDATA[
+	         $(document).ready(function(){
+	        		$("#editAppKeyForm").validate({
+	    				rules : {
+	    					redirectUrl:{required:true},
+	    					clientId:{required:true},
+	    					name:{required:true,remote:{
+	    								 url:"/ump/commentvalidata/validataUniqueId",
+	    								 type: "post", 
+	    								 data: {
+	    									field:'name',
+	    									value:function(){
+	    										return $("#add_name").val();
+	    									},
+	    									table:"VocAppkey",
+	    									id:function (){
+	    										return $("#appKey_id").val();
+	    									},
+	    									isCompany:true,
+	    									companyField:"companyId"
+	    								 }
+	    					}},
+	    					clientSecret:"required"
+	    				},
+	    				messages : {
+	    					redirectUrl :{
+	    						required:"此项必填"
+	    					},
+	    					clientId:{required:"此项必填"},
+	    					name:{required:"此项必填",remote:"应用名称要唯一"},
+	    					clientSecret:"此项必填"
+	    				},
+	    				errorElement:"em",
+	    				focusCleanup:true,
+	    				errorClass:"invalid"
+	    			});
+	         });       
+	         function switchOpen(obj,vl){
+				 if(vl==1){
+					 $("#add_isVisable").val(false);
+				 }else{
+					 $("#add_isVisable").val(true);
+				 }
+				$(".switchClass").toggle();
+			 }
+	         function editAppKey(){
+	        	 if(!$("#editAppKeyForm").valid()){
+	        		 return;
+	        	 }
+				 var url ="/ump/vocappkeys/update";
+				 var flag =true;
+				 $.ajax({
+						url : "/ump/vocappkeys/update",
+						async : false,
+						dataType : "text",
+						type : "POST",
+						data :$("#editAppKeyForm").serialize(),
+						error : function(msg) {
+						},
+						success : function(data) {
+							Notify(data);
+						}
+					});
+				 window.location.href="/ump/vocappkeys/appKeyManage";
+			 }
+			 function Notify(msg){
+				 $.Notify({
+						caption : "",
+						content : msg,
+						timeout : 5000
+					});
+			 }
+			 function goBack(){
+				 window.location.href="/ump/vocappkeys/appKeyManage";
+			 }
+	 ]]>
+	
+	</SCRIPT>
+	<form id="editAppKeyForm" action="/ump/vocappkeys/update" method="POST">
+		<div class="grid">
+		<INPUT id="appKey_id" name="id" type="hidden" value="${vocAppkey.id}"/>
+		<INPUT name="version"  type="hidden" value="${vocAppkey.version}"/>
+			<div class="row">
+				<!-- <div class="span1">平台名称:</div>
+				<div class="span2">
+					<SELECT class="addClass" name="umpChannelId" id="edit_umpChannelId">
+						<OPTION selected="selected" value="-1">请选择</OPTION>
+					</SELECT><SPAN style="color: red; display: none;">此项必填</SPAN>
+				</div> -->
+				<div class="span1">应用名称:</div>
+				<div class="span3">
+					<INPUT class="addClass publicSize" name="name" id="add_name"  value="${vocAppkey.name}"/>
+				</div>
+				<div class="span1">回调地址:</div>
+				<div class="span3">
+					<input class="addClass publicSize" id="edit_redirectUrl" type="text"
+						name="redirectUrl" value="${vocAppkey.redirectUrl}"/><SPAN style="color: red; display: none;">此项必填</SPAN>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span1">client-id:</div>
+				<div class="span3">
+					<input class="addClass publicSize" id="edit_clientId" type="text"
+						name="clientId" value="${vocAppkey.clientId}"/><SPAN style="color: red; display: none;">此项必填</SPAN>
+				</div>
+				<div class="span1">client-secret:</div>
+				<div class="span3">
+					<input class="addClass publicSize" id="edit_clientSecret" type="text"
+						name="clientSecret" value="${vocAppkey.clientSecret}"/><SPAN style="color: red; display: none;">此项必填</SPAN>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span1">启用状态:</div>
+				<div class="span3">
+					<INPUT name="isVisable" id="add_isVisable" type="hidden" value="true" checked="checked"/>
+									<img class="switchClass" onclick="switchOpen(this,1)" src="/ump/images/ON.png"/>
+									<img class="switchClass"  onclick="switchOpen(this,0)" style="display: none;" src="/ump/images/OFF.png"/>
+				</div>
+			</div>
+			<div class="row">
+				<DIV class="span1">
+					<SPAN></SPAN>
+				</DIV>
+				<DIV class="span1">
+					<input type="button" class="info" value="确定" onclick="editAppKey();"></input>
+				</DIV>
+				<DIV class="span1">
+					<button class="warning" type="button"
+						onclick="goBack();">取消</button>
+				</DIV>
+			</div>
+		</div>
+	</form>
+	<SPAN>${msg}</SPAN>
+</div>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_nineclient_model_WccTemplate" modelAttribute="wccTemplate" path="/wcctemplates" versionField="Version" z="dzmPh32QksYWnuVnAqw6F3pUCvY=">
+        <field:select field="type" id="c_com_nineclient_model_WccTemplate_type" items="${wcctemplatetypes}" path="wcctemplatetypes" z="hh299358ZgQz1NVUTMyWpvc3H1Y="/>
+        <field:textarea field="name" id="c_com_nineclient_model_WccTemplate_name" z="UIoRjObWVnB3P0y0PR2u6Pv9Gwc="/>
+        <field:textarea field="parentId" id="c_com_nineclient_model_WccTemplate_parentId" z="7+FiRN8wkox0rC6LSlrJwe+COvo="/>
+        <field:textarea field="title" id="c_com_nineclient_model_WccTemplate_title" z="JFSu+4RAJ8uOe5X2SWa1hlWCDKQ="/>
+        <field:textarea field="content" id="c_com_nineclient_model_WccTemplate_content" z="mq1ZoXA06E8DwYqvVaEajnS+YhA="/>
+        <field:input field="useCount" id="c_com_nineclient_model_WccTemplate_useCount" z="jDp5gYcl0S5WKC0yhs64T8Ac3KE="/>
+        <field:textarea field="sort" id="c_com_nineclient_model_WccTemplate_sort" z="6dx/zYiVywAJYxnQZy36zsHvVYY="/>
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_WccTemplate_isDeleted" z="F/pg96TnBCzbc0DX4Y9SHAZGO5A="/>
+        <field:checkbox field="isVisable" id="c_com_nineclient_model_WccTemplate_isVisable" z="yW2exP18Qllu5xZ9y8mJSxeUHJI="/>
+        <field:datetime dateTimePattern="${wccTemplate_inserttime_date_format}" field="insertTime" id="c_com_nineclient_model_WccTemplate_insertTime" z="b97Y7neWe+c5Q7RHeGs6klK3iK8="/>
+    </form:update>
+</div>

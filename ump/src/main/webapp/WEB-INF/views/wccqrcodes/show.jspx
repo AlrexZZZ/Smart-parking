@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccQrcode" object="${wccqrcode}" path="/wccqrcodes" z="cVdt2J7gLxNEKiQfsQF2rTc7xMo=">
+        <field:display field="codeUrl" id="s_com_nineclient_model_WccQrcode_codeUrl" object="${wccqrcode}" z="4ffx+rXs/dEBEQYwBf+O7njFdLQ="/>
+        <field:display field="codeId" id="s_com_nineclient_model_WccQrcode_codeId" object="${wccqrcode}" z="0d00fQJVqYK76wU167Z+xU7UA9o="/>
+        <field:display field="isUse" id="s_com_nineclient_model_WccQrcode_isUse" object="${wccqrcode}" z="RvZ85rIWFMl2svon0Vz91aT1iSM="/>
+        <field:display field="expireSeconds" id="s_com_nineclient_model_WccQrcode_expireSeconds" object="${wccqrcode}" z="Tf6FDctinuHfOK11UnDa13ITEuA="/>
+        <field:display field="actionType" id="s_com_nineclient_model_WccQrcode_actionType" object="${wccqrcode}" z="lMwrQvxrUj3eouhJcmmJBIf7/9E="/>
+        <field:display field="useType" id="s_com_nineclient_model_WccQrcode_useType" object="${wccqrcode}" z="fqX2337Q9VQVOnirpYmnltLp0Pw="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccQrcode_isDeleted" object="${wccqrcode}" z="8gvygaoueImDdccATfv/65XHCIg="/>
+        <field:display date="true" dateTimePattern="${wccQrcode_createtime_date_format}" field="createTime" id="s_com_nineclient_model_WccQrcode_createTime" object="${wccqrcode}" z="SmiArWq3vYM1CXYowEwq/SVwWkc="/>
+    </page:show>
+</div>

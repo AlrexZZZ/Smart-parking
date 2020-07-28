@@ -1,0 +1,10 @@
+.invalid{
+	color: red;
+	font-family: Arial,"Î¢ÈíÑÅºÚ";
+    font-style: normal;
+    font-weight: normal;
+}
+.hintSpan{
+	height:13px;width:8px;margin-left:5px
+}
+input.error{border: 1px solid red;}

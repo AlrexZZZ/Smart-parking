@@ -1,0 +1,6 @@
+名称                                      上级                                      跳转地址
+项目管理
+社区信息                          项目管理                               /ump/cdbWccAppartment/TestCdbWccAppartment?
+社区其他信息	      项目管理                               /ump/cdbWccAppartmentFu/TestCbdWccAppartmentFu?
+一卡通管理                      
+我的一卡通                     一卡通管理                            /ump/myCard/TestMyCard?

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_UmpCompanyService" object="${umpcompanyservice}" path="/umpcompanyservices" z="d3HrZUQ/o533sr8BWG5pXD264O8=">
+        <field:display field="companyId" id="s_com_nineclient_model_UmpCompanyService_companyId" object="${umpcompanyservice}" z="Nq/2aoqCcKfbrtmzvItcA1r2Fkk="/>
+        <field:display field="productId" id="s_com_nineclient_model_UmpCompanyService_productId" object="${umpcompanyservice}" z="6LXGs0JbuxeXxVxdbGk9vVch42I="/>
+        <field:display field="versionId" id="s_com_nineclient_model_UmpCompanyService_versionId" object="${umpcompanyservice}" z="vfJDBTzalu/4FZ3P0mjJW22WilA="/>
+        <field:display field="maxAccount" id="s_com_nineclient_model_UmpCompanyService_maxAccount" object="${umpcompanyservice}" z="+OOSDC7WNOCU/m8tuiCFNMsI12s="/>
+        <field:display date="true" dateTimePattern="${umpCompanyService_servicestarttime_date_format}" field="serviceStartTime" id="s_com_nineclient_model_UmpCompanyService_serviceStartTime" object="${umpcompanyservice}" z="8rt5cZ1zdsYVPpLTXzaQeww74k4="/>
+        <field:display date="true" dateTimePattern="${umpCompanyService_serviceendtime_date_format}" field="serviceEndTime" id="s_com_nineclient_model_UmpCompanyService_serviceEndTime" object="${umpcompanyservice}" z="KtnOR2mgmHDfd2t03MaK5HDnnxQ="/>
+    </page:show>
+</div>

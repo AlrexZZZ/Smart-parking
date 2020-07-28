@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" 
+xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" 
+xmlns:client="urn:jsptagdir:/WEB-INF/tags/client" 
+xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" 
+xmlns:jsp="http://java.sun.com/JSP/Page" 
+xmlns:spring="http://www.springframework.org/tags" version="2.0">
+ <style>
+	@IMPORT url("/ump/ui/kindeditor/plugins/code/prettify.css");
+</style>  
+  <!-- 复选框引用css -->
+  <style>@IMPORT url("/ump/styles/selectTree.css");</style>
+  
+<spring:url value="/ui/kindeditor/kindeditor.js" var="kind"></spring:url>
+<spring:url value="/ui/kindeditor/lang/zh_CN.js" var="zhcn"></spring:url>
+
+<script src="${kind}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+<script src="${zhch}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+
+<!-- 复选框引用js -->
+<SCRIPT type="text/javascript" src="/ump/js/selectStoreOrPubTree.js">/*selectTree*/</SCRIPT>
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+
+    <style>
+
+	
+ .ke-button{background:#e5e5e5 !important;font-family:"微软雅黑" !important; font-size:14px !important;
+ cursor:pointer !important; }
+    	
+    label{width: 110px; text-align: right; display:inline-block; cursor:default !important;}
+
+/* input[name='imgFile']{cursor:pointer;opacity:0;left:111px;position:absolute;} */
+
+.up_button{ width:270px;height:28px; appearance:none; -webkit-appearance:none; border:1px solid #e5e5e5; background:#fff;}
+
+/* .spanText{width: 110px; text-align: right; display:inline-block;} */
+    .sp{
+    	text-align: left;
+    	padding-left: 5px;
+    	width : 10px;
+    } 
+    .select_cheally{border: 1px solid #e5e5e5;width: 270px;height: 28px;margin-left: 0px;}
+    </style>
+    
+    	<SCRIPT type="text/javascript">
+	<![CDATA[
+
+	 ]]> 
+	
+	window.onload = function(){
+ 	var dept =	'${s.dept}';
+ 	var problemType = '${s.problemType}';
+ 	var isBack = '${s.isBack}'
+ 		if(dept){
+ 		$("#deptId").val(dept);	
+ 		}
+	if(problemType){
+		$("#problemTypeId").val(problemType);
+	} 
+	
+	if(isBack){
+		$("#isBackId").val(isBack);
+	} 
+
+	}
+	</SCRIPT>
+    
+    
+    
+    <script type="text/javascript">
+    <![CDATA[
+         var flag1 = true;
+         var flag2 = true;
+     		function changeType(){
+    			$("#password_").attr("Type","password");
+    		}
+             
+
+    	
+    	function checkPlat(o){
+    		var name = $(o).val();
+    		if(!name){
+    			flag1 = false;
+    			$('#aerrMsg').html('公众平台名不能为空');
+    			return;
+    		}
+    		$.ajax({
+    			url : "/ump/wccplatformusers/checkPlat",
+    			type : "POST",
+    			data : {'name':name},
+    			error : function(msg) {
+    				alert("error " + msg);
+    			},
+    			success : function(text) {
+    				if(text=='false'){
+    					flag1 = false;
+	    				$('#aerrMsg').html('公众平台名重复');
+	    				return;
+    				}
+    				flag1 = true;
+    				$('#aerrMsg').html('');
+    			}
+    		});
+    	}
+    	
+    	function checkPlatid(o){
+    		var platId = $(o).val();
+    		if(!platId){
+    			flag2 = false;
+    			$('#perrMsg').html('原始ID不能为空');
+    			return;
+    		}
+    		$.ajax({
+    			url : "/ump/wccplatformusers/checkPlatId",
+    			type : "POST",
+    			data : {'platId':platId},
+    			error : function(msg) {
+    				alert("error " + msg);
+    			},
+    			success : function(text) {
+    				if(text=='false'){
+    					flag2 = false;
+	    				$('#perrMsg').html('原始ID重复');
+	    				return;
+    				}
+    				flag2 = true;
+    				$('#perrMsg').html('');
+    			}
+    		});
+    	}
+    	
+
+    	$(document).ready(function(){
+    		
+    		loadTree('/ump/wccplatformusers/tree','${pltIds}');
+    		
+    		$('#proceed').unbind().bind('click',function(){
+    			var platformId = $('#platformId_').val();
+    			var appId = $('#appId_').val();
+    			var appSecret = $('#appSecret_').val();
+    			var account = $('#paccount_').val();
+    			var platReg=/^\w{15}$/;
+    			var appReg=/^[0-9a-zA-Z_]{18}$/;
+    			var sercReg=/^[0-9a-zA-Z_]{32}$/;
+    			if(!flag1){
+    				return false;
+    			}
+    			if(!flag2){
+    				return false;
+    			}
+    			if(!account){
+    				$('#aerrMsg').html('公众平台不能为空');
+    				return false;
+    			}
+    			$('#aerrMsg').html('');
+    			if(!platformId){
+    				$('#perrMsg').html('原始ID不能为空');
+    				return false;
+    			}
+    			if(!platReg.test(platformId)){
+    				$('#perrMsg').html('原始ID格式不正确');
+    				return false;
+    			}
+    			
+    			$('#perrMsg').html('');
+
+    		});
+    	});
+    	
+    	function check(){
+    		editor.sync();
+
+            editor.sync();
+            console.log($('#editor_id').val());
+    	// return false;
+    	}
+    	
+        function selectShowMenu2() {
+    		var SelObj = $("#SelVals");
+    		var SelOffset = $("#SelVals").offset();
+    		$("#selectMenuContent").css({
+    		}).slideDown("fast");
+    		$("body").bind("mousedown", selectOnBodyDown);
+    	}
+		function checkPlatForm(){
+			var platId = $("#platId").val();
+			if($.trim(platId) == ""){
+				$("#platformMsg").html("请选择公众平台");
+				return false;
+			}
+			$("#platformMsg").html("");
+			return true;
+		}
+	
+		function getId(){
+			
+			var fname = $('#fnameId').val();
+			var dept = $('#deptId').val();
+			var area = $('#areaId').val();
+			var stuNo = $('#stuNoId').val();
+			var fphone = $('#fphoneId').val();
+			var address = $('#addressId').val();
+			var problemType = $('#problemTypeId').val();
+			var isBack = $('#isBackId').val();
+			var problemDes = $('#problemDesId').val();
+			
+			if(fname.trim() == ''){
+				alert('请填写姓名');
+				return;
+			}
+			if(dept.trim() == ''){
+				alert('请填写所在系部');
+				return;
+			}
+			if(area.trim() == ''){
+				alert('请填写区域');
+				return;
+			}
+
+			if(stuNo.trim() == ''){
+				alert('请填写学号');
+				return;
+			}
+			if(fphone.trim() == ''){
+				alert('请填写联系电话');
+				return;
+			}
+			if(address.trim() == ''){
+				alert('请填写地址');
+				return;
+			}
+			if(problemType.trim() == ''){
+				alert('请选择故障分类');
+				return;
+			}
+			if(isBack.trim() == ''){
+				alert('请选择是否备案');
+				return;
+			}
+			if(problemDes.trim() == ''){
+				alert('请填写故障描述');
+				return;
+			}
+			document.forms[0].submit();
+		}
+    ]]>
+    </script>
+    <client:create modelAttribute="wccRepairReg"  path="UpdateRepair" id="bdingStuInfoResultId">
+       <div class="grid">
+       
+          <div class="row">
+            	<div class="span12" style="display: none;">
+                    <label>主键id_：</label>
+                    <input class="select_cheally" type="text" id="id_" value="${s.id}" name="id" />
+                </div>
+            </div>
+            <div class="row" >
+            	<div class="span12" >
+                    <label>姓名：</label>
+                    <input class="select_cheally" type="text"  value="${s.fname}" name="fname" id="fnameId"  placeholder="请输入姓名" />
+                </div>
+            </div>
+            <div class="row" >
+            	<div class="span12" >
+                    <label>系部：</label>
+                    		<select class="select_cheally" name="dept" id="deptId">
+		                  <option value="">请选择</option>
+		                 <option value="软件工程">软件工程</option>
+		                 <option value="计算机科学与技术">计算机科学与技术</option>
+		                  <option value="物管">物管</option>
+		                     <option value="建筑">建筑</option>
+		                <option value="其它">其它</option>
+		                    </select>
+                </div>
+            </div>
+            <div class="row" >
+            	<div class="span12" >
+                    <label>所在区：</label>
+                    <input class="select_cheally" type="text" id="areaId" value="${s.area}" name="area" />
+                </div>
+            </div>
+            <div class="row">
+            	<div class="span12" >
+                    <label>学号：</label>
+                    <input class="select_cheally" type="text" id="stuNoId" value="${s.stuNo}" name="stuNo" />
+
+                </div>
+            </div> 
+
+           <div class="row">
+            	<div class="span12" >
+                    <label>联系电话：</label>
+                    <input class="select_cheally" name="fphone" id="fphoneId" value="${s.fphone}" />
+
+                </div>
+            </div> 
+                <div class="row">
+            	<div class="span12" >
+                    <label>联系地址：</label>
+                    <input class="select_cheally" name="address" max="100" id="addressId" value="${s.address}" />
+
+                </div>
+                </div> 
+                    <div class="row">
+            	<div class="span12" >
+                    <label>故障分类：</label>
+                  <select class="select_cheally" name="problemType" id="problemTypeId">
+		              <option value="">请选择</option>
+		               <option value="硬件故障">硬件故障</option>
+		              <option value="软件故障">软件故障</option>
+		              <option value="装机组合">装机组合</option>
+		             <option value="软件组合">软件组合</option>
+		             <option value="其它">其它</option>
+		          </select>
+
+                </div>
+               </div> 
+                       <div class="row">
+            	<div class="span12" >
+                    <label>是否备案：</label>
+            <select class="select_cheally" name="isBack" id="isBackId">
+		     <option value="">请选择</option>
+		     <option value="是">是</option>
+		     <option value="否">否</option>
+		 </select>
+
+                </div>
+            </div> 
+               <div class="row">
+            	<div class="span12" >
+                    <label>故障描述：</label>
+                    <textarea name="problemDes" id="problemDesId" cols="48" rows="5" >${s.problemDes}<!-- sss --></textarea>
+
+                </div>
+            </div>    
+  
+        </div>
+
+     <client:button  submit="true" onclick="getId();" cancel="true"></client:button> 
+   
+     
+    </client:create>
+
+<!-- 复选框div -->
+     <div id="menuContent" class="menuContent"
+		style="display: none;position: absolute;background: #fff;padding: 20px;border: 1px solid #e4e4e4;box-shadow: -0px 6px 10px #888888;">
+		<ul id="treeDemo" class="ztree" style="margin-top: 0;"></ul>
+	</div>
+ 
+</div>

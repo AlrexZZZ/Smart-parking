@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_nineclient_model_WccUserLottery" modelAttribute="wccUserLottery" path="/wccuserlotterys" versionField="Version" z="UNfsSaOyjCx2rm6tuVAA3vh1FK8=">
+        <field:input field="lotteryNumber" id="c_com_nineclient_model_WccUserLottery_lotteryNumber" z="6Rkl4NyTyxpQYS9VtK76mTd2ygA="/>
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_WccUserLottery_isDeleted" z="GqKxZ4FC578LzEY/OPiMPLnhe7Q="/>
+    </form:update>
+</div>

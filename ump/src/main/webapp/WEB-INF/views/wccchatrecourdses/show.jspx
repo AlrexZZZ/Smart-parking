@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccChatRecourds" object="${wccchatrecourds}" path="/wccchatrecourdses" z="wuj/OsuiUQg2g8MtxyaCsJva48s=">
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccChatRecourds_isDeleted" object="${wccchatrecourds}" z="EZcNEDDFyvB4aw9LARvntrSKQ/E="/>
+        <field:display date="true" dateTimePattern="${wccChatRecourds_inserttime_date_format}" field="insertTime" id="s_com_nineclient_model_WccChatRecourds_insertTime" object="${wccchatrecourds}" z="iCQRPy4S+263u4lEbnOmd0W5jlA="/>
+        <field:display date="true" dateTimePattern="${wccChatRecourds_starttime_date_format}" field="startTime" id="s_com_nineclient_model_WccChatRecourds_startTime" object="${wccchatrecourds}" z="ov6b6svImnOMbV9xg8yF2AcwXzw="/>
+        <field:display date="true" dateTimePattern="${wccChatRecourds_endtime_date_format}" field="endTime" id="s_com_nineclient_model_WccChatRecourds_endTime" object="${wccchatrecourds}" z="+ZAO8UA58BO01enzs9XDymPQB4c="/>
+    </page:show>
+</div>

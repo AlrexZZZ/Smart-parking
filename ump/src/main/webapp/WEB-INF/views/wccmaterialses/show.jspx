@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccMaterials" object="${wccmaterials}" path="/wccmaterialses" z="RJJb3O0q2h9V++NA4OTBCTlvqDg=">
+        <field:display field="type" id="s_com_nineclient_model_WccMaterials_type" object="${wccmaterials}" z="0mzRdxKzPvCAE/8qWMdnu5azdSw="/>
+        <field:display field="title" id="s_com_nineclient_model_WccMaterials_title" object="${wccmaterials}" z="2/81FFj+b8I/8Td1FZ20nLPQRqY="/>
+        <field:display field="content" id="s_com_nineclient_model_WccMaterials_content" object="${wccmaterials}" z="JjA8HUcniIMDmeEhTM6HeejykuE="/>
+        <field:display field="resourceUrl" id="s_com_nineclient_model_WccMaterials_resourceUrl" object="${wccmaterials}" z="rUX7EaugsB0/5weyv/+6WP3MZDY="/>
+        <field:display field="thumbnailUrl" id="s_com_nineclient_model_WccMaterials_thumbnailUrl" object="${wccmaterials}" z="VwpzwfZwrIjCb8bQPQ1snmQqE0o="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccMaterials_isDeleted" object="${wccmaterials}" z="pZAclnagA3zLtoznMygkmHoTrJ4="/>
+        <field:display date="true" dateTimePattern="${wccMaterials_inserttime_date_format}" field="insertTime" id="s_com_nineclient_model_WccMaterials_insertTime" object="${wccmaterials}" z="EUqiUZ58GsoxHR0eCOX9FO22YeU="/>
+        <field:display field="remakeUrl" id="s_com_nineclient_model_WccMaterials_remakeUrl" object="${wccmaterials}" z="9ZbYdtlGtz7WE6NBOyxkyVlhHNY="/>
+        <field:display field="urlBoolean" id="s_com_nineclient_model_WccMaterials_urlBoolean" object="${wccmaterials}" z="C75eFK45/arhd+7xroyjX/sn8FI="/>
+        <field:display field="token" id="s_com_nineclient_model_WccMaterials_token" object="${wccmaterials}" z="QLpY03HwYVJ1g58nhR+xmSN94Gc="/>
+        <field:display field="sort" id="s_com_nineclient_model_WccMaterials_sort" object="${wccmaterials}" z="oS06+uk6T5hQm08YX9nrivU2DM4="/>
+    </page:show>
+</div>

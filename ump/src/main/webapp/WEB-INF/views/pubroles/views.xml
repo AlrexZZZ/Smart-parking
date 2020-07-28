@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default_pub" name="pubroles/list">
+        <put-attribute name="body" value="/WEB-INF/views/pubroles/list.jspx"/>
+    </definition>
+<definition extends="default_pub" name="pubroles/create">
+        <put-attribute name="body" value="/WEB-INF/views/pubroles/create.jspx"/>
+    </definition>
+<definition extends="default_pub" name="pubroles/update">
+        <put-attribute name="body" value="/WEB-INF/views/pubroles/update.jspx"/>
+    </definition>
+    <definition extends="pub" name="pubroles/result">
+        <put-attribute name="body" value="/WEB-INF/views/pubroles/result.jspx"/>
+    </definition>
+</tiles-definitions>

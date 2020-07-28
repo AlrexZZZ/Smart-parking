@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <script src="/ump/ui/zTree/js/jquery.ztree.core-3.5.js"><!-- --></script>
+	<script src="/ump/ui/zTree/js/jquery.ztree.excheck-3.5.js"><!-- --></script>
+	<script src="/ump/ui/zTree/js/jquery.ztree.exedit-3.5.js"><!-- --></script>
+ <style>
+ .metro .button{
+ 	padding: 0px;
+ }
+ </style>
+ <SCRIPT type="text/javascript">
+ <![CDATA[ 
+         var cflag = false; 
+        function checkName(o){
+        	var name = $(o).val();
+        	if(!name){
+        		cflag = false;
+        		$('#rname')[0].innerHTML='权限组名不能为空';
+        		return;
+        	}
+        	var timestamp = new Date().getTime();
+        	$.ajax({
+	            url:"/ump/pubroles/check?timestamp="+timestamp,
+	            datatype :"text",
+	            type: "POST",
+	            data:{'name':name},
+	            error: function(msg){
+	            },
+	            success:function(data){
+	            	if(data=='true'){
+	            		cflag = true;
+	            		$('#rname')[0].innerHTML='';
+	            		return;
+	            	}
+	            	$('#rname')[0].innerHTML='权限组名重复';
+	            	cflag = false;
+				  }
+	        });
+        } 
+          
+          
+		function iscontains(item,o){ 
+			return RegExp("\\b"+item+"\\b").test(o); 
+		}; 
+		
+ 		var status = true;//启用状态
+ 		var name = '${name}';//权限名
+ 		var id = '${id}';//权限id
+ 		var proidss = '${productIds}'.replace(/[ ]/g,"");//产品id
+ 		var productIds = proidss.substring(1,proidss.length-1);
+ 		var proids = productIds.split(',');
+ 		if(!id){
+ 			 id = "";
+ 		}
+		var statu = '${status}';
+		var ids = '${ids}';//菜单id
+		var idss = ids.split(',');
+		var setting = {
+			check: {
+				enable: true
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+			},
+			callback: {
+				beforeCheck: beforeCheck,
+				onCheck: zTreeOnCheck
+			}
+		};
+		if(proids){
+			showTree(proids[0]);
+		}
+		
+		//根据产品id查询菜单
+		function showTree(pid){
+			var zNodes = new Array();
+			var timestamp = new Date().getTime();
+			var pzTree = $.fn.zTree.getZTreeObj("treeDemo"+id);
+			if(pzTree){
+				return;
+			}
+			 $.ajax({
+	            url:"/ump/pubroles/tree?timestamp="+timestamp,
+	            datatype :"text",
+	            type: "POST",
+	            data:{'pid':pid,'roleId':id},
+	            error: function(msg){
+	            },
+	            success:function(data){
+	            	var str = '['+data+']';
+	            	zNodes = eval('('+str+')');
+	            	zNodes.checked = true;
+	            	$.fn.zTree.init($("#treeDemo"+pid), setting, zNodes);
+	    			setCheck(pid);
+	    			
+					if(name){
+						$('#name')[0].value=name;
+						$('#status')[0].checked=status;
+						var zTree = $.fn.zTree.getZTreeObj("treeDemo"+pid);
+						var nodes = zTree.transformToArray(zTree.getNodes());
+						for(n in idss){
+							for(i in nodes){
+								var id1 = nodes[i].id;
+								var id2 = idss[n];
+								if(id1==id2){
+									zTree.checkNode(nodes[i],true,false);										
+								}
+							}
+						}
+					}
+				  }
+	        });
+		}
+		
+		var code, log;
+		function setCheck(pid) {
+			/* py = $("#py").attr("checked")? "p":"",
+			sy = $("#sy").attr("checked")? "s":"",
+			pn = $("#pn").attr("checked")? "p":"",
+			sn = $("#sn").attr("checked")? "s":"";
+			var type = { "Y":"ps", "N":"ps"};
+	    	zTree.setting.check.chkboxType = type;
+			showCode('setting.check.chkboxType = { "Y" : "' + type.Y + '", "N" : "' + type.N + '" };'); */
+		}
+		function showCode(str) {
+			if (!code) code = $("#code");	
+			code.empty();
+			code.append("<li>"+str+"</li>");
+		}
+		
+		 function zTreeOnCheck(event, treeId, treeNode) {
+			 if(treeNode.name == '审核'){
+				var zTree = $.fn.zTree.getZTreeObj(event.currentTarget.id);
+			 	zTree.checkNode(treeNode.getParentNode(),true,false);
+			 }
+		};
+		function beforeCheck(treeId, treeNode){
+		}
+		
+		function sure(){
+			var name = $('#name')[0].value;
+			if(!name){
+				$('#rname')[0].innerHTML='权限组名称不能为空';
+				return;
+			}
+			if(name.length>50){
+				$('#rname')[0].innerHTML='权限组名太长';
+				return;
+			}
+			var aids = new Array();
+			aids.push(0);
+			for(n in proids){
+				var ids = "";
+				var zTree = $.fn.zTree.getZTreeObj("treeDemo"+proids[n]);
+				if(!zTree){
+					continue;
+				}
+				var nodes = zTree.getCheckedNodes();
+			
+						
+				for(i in nodes){
+					if(nodes[i].id == '0'){
+						continue;
+					}
+					aids.push(nodes[i].id);
+			  		if(i!=nodes.length-1){
+							ids += nodes[i].id+",";
+							continue;				
+						}
+						ids += nodes[i].id;
+					}
+			}
+			var authids = aids.join(',');
+			if(aids.length == 1){
+				$('#rname')[0].innerHTML='请选择菜单';
+				return;
+			}
+			window.location.href="/ump/pubroles/creates?name="+name+"&status="+status+"&authids="+authids+"&id="+id;
+ 			}
+		
+		
+ 			function change(o){
+ 				if(iscontains('ON',o.src)){
+ 					$(o).attr('src','/ump/images/OFF.png');
+	 				status = false;
+	 				return;
+ 				}
+ 				$(o).attr('src','/ump/images/ON.png');
+ 				status = true;
+ 			}
+			
+			function exit(){
+				window.location.href="/ump/pubroles?page=1&amp;size=10";
+			}
+		$(document).ready(function(){
+			status = true;
+			if(name){
+ 				$('#tname')[0].innerHTML='修改权限组';
+ 				if(statu=='false'){
+ 					status = false;
+ 					$('#status').attr('src','/ump/images/OFF.png');
+ 				}
+ 			}
+		})
+	 ]]> 
+	</SCRIPT>
+		
+		
+		<div class="grid">
+			<div class="row">
+				<div class="span6">
+					<label>权限组名称：</label>
+					<input class="input" id="name" onblur="checkName(this)" type="text" style="width: 135px;height: 28px;border: 1px solid #e4e4e4;background: #fff;"/><span class="sp" style="color: red"> *</span>&#160;<span id="rname" style="color: red;font-size: 15px"></span>
+				</div>
+				<div class="span6">
+					<label>启用状态</label>
+					<label><img id="status" onclick="change(this)" style="cursor: pointer;" src="/ump/images/ON.png"/></label>
+				</div>
+			</div>
+		</div>
+    	
+        <!-- <input id="status" type="checkbox" checked="checked"/>
+        <span id="check"  style="color: red;font-size: 1px" class="check"></span> -->
+    
+    <div style="margin-top: 50px" class="tab-control" data-role="tab-control" data-effect="slide">
+   <!--  <p>权限设置</p> -->
+    <ul class="tabs">
+    	<c:forEach items="${productss }" var="data">
+    		<li><a href="#_page_${data.id }" onclick="showTree(${data.id})">${data.productName }</a></li> 
+    	</c:forEach>
+    </ul>
+ 
+    <div class="frames">
+   		 <c:forEach items="${productss }" var="data">
+    		 <div class="frame" id="_page_${data.id }">
+        		<div class="zTreeDemoBackground left">
+					<ul id="treeDemo${data.id }" class="ztree"></ul>
+				</div>
+			</div>
+    	</c:forEach>
+    </div>
+    	<BUTTON style="margin-top: 20px;" class="info" onclick="javascript:sure();">确 定</BUTTON><BUTTON style="margin-top: 20px;" class="warning" onclick="javascript:exit();">取 消</BUTTON>
+    	<br/>
+	</div>
+</div>

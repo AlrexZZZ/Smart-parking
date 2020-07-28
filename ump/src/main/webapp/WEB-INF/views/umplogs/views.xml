@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default_pub" name="umplogs/list">
+        <put-attribute name="body" value="/WEB-INF/views/umplogs/list.jspx"/>
+    </definition>
+<definition extends="default_pub" name="umplogs/show">
+        <put-attribute name="body" value="/WEB-INF/views/umplogs/show.jspx"/>
+    </definition>
+<definition extends="default_pub" name="umplogs/create">
+        <put-attribute name="body" value="/WEB-INF/views/umplogs/create.jspx"/>
+    </definition>
+<definition extends="default_pub" name="umplogs/update">
+        <put-attribute name="body" value="/WEB-INF/views/umplogs/update.jspx"/>
+    </definition>
+</tiles-definitions>

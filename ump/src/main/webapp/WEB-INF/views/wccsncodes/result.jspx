@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fmt="http://java.sun.com/jsp/jstl/fmt" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+       	<table class="table striped3n">
+        	<thead>
+        		<tr>
+        			<th>
+						<input type="checkbox" class="acheck" name="allCheck" onclick="checkall()"/> <span class="check"></span>
+        			</th>
+        			<th>
+        				公众平台
+        			</th>
+        			<th>
+        				奖品类别
+        			</th>
+        			<th>
+        				中奖人
+        			</th>
+        			<th>
+        				中奖时间
+        			</th>
+        			<th>
+        				中奖人电话
+        			</th>
+        			<th>
+        				SN码
+        			</th>
+        			<th>
+        				抽奖次数
+        			</th>
+        			<th>
+        				状态
+        			</th>
+        			<th>
+        				兑奖操作
+        			</th>
+        		</tr>
+        	</thead>
+        	<tbody>
+        		<c:if test="${empty WccSncode}">
+        			<tr>
+        				<td colspan="5">无数据</td>
+        			</tr>
+        		</c:if>
+        		<c:forEach items="${WccSncode}" var="data">
+        		<tr>
+        			<td>
+						<input type="checkbox" class="scheck" name="sncodeCheck" value="${data.id },${data.lotteryActivity.id}"/> 
+					</td>
+					<td>
+						${data.friend.platformUser.account }
+					</td>
+        			<td>
+        				<c:if test="${data.awardInfo.awardLevel == 1}">
+        					一等奖
+        				</c:if>
+        				<c:if test="${data.awardInfo.awardLevel == 2}">
+        					二等奖
+        				</c:if>
+        				<c:if test="${data.awardInfo.awardLevel == 3}">
+        					三等奖
+        				</c:if>
+        				<c:if test="${data.awardInfo.awardLevel == 4}">
+        					四等奖
+        				</c:if>
+        				<c:if test="${data.awardInfo.awardLevel == 5}">
+        					五等奖
+        				</c:if>
+        				<c:if test="${data.awardInfo.awardLevel == 6}">
+        					六等奖
+        				</c:if>
+        			</td>
+        			<td>
+        				${data.friend.nickName }
+        			</td>
+        			<td>
+        				<fmt:formatDate value="${data.awardTime }" pattern="yyyy-MM-dd HH:mm:ss" />
+        			</td>
+        			<td>
+        				${data.tel }
+        			</td>
+        			<td>
+        				${data.snCode }
+        			</td>
+        			<td>
+        				${data.lotteryNumber}
+        			</td>
+        			<td>
+        				${data.snStatus }
+        			</td>
+        			<td>
+        				<![CDATA[<a href="javascript:void(0);" onclick="awardSncode(${data.id },${data.lotteryActivity.id})">兑奖</a>]]>
+        			</td>
+        		</tr>
+        		</c:forEach>
+        	</tbody>
+        </table>
+        <c:if test="${not empty WccSncode}">
+		<div style="float:right;margin-top: 20px;">
+			<input id="pageNum" type="hidden" value="${page}" />
+			<c:if test="${page>1 }">
+				<a class="default" href="javascript:void(0);" onclick="querySncode(1)"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px"> <img alt="首页"
+					src="/ump/resources/images/resultset_first.png" title="首页" style="float:left"/></a>
+				<a class="default"
+					href="javascript:void(0);" onclick="querySncode(${page-1})"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px"> <img alt="前一页"
+					src="/ump/resources/images/resultset_previous.png" title="前一页" style="float:left"/>
+				</a>
+			</c:if>
+			<c:if test="${WccSncode!= null and fn:length(WccSncode) > 0}">
+				<TFOOT>
+					<span style="color: #069dd5; height: 22px; line-height: 22px;float:left;padding-left: 6px">${page}</span>
+					<span style="float:left;padding-top: 4px;padding-left: 6px"> /</span>
+					<span style="color: #069dd5;float:left;padding-top: 4px;padding-left:6px">${maxPages}</span>
+					<input type="text" value="" style="width: 30px; height: 22px;float:left;margin-left:6px"
+						id="pageStr" />
+					<a
+						style="width: 28px; height: 22px; background-color: #069dd5; color: white; display: inline-block; font-family: Arial; font-size: 10px; line-height: 22px; text-align: center; cursor: pointer;float:left"
+						onclick="goPage(${maxPages});">GO</a>
+
+				</TFOOT>
+			</c:if>
+			<c:if test="${page!=maxPages}">
+				<a class="default"
+					href="javascript:void(0);" onclick="querySncode(${page+1})"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 2px;padding-left:6px"> <img alt="下一页"
+					src="/ump/resources/images/resultset_next.png" title="下一页" style="float:left"/>
+				</a>
+				<a class="default"
+					href="javascript:void(0);" onclick="querySncode(${maxPages})"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px"> <img alt="末页"
+					src="/ump/resources/images/resultset_last.png" title="末页" style="float:left"/>
+				</a>
+			</c:if>
+			<span style="float:left;padding-top: 3px;padding-left: 6px">每页<span  style="color:#069dd5;">${limit}</span>条</span>
+		</div>
+		</c:if>
+</div>

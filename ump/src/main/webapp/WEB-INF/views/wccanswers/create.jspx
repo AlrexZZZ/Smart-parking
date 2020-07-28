@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_com_nineclient_model_WccAnswer" modelAttribute="wccAnswer" path="/wccanswers" render="${empty dependencies}" z="tAt0fhPuZRKt+VHe1M9BMrtMBbg=">
+        <field:textarea field="answer" id="c_com_nineclient_model_WccAnswer_answer" z="nXlFnuT9Liw++/dKcZECki16u+0="/>
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_WccAnswer_isDeleted" z="mve5WPciOUwCPl0JI+YYHEkMnW4="/>
+        <field:textarea field="userName" id="c_com_nineclient_model_WccAnswer_userName" z="7GFMcFny7HpMpjpG/SFu83YH1EM="/>
+        <field:input field="userPhone" id="c_com_nineclient_model_WccAnswer_userPhone" validationRegex="(^[0-9]{11}$)" z="NE6ipW8azRxoO530waxiisXVUEY="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_nineclient_model_WccAnswer" render="${not empty dependencies}" z="tk8HKZl9OxqTljwcodmr57aWnU8="/>
+</div>

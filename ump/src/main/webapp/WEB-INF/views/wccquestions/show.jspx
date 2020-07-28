@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccQuestion" object="${wccquestion}" path="/wccquestions" z="s/b31k56LCa0QB516wbhzVq8H8U=">
+        <field:display field="name" id="s_com_nineclient_model_WccQuestion_name" object="${wccquestion}" z="8SKsxAMoe3XnVFdxCUETjPWyYaA="/>
+        <field:display field="questionNo" id="s_com_nineclient_model_WccQuestion_questionNo" object="${wccquestion}" z="34Z/dLOsDXIJY/SlEbRJSfTSmsI="/>
+        <field:display field="sort" id="s_com_nineclient_model_WccQuestion_sort" object="${wccquestion}" z="dtza9Djxe878TixQEpX+z1VCD6I="/>
+        <field:display field="isVisable" id="s_com_nineclient_model_WccQuestion_isVisable" object="${wccquestion}" z="Nkqu7jhOXcorYsBRJxBAjEcncRo="/>
+        <field:display field="questionType" id="s_com_nineclient_model_WccQuestion_questionType" object="${wccquestion}" z="LdgRjKvUe5p6sOHSjJPEDuR1tR0="/>
+    </page:show>
+</div>

@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" 
+xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" 
+xmlns:client="urn:jsptagdir:/WEB-INF/tags/client" 
+xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" 
+xmlns:jsp="http://java.sun.com/JSP/Page" 
+xmlns:spring="http://www.springframework.org/tags" version="2.0">
+ <style>
+	@IMPORT url("/ump/ui/kindeditor/plugins/code/prettify.css");
+</style>  
+  <!-- 复选框引用css -->
+  <style>@IMPORT url("/ump/styles/selectTree.css");</style>
+  
+<spring:url value="/ui/kindeditor/kindeditor.js" var="kind"></spring:url>
+<spring:url value="/ui/kindeditor/lang/zh_CN.js" var="zhcn"></spring:url>
+
+<script src="${kind}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+<script src="${zhch}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+
+<!-- 复选框引用js -->
+<SCRIPT type="text/javascript" src="/ump/js/selectStoreOrPubTree.js">/*selectTree*/</SCRIPT>
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+
+    <style>
+
+	
+ .ke-button{background:#e5e5e5 !important;font-family:"微软雅黑" !important; font-size:14px !important;
+ cursor:pointer !important; }
+    	
+    label{width: 110px; text-align: right; display:inline-block; cursor:default !important;}
+
+/* input[name='imgFile']{cursor:pointer;opacity:0;left:111px;position:absolute;} */
+
+.up_button{ width:270px;height:28px; appearance:none; -webkit-appearance:none; border:1px solid #e5e5e5; background:#fff;}
+
+/* .spanText{width: 110px; text-align: right; display:inline-block;} */
+    .sp{
+    	text-align: left;
+    	padding-left: 5px;
+    	width : 10px;
+    } 
+    .select_cheally{border: 1px solid #e5e5e5;width: 270px;height: 28px;margin-left: 5px;}
+    </style>
+    
+    
+    
+    	<SCRIPT type="text/javascript">
+    	
+    	
+	<![CDATA[
+	KindEditor.ready(function(K) {
+    window.editor = K.create('#editor_id',{
+            uploadJson : '/ump/ui/kindeditor/jsp/upload_json.jsp',
+            fileManagerJson : '/ump/ui/kindeditor/jsp/file_manager_json.jsp',
+            allowFileManager : true,
+        	items : [
+						'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+						'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+						'insertunorderedlist', '|', 'emoticons', 'image', 'link'],
+					    afterCreate : function() { 
+					         this.sync(); 
+					        },
+					        afterBlur:function(){ 
+					            this.sync(); 
+					        }    
+        });	
+	         
+	         
+	         
+	var cal =0;
+		var url2="";
+			var uploadbutton = K.uploadbutton({
+				button : K('#uploadButton')[0],
+				fieldName : 'imgFile',
+				url : '/ump/ui/kindeditor/jsp/upload_json.jsp?dir=wx_image&maxSize=1024',
+				afterUpload : function(data) {
+					if (data.error === 0) {
+						var url= K.formatUrl(data.url,'absolute');
+						/* 	url2+=","+url;
+						cal++;
+						if(cal>1){
+							$("#otherPic_").val(url2);
+						//	alert("url:"+url2);
+						}
+						else{
+							$("#otherPic_").val(url); 
+						//	alert("url:"+url);
+						}
+						alert("第:"+cal+"张图片"); */
+						$("#otherPic_").val(url); 
+						$("#imgId").attr('src',url);
+						
+					} else {
+						alert(data.message);
+					}
+				},
+				afterError : function(str) {
+					alert('自定义错误信息: ' + str);
+				}
+			});
+		
+				$("input[name='imgFile']")
+			 .css("width","110px").css("height","28px;")  
+			 .css('cursor','pointer').css('opacity','0')
+			 .css("background","#fff");
+			uploadbutton.fileBox.change(function(e) {
+				uploadbutton.submit();
+			});
+		});
+	 ]]> 
+
+	</SCRIPT>
+    
+    
+    
+    <script type="text/javascript">
+    <![CDATA[
+         var flag1 = true;
+         var flag2 = true;
+     		function changeType(){
+    			$("#password_").attr("Type","password");
+    		}
+             
+
+    	
+    	function checkPlat(o){
+    		var name = $(o).val();
+    		if(!name){
+    			flag1 = false;
+    			$('#aerrMsg').html('公众平台名不能为空');
+    			return;
+    		}
+    		$.ajax({
+    			url : "/ump/wccplatformusers/checkPlat",
+    			type : "POST",
+    			data : {'name':name},
+    			error : function(msg) {
+    				alert("error " + msg);
+    			},
+    			success : function(text) {
+    				if(text=='false'){
+    					flag1 = false;
+	    				$('#aerrMsg').html('公众平台名重复');
+	    				return;
+    				}
+    				flag1 = true;
+    				$('#aerrMsg').html('');
+    			}
+    		});
+    	}
+    	
+    	function checkPlatid(o){
+    		var platId = $(o).val();
+    		if(!platId){
+    			flag2 = false;
+    			$('#perrMsg').html('原始ID不能为空');
+    			return;
+    		}
+    		$.ajax({
+    			url : "/ump/wccplatformusers/checkPlatId",
+    			type : "POST",
+    			data : {'platId':platId},
+    			error : function(msg) {
+    				alert("error " + msg);
+    			},
+    			success : function(text) {
+    				if(text=='false'){
+    					flag2 = false;
+	    				$('#perrMsg').html('原始ID重复');
+	    				return;
+    				}
+    				flag2 = true;
+    				$('#perrMsg').html('');
+    			}
+    		});
+    	}
+    	
+
+    	$(document).ready(function(){
+    		$('#proceed').unbind().bind('click',function(){
+    			var platformId = $('#platformId_').val();
+    			var appId = $('#appId_').val();
+    			var appSecret = $('#appSecret_').val();
+    			var account = $('#paccount_').val();
+    			var platReg=/^\w{15}$/;
+    			var appReg=/^[0-9a-zA-Z_]{18}$/;
+    			var sercReg=/^[0-9a-zA-Z_]{32}$/;
+    			if(!flag1){
+    				return false;
+    			}
+    			if(!flag2){
+    				return false;
+    			}
+    			if(!account){
+    				$('#aerrMsg').html('公众平台不能为空');
+    				return false;
+    			}
+    			$('#aerrMsg').html('');
+    			if(!platformId){
+    				$('#perrMsg').html('原始ID不能为空');
+    				return false;
+    			}
+    			if(!platReg.test(platformId)){
+    				$('#perrMsg').html('原始ID格式不正确');
+    				return false;
+    			}
+    			
+    			$('#perrMsg').html('');
+
+    		});
+    	});
+    	
+    	
+    	function returnForm(){
+    		var otherType=$("#otherType_").val();
+    		var itemPkStr=$("#itemPk_").val();
+    		var introTitle=$("#otherTitle_").val();
+    	//	var otherPic=$("#otherPic_").val();
+    		if(otherType == ""){
+    			$("#otherTypeXp").html("请选择项目类型");
+    		}
+    		if(itemPkStr == ""){
+    			$("#itemPkXp").html("请选择项目名称");
+    		}
+    		if(introTitle == ""){
+    			$("#otherTitleXp").html("请选择列表标题");
+    		}
+    		if(otherType != "" && itemPkStr != ""&& introTitle != ""){
+    			
+    			$("#WccItemotherinfoId").submit();
+    		}
+    		return false;
+    	}
+    ]]>
+    function getInfo(value,text){
+    	  var str="/ump/cdbWccAppartmentFu/createCommunityFu?itemStatus="+value;
+    	    console.log(str);
+    		window.location.href = str;
+    }
+    
+ 
+    </script>
+   <form method="post"  action="/ump/cdbWccAppartmentFu/addStore" id="WccItemotherinfoId">
+       <div class="grid">
+            
+            
+     			<div class="row">
+            	<div class="span12" id="platId" >
+            	<span>项目类型：</span>
+						<select id="otherType_" name="otherType" class="select_cheally" onchange="javascript:getInfo(this.value,this.options[this.selectedIndex].text);">
+							
+							<c:if test="${itemStatus==null }">
+								<c:if test="${wccItemotherinfo.otherType==1 }">
+								<option value="1"  selected="selected" >新</option>
+								</c:if>
+								<c:if test="${wccItemotherinfo.otherType==2 }">
+								<option value="2"  selected="selected" >旧</option>
+								</c:if>
+								<c:if test="${wccItemotherinfo.otherType!=2 and  wccItemotherinfo.otherType!=1}">
+								<option value="请选择" selected="selected">请选择</option>
+								<option value="1" >新</option>
+								<option value="2"   >旧</option>
+								</c:if>
+							</c:if>
+					</select>
+            	</div>
+            </div>
+     			
+     			<div class="row">
+                <div class="span12" id="platId" >
+                		
+						
+						<span>项目名称：</span>
+						<select id="itemPk_" name="itemPkStr" class="select_cheally" onchange="oncha();">
+							<c:if test="${wccItemotherinfo.itemPk != null and wccItemotherinfo.itemPk != ''}">
+									<option value="${wccItemotherinfo.itemPk.id}" selected="selected">${wccItemotherinfo.itemPk.itemName}</option>
+							</c:if>
+							
+						</select>
+					</div>
+                
+            </div>
+            <div class="row" style="display:none;">
+            	<div class="span12">
+            	
+                     <input type="text" id="otherPic_" name="otherPic" value="${wccItemotherinfo.otherPic}" onfocus="changeType();"/>
+                </div>
+            </div>
+  
+  		   <div class="row">
+                <div class="span12">
+                    <span>项目模块：</span>
+                    <select id="otherTitle_" name="otherTitle" class="select_cheally">
+                   	<c:if test="${wccItemotherinfo.otherTitle!=null and  wccItemotherinfo.otherTitle!=''}">
+                   		<option value="${wccItemotherinfo.otherTitle}">${wccItemotherinfo.otherTitle}</option>
+                   	</c:if>
+					</select>
+                </div>
+            </div>
+            
+               <div class="row">
+            	<div class="span12" style="position:relative;">
+              <label></label> 
+                   <DIV  style="margin-left: 116px;" >
+                   <input type="button"  id="uploadButton" value="点击选择图片"  onclick="onclick()"/>
+                   <c:if test="${wccItemotherinfo.otherType!='1' }">
+                  		<span style="color:red;float: left;width: 260px;" id="itemPhoneXs" >仅支持JPG格式，图片大小建议为580*300像素</span>	
+                 	 </c:if>
+                 	  <c:if test="${wccItemotherinfo.otherType=='1' }">
+                  		 <span style="color:red; float: left;width: 260px;" id="itemPhoneXs">仅支持JPG格式，图片大小建议为60×60像素</span>	
+                 	 </c:if>
+                   </DIV>
+                    <DIV style="height: 110px; width: 150px;background-color: #ccc;text-align: center;margin-top: 10px; margin-left: 110PX;float: left" >  
+                    <IMG id="imgId" width="100px;" height="80px;" style="margin-top: 4px;" src="${wccItemotherinfo.otherPic }" />
+                   </DIV>
+                </div>
+            </div>
+            
+     
+            <div class="row">
+            	<div class="span12">
+                    <span>详情标题：</span>
+                    <INPUT type="hidden" id="id_" name="id" value="${wccItemotherinfo.id }" />
+                    <input type="text" id="introTitle_" name="introTitle" value="${wccItemotherinfo.introTitle}"/>
+                </div>
+               
+            </div>
+            
+            
+              <div  id="editor_z" >
+           
+				<textarea id="editor_id" name="otherIntro" style="width:500px;height:200px;">${wccItemotherinfo.otherIntro }<!--ssssssdfsdfsdf  --></textarea>
+		</div> 
+       
+        </div>
+   <client:button submit="true" cancel="true" onclick="returnForm();"></client:button>
+    
+     
+  </form>
+
+
+ 
+</div>

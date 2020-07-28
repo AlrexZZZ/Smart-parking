@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<style>
+.metro .button {
+	padding: 0px;
+}
+
+.metro .notice.marker-on-top:before {
+	left: 5% !important;
+}
+
+.ztree li span.button.ico_docu {
+	background: url("/ump/resources/images/folder.png");
+	margin-right: 2px;
+	vertical-align: top;
+}
+
+.ztree li a span.button.ico_docu {
+	background: url("/ump/resources/images/folder.png");
+	margin-right: 2px;
+	vertical-align: top;
+}
+
+.ztree li span.button.ico_open {
+	background: url("/ump/resources/images/folder.png");
+	margin-right: 2px;
+	vertical-align: top;
+}
+
+.ztree li a span.button.ico_open {
+	background: url("/ump/resources/images/folder.png");
+	margin-right: 2px;
+	vertical-align: top;
+}
+
+.ztree li span.button.ico_close {
+	background: url("/ump/resources/images/folder_close.png");
+	margin-right: 2px;
+	vertical-align: top;
+}
+
+.ztree li a.curSelectedNode {
+	background-color: #ffe6b0;
+	border: 1px solid #ffb951;
+	color: black;
+	height: 24px;
+	opacity: 0.8;
+	padding-top: 0;
+}
+</style>
+	<script type="text/javascript">
+		<![CDATA[
+		//显示内容div
+		function showdiv(str) {
+			$("#content" + str).removeAttr("style");
+		}
+		//隐藏内容div
+		function hidendiv(str) {
+			$("#content" + str).attr("style", "display:none;");
+		}
+		//添加分类
+		function addClassify() {
+			if ($('#mTitle').val() != "") {
+				var ptitle = $('#mTitle').val();
+				$.Dialog({
+							overlay : true,
+							shadow : true,
+							flat : true,
+							icon : '<img src="/ump/resources/images/add.png"/>',
+							title : '添加分类',
+							content : '',
+							padding : 20,
+							height : 100,
+							width : 100,
+							onShow : function(_dialog) {
+								var html = '<div class="grid" style="width: 300px;">'
+										+ '<input type="hidden" id="id" value="" />'
+										+ '<div class="row"><div class="span6"><label style="text-align:right; ">上级分类：</label> <input type="text" style="border: 1px solid #E4E4E4;margin-left: 10px; height:28px;" id="pTilte" disabled="disabled" value="" /></div></div>'
+										+ '<div class="row"><div class="span6"><label style="text-align:right; ">分类名称：</label><input id="title" style="border: 1px solid #E4E4E4;margin-left: 10px;height:28px;" name="title" /><font color="red"> *</font><div id="cHint1" style="color:red;margin-left:30px;"><!--hint1--></div></div></div>'
+										+ '<div class="row"><div class="bt_box"><button class="info" onclick="saveClassify();" >确 定</button><button class="warning" onclick="$.Dialog.close();">取 消</button></div></div></div>';
+								$.Dialog.content(html);
+								$.Metro.initInputs();
+							}
+						});
+				$("#pTilte").val(ptitle);
+			} else {
+				alert('请先选择上级分类');
+			}
+		}
+		//添加文本
+		function addText() {
+			if ($('#mTitle').val() != "") {
+				var ptitle = $('#mTitle').val();
+				$
+						.Dialog({
+							overlay : true,
+							shadow : true,
+							flat : true,
+							icon : '<img src="/ump/resources/images/add.png"/>',
+							title : '添加文本',
+							content : '',
+							padding : 20,
+							height : 100,
+							width : 100,
+							onShow : function(_dialog) {
+								var html = '<div class="grid" style="width: 300px;"><input type="hidden" id="id" value="" />'
+										+ '<div class="row"><div class="span6"><label style="text-align:right; ">上级分类：</label> <input type="text" style="margin-left: 10px;width: 150px;border: 1px solid #E4E4E4;height:28px;" id="pTilte" disabled="disabled" value="" /></div></div>'
+										+ '<div class="row"><div class="span6"><label style="text-align:right; ">标题：</label> <input style="margin-left: 10px;width: 150px;border: 1px solid #E4E4E4;height:28px;" type="text" id="title" /><font color="red"> *</font><div id="tHint1" style="color:red;margin-left:55px;"><!--hint1--></div></div></div>'
+										+ '<div class="row"><div class="span6"><label style="text-align:right; ">排序：</label> <input style="margin-left: 10px;width: 150px;border: 1px solid #E4E4E4;height:28px;" type="text" id="sort" /><font color="red"> *</font><div id="tHint2" style="color:red;margin-left:55px;"><!--hint1--></div></div></div>'
+										+ '<div class="row"><div class="span6"><label style="text-align:right; ">内容：</label><textarea style="width: 150px; resize: none; margin-left: 10px;height:100px;" id="content"></textarea><font style="color: red;line-height: 100px;margin-left: 5px;">*</font><div id="tHint3" style="color:red;margin-left:55px;"><!--hint1--></div></div></div>'
+										+ '<div class="row"><div class="bt_box"><button class="info" onclick="saveText();" >确 定</button><button class="warning" onclick="$.Dialog.close();">取 消</button></div></div></div>';
+								$.Dialog.content(html);
+								$.Metro.initInputs();
+							}
+						});
+				$("#pTilte").val(ptitle);
+			} else {
+				alert('请先选择上级分类');
+			}
+		}
+		//保存分类
+		function saveClassify() {
+			var id = $('#id').val();
+			var pid = $('#pid').val();
+			var title = $('#title').val();
+			if ($.trim(title)=="") {
+				$('#cHint1').html("分类名称不可为空！");
+				return false;
+			}
+			var strlength = strlen(title);
+			if (strlength > 30) {
+				$('#cHint1').html("分类名称过长，请修改后重新提交");
+				return false;
+			}
+			$.post("/ump/wcctemplates/saveClassify", {
+				"id" : id,
+				"pid" : pid,
+				"title" : title
+			}, function(data) {
+				if (data == 0) {
+					$.Dialog.close();
+					reloadZTree();
+					findByPid(pid);
+				} else if (data == 1) {
+					alert("分类保存失败");
+				} else if (data == 2) {
+					$.Dialog.close();
+					reloadZTree();
+					findByPid(pid);
+				} else if (data == 3) {
+					alert("分类修改失败");
+				} else if (data == 4) {
+					alert("超过最大目录级数");
+				} else if (data == 5) {
+					$('#cHint1').html("分类名称重复，请重新输入！");
+				}
+			});
+		}
+		//删除分类
+		function deleteClassify(id, pid) {
+			$.post("/ump/wcctemplates/deleteTemplate", {
+				"id" : id,
+				"type" : 3
+			}, function(data) {
+				if (data == 1) {
+					if (confirm('该分类下有数据，删除后无法恢复，确定删除？')) {
+						$.post("/ump/wcctemplates/deleteTemplate", {
+							"id" : id,
+							"type" : 1
+						}, function(data) {
+							reloadZTree();
+							findByPid(pid);
+						});
+					}
+				} else if (data == 2) {
+					if (confirm('确定要删除吗？')) {
+						$.post("/ump/wcctemplates/deleteTemplate", {
+							"id" : id,
+							"type" : 1
+						}, function(data) {
+							reloadZTree();
+							findByPid(pid);
+						});
+					}
+				} else {
+					alert("分类删除失败");
+				}
+			});
+		}
+		//删除文本
+		function deleteText(id, pid) {
+			if (confirm('确定要删除吗？')) {
+				$.post("/ump/wcctemplates/deleteTemplate", {
+					"id" : id,
+					"type" : 1
+				}, function(data) {
+					if (data == 1) {
+						reloadZTree();
+						findByPid(pid);
+					} else {
+						alert("常用文本删除失败");
+					}
+				});
+			}
+		}
+		//保存内容
+		function saveText() {
+			var id = $('#id').val();
+			var pid = $('#pid').val();
+			var title = $('#title').val();
+			if ($.trim(title) == "") {
+				$('#tHint1').html("标题不可为空！");
+				return false;
+			}else{
+				$('#tHint1').html("");
+			}
+			var sort = $('#sort').val();
+			if (sort.trim().length == 0) {
+				$('#tHint2').html("排序不可为空");
+				return false;
+			} else {
+				var reg = /^[0-9]*$/;
+				if (!reg.test(sort)) {
+					$('#tHint2').html("排序只可正整数");
+					return false;
+				} else {
+					if (sort == 0) {
+						$('#tHint2').html("排序只可为正整数");
+						return false;
+					}else{
+						$('#tHint2').html("");
+					}
+				}
+			}
+			var content = $("#content").val().replace(/[\r\n]/g, " ");
+			if (content.trim().length == 0) {
+				$('#tHint3').html("内容不可为空！");
+				return false;
+			}else{
+				$('#tHint3').html("");
+			}
+			var strlength = strlen(content);
+			if (strlength > 300) {
+				$('#tHint3').html("内容过长，请修改后重新提交");
+				return false;
+			}else{
+				$('#tHint3').html("");
+			}
+			$.post("/ump/wcctemplates/saveText", {
+				"id" : id,
+				"pid" : pid,
+				"title" : title,
+				"sort" : sort,
+				"content" : content
+			}, function(data) {
+				if (data == 0) {
+					$.Dialog.close();
+					findByPid(pid);
+				} else if (data == 1) {
+					alert("常用文本保存失败");
+				} else if (data == 2) {
+					$.Dialog.close();
+					findByPid(pid);
+				} else if (data == 3) {
+					alert("常用文本修改失败");
+				}
+			});
+		}
+		//重新加载树
+		function reloadZTree() {
+			$.ajax({
+				url : "/ump/wcctemplates/tree",
+				datatype : "text",
+				type : "POST",
+				error : function(msg) {
+					console.log(msg);
+				},
+				success : function(data) {
+					var str = '[' + data + ']';
+					zNodes = eval('(' + str + ')');
+					$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+					findByPid(pid);
+				}
+			});
+		}
+		//修改分类dialog
+		function updateClassifyForm(id, title) {
+			var ptitle = $('#mTitle').val();
+			$.Dialog({
+						overlay : true,
+						shadow : true,
+						flat : true,
+						icon : '<img src="/ump/resources/images/editor.png"/>',
+						title : '修改分类',
+						content : '',
+						padding : 20,
+						height : 100,
+						width : 100,
+						onShow : function(_dialog) {
+							var html = '<div class="grid" style="width: 300px;margin-left: 5px;"><input type="hidden" id="id" value="" />'
+									+ '<div class="row"><div class="span6"><label style="text-align:right; ">上级分类：</label> <input style="border: 1px solid #E4E4E4;margin-left: 10px;height:28px;" type="text" id="pTilte" disabled="disabled" value="" /></div></div>'
+									+ '<div class="row"><div class="span6"><label style="text-align:right; ">分类名称：</label><input style="border: 1px solid #E4E4E4;margin-left: 10px;height:28px;" id="title" name="title" value="" /><font color="red"> *</font><div id="cHint1" style="color:red;margin-left:30px;"><!--hint1--></div></div></div>'
+									+ '<div class="row"><div class="bt_box"><button class="info" onclick="saveClassify();" >确 定</button><button class="warning" onclick="$.Dialog.close();">取 消</button></div></div></div>';
+							$.Dialog.content(html);
+							$.Metro.initInputs();
+						}
+					});
+			$("#id").val(id);
+			$("#pTilte").val(ptitle);
+			$("#title").val(title);
+		}
+		//修改文本dialog
+		function updateTextForm(id, title, sort, content) {
+			var ptitle = $('#mTitle').val();
+			$
+					.Dialog({
+						overlay : true,
+						shadow : true,
+						flat : true,
+						icon : '<img src="/ump/resources/images/editor.png"/>',
+						title : '修改文本',
+						content : '',
+						padding : 20,
+						height : 100,
+						width : 100,
+						onShow : function(_dialog) {
+							var html = '<div class="grid" style="width: 300px;margin-left: 5px;"><input type="hidden" id="id" value="" />'
+									+ '<div class="row"><div class="span6"><label style="text-align:right; ">上级分类：</label> <input type="text" id="pTilte" disabled="disabled" value="" style="margin-left: 10px;width: 150px;border: 1px solid #E4E4E4;height:28px;"/></div></div>'
+									+ '<div class="row"><div class="span6"><label style="text-align:right; ">标题：</label> <input type="text" id="title" value="" style="margin-left: 10px;width: 150px;border: 1px solid #E4E4E4;height:28px;" /><font color="red"> *</font><div id="tHint1" style="color:red;margin-left:55px;"><!--hint1--></div></div></div>'
+									+ '<div class="row"><div class="span6"><label style="text-align:right; ">排序：</label> <input type="text" id="sort" value="" style="margin-left: 10px;width: 150px;border: 1px solid #E4E4E4;height:28px;"/><font color="red"> *</font><div id="tHint1" style="color:red;margin-left:55px;"><!--hint1--></div></div></div>'
+									+ '<div class="row"><div class="span6"><label style="text-align:right; ">内容：</label><textarea style="width: 150px;resize: none; margin-left: 10px;height:100px;" id="content"></textarea><font style="color: red;line-height: 100px;margin-left: 5px;">*</font><div id="tHint1" style="color:red;margin-left:55px;"><!--hint1--></div></div></div>'
+									+ '<div class="row"><div class="bt_box"><button class="info" onclick="saveText();" >确 定</button><button class="warning" onclick="$.Dialog.close();">取 消</button></div></div></div>';
+							$.Dialog.content(html);
+							$.Metro.initInputs();
+						}
+					});
+			$('#id').val(id);
+			$('#pTilte').val(ptitle);
+			$('#title').val(title);
+			$('#sort').val(sort);
+			$('#content').val(content);
+		}
+		//页面加载时 查询默认列表
+		$(document).ready(function() {
+			findByPid(0);
+		});
+		function strlen(str) {
+			var len = 0;
+			for (var i = 0; i < str.length; i++) {
+				var c = str.charCodeAt(i);
+				//单字节加1 
+				if ((c >= 0x0001 && c <= 0x007e)
+						|| (0xff60 <= c && c <= 0xff9f)) {
+					len++;
+				} else {
+					len += 2;
+				}
+			}
+			return len;
+		}
+
+		]]>
+	</script>
+	<SCRIPT type="text/javascript">
+		<![CDATA[
+		var setting = {
+			check : {
+				enable : false
+			},
+			async : {
+				enable : true,
+				url : "/ump/wcctemplates/tree"
+			},
+			data : {
+				simpleData : {
+					enable : true
+				}
+			},
+			callback : {
+				beforeClick : beforeClick,
+				onClick : onClick
+			}
+		};
+		var zNodes = new Array();
+		$.ajax({
+			url : "/ump/wcctemplates/tree",
+			datatype : "text",
+			type : "POST",
+			error : function(msg) {
+				console.log(msg);
+			},
+			success : function(data) {
+				var str = '[' + data + ']';
+				zNodes = eval('(' + str + ')');
+				$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+			}
+		});
+
+		var code;
+
+		function beforeClick(treeId, treeNode, clickFlag) {
+			if (clickFlag == 2) {
+				return false;
+			}
+			return (treeNode.click != false);
+		}
+		function onClick(event, treeId, treeNode, clickFlag) {
+			$('#mTitle').val(treeNode.name);
+			$('#pid').val(treeNode.id);
+			if (clickFlag == 0) {
+				$('#pid')[0].value = 0;
+			}
+			findByPid(treeNode.id)
+		}
+		function findByPid(pid, pageNo) {
+			var start = 0;
+			var limit = 10;
+			if (pageNo > 0) {
+				start = (pageNo - 1) * limit;
+			}
+			if (pid == -1) {
+				pid = $('#pid').val();
+			}
+			//点击树时加载右边列表
+			$.post("/ump/wcctemplates/loadList", {
+				"pid" : pid,
+				"start" : start,
+				"limit" : limit
+			}, function(data) {
+				$("#rightList").html(data);
+			});
+		}
+		//查看分类下内容
+		function findDirectories(pid, title) {
+			$('#pid').val(pid);
+			$('#mTitle').val(title);
+			findByPid(pid);
+		}
+		function goPage(page) {
+			var pageStr = $("#pageStr").val();
+			if ($.trim(pageStr) == "") {
+				alert("请输入需要跳转的页数！");
+				return false;
+			}
+			if (isNaN(pageStr)) {
+				alert("格式错误，请输入数字！");
+				return false;
+			}
+			if (pageStr > page) {
+				alert("你输入的页数大于最大页数");
+				return false;
+			}
+			if (pageStr <= 0) {
+				alert("你输入的页数不符合要求");
+				return false;
+			}
+			findByPid(-1, pageStr);
+		}
+		]]>
+	</SCRIPT>
+	<div class="grid ">
+		<div class="row" style="margin-top: 0px;">
+			<div
+				style="float: left; border: 1px solid #e4e4e4; width: 20%; line-height: 46px; background: #edf1f9; display: block;">
+				<div
+					style="font-family: Microsoft Yahei; height: 46px; box-sizing: border-box; -webkit-box-sizing: border-box; -moz-box-sizing：: border-box; padding-left: 20px; font-size: 14px;">常用文本</div>
+				<div class="zTreeDemoBackground left" id="_page_1"
+					style="background: #FFF">
+					<ul id="treeDemo" class="ztree"></ul>
+				</div>
+			</div>
+			<input type="hidden" id="mTitle" value="${defultTitle}" /> <input
+				type="hidden" id="pid" value="${defultPId}" />
+			<div id="rightList"
+				style="float: right; width: 78%; margin-left: 2%;"></div>
+		</div>
+	</div>
+</div>

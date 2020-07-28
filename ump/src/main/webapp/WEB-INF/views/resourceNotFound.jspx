@@ -1,0 +1,66 @@
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:spring="http://www.springframework.org/tags" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+  <jsp:directive.page contentType="text/html;charset=UTF-8" />
+  <jsp:output omit-xml-declaration="yes" />
+ 
+ <head>
+<title>报错</title>
+<style>
+ .k_contain{width:100%; height:auto; overflow:hidden; clear:both; margin:0 auto;}
+
+.error_contain{width:705px; height:auto; overflow:hidden; clear:both; margin:0 auto;margin-top:8%;}
+.k_biaoqing{width:128px; height:auto;float:left;}
+.k_biaoqing img{width:128px; height:auto;vertical-align:top;}
+.k_wenzi{width:545px; height:auto;float:left; margin-left:25px;}
+.wenzi_tu{width:507px; height:auto; overflow:hidden;}
+.wenzi_tu img{height:auto; width:507px;}
+.k_wenzi_wen{width:100%; height:auto; overflow:hidden; font-family:"微软雅黑"; font-size:21px; color:#333;margin-top:10px;line-height:30px; cursor:pointer;}
+.relogin{ display:inline-block; color:#069dd5;}
+.k_zixun{width:355px; height:auto; overflow:hidden; clear:both; margin:0 auto; text-align:center;padding-top:80px;}
+.k_zixun_detail{width:120px; height:auto; overflow:hidden; float:left; cursor:pointer;}
+.k_zd_tu{width:100%; height:auto; overflow:hidden; clear:both; margin:0 auto;}
+.k_zd_tu img{width:120px; height:auto;}
+.k_zd_wen{ font-family:"微软雅黑"; font-size:18px; color:#333;margin-top:10px;}
+</style>
+</head>
+<body style="margin:0px; padding:0px;">
+<div class="k_contain">
+ 
+ 
+  <div class="topmenu"
+		style="background: none repeat scroll 0 0 #069dd5; clear: both; height: 72px; margin: 0 auto; min-width: 1200px; overflow: hidden; width: 100%;">
+		<div class="topmenu_L"
+			style="float: left; height: 72px; overflow: hidden; width: 50%;">
+			<img src="/ump/images/pub/logo.png" alt=""
+				style="height: auto; margin-left: 20px; margin-top: 10px; max-width: 267px; width: 40%;" />
+		</div>
+	</div>
+  
+ <div class="error_contain">
+
+     <div class="k_biaoqing"><img src="/ump/images/error/error_04.png" alt=""/></div>
+     <div class="k_wenzi">
+      <div class="wenzi_tu"><img src="/ump/images/error/error_06.png" alt=""/></div>
+      <div class="k_wenzi_wen">您可以试试清除缓存或<div class="relogin" onClick="location.href='/ump'">重新登录</div>，如不能解决您的问题请尝试以下操作：</div>
+     </div>
+     
+     <div class="k_zixun">
+     
+      <![CDATA[  <div class="k_zixun_detail" onClick="location.href='http://www.any800.com/JtalkManager/echatManager.do?companyPk=8a28ccbd4d51f3be014d564cc91417d4&codeKey=20'">]]>
+         <div class="k_zd_tu"><img src="/ump/images/error/error_09.png" alt=""/></div>
+         <div class="k_zd_wen">在线咨询</div>
+       </div>
+       
+       <div class="k_zixun_detail" style="margin-left:115px;" onClick="location.href='#'">
+         <div class="k_zd_tu"><img src="/ump/images/error/error_05.png" alt=""/></div>
+         <div class="k_zd_wen">建议反馈</div>
+       </div>
+     
+     </div>
+     
+     <div class="k_foot"
+		style="background: none repeat scroll 0 0 #069dd5; bottom: 0; color: #fff; font-size: 14px; height: 35px; left: 0; line-height: 35px; margin: 0 auto; overflow: hidden; position: fixed; text-align: center; width: 100%; z-index: 999;">版权所有:xxxxxxx</div>
+ </div>
+
+</body>
+ 
+</div>

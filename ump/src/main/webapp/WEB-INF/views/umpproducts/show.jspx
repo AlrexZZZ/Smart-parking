@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_UmpProduct" object="${umpproduct}" path="/umpproducts" z="teGXsTEHcssaKMTA3B4ETDd1Y/0=">
+        <field:display field="productName" id="s_com_nineclient_model_UmpProduct_productName" object="${umpproduct}" z="dWZxb3PmkREqjNWGFnuK4gAp3F8="/>
+        <field:display field="remark" id="s_com_nineclient_model_UmpProduct_remark" object="${umpproduct}" z="TN/k2AU06uGd0BG8vr47lfcvmKc="/>
+        <field:display field="isVisable" id="s_com_nineclient_model_UmpProduct_isVisable" object="${umpproduct}" z="u8/b72sC94RUf8AmIF9Tfdl6L9Y="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_UmpProduct_isDeleted" object="${umpproduct}" z="yeg5GSlx+8FqrxdTWPZPQCunMPk="/>
+        <field:display date="true" dateTimePattern="${umpProduct_createtime_date_format}" field="createTime" id="s_com_nineclient_model_UmpProduct_createTime" object="${umpproduct}" z="TP5H60uxaSbOrIEW6tFRMWyy+Ew="/>
+    </page:show>
+</div>

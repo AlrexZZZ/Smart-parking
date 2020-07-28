@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_VocCommentCategory" object="${voccommentcategory}" path="/voccommentcategorys" z="a9TsBHUQOFVCwSclrEKwn8Nxlw0=">
+        <field:display field="name" id="s_com_nineclient_model_VocCommentCategory_name" object="${voccommentcategory}" z="M72LKWIvV8HIvuCF9hFktstzBog="/>
+        <field:display field="sort" id="s_com_nineclient_model_VocCommentCategory_sort" object="${voccommentcategory}" z="CYKx4qog/i1AKN1rEkEiA+4G0cI="/>
+        <field:display field="isVisable" id="s_com_nineclient_model_VocCommentCategory_isVisable" object="${voccommentcategory}" z="t7v321h2/LToXHapk7LH9Zwvt1w="/>
+        <field:display date="true" dateTimePattern="${vocCommentCategory_createtime_date_format}" field="createTime" id="s_com_nineclient_model_VocCommentCategory_createTime" object="${voccommentcategory}" z="dAysty00zvpfCh0xtxIhyLGZRuQ="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_VocCommentCategory_isDeleted" object="${voccommentcategory}" z="Xbhv/uamXXaYSj28qxouXeTxIYQ="/>
+        <field:display field="remark" id="s_com_nineclient_model_VocCommentCategory_remark" object="${voccommentcategory}" z="Wd6hGfgQBUuXpBhCaZSxhlOwWV0="/>
+        <field:display field="parentId" id="s_com_nineclient_model_VocCommentCategory_parentId" object="${voccommentcategory}" z="7U6tnlN0GqCNHgb7jUTHzrZ9SJ0="/>
+        <field:display field="displayName" id="s_com_nineclient_model_VocCommentCategory_displayName" object="${voccommentcategory}" z="zaKQLvTutIv5CJfAdgt8lmVzUGU="/>
+        <field:display field="isLeaf" id="s_com_nineclient_model_VocCommentCategory_isLeaf" object="${voccommentcategory}" z="zxGR4jWJkPOu5sJRPWpgKGWniA8="/>
+        <field:display field="deepth" id="s_com_nineclient_model_VocCommentCategory_deepth" object="${voccommentcategory}" z="/JzfV00EoRd1eYPPUw78ZoY3Qu4="/>
+    </page:show>
+</div>

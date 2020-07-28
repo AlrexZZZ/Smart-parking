@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccInterActiveApp" object="${wccinteractiveapp}" path="/wccinteractiveapps" z="HfyzknpaYF/IQ83UhihnLwHSRJ0=">
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccInterActiveApp_isDeleted" object="${wccinteractiveapp}" z="5DTHmgUgX57Dp1I3KXdev/oBU4M="/>
+        <field:display field="name" id="s_com_nineclient_model_WccInterActiveApp_name" object="${wccinteractiveapp}" z="ZtU6xwZ8rSzbmz/VbOz5KrhmB8Y="/>
+        <field:display field="keyword" id="s_com_nineclient_model_WccInterActiveApp_keyword" object="${wccinteractiveapp}" z="uQSuWFav7lLARBJCqKfwaesrkgM="/>
+        <field:display field="isOpen" id="s_com_nineclient_model_WccInterActiveApp_isOpen" object="${wccinteractiveapp}" z="b+kYLYyp7+W8VELnFU68L8hUP/E="/>
+        <field:display field="url" id="s_com_nineclient_model_WccInterActiveApp_url" object="${wccinteractiveapp}" z="RoY8sQCt/WNpNffxJ1PA5S4K5n8="/>
+    </page:show>
+</div>

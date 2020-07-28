@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:spring="http://www.springframework.org/tags" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<style>
+div#showWayClass span label {
+	display: inherit;
+	float: inherit;
+}
+
+div#showWayClass span input#showWay2 {
+	margin-left: 20px;
+}
+
+div#matchWayClass span label {
+	display: inherit;
+	float: inherit;
+}
+
+div#matchWayClass span input#matchWay2 {
+	margin-left: 20px;
+}
+
+.container-fluid {
+	padding: 20px;
+	margin-top: 10px;
+}
+
+.tuwen_dandiv_newlist li:last-child {
+	border: 0px;
+}
+
+.tuwen_dandiv_newlist li {
+	width: 94%;
+	height: auto;
+	margin: 0 auto;
+	clear: both;
+	overflow: hidden;
+	border-bottom: 1px solid #e5e5e5;
+	font-family: Microsoft Yahei;
+	font-size: 14px;
+	color: #7d7d7d;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.boxs {
+	margin-bottom: 20px;
+	border: 1px solid #e5e5e5;
+}
+
+.tuwen_dandiv_newlist {
+	width: 100%;
+	height: auto;
+	clear: both;
+	overflow: hidden;
+	margin: 0 auto;
+}
+
+.tuwen_listw {
+	padding: 0px;
+	width: 120px;
+	height: auto;
+	float: left;
+	overflow: hidden;
+	font-family: Microsoft Yahei;
+}
+
+.tuwen_listw a {
+	color: #7d7d7d;
+	font-family: Microsoft Yahei;
+}
+
+.tuwen_listw a:hover {
+	text-decoration: underline;
+}
+
+.tuwen_dandiv_newlist li {
+	list-style: none;
+}
+
+.tuwen_listt {
+	width: 40px;
+	height: 40px;
+	float: right;
+	overflow: hidden;
+}
+
+.tuwen_listt img {
+	width: 40px;
+	height: 40px;
+}
+
+.boxs img {
+	max-width: 100%
+}
+
+.tupian_dandiv_img {
+	width: 170px;
+	height: 170px;
+	overflow: hidden;
+	margin-right: 20px;
+	margin-bottom: 20px;
+	float: left;
+	margin-bottom: 20px;
+}
+
+.tupian_dandiv_img img {
+	width: 170px;
+	height: 170px;
+}
+</style>
+	<SCRIPT type="text/javascript">
+		<![CDATA[
+		$(function() {
+			masonry();
+		});
+		function masonry() {
+			var $container = $('#masonry');
+			$container.imagesLoaded(function() {
+				$container.masonry({
+					itemSelector : '.boxs',
+					gutterWidth : 20,
+					isAnimated : true,
+				});
+			});
+		}
+		function submitForm() {
+			var boo = true;
+			if ($("#platformUser").val() == null) {
+				alert("公众平台不可为空！");
+				boo = false;
+				return boo;
+			}
+			if (checkTitle() == false) {
+				boo = false;
+				return boo;
+			}
+			if($('#hint1').html().length!=0){
+				boo = false;
+				return boo;
+			}
+			if (!checkKeyWord()) {
+				boo = false;
+				return boo;
+			}
+			if ($("#replyType").val() == "文本") {
+				var content = $('#content').val();
+				if (content.trim().length == 0) {
+					$("#hint3").html("* 请输入内容");
+					boo = false;
+					return boo;
+				}
+			} else {
+				if ($("#selectId").val() == "div_") {
+					$("#hint4").html(" 请选择素材");
+					boo = false;
+					return boo;
+				}
+			}
+			if (boo) {
+				document.forms[0].submit();
+			}
+		}
+		function changeDiv() {
+			var reply = $("#replyType").val();
+			if (reply == "图片") {
+				$("#contents").hide();
+				$("#images").hide();
+				$("#sounds").hide();
+				$("#video").hide();
+				$("#pictures").show();
+				$("#hint3").html("*");
+			}
+			if (reply == "文本") {
+				$("#images").hide();
+				$("#pictures").hide();
+				$("#sounds").hide();
+				$("#video").hide();
+				$("#contents").show();
+				$("#hint4").html("");
+			}
+			if (reply == "图文") {
+				$("#contents").hide();
+				$("#sounds").hide();
+				$("#video").hide();
+				$("#images").show();
+				masonry();
+				$("#pictures").hide();
+				$("#hint3").html("*");
+			}
+			if (reply == "语音") {
+				$("#contents").hide();
+				$("#images").hide();
+				$("#sounds").show();
+				$("#video").hide();
+				$("#pictures").hide();
+				$("#hint3").html("*");
+			}
+			if (reply == "视频") {
+				$("#contents").hide();
+				$("#images").hide();
+				$("#sounds").hide();
+				$("#video").show();
+				$("#pictures").hide();
+				$("#hint3").html("*");
+			}
+		}
+		function changeState(id, url) {
+			var picId = $("#selectId").val();
+			$("#" + picId).toggleClass("selected")
+			$("#" + id).toggleClass("selected")
+			$("#selectId").val(id);
+			if (url.length > 0) {
+				if(id == picId&&$("#myaudio").attr("src")!=""){
+					var myAuto = document.getElementById('myaudio');
+					$("#myaudio").attr("src", "");
+					myAuto.play();
+				}else{
+					var myAuto = document.getElementById('myaudio');
+					$("#myaudio").attr("src",url);
+					myAuto.play();
+				}
+			}
+		}
+		function changeOnOff() {
+			if ($("#active").val() == "true") {
+				$("#activeOn").hide();
+				$("#activeOff").show();
+				$("#active").val("false");
+			} else {
+				$("#activeOn").show();
+				$("#activeOff").hide();
+				$("#active").val("true");
+			}
+		}
+		function changePlantform() {
+			var autoId = $("#id").val();
+			var platform = $("#platformUser").val();
+			loadTree("/ump/wccautokbses/tree?id=" + platform + "&#38;autoId="
+					+ autoId);
+			checkTitle();
+			//清空多选框
+			$("#SelVals").attr("value", "");
+			$("#SelIds").attr("value", "");
+			refresh();
+		}
+		function checkTitle() {
+			var title = $("#title").val();
+			if (title.trim().length == 0) {
+				$("#hint1").html("* 请输入标题");
+				return false;
+			}else if(title.trim().length >40){
+				$("#hint1").html("* 最多40个字符");
+				return false;
+			} else {
+				var id = $('#id').val();
+				var platform = $("#platformUser").val();
+				$.post("/ump/wccautokbses/checkTitle", {
+					"id": id,
+					"title" : title,
+					"platform" : platform
+				}, function(data) {
+					if (data == 1) {
+						$("#hint1").html("");
+						return true;
+					} else {
+						$("#hint1").html("* 标题已存在，请重新输入");
+						return false;
+					}
+				});
+			}
+		}
+		function checkKeyWord() {
+			var keyWord = $("#keyWord").val();
+			if (keyWord.trim().length == 0) {
+				$("#hint2").html("* 请输入关键词");
+				return false;
+			} else {
+				var reg = /^\D+$/;
+				if (!reg.test(keyWord)) {
+					$("#hint2").html("* 关键词不可为数字");
+					return false;
+				} else {
+					$("#hint2").html("");
+					return true;
+				}
+			}
+		}
+		function changeNumTips(_this, hintId, num) {
+			var txt = _this.value;
+			var spans = $("#" + num);
+			if (txt.length == 0) {
+				$("#" + hintId).html("* 请输入内容");
+			} else {
+				$("#" + hintId).html("");
+			}
+			var remain = 600 - txt.length;
+			if (remain < 0) {
+				remain = 0;
+				var val = txt.substr(0, 600);
+				_this.value = val;
+			}
+			spans[0].innerHTML = remain;
+		}
+		//跳转素材页面
+		function goUrl() {
+			var type = $('#replyType').val();
+			if(type == "图片"){
+				window.open("/ump/wccmaterialses?&displayId=27&type=PICTURE");
+			}else if(type == "视频"){
+				window.open("/ump/wccmaterialses?&displayId=27&type=VIDEO");
+			}else if(type == "语音"){
+				window.open("/ump/wccmaterialses?&displayId=27&type=SOUNDS");
+			}else if(type == "图文"){
+				window.open("/ump/wccmaterialses?&displayId=27&type=IMAGETEXT");
+			}
+		}
+		//刷新素材
+		function refresh() {
+			var platform = $("#platformUser").val();
+			var autoId = $("#id").val();
+			$.post("/ump/wccautokbses/materialsList", {
+				"platformUserId" : platform,
+				"id" : autoId
+			}, function(data) {
+				$("#materials").html(data);
+				location.hash="botom";
+				var type = $('#replyType').val();
+				if(type == "图片"){
+					$("#contents").hide();
+					$("#video").hide();
+					$("#sounds").hide();
+					$("#images").hide();
+					$("#pictures").show();
+				}else if(type == "视频"){
+					$("#contents").hide();
+					$("#pictures").hide();
+					$("#sounds").hide();
+					$("#images").hide();
+					$("#video").show();
+				}else if(type == "语音"){
+					$("#contents").hide();
+					$("#pictures").hide();
+					$("#video").hide();
+					$("#images").hide();
+					$("#sounds").show();
+				}else if(type == "图文"){
+					$("#contents").hide();
+					$("#pictures").hide();
+					$("#video").hide();
+					$("#sounds").hide();
+					$("#images").show();
+				}
+				masonry();
+			});
+		}
+		function changeHint(hintId,hint) {
+			$("#"+hintId).html(hint);
+		}
+		]]>
+	</SCRIPT>
+	<style>
+@IMPORT url("/ump/styles/selectTree.css");
+</style>
+	<SCRIPT type="text/javascript" src="/ump/js/selectTree.js">
+		//selectTree;
+	</SCRIPT>
+	<div class="frames" style="width: 98%;">
+		<div class="grid">
+			<form:form id="form" action="/ump/wccautokbses/create" method="POST"
+				modelAttribute="wccAutokbs">
+				<form:hidden path="id" />
+				<div class="row">
+					<div class="span12">
+						<label>公众平台：</label>
+						<div class="input-control select" style="width: 270px;">
+							<form:select path="platformUser" items="${platformUsers}"
+								itemValue="id" itemLabel="account" cssStyle="width: 270px;"
+								onchange="changePlantform();"></form:select>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span12">
+						<label>标题：</label>
+						<div class="input-control text" style="width: 275px;">
+							<form:input path="title" cssStyle="width: 270px;"
+								onblur="checkTitle();" />
+						</div>
+						<font id="hint1" style="color: red;">* <font color="black">最多40个字符,消息自动回复列表的标题</font></font>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span12">
+						<label>相关问题：</label>
+						<div class="input-control text" style="width: 275px;">
+							<input id="SelVals" type="text" readonly="readonly"
+								value="${wccAutokbs.relatedIssuesName}" style="width: 270px;"
+								onclick="selectShowMenu();" /> <input id="SelIds"
+								name="relatedIssues" type="hidden"
+								value="${wccAutokbs.relatedIssues}" />
+							<div id="selectMenuContent" class="menuContent"
+								style="display: none; position: absolute; z-index: 99;">
+								<ul id="selectTreeDemo" class="ztree"
+									style="margin-left: 0px; margin-top: 0; width: 270px; max-height: 300px;"></ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<SCRIPT type="text/javascript">
+					<![CDATA[
+					var platform = $("#platformUser").val();
+					var autoId = $("#id").val();
+					var selIds = $("#SelIds").val();
+					var autoId = $("#id").val();
+					if (selIds.length != 0 && autoId.length != 0) {
+						window.onload = loadTree("/ump/wccautokbses/tree?id="
+								+ platform + "&selIds=" + selIds + "&autoId="
+								+ autoId);
+					} else if (autoId.length != 0) {
+						window.onload = loadTree("/ump/wccautokbses/tree?id="
+								+ platform + "&autoId=" + autoId);
+					} else {
+						window.onload = loadTree("/ump/wccautokbses/tree?id="
+								+ platform);
+					}
+
+					$.post("/ump/wccautokbses/materialsList", {
+						"platformUserId" : platform,
+						"id" : autoId
+					}, function(data) {
+						$("#materials").html(data);
+						masonry();
+					});
+					]]>
+				</SCRIPT>
+				<div class="row">
+					<div class="span12">
+						<label>关键词：</label>
+						<div class="input-control text" style="width: 275px;">
+							<form:input path="keyWord" cssStyle="width: 270px;"
+								onblur="checkKeyWord();" />
+						</div>
+						<font id="hint2" style="color: red;">* <font color="black">多个关键词之间用英文逗号分隔，且不可为数字</font></font>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span12">
+						<label>展示方式：</label>
+							<c:if
+								test="${wccAutokbs.showWay eq DEFALT or empty wccAutokbs.showWay}">
+						<div id="showWayClass" style="width: 80%; margin: 5px 0;">
+								<span><input type="radio" value="默认回复" name="showWay" onclick="changeHint('showHint','当关键词未匹配时，将回复展示方式为默认回复的问题');"
+									style="border: 0px; box-sizing: content-box;" id="showWay1"
+									checked="checked" /> <label for="showWay1">默认回复</label></span>
+								<span>&#160;<input type="radio" value="相关回复" onclick="changeHint('showHint','仅展示在相关问题列表中');"
+									style="border: 0px; box-sizing: content-box;" name="showWay"
+									id="showWay2" /><label for="showWay2">相关回复</label></span>
+						<font color="red" style="margin-left: 107px;"> * </font><font color="black" id="showHint">当关键词未匹配时，将回复展示方式为默认回复的问题</font>
+						</div>
+							</c:if>
+							<c:if test="${wccAutokbs.showWay eq ABOUT}">
+						<div id="showWayClass" style="width: 80%; margin: 5px 0;">
+								<span><input type="radio" value="默认回复" name="showWay" onclick="changeHint('showHint','当关键词未匹配时，将回复展示方式为默认回复的问题');"
+									style="border: 0px; box-sizing: content-box;" id="showWay1" />
+									<label for="showWay1">默认回复 </label></span>
+								<span>&#160;<input type="radio" value="相关回复"  onclick="changeHint('showHint','仅展示在相关问题列表中');"
+									style="border: 0px; box-sizing: content-box;" name="showWay"
+									id="showWay2" checked="checked" /><label for="showWay2">相关回复</label></span>
+						<font color="red" style="margin-left: 107px;"> * </font><font color="black" id="showHint">仅展示在相关问题列表中</font>
+						</div>
+							</c:if>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span12">
+						<label>匹配方式：</label>
+							<c:if
+								test="${wccAutokbs.matchWay eq ALL or empty wccAutokbs.matchWay}">
+						<div id="matchWayClass" style="width: 80%; margin: 5px 0;">
+								<span><input type="radio" value="全部匹配" name="matchWay" onclick="changeHint('matchHint','关键词仅在完全匹配时触发');"
+									style="border: 0px; box-sizing: content-box;" id="matchWay1"
+									checked="checked" /><label for="matchWay1">完全匹配</label></span>
+								<span>&#160;<input type="radio" value="部分匹配" onclick="changeHint('matchHint','只要包含该关键词即可触发');"
+									style="border: 0px; box-sizing: content-box;" name="matchWay"
+									id="matchWay2" /><label for="matchWay2">部分匹配</label></span>
+						<font color="red" style="margin-left: 107px;"> * </font><font color="black" id="matchHint">关键词仅在完全匹配时触发</font>
+						</div>
+							</c:if>
+							<c:if test="${wccAutokbs.matchWay eq LIKE}">
+						<div id="matchWayClass" style="width: 80%; margin: 5px 0;">
+								<span><input type="radio" value="全部匹配" name="matchWay" onclick="changeHint('matchHint','关键词仅在完全匹配时触发');"
+									style="border: 0px; box-sizing: content-box;" id="matchWay1" /><label
+									for="matchWay1">完全匹配 </label></span>
+								<span>&#160;<input type="radio" value="部分匹配" onclick="changeHint('matchHint','只要包含该关键词即可触发');"
+									style="border: 0px; box-sizing: content-box;" name="matchWay"
+									id="matchWay2" checked="checked" /><label for="matchWay2">部分匹配</label></span>
+						<font color="red" style="margin-left: 107px;"> * </font><font color="black" id="matchHint">只要包含该关键词即可触发</font>
+						</div>
+							</c:if>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span12">
+						<label>启用状态：</label>
+						<div class="input-control select" style="width: 270px;">
+							<!-- 
+							<select id="active" name="active">
+								<option value="true">启用</option>
+								<option value="false">未启用</option>
+							</select>
+							 -->
+							<div class="input-control switch">
+								<div id="switchId"><c:if
+										test="${wccAutokbs.active or empty wccAutokbs.active}">
+										<input id="active" type="hidden" name="active" value="true" />
+										<img id="activeOn" onclick="changeOnOff()"
+											src="/ump/resources/images/ON.png" />
+										<img src="/ump/resources/images/OFF.png" id="activeOff"
+											onclick="changeOnOff()" style="display: none;" />
+									</c:if> <c:if
+										test="${not empty wccAutokbs.active and ! wccAutokbs.active}">
+										<input id="active" type="hidden" name="active" value="false" />
+										<img src="/ump/resources/images/ON.png" id="activeOn"
+											onclick="changeOnOff()" style="display: none;" />
+										<img src="/ump/resources/images/OFF.png" id="activeOff"
+											onclick="changeOnOff()" />
+									</c:if> </div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span12">
+						<label>回复类型：</label>
+						<div class="input-control select" style="width: 270px;">
+							<c:if test="${empty wccAutokbs}">
+								<select id="replyType" name="replyType" onchange="changeDiv();"
+									style="width: 270px;">
+									<c:forEach items="${replyTypes}" var="replyType">
+										<option value="${replyType}">${replyType}</option>
+									</c:forEach>
+								</select>
+							</c:if>
+							<c:if test="${not empty wccAutokbs}">
+								<select id="replyType" name="replyType" onchange="changeDiv();"
+									style="width: 270px;">
+									<c:forEach items="${replyTypes}" var="replyType">
+										<c:if test="${wccAutokbs.replyType==replyType}">
+											<option value="${replyType}" selected="selected">${replyType}</option>
+										</c:if>
+										<c:if test="${wccAutokbs.replyType!=replyType}">
+											<option value="${replyType}">${replyType}</option>
+										</c:if>
+									</c:forEach>
+								</select>
+							</c:if>
+						</div>
+					</div>
+				</div>
+
+				<div id="materials">
+					<!-- materials -->
+				</div>
+				<div id="hint4" style="color: red; margin-left: 20px;">
+					<!-- hint4 -->
+				</div>
+				<div class="row">
+					<div class="span12">
+						<a class="button info" style="margin-left: 20px; padding: 4px;"
+							onclick="submitForm();">确 定</a> <a style="padding: 4px;"
+							href="/ump/wccwelcomkbses?form&amp;welType=3" class="button warning">取 消</a>
+					</div>
+				</div>
+				<a name="botom"></a>
+			</form:form>
+		</div>
+	</div>
+</div>

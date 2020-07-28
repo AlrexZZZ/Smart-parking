@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default_pub" name="puboperators/list">
+        <put-attribute name="body" value="/WEB-INF/views/puboperators/list.jspx"/>
+    </definition>
+<definition extends="default_pub" name="puboperators/show">
+        <put-attribute name="body" value="/WEB-INF/views/puboperators/show.jspx"/>
+    </definition>
+<definition extends="default_pub" name="puboperators/create">
+        <put-attribute name="body" value="/WEB-INF/views/puboperators/create.jspx"/>
+    </definition>
+<definition extends="default_pub" name="puboperators/update">
+        <put-attribute name="body" value="/WEB-INF/views/puboperators/update.jspx"/>
+    </definition>
+
+   <definition extends="default_pub" name="puboperators/disSkill">
+        <put-attribute name="body" value="/WEB-INF/views/puboperators/disSkill.jspx"/>
+    </definition> 
+
+<definition extends="default_pub" name="puboperators/userCenter">
+        <put-attribute name="body" value="/WEB-INF/views/puboperators/userCenter.jspx"/>
+    </definition>
+</tiles-definitions>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_VocAccount" items="${vocaccounts}" z="0fmYaVTuKkyXV7DSxWlkMSj85vY=">
+        <table:table data="${vocaccounts}" id="l_com_nineclient_model_VocAccount" path="/vocaccounts" z="PxSWbQLKhiCX5zEkhAU7Y0kUCRg=">
+            <table:column id="c_com_nineclient_model_VocAccount_account" property="account" z="c837UUIcEtSFwmK2Cix6hogK3ZU="/>
+            <table:column id="c_com_nineclient_model_VocAccount_cookie" property="cookie" z="fLKi22qFWtQH6IWgrLNaPX9B86A="/>
+            <table:column id="c_com_nineclient_model_VocAccount_password" property="password" z="yB/JAViZ72NOBqKwG4zQwBvzAGk="/>
+            <table:column id="c_com_nineclient_model_VocAccount_sort" property="sort" z="QRyQK5WmiboOOjjDA3+HqoSHubU="/>
+            <table:column id="c_com_nineclient_model_VocAccount_isVisable" property="isVisable" z="fu3LEFxljbp6QxGzni+Q9Bfk2cw="/>
+            <table:column id="c_com_nineclient_model_VocAccount_remark" property="remark" z="b9u7ciOtaKSBqQv1IBCx5s8GUyA="/>
+        </table:table>
+    </page:list>
+</div>

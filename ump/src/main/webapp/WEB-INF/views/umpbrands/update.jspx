@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+ xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:form="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<style>
+	@IMPORT url("/ump/styles/url.css");
+	</style>
+	<FORM id="brandForm" method="POST">
+		<INPUT type="hidden" id="brand_id" name="id" value="${umpBrand.id}"/>
+		<div class="grid">
+			<div class="row">
+				<div class="span gridTitle">行业名称：</div>
+				<div class="span gridInputWAuto">
+					<SELECT id="parentBusinessId" name="parentBusinessId" class="publicSize">
+						<c:forEach items="${umpparentbusinesstypes}" var="item">
+							<c:if test="${item.id eq umpBrand.business.id}">
+							<OPTION value="${item.id}" selected="selected">${item.businessName}</OPTION>
+							</c:if>
+							<c:if test="${item.id ne umpBrand.business.id}">
+							</c:if>
+						</c:forEach>
+					</SELECT>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span gridTitle">品牌名称：</div>
+				<div class="span gridInputWAuto">
+					<INPUT name="brandName" id="brandName" value="${umpBrand.brandName}"  class="publicSize" readonly="readonly"/>
+				</div>
+			</div>
+			<!--<div class="row">
+				<div class="span1"><span style="width: 100%">是否启用:</span></div>
+				<div class="span4">
+					<c:if test="${umpBrand.isVisable}">
+					<INPUT name="isVisable" id="isVisable" type="hidden" value="true" />
+					<img class="switchClass" onclick="switchImg(this,false,'isVisable')" src="/ump/images/ON.png"/>
+					<img class="switchClass"  onclick="switchImg(this,true,'isVisable')" style="display: none;" src="/ump/images/OFF.png"/>
+					</c:if>
+					<c:if test="${!umpBrand.isVisable}">
+					<INPUT name="isVisable" id="isVisable" type="hidden" value="false" />
+					<img class="switchClass" onclick="switchImg(this,false,'isVisable')" style="display: none;" src="/ump/images/ON.png"/>
+					<img class="switchClass"  onclick="switchImg(this,true,'isVisable')"  src="/ump/images/OFF.png"/>
+					</c:if>
+				</div>
+			</div>
+			 <div class="row">
+				<div class="span1"><span style="width: 100%">备注信息:</span></div>
+				<div class="span4">
+					<div class="input-control textarea">
+						<textarea name="remark" class="publicSize">${umpBrand.remark}</textarea>
+					</div>
+				</div>
+			</div> -->
+			<div class="row">
+				<div class="span gridTitle">关键字：</div>
+				<div class="span gridInputWAuto">
+							<![CDATA[<textarea name="keyName" class="gridTextArea">${umpBrand.keyName}</textarea>]]><span class="hintSpan" style="color:red;">*</span>
+				</div>
+			</div>
+			<DIV class="row">
+					<a class="button info" onclick="submit('brandForm');">确定</a>
+					<INPUT type="button" style="margin-left: 30px;" class="warning" onclick="queryListPage()"
+						value="取消" />
+			</DIV>
+		</div>
+	</FORM>
+	<style>
+	@IMPORT url("/ump/styles/validation.css");
+	</style>
+	<SCRIPT type="text/javascript" src="/ump/js/nineclient/ump/product.js">
+		//--
+	</SCRIPT>
+	<SCRIPT type="text/javascript"
+		src="/ump/js/nineclient/vocreport/nineclient.js">
+		//--
+	</SCRIPT>
+	<SCRIPT type="text/javascript"
+		src="/ump/ui/jquery-validation/jquery.validate.js">
+		//--
+	</SCRIPT>
+	<SCRIPT type="text/javascript">
+		<![CDATA[
+$.validator.addMethod("af",function(value,element,params){  
+	if(value==""){
+		return false;
+	}
+	//var reg=new RegExp("/^.+$/g");
+	var flag=true;
+	var arr =value.split(/[\n\r]+/g);
+    if(arr.length>1){
+    	for(var i=1;i<arr.length;i++){
+    		if(arr[i-1]==arr[arr.length-1]||$.trim(arr[arr.length-1])==''){
+    			flag=false;
+    			break;
+    		}
+    	}
+		return flag;
+	}else{
+		return flag;
+	}
+},"关键词不能重复且不能有空行");
+		$(document).ready(function() {
+			$("#brandForm").validate({
+				rules : {
+					parentBusinessId : {
+						minlength:1
+					},
+					brandName : {
+						 required: true,
+						 maxlength:20,remote:{
+							 url:"/ump/commentvalidata/validataUniqueId",
+							 type: "post", 
+							 data: {
+								field:'brandName',
+								value:function(){
+									return $("#brandName").val();
+								},
+								table:"UmpBrand",
+								id:function(){
+									return $("#brand_id").val();
+								}
+							 }
+							}
+					},
+					keyName:"af"
+				},
+				messages : {
+					parentBusinessId :{
+						minlength:"请选择行业"
+					},
+					brandName : {
+						 required: "品牌名称不可为空",
+						 maxlength: "品牌名称不能超过20个字",
+						 remote:"品牌名称不能重复"
+					},
+					keyName:"关键词不能重复且不能有空行"
+				},
+				errorElement:"em",
+				focusCleanup:true,
+				errorClass:"invalid",
+				errorPlacement:function(error, element){
+					error.appendTo($(element).parent().find("span"));
+				}
+			});
+		});
+		function submit(id) {
+			if(!$("#" + id).valid()){
+				return;
+			}
+			var parentBusinessId = $("#parentBusinessId").val();
+			if(parentBusinessId==""){
+				return;
+			}
+			var url = "/ump/umpbrands/update";
+			var param = {};
+			param=$("#" + id).serialize();
+			dataAjax(url, param, Notify);
+			window.location.href="/ump/umpbrands/listPage?active=U";
+		}
+		function queryListPage(){
+			window.location.href="/ump/umpbrands/listPage?active=U";
+		}
+		]]>
+	</SCRIPT>
+</div>

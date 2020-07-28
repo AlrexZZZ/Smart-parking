@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_VocCommentCategory" items="${voccommentcategorys}" z="ierhnhlLKfnrmbiXG+CSTr9Yt7I=">
+        <table:table data="${voccommentcategorys}" id="l_com_nineclient_model_VocCommentCategory" path="/voccommentcategorys" z="Utw44IPhKZbgnTz+dMkBpmz4GU4=">
+            <table:column id="c_com_nineclient_model_VocCommentCategory_name" property="name" z="25SW+no9rzSsrbf3Rn0n3ZjAYQE="/>
+            <table:column id="c_com_nineclient_model_VocCommentCategory_sort" property="sort" z="hAOaClbq0Tefzo2utrAxJqDZuT4="/>
+            <table:column id="c_com_nineclient_model_VocCommentCategory_isVisable" property="isVisable" z="PFf8u/G6sqtTmm07T4+QEKiNXPs="/>
+            <table:column date="true" dateTimePattern="${vocCommentCategory_createtime_date_format}" id="c_com_nineclient_model_VocCommentCategory_createTime" property="createTime" z="GRYR5XB2eDHk7B+K1Qhzx/GOJ0Q="/>
+            <table:column id="c_com_nineclient_model_VocCommentCategory_isDeleted" property="isDeleted" z="fvkc4h9ScRd2wiUbNDU5xvbH490="/>
+            <table:column id="c_com_nineclient_model_VocCommentCategory_remark" property="remark" z="9zE5iC8iB0LX7bMjHM5cA+kUXpc="/>
+        </table:table>
+    </page:list>
+</div>

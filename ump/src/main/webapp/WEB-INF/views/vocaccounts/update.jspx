@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:form="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<style>
+	@IMPORT url("/ump/styles/validation.css");
+	@IMPORT url("/ump/styles/url.css");
+	</style>
+	<SCRIPT type="text/javascript"
+		src="/ump/ui/jquery-validation/jquery.validate.js">
+		//--
+	</SCRIPT>
+
+	<SCRIPT type="text/javascript">
+	<![CDATA[	$(document).ready(function() {
+		$("#editVocAccountForm").validate({
+			rules : {
+				account:{required:true,remote:{
+					 url:"/ump/commentvalidata/validataUniqueId",
+					 type: "post", 
+					 data: {
+						field:'account',
+						value:function(){
+							return $("#add_account").val();
+						},
+						table:"VocAccount",
+						id:function(){
+							return $("#account_id").val();
+						},
+						isCompany:true,
+						companyField:"companyId"
+					 }
+					}},
+				password:{required:true},
+				umpChannelId:{required:true},
+				secpassword:{required:true,equalTo: "#add_password"}
+			},
+			messages : {
+				account :{
+					required:"此项必填",
+					remote:"账号不能重复"
+				},
+				password:{required:"此项必填"},
+				umpChannelId:{required:"请选择渠道"},
+				secpassword:{required:"此项必填",equalTo: "两次输入密码不一致不一致"},
+			},
+			errorElement:"em",
+			focusCleanup:true,
+			errorClass:"invalid"
+		});
+			
+		});
+		function switchOpen(obj, vl) {
+			if (vl == 1) {
+				$("#add_isVisable").val(false);
+			} else {
+				$("#add_isVisable").val(true);
+			}
+			$(".switchClass").toggle();
+		}
+		function editAccount() {
+			if(!$("#editVocAccountForm").valid()){
+				return;
+			}
+			var url = "/ump/vocaccounts/update";
+			var param = {};
+			$("#editVocAccountForm").submit();
+		}
+		function selectChannel(channelId,effectId){
+			var url="/ump/vocshops/queryVocShops";
+			var param={};
+			param.umpChannelId=channelId;
+			dataAjax(url, param, null, null, createSelect,effectId);
+		}
+		function Notify(msg) {
+			$.Notify({
+				caption : "",
+				content : msg,
+				timeout : 5000
+			});
+		}
+		function goBack() {
+			window.location.href = "/ump/vocaccounts/accountManage";
+		}
+		function dataAjax(url, param, notifyCallBack, callBack, callBackData,
+				effectId) {
+			$.ajax({
+				url : url,
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data : param,
+				error : function(msg) {
+				},
+				success : function(data) {
+					if (notifyCallBack) {
+						notifyCallBack(data);
+					}
+					if (callBack) {
+						callBack();
+
+					}
+					if (callBackData) {
+						if (effectId) {
+							callBackData(data, effectId);
+						} else {
+							callBackData(data);
+						}
+
+					}
+				}
+			});
+		}
+		function createSelect(data, id) {
+			var sel = "";
+			var flag = true;
+			var dataList = eval("(" + data + ")");
+			for (var i = -1; i < dataList.length; i++) {
+				if (flag) {
+					flag = false;
+					sel += "<option value=''>请选择</option>";
+				} else {
+					sel += "<option value="+dataList[i].id+">"
+							+ dataList[i].name + "</option>";
+				}
+			}
+			$("#" + id).html(sel);
+		}
+		]]>
+	</SCRIPT>
+
+	<DIV style="margin-left: 30px;">
+	<form id="editVocAccountForm" action="/ump/vocaccounts/update" method="POST" >
+		<div class="grid">
+		<INPUT type="hidden" id="account_id" name="id" value="${vocAccount.id}"/>
+			<div class="row">
+				<!-- <div class="span1">
+									平台名称:</div>
+								<div class="span2">
+									<SELECT class="addClass" name="umpChannelId"
+										id="add_umpChannelId">
+										<OPTION selected="selected" value="-1">请选择</OPTION>
+										<c:forEach items="${umpchannels}" var="item">
+										<OPTION selected="selected" value="${item.id}">${item.channelName}</OPTION>
+										</c:forEach>
+									</SELECT><SPAN style="color: red;display: none;">此项必填</SPAN>
+								</div> -->
+				<div class="span1">账号名称:</div>
+				<div class="span3">
+					<INPUT class="addClass publicSize" name="account" id="add_account" value="${vocAccount.account}"/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span1">密码:</div>
+				<div class="span3">
+					<input class="addClass publicSize" id="add_password" type="password"
+						name="password" value="${vocAccount.password}"/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span1">再次输入密码:</div>
+				<div class="span3">
+					<input id="add_second_password" class="publicSize"
+						type="password" name="secpassword" value="${vocAccount.password}"/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span1">平台名称:</div>
+				<div class="span3">
+					<SELECT class="addClass publicSize" id="add_umpchannel" name="umpChannelId"
+						onchange="selectChannel(this.value,'add_vocshop');">
+						<OPTION value="">请选择</OPTION>
+						<c:forEach items="${umpchannels}" var="item">
+							<c:if test="${vocAccount.umpChannel ne null and vocAccount.umpChannel.id eq item.id}">
+								<OPTION value="${item.id}" selected="selected">${item.channelName}</OPTION>
+							</c:if>
+							<c:if test="${vocAccount.umpChannel ne null and vocAccount.umpChannel.id ne item.id}">
+								<OPTION value="${item.id}">${item.channelName}</OPTION>
+							</c:if>
+							<c:if test="${vocAccount.umpChannel eq null}">
+								<OPTION value="${item.id}">${item.channelName}</OPTION>
+							</c:if>
+						</c:forEach>
+					</SELECT>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span1">店铺名称:</div>
+				<div class="span3">
+					<SELECT id="add_vocshop" class="publicSize" name="vocShopId">
+						<OPTION value="-1">请选择</OPTION>
+						<c:forEach items="${vocShops}" var="item">
+							<c:if test="${vocAccount.vocShop ne null and vocAccount.vocShop.id eq item.id}">
+							<OPTION value="${item.id}" selected="selected">${item.name}</OPTION>
+							</c:if>
+							<c:if test="${vocAccount.vocShop ne null and vocAccount.vocShop.id ne item.id}">
+							<OPTION value="${item.id}">${item.name}</OPTION>
+							</c:if>
+							<c:if test="${vocAccount.vocShop eq null}">
+								<OPTION value="${item.id}">${item.name}</OPTION>
+							</c:if>
+						</c:forEach>
+					</SELECT>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span1">启用状态:</div>
+				<div class="span2">
+					<INPUT name="isVisable" id="add_isVisable" type="hidden"
+						value="${vocAccount.isVisable}"/> 
+						<c:if test="${vocAccount.isVisable}">
+						<img class="switchClass"
+						onclick="switchOpen(this,1)" src="/ump/images/ON.png" /> 
+						<img
+						class="switchClass" onclick="switchOpen(this,0)"
+						style="display: none;" src="/ump/images/OFF.png" />
+						</c:if>
+						<c:if test="${!vocAccount.isVisable}">
+						<img class="switchClass"
+						onclick="switchOpen(this,1)" style="display: none;" src="/ump/images/ON.png" /> 
+						<img
+						class="switchClass" onclick="switchOpen(this,0)"
+						 src="/ump/images/OFF.png" />
+						</c:if>
+				</div>
+			</div>
+			<div class="row">
+					<input type="button" class="info" value="确定"
+						onclick="editAccount();"></input>
+					<button class="warning" type="button" style="margin-left: 30px;"
+						onclick="goBack();">取消</button>
+			</div>
+		</div>
+	</form>
+	<SPAN style="color:red;">${msg}</SPAN>
+	</DIV>
+</div>

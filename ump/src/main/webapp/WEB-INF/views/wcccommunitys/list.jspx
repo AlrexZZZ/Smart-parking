@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_WccCommunity" items="${wcccommunitys}" z="LOUe97incvFSTq9qspp2zJo5tpU=">
+        <table:table data="${wcccommunitys}" id="l_com_nineclient_model_WccCommunity" path="/wcccommunitys" z="/EnDBu4rce/HvExM8DTJTjr2HnA=">
+            <table:column id="c_com_nineclient_model_WccCommunity_isDeleted" property="isDeleted" z="qNbJkbe9Ic8PjC0ySXkyOqkTWV8="/>
+            <table:column id="c_com_nineclient_model_WccCommunity_communityName" property="communityName" z="tSYZY+2oGixZhWpTa+U57tVt7ZI="/>
+            <table:column id="c_com_nineclient_model_WccCommunity_communityUrl" property="communityUrl" z="hFbyo/37Ogo+4it68E9idNQMwxY="/>
+            <table:column id="c_com_nineclient_model_WccCommunity_topicStatus" property="topicStatus" z="ph0WLlmyoOtVru6kL5OXSHl/MyU="/>
+            <table:column id="c_com_nineclient_model_WccCommunity_topicSort" property="topicSort" z="OYKB7j7w0lRGMwmouVparNYdB5I="/>
+            <table:column id="c_com_nineclient_model_WccCommunity_headImage" property="headImage" z="uWy8sXTE4W1Q+nqJtPF/jMVmcls="/>
+        </table:table>
+    </page:list>
+</div>

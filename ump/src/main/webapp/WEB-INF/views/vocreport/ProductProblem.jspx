@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+		<script type="text/javascript"
+		src="/ump/js/nineclient/vocreport/nineclient.js">
+		//---
+	</script>
+	<style>
+@IMPORT url("/ump/ui/dtGrid/dependents/bootstrap/css/bootstrap.min.css");
+@IMPORT url("/ump/ui/dtGrid/dependents/fontAwesome/css/font-awesome.min.css");
+@IMPORT url("/ump/ui/dtGrid/jquery.dtGrid.css");
+@IMPORT url("/ump/ui/dtGrid/dependents/datePicker/skin/WdatePicker.css");
+@IMPORT url("/ump/ui/dtGrid/dependents/datePicker/skin/default/datepicker.css");
+</style>
+	<style>
+	
+	.metro .table th {
+height: 30px;
+line-height: 20px;
+padding-left: 10px;
+padding-right: 10px;
+font-size: 12px;
+background-color:#f8f8f8;
+border-bottom: 1px #e5e5e5 solid;
+}
+ .metro .table td{
+ background-color:white;
+ height: 30px;
+line-height: 20px;
+padding-left: 10px;
+padding-right: 10px;
+font-size: 12px;
+text-align:left;
+border-bottom: 1px #e5e5e5 solid;
+}
+
+.publicSize{
+	width: 135px;
+	height: 28px;
+	border:1px solid;
+	border-color:#e4e4e4;
+}
+	
+input {
+	width: 100%;
+}
+
+select {
+	width: 100%;
+}
+
+.metro label {
+display: block;
+margin: 5px 0;
+font-weight:normal;
+font-size:12px;
+text-align: right;
+}
+	
+	
+	</style>
+	<SCRIPT type="text/javascript">
+	<![CDATA[	
+	 var hchat = {                                           
+			   chart: {                                                           
+		            type: 'bar',
+		            renderTo:'container'
+		        },   
+		        exporting: { enabled:false },
+		        title: {                                                           
+		            text: '产品问题排行榜TOP10',
+		            style:{
+		            	
+		            	fontSize: "16px",
+		            	fontFamily:'微软雅黑'
+		            }
+		        },                                                                 
+		        subtitle: {                                                        
+		            text: ''                                  
+		        },                                                                 
+		        xAxis: {                                                           
+		            categories: [],
+		            title: {                                                       
+		                text: null                                                 
+		            }                                                              
+		        },                                                         
+		        yAxis: {                                                           
+		            min: 0,                                                        
+		            title: {                                                       
+		                text: '数量 (个)',                             
+		                align: 'high'                                              
+		            },                                                             
+		            labels: {                                                      
+		                overflow: 'justify'                                        
+		            }                                                              
+		        },                                                                 
+		        tooltip: {                                                         
+		            valueSuffix: '个'                                       
+		        },                                                                 
+		        plotOptions: {                                                     
+		            bar: {                                                         
+		                dataLabels: {                                              
+		                    enabled: true                                          
+		                }                                                          
+		            }                                                              
+		        },                                                                 
+		        legend: {                                                          
+		            layout: 'vertical',                                            
+		            align: 'right',                                                
+		            verticalAlign: 'top',                                          
+		            x: -40,                                                        
+		            y: 100,                                                        
+		            floating: true,                                                
+		            borderWidth: 1,                                                
+		            backgroundColor: '#FFFFFF',                                    
+		            shadow: true                                                   
+		        },                                                                 
+		        credits: {                                                         
+		            enabled: false                                                 
+		        },
+		        series: [{                                                               
+		            name: "差评标签",                                             
+		            data: []                                
+		        }]
+		    };
+	 
+	 var nameValues = {                                                               
+         name: '差评关键词数'                                           
+     };
+	 
+	 var  series= [] ; 
+	 var xAxis =  {                                                           
+        title: {                                                       
+           text: null                                                 
+        }                                                              
+      };
+	 
+	 var  data =  new Array();
+	 var categories = new Array();
+	 
+	 
+	 /**
+	  *包装查询条件
+	  */
+	 function createQueryParam(){
+		 var param = {};
+		var channelName = $("#channelName").val();
+		if (channelName != -1 && channelName) {
+			param.channelName = $("#channelName").find("option:selected")
+					.text();
+		}
+		var shopName = $("#shopName").val();
+		if (shopName != -1 && shopName) {
+			param.shopName = $("#shopName").find("option:selected").text();
+		}
+		var brandName = $("#brandName").val();
+		if (brandName != -1 && brandName) {
+			param.brandName = $("#brandName").find("option:selected")
+					.text();
+		}else{
+			param.brandName = '请选择';
+		}
+		 var skuName = $("#skuName").val();
+		if (skuName != -1 && skuName) {
+			param.skuName = $("#skuName").find("option:selected").text();
+		}
+		var skuName = $("#skuName").val();
+		if (skuName != -1 && skuName) {
+			param.skuName = $("#skuName").find("option:selected").text();
+		} 
+		var startTimeStr = $("#startTimeStr").val();
+		if (startTimeStr != -1 && startTimeStr) {
+			param.startTimeStr=startTimeStr+" 00:00:00";
+		}
+		var endTimeStr = $("#endTimeStr").val();
+		if (endTimeStr != -1 && endTimeStr) {
+			param.endTimeStr=endTimeStr+" 23:59:59";
+		}   
+	   
+	   
+		 return param;
+	 }
+	 
+	 
+	 /**
+	  * 生成热词报表
+	  */
+	 function  queryHotWord(){
+	
+		var parmam = createQueryParam();
+		 hchat.xAxis.categories = [];
+		 hchat.series[0].data = [];
+				$.ajax({
+					type : "post",
+					url : "/ump/productproblemrandlist/queryHotWord",
+					data : parmam,
+					cache : false,
+					async : false,
+					success : function(text) {
+					 var jsonStr = eval("(" + text + ")");
+						
+						 $.each(jsonStr.hotWords,function(id,hotWord){
+							 hchat.xAxis.categories.push(hotWord.name);
+							 hchat.series[0].data.push(hotWord.count);	
+							 //categories.push(hotWord.name);
+							 //data.push(hotWord.count);
+						});
+						
+					 $('#container').highcharts(hchat);  
+					 if(hchat.series[0].data.length > 0){
+				if(document.getElementById('export_1').getAttribute('disabled') == 'disabled'){
+					document.getElementById('export_1').removeAttribute('disabled');
+					
+				}
+					 }else{
+						document.getElementById('export_1').setAttribute('disabled','disabled');
+					 }
+				 }
+			 });
+         
+	}
+	 
+	 /**
+	  * 查询表格
+	  */
+	 function queryHotWordTable(){
+		 var parmam = createQueryParam();
+		 /*
+		 $.ajax({
+				type : "post",
+				url : "/ump/productproblemrandlist/queryHotWordTable",
+				data : parmam,
+				cache : false,
+				async : false,
+				success : function(text) {
+				 $("#detailTableId").html(text);
+			 }
+		 });
+
+	  		*/
+	  		dtGridOption_2_1_4.params.channelName = parmam.channelName;
+	  		dtGridOption_2_1_4.params.shopName = parmam.shopName;
+	  		dtGridOption_2_1_4.params.brandName = parmam.brandName;
+	  		dtGridOption_2_1_4.params.skuName = parmam.skuName;
+	  		dtGridOption_2_1_4.params.startTimeStr = parmam.startTimeStr;
+	  		dtGridOption_2_1_4.params.endTimeStr = parmam.endTimeStr;
+	  		
+	  		grid_2_1_4.load();
+	 }
+	 ///
+	 	 //导出excel表格
+	 		function exportExcel() {
+			if(!comPareStartTimeAndEndTime($("#startTimeStr").val(),$("#endTimeStr").val()))
+			{
+				return;
+			}
+			 var skuName = $("#skuName").val();
+	 
+			var url = "/ump/productproblemrandlist/exportExcel";
+			var param =[];
+			var name=[];
+			if (skuName != -1 && skuName) {
+				var skuNameText = $("#skuName").find("option:selected").text();
+				param.push(skuNameText);
+				name.push('skuName');
+			}else{
+				Notify("请选择SKU");
+				return;
+			}
+			var channelName = $("#channelName").val();
+			if (channelName != -1 && channelName) {
+				channelName = $("#channelName").find("option:selected").text();
+				param.push(channelName);
+				name.push('channelName');
+			}
+			var shopName = $("#shopName").val();
+			if (shopName != -1 && shopName) {
+				param.push($("#shopName").find("option:selected").text());
+				name.push('shopName');
+			}
+			var brandName = $("#brandName").val();
+			if (brandName != -1 && brandName) {
+				brandName = $("#brandName").find("option:selected")
+						.text();
+				param.push(brandName);
+				name.push('brandName');
+			}
+			var startTimeStr = $("#startTimeStr").val();
+			if (startTimeStr != -1 && startTimeStr) {
+				param.push(startTimeStr+" 00:00:00");
+				name.push('startTimeStr');
+			}
+			var endTimeStr = $("#endTimeStr").val();
+			if (endTimeStr != -1 && endTimeStr) {
+				param.push(endTimeStr+" 23:59:59");
+				name.push('endTimeStr');
+			}
+			var tij="";
+			var fl=true;
+			for(var j=0;j<param.length;j++){
+				if(fl){
+					
+					tij+="?"+name[j]+"="+param[j];
+					
+					fl=false;
+				}else{
+					tij+="&"+name[j]+"="+param[j];
+				}
+				
+			}
+			
+			window.location.href = url+tij;
+		}
+	 var f = 0;
+	function queryList(){
+		f++;
+		if(f >= 2){
+			 var param = {};
+				var channelName = $("#channelName").val();
+				var shopName = $("#shopName").val();
+				var brandName = $("#brandName").val();
+				var skuName = $("#skuName").val();
+				var startTimeStr = $("#startTimeStr").val();
+				var endTimeStr = $("#endTimeStr").val();
+			   if(channelName == '-1' || channelName==''){
+				   Notify("请选择平台");
+				   return;
+			   }
+			   if(shopName == '-1' || shopName==''){
+				   Notify("请选择店铺");
+				   return; 
+			   }
+			   if(brandName == '-1' || brandName==''){
+				   Notify("请选择品牌名称");
+				   return;
+			   }
+			   if(skuName == '-1' || skuName==''){
+				   Notify("请选择SKU名称");
+				   return;
+			   }
+			   if(startTimeStr == ''){
+				   Notify("请选择开始时间");
+				   return;
+			   }
+			   if(endTimeStr == ''){
+				   Notify("请选择结束时间");
+				   return;
+			   }
+			
+			
+		}
+		queryHotWord();
+		queryHotWordTable(); 
+		
+	}	
+		
+		function selectDefaut(id,elementId){
+			if(id==-1||id==''){
+				$("#"+elementId).val(id);
+			}
+		}
+		function selectChannel(id, elementId) {
+			
+			var url = "/ump/vocshops/queryVocShops";
+			var param = {};
+			param.umpChannelId = id;
+			dataAjax(url, param, null, null, createSelect, elementId);
+		}
+		function selectShop(id, elementId) {
+			selectDefaut(id,elementId);
+			var url = "/ump/vocshops/queryVocBrands";
+			var param = {};
+			if(id==''){
+				id=-1;
+			}
+			param.shopId = id;
+			dataAjax(url, param, null, null, createSelect, elementId);
+		}
+		function selectBrand(id, elementId) {
+			var url = "/ump/vocskus/querySkuGoodsList";
+			var param = {};
+			param.vocBrandId = id;
+			dataAjax(url, param, null, null, createSelect, elementId);
+		}
+	 window.onload = queryList;
+	 ]]>
+	</SCRIPT>
+	<SCRIPT type="text/javascript">
+	//定义表格
+	var z = 0;
+	var dtGridColumns_2_1_4 = [
+	{
+		id:'id',
+		title:'排行', 
+		type:'string', 
+		headerStyle : 'background:white;text-align:center;',
+		fastQuery:true, 
+		fastQueryType:'range',
+		resolution : function(record, value) {
+			return value;
+		} 
+		},{
+		id : 'commentTagName',
+		title : '标签名称',
+		type : 'string',
+		fastQuery : true,
+		fastQueryType : 'eq',
+		columnClass : 'text-center',
+		headerStyle : 'background:white;text-align:center;'
+	}, {
+		id : 'increaseCount',
+		title : '评论数量',
+		type : 'string',
+		fastQuery : true,
+		fastQueryType : 'eq',
+		columnClass : 'text-center',
+		headerStyle : 'background:white;text-align:center;'
+	}];
+	 dtGridOption_2_1_4 = {
+			ajaxLoad : true,
+			params:{
+				skuName :'0'	
+			},
+			
+			loadURL : '/ump/productproblemrandlist/queryDtGrid',
+			columns : dtGridColumns_2_1_4,
+			gridContainer : 'dtGridContainer_2_1_1',
+			tools : '',
+			pageSize : 10
+		};
+	
+		var grid_2_1_4 = $.fn.DtGrid.init(dtGridOption_2_1_4);
+		$(function() {
+			grid_2_1_4.load();
+			
+		});
+
+	</SCRIPT>
+     <div class="grid">
+		<FORM id="queryForm">
+			<DIV class="row">
+				
+				<div class="span3">
+				<label>平台名称：</label>
+					<SELECT id="channelName" name="channelName" class="publicSize"
+						onchange="selectChannel(this.value,'shopName')">
+						<OPTION value="-1" selected="selected">请选择</OPTION>
+						<c:forEach items="${channels}" var="item">
+							<OPTION value="${item.id}">${item.channelName}</OPTION>
+						</c:forEach>
+					</SELECT>
+				</div>
+				<div class="span3">
+				<label>店铺名称：</label>
+					<SELECT id="shopName" name="shopName" class="publicSize" onchange="selectShop(this.value,'brandName')">
+						<OPTION value="-1" selected="selected">请选择</OPTION>
+					</SELECT>
+				</div>
+				<div class="span3">
+				<label>品牌名称：</label>
+					<SELECT id="brandName" name="brandName" class="publicSize"
+						onchange="selectBrand(this.value,'skuName');">
+						<OPTION value="-1" selected="selected">请选择</OPTION>
+					</SELECT>
+				</div>
+				<div class="span3">
+				<LABEL>SKU名称：</LABEL>
+					<SELECT id="skuName" name="skuName" class="publicSize">
+						<OPTION value="-1">请选择</OPTION>
+					</SELECT>
+				</div>
+			</DIV>
+			<DIV class="row">
+				<div class="span3">
+				<LABEL>时  间：</LABEL>
+					<input type="text" name="startTimeStr" class="publicSize"
+						value="" id="startTimeStr"
+						onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+				</div>
+				<div class="span3">
+				<LABEL>至：</LABEL>
+					<input type="text" name="endTimeStr" class="publicSize"
+					 value="" id="endTimeStr"
+						onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+				</div>
+			</DIV>
+			<DIV class="row">
+			<div style="margin-left: 20px;" class="span6">
+					<input type="button" class="info" value="查询" onclick="queryList();" />
+					<input id="export_1" type="button" class="warning" disabled="disabled"  value="导出" onclick="exportExcel();" />
+			</div>
+			</DIV>
+		</FORM>
+	</div>
+    
+	<div id="container" style="min-width:700px;height:400px"><SPAN></SPAN></div>
+    	<div id="dtGridContainer_2_1_1" class="dt-grid-container">
+		<DIV>
+			<SPAN></SPAN>
+		</DIV>
+	</div>
+</div>

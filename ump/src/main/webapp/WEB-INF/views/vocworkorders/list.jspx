@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_VocWorkOrder" items="${vocworkorders}" z="tsxREHdZ/3sGzpBoBvI4F77rjgo=">
+        <table:table data="${vocworkorders}" id="l_com_nineclient_model_VocWorkOrder" path="/vocworkorders" z="WyZaFWn8KMn0KyFgM9bb7sx+81o=">
+            <table:column id="c_com_nineclient_model_VocWorkOrder_updateReason" property="updateReason" z="36D45Y/LWHsMaPwX9JE685tIC+U="/>
+            <table:column date="true" dateTimePattern="${vocWorkOrder_createtime_date_format}" id="c_com_nineclient_model_VocWorkOrder_createTime" property="createTime" z="ZVe616wpbNCkBLfiWXBBDm6Ih9Y="/>
+        </table:table>
+    </page:list>
+</div>

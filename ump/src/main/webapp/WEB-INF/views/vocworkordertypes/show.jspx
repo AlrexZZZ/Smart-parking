@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_VocWorkOrderType" object="${vocworkordertype}" path="/vocworkordertypes" z="w5euiHVHMEk5B036RA94bZyKo48=">
+        <field:display field="name" id="s_com_nineclient_model_VocWorkOrderType_name" object="${vocworkordertype}" z="6ywuzsPLlB9PmYSD7gWma/4m3/A="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_VocWorkOrderType_isDeleted" object="${vocworkordertype}" z="BD5GshnTeedQVTtCwNC9C8b2NqU="/>
+        <field:display date="true" dateTimePattern="${vocWorkOrderType_createtime_date_format}" field="createTime" id="s_com_nineclient_model_VocWorkOrderType_createTime" object="${vocworkordertype}" z="lZH8OUrCEZgwvvoDMj5/UWFrd54="/>
+    </page:show>
+</div>

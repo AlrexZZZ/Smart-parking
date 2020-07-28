@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+  	<TABLE class="table striped hovered">
+  			<THEAD>
+				<tr>
+					<th>产品名称</th>
+					<th>提交时间</th>
+					<th>备注</th>
+					<th>是否启用</th>
+					<th>操作</th>
+				</tr>
+			</THEAD>
+			<TBODY id="tbody">
+
+			</TBODY>
+  	</TABLE>
+  		<div align="right" style="text-align: right;" id="tfoot">
+	  	</div>
+  	<SCRIPT type="text/javascript" src="/ump/js/nineclient/ump/product.js">
+		//--
+	</SCRIPT>
+	<SCRIPT type="text/javascript"
+		src="/ump/js/nineclient/vocreport/nineclient.js">
+		//--
+	</SCRIPT>
+    <SCRIPT type="text/javascript">
+    <![CDATA[
+         $(document).ready(function (){
+        	 query();
+         });
+		function createDataGride(data) {
+			var model = eval("(" + data + ")");
+			var list = eval(model.dataJson);
+			//添加表头
+			var th = "";
+			var table = "";
+			for (var i = 0; i < list.length; i++) {
+				table += "<tr>";
+				table += "<td>";
+				table += list[i].productName;
+				table += "</td>";
+				table += "<td>";
+				table += formatData(list[i].createTime);
+				table += "</td>";
+				table += "<td>";
+				table += list[i].remark==null?"":list[i].remark;
+				table += "</td>";
+				table += "<td>";
+				if(list[i].isVisable){
+					table +="<img class='switchClass_"+list[i].id+"' onclick='switchImg(this,false,"+list[i].id+")' src='/ump/images/ON.png' />";
+					table +="<img class='switchClass_"+list[i].id+"' onclick='switchImg(this,true,"+list[i].id+")' src='/ump/images/OFF.png' style='display:none;'/>";
+				}else{
+					table +="<img class='switchClass_"+list[i].id+"' onclick='switchImg(this,false,"+list[i].id+")' src='/ump/images/ON.png' style='display:none;'/>";
+					table +="<img class='switchClass_"+list[i].id+"' onclick='switchImg(this,true,"+list[i].id+")' src='/ump/images/OFF.png' />";
+				}
+				table += "</td>";
+				table += "<td>";
+				table += '<a href="/ump/umpproducts/'
+						+ list[i].id
+						+ '?form" alt="编辑" title="编辑 "><img alt="编辑" class="image" src="/ump/images/update.png" title="编辑"></a>';
+				table += '<a href="javascript:deleteProduct('
+						+ list[i].id
+						+ ')" alt="删除" title="删除 "><img alt="删除" class="image" src="/ump/images/delete.png" title="删除"></a>';
+				table += "</td>";
+				table += "</tr>";
+			}
+			$("#tbody").html(table);
+			var addBtn ='<a onclick="addProductPage();" style="float:left;"><img style="cursor: pointer;" src="/ump/images/add_01.png"/></a>';
+			if (model.totalCount > 0) {
+				var foot = Page(model, 'query',4,true,'addProductPage');
+				$("#tfoot").html(foot);
+			} else {
+				$("#tfoot").html('<tr><td  colspan="4"><a onclick="addProductPage();"><img style="cursor: pointer;" src="/ump/images/add_01.png"/></a>无数据</td></tr>');
+			}
+		
+		}
+		function addProductPage(){
+			window.location.href="/ump/umpproducts?form";
+			
+		}
+		function query(page){
+			var pageNo;
+			if (page) {
+				pageNo = page
+			} else {
+				pageNo = 1;
+			}
+			var param={};
+			param.page=pageNo;
+			param.size=10;
+			var url="/ump/umpproducts/list";
+			dataAjax(url, param, null,null,createDataGride,null);
+		}
+		function deleteProduct(id){
+			if(!confirm("确定删除?")){
+				return ;
+			}
+			var url="/ump/umpproducts/delete"
+			var param={id:id};
+			dataAjax(url, param, Notify);
+			query();
+		}
+		function switchImg(obj, vl, id) {
+			$.ajax({
+				url : "/ump/umpproducts/updateVisable",
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data : {
+					id : id,
+					isVisable : vl
+				},
+				error : function(msg) {
+				},
+				success : function(data) {
+					Notify(data,1000);
+					$(".switchClass_" + id).toggle();
+				}
+			});
+		
+		}
+             ]]>
+    </SCRIPT>
+</div>

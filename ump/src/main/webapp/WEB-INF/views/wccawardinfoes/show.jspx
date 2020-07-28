@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccAwardInfo" object="${wccawardinfo}" path="/wccawardinfoes" z="j8r9dGn1xbIBKPvDlwc6lViiin8=">
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccAwardInfo_isDeleted" object="${wccawardinfo}" z="jSsi5PZ3V/ypSBCRk4rIioYtN+Q="/>
+        <field:display field="awardName" id="s_com_nineclient_model_WccAwardInfo_awardName" object="${wccawardinfo}" z="yU2rg7dtmfF/wEWhmsc9G5XU740="/>
+        <field:display field="awardInfo" id="s_com_nineclient_model_WccAwardInfo_awardInfo" object="${wccawardinfo}" z="rbInAMCOwxLBkvEJ9E+Y+u1KE4k="/>
+        <field:display field="winRate" id="s_com_nineclient_model_WccAwardInfo_winRate" object="${wccawardinfo}" z="3ya/io1DO2l4wxV+qnlYG7T5JD0="/>
+        <field:display field="cdkey" id="s_com_nineclient_model_WccAwardInfo_cdkey" object="${wccawardinfo}" z="urea66yXPkhx1n+E/fwbIQb2Ifw="/>
+        <field:display field="awardNum" id="s_com_nineclient_model_WccAwardInfo_awardNum" object="${wccawardinfo}" z="sH3NJuM+SnzxO8ZNei8CtKHgPNU="/>
+    </page:show>
+</div>

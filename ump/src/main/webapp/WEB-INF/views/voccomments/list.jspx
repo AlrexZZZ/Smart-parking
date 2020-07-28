@@ -1,0 +1,1728 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<style>
+.page {
+	width: 210px;
+	float: left;
+	height: 30px;
+	line-height: 20px;
+	margin-top: 10px;
+}
+
+.page ul li {
+	float: left;
+	height: 18px;
+	line-height: 20px;
+	margin-left: 2px;
+	font-size: 12px;
+	font-family: "宋体";
+	display: inline
+}
+
+.input_number {
+	width: 40px;
+	border: 1px solid #CCC
+}
+
+.page_li_01 {
+	width: 25px;
+	height: 12px;
+	border: 1px solid #CCC;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.mySearch {
+	top: 20%;
+	left: 20%;
+	position: absolute;
+	height: auto;
+	margin: 0px auto;
+	clear: both;
+	background: #FFF;
+	margin-top: 10px;
+	border: 1px solid #CCC;
+	z-index: 1002;
+}
+
+.myReply {
+	top: 30%;
+	left: 0%;
+	position: absolute;
+	height: auto;
+	margin: 0px auto;
+	clear: both;
+	background: #FFF;
+	padding: 20px;
+	margin-top: 10px;
+	border: 1px solid #CCC;
+	z-index: 1003;
+}
+
+.showTemplate {
+	top: 10%;
+	left: 15%;
+	position: absolute;
+	height: auto;
+	margin: 0px auto;
+	clear: both;
+	background: #FFF;
+	padding: 20px;
+	margin-top: 10px;
+	border: 1px solid #CCC;
+	z-index: 1004;
+}
+
+.myWorkOrder {
+	top: 30%;
+	
+	position: absolute;
+	width:600px;
+	margin: 0px auto;
+	clear: both;
+	background: #FFF;
+	padding: 20px;
+	margin-top: 10px;
+	border: 1px solid #CCC;
+	z-index: 1111;
+}
+
+.myWorkOrderInfoDetail {
+	top: 30%;
+	left: 35%;
+	position: absolute;
+	height: auto;
+	width:800px;
+	margin: 0px auto;
+	clear: both;
+	background: #FFF;
+	padding-left: 20px;
+	padding-right: 20px;
+	margin-top: 10px;
+	border: 1px solid #CCC;
+	z-index: 1115;
+}
+
+
+.search_bt {
+	width: 180px;
+	margin: 0px auto;
+}
+
+.search_bt  input {
+	widt: 78px;
+	height: 28px;
+	line-height: 28px;
+}
+
+.ok {
+	background: #fa6800
+}
+
+.cl {
+	backgroud: #069dd5;
+	margin-left: 30px;
+}
+
+select {
+	width: 100%;
+}
+
+
+span.button.switch {
+    height: 18px;
+    padding: 0;
+    width: 18px;
+}
+
+span.button.ico_docu {
+    background-position: -110px -32px;
+    margin-right: 2px;
+    padding: 0;
+    vertical-align: top;
+}
+span.button.ico_open {
+    background-position: -110px -16px;
+    margin-right: 2px;
+    padding: 0;
+    vertical-align: top;
+}
+span.button.ico_close {
+    background-position: -110px -16px;
+    margin-right: 2px;
+    padding: 0;
+    vertical-align: top;
+}
+ .metro .button .ztree{
+ 	padding: 0px;
+ }
+ .buttondiv a:hover {background: #fff}
+.publicSize{
+	width: 135px;
+	height: 28px;
+	border:1px solid;
+	border-color:#e4e4e4;
+	margin-left:10px;
+}
+
+.metro .grid .row {
+  display: block;
+  margin-top: 10px;
+}
+
+.layerOneHover{
+background-color:#dfe9f8;
+border:1px solid #bbb;
+}
+
+.layerTwoHover{
+  background-color:#dfe9f8
+}
+
+.layerOneOff{
+ background-color:#aad9ee;
+ border:1px solid #bbb;
+}
+
+.layerTwoOff{
+ background-color:#aad9ee;
+ color:#111;
+}
+
+
+</style>
+
+ <style>
+    @IMPORT url("/ump/styles/selectTree.css");
+ </style>
+ <script type="text/javascript" src="/ump/js/selectTree.js"><!----></script>
+ <script type="text/javascript" src="/ump/js/voc_comment/vocLocalStorage.js"><!----></script>
+
+	<SCRIPT type="text/javascript">
+	<![CDATA[
+	       
+	 /**
+	  *保存当前选择的下拉复选
+	  */
+    var globalMenuContentId = "";
+	var globalInputId = "";
+	var fieldSortInfo = "";
+	var zTree = $.fn.zTree;
+
+	  $(document).ready(function() {
+		  var jsonStr = getObjByKey('goBack2Label'); 
+		   if(jsonStr){//跳转到点击的标签上
+			 loadTable(jsonStr.commentId);
+			 removeObjByKey('goBack2Label');
+		   }else{
+			 loadMultSelect();
+			  queryComment(1);
+		   }
+			
+			//hideReplayPage();
+			//loadUndoTask();
+		});
+		
+	  
+	  /**
+	   *加载代办任务标签
+	   */
+	  function loadUndoTask(){
+		  if(localStorage){
+			  var jsonStr = null;
+			 for(key in localStorage){
+			   jsonStr = getObjByKey(key);
+			   if(jsonStr.saveDate){
+				 if((new Date().getTime() - parseInt(jsonStr.saveDate)) > 1800000){
+					 removeObjByKey(key);
+				  }else{
+					 createLabel(key.split("_")[1]);
+				  }
+			   }else{
+				    createLabel(key.split("_")[1]);
+			   }
+			 
+			 }
+			 
+			$("#onevocMenuName").css("display","block");
+		  }
+	  }
+	  
+	  /**
+	   *页面排序展示
+	   */
+	  function initSort(){
+		 if("" != fieldSortInfo){
+			 var sortInfoObj = eval("("+fieldSortInfo+")");
+			  $.each(sortInfoObj,function(id,data){
+			    $("#"+data.id).attr("class",data.value);
+			});
+		 }
+		 
+	  }
+	  
+		/**
+		 * 加载下拉复选框
+		 */
+		function loadMultSelect() {
+			var param = {};
+			$.ajax({
+				url : "/ump/voccomments/loadMultSelect",
+				type : "POST",
+				data : param,
+				error : function(msg) {
+					alert("请求错误! ");
+				},
+				success : function(text) {
+					var jsonStr = eval("(" + text + ")");
+					createMultSelected("treeDemo5",jsonStr.channels);
+					createMultSelected("treeDemo1",jsonStr.replyStates);
+					createMultSelected("treeDemo2",jsonStr.commentLevels);
+				    createMultSelected("treeDemo3",jsonStr.shops);
+					createMultSelected("treeDemo4",jsonStr.brands);
+					createMultSelected("treeDemo6",jsonStr.dispatchOperators);
+					
+					
+				}
+			});
+		}
+		
+		
+	   /**
+		*创建店铺的选择框
+	    */
+	  function createShopsMultselect(){
+	   createMultSelected("treeDemo3",jsonStr.shops);
+	   
+	  }
+		
+		function showtk(id){
+		      $("html").scrollTop("0");
+		      var winw=$(window).width();
+		      var winw2=(parseInt(winw)-parseInt($("#"+id).width()))/2;
+		      $("#"+id).css("left",winw2+"px");
+		      $(window).resize(function() {
+		    	  var winw=$(window).width();
+			      var winw2=(parseInt(winw)-parseInt($("#"+id).width()))/2;
+			      $("#"+id).css("left",winw2+"px");
+			 });
+		      
+		      
+		}
+		
+	    
+
+  /**
+  * 显示查询div
+  */
+  function showQueryDiv(){
+	  searchPage('webSerachId','fade');
+	  showtk('webSerachId');
+  }
+
+		function checkUnique() {
+			var companyId = "";
+			var objectName = "UmpChannel";
+			var fieldName = "channelName";
+			var fieldValue = "初级版";
+
+			var parmam = {
+				companyId : companyId,
+				objectName : objectName,
+				fieldName : fieldName,
+				fieldValue : fieldValue
+			};
+
+			$.ajax({
+				type : "post",
+				url : "/ump/voccomments/checkUnique",
+				data : parmam,
+				cache : false,
+				async : false,
+				success : function(text) {
+					var jsonStr = eval("(" + text + ")");
+					if (jsonStr.success) {
+						alert("验证通过");
+					} else {
+						alert("验证失败");
+					}
+				}
+			});
+		}
+
+		function getShopsByProductId() {
+			var channelIds = $("#channelsId").val();
+			var param = {
+				channelIds : channelIds
+			};
+			$.ajax({
+				url : "/ump/voccomments/getShopsByProductId",
+				type : "POST",
+				data : param,
+				error : function(msg) {
+					alert("请求错误! ");
+				},
+				success : function(text) {
+					var jsonStr = eval("(" + text + ")");
+
+					if (jsonStr.length > 0) {
+						$("#shopsId").empty();
+						var defaultId = "";
+						$("#shopsId").append(
+								"<option value="+defaultId+" >请选择</option>");
+						$.each(jsonStr, function(id, shop) {
+							$("#shopsId").append(
+									"<option value="+shop.id+">" + shop.name
+											+ "</option>");
+						});
+					}
+
+				}
+			});
+		}
+
+		function queryComment(pageNo) {
+			var start = 0;
+			var limit = $("#limit").val();
+			if (pageNo > 0) {
+				start = (pageNo - 1) * limit;
+			}
+
+			var commentLevels = $("#commentLevelsId").val();
+			var commentContent = $("#commentContentId").val();
+			var channels = $("#channelsId").val();
+			var shops = $("#shopsId").val();
+			var brands = $("#brandsId").val();
+			var dispatchOperators = $("#dispatchOperatorsId").val();
+			var replyStates = $("#replyStatesId").val();
+			var commentStartTime = $("#commentStartTimeId").val();
+			var commentEndTime = $("#commentEndTimeId").val();
+			var createStartTime = $("#createStartTimeId").val();
+			var createEndTime = $("#createEndTimeId").val();
+			var replyStartTime = $("#replyStartTimeId").val();
+			var replyEndTime = $("#replyEndTimeId").val();
+			var userName = $("#userNameId").val();
+			var goodsName = $("#goodsNameId").val();
+			var commentCategory = $("#commentCategoryId").val();
+			var tagName = $("#tagNameId").val();
+			var parmam = {
+				start : start,
+				limit : limit,
+				commentContent : commentContent,
+				goodsName : goodsName,
+				userName : userName,
+				channels : channels,
+				shops : shops,
+				brands : brands,
+				dispatchOperators : dispatchOperators,
+				replyStates : replyStates,
+				commentLevels : commentLevels,
+				commentStartTime : commentStartTime,
+				commentEndTime : commentEndTime,
+				createStartTime : createStartTime,
+				createEndTime : createEndTime,
+				replyStartTime:replyStartTime,
+				replyEndTime:replyEndTime,
+				commentCategory : commentCategory,
+				tagName : tagName,
+				sortedField:fieldSortInfo
+			};
+
+			$.ajax({
+				url : "/ump/voccomments/queryComments",
+				type : "POST",
+				data : parmam,
+				error : function(msg) {
+					alert("error " + msg);
+				},
+				success : function(text) {
+					$("#showResult").html(text);
+					initSort();
+				}
+			});
+		}
+
+		function reset() {
+			$("#commentLevelsId").attr("value", "");
+	 		$("#commentLevelsId_")[0].value ="请选择";
+			$("#commentContentId").val('');
+			$("#channelsId").attr("value", "");
+	 		$("#channelsId_")[0].value ="请选择";
+			$("#shopsId").attr("value", "");
+	 		$("#shopsId_")[0].value ="请选择";
+			$("#brandsId").attr("value", "");
+	 		$("#brandsId_")[0].value ="请选择";
+			$("#dispatchOperatorsId").attr("value", "");
+	 		$("#dispatchOperatorsId_")[0].value ="请选择";
+			$("#replyStatesId").attr("value", "");
+			$("#replyStatesId_")[0].value ="请选择";
+			$("#commentStartTimeId").val('');
+			$("#commentEndTimeId").val('');
+			$("#createStartTimeId").val('');
+			$("#createEndTimeId").val('');
+			$("#replyStartTimeId").val('');
+			$("#replyEndTimeId").val('');
+			$("#userNameId").val('');
+			$("#goodsNameId").val('');
+			$("#commentCategoryId").val('');
+			$("#tagNameId").val('');
+			loadMultSelect();
+		}
+		
+
+		function checkBoxAll() {
+			if ($('#checkboxAll').prop('checked')) {
+				$("[name = checkbox]:checkbox").prop("checked", true);
+			} else {
+				$("[name = checkbox]:checkbox").prop("checked", false);
+			}
+		} 
+		]]>
+	</SCRIPT>
+
+	<script type="text/javascript">
+	<![CDATA[
+		function exportExcl() {
+			var commentLevels = $("#commentLevelsId").val();
+			var commentContent = $("#commentContentId").val();
+			var channels = $("#channelsId").val();
+			var shops = $("#shopsId").val();
+			var brands = $("#brandsId").val();
+			var dispatchOperators = $("#dispatchOperatorsId").val();
+			var replyStates = $("#replyStatesId").val();
+			var commentStartTime = $("#commentStartTimeId").val();
+			var commentEndTime = $("#commentEndTimeId").val();
+			var createStartTime = $("#createStartTimeId").val();
+			var createEndTime = $("#createEndTimeId").val();
+			var replyStartTime = $("#replyStartTimeId").val();
+			var replyEndTime = $("#replyEndTimeId").val();
+			var userName = $("#userNameId").val();
+			var goodsName = $("#goodsNameId").val();
+			var tagName = $("#tagNameId").val();
+
+			var src = "/ump/voccomments/exportExcle" + "?commentLevels="
+					+ commentLevels + "&commentContent=" + commentContent
+					+ "&channels=" + channels 
+					+ "&shops=" + shops
+					+ "&brands=" + brands 
+					+ "&dispatchOperators="+dispatchOperators 
+					+ "&replyStates=" + replyStates
+					+ "&commentStartTime=" + commentStartTime
+					+ "&commentEndTime=" + commentEndTime
+					+ "&createStartTime=" + createStartTime
+					+ "&createEndTime=" + createEndTime
+					+ "&replyStartTime=" + replyStartTime
+					+ "&replyEndTime=" + replyEndTime
+					+ "&userName=" + userName 
+					+ "&goodsName=" + goodsName
+					+ "&isWebSearch=" + true;
+
+			window.location.href = src;
+		}
+
+		/**
+		 * 关闭所有
+		 */
+		function closeAll(searchDivId, fadeId) {
+			$("#" + searchDivId).toggle();
+			$("#" + fadeId).toggle();
+		}
+
+		/**
+		 * 查询条件显示
+		 */
+		function searchPage(searchDivId, fadeId) {
+			$("#" + searchDivId).toggle();
+			$("#" + fadeId).toggle();
+		}
+
+
+		/**
+		 *显示回复页面
+		 */
+		function showReply(commentIds) {
+			var param = {
+				commentIds : commentIds
+			};
+			$.ajax({
+				url : "/ump/voccomments/getReolyPage",
+				type : "POST",
+				data : param,
+				error : function(msg) {
+					alert("请求错误! ");
+				},
+				success : function(text) {
+					searchPage("showReplyId", "fade");
+					showtk("showReplyId");
+				}
+			});
+		}
+
+		/**
+		 *批量回复
+		 */
+		function showBatchReply() {
+			var commentIds = new Array();
+			var brandId = '';
+			var commentLevel;
+			var flag = true;
+			$("[name = checkbox]:checkbox").each(function() {
+				if ($(this).prop('checked')) {
+					var jsonStr = eval("(" + $(this).val() + ")");
+					if (brandId == '') {
+						brandId = jsonStr.brandId;
+					} else {
+						if (brandId != jsonStr.brandId) {
+							alert("请选择同一品牌!");
+							flag = false;
+							return false
+						}
+					}
+					
+					if(commentLevel == null || commentLevel == undefined){
+						commentLevel = jsonStr.commnetLevel;
+					}else{
+						if(commentLevel != jsonStr.commnetLevel){
+							alert("请选择同一评论类型!");
+							flag = false;
+							return false
+						}
+					}
+
+					if (jsonStr.replyState == '待回复') {
+						commentIds.push(jsonStr.commentId);
+					} else {
+						alert("请选择回复状态为待回复!");
+						flag = false;
+						return false
+					}
+				}
+			});
+
+			if (!flag) {
+				return;
+			}
+
+			if (commentIds.length == 0) {
+				alert("请选择评论!");
+				return;
+			}
+
+			displayReplyPage(commentIds,1);
+			
+		}
+		
+		 //显示待回复数据
+		 function displayReplyPage(commentIds,type){ //type 0 单条回复，1批量回复
+			 if(!isLabelLimit()){
+				alert("最多只能保留8个待处理页面!");
+			    return;
+			  }
+			 
+			   var labelId; //回复页面标签ID
+			   if(type == 0){
+				   labelId = commentIds;
+			     //先判断打开的标签里是否包含当前的页面
+			     //如果包含，直接显示页签，否则新打开一个页签
+			       var commentIdArr = [commentIds];
+				   labelId = getShownTabId(commentIdArr);
+				   if(labelId){ //在已经打开的页签里，直接显示，不执行下面的代码
+					  loadTable(labelId); 
+					  return;
+				   }else{ //如果没有不包含在打开的标签里
+					  labelId = commentIds;
+					  saveObject(labelId);
+				   }
+				 
+			   }else{
+				   //1  如果批量回复里有其它打开过的页签
+				   //2 批量回复没有其它打开过的页签
+				   //3 批量回复没有其它打开的页签
+				   labelId = getShownTabId(commentIds);
+				   if(labelId){
+					  if(commentIds.length == 1){//只有一条批量回复时，直接显示打开的页签
+						 loadTable(labelId);
+					     return;
+					  }else{
+						alert("批量回复里包含已经打开的页签!");
+					    return;
+					  }
+					  
+				   }else{ //如果批量回复里不包含在打开的标签里,显示新标签
+					  labelId = commentIds[0];
+					  saveBatchObject(commentIds[0],commentIds);
+				   }
+				   commentIds = commentIds.join();
+			   }
+		    
+		       if(!labelId){
+		    	 return;	   
+		       }
+		 
+			   showCurrentTab("commentId_"+labelId);
+			   
+			   var param = {
+			    commentIds : commentIds
+			   };
+			   
+				$.ajax({
+					url : "/ump/voccomments/getRelyPage",
+					type : "POST",
+					data : param,
+					error : function(msg) {
+						alert("请求错误! ");
+					},
+					success : function(text) {
+						$("#showReplyResult").html(text);
+						showVocTabBar(labelId);
+						changeTab();
+					}
+				});
+		  }
+
+		/**
+		 * 发送回复内容
+		 */
+		function sendReply() {
+			var commentIds = new Array();
+			$("input[name='commnetId']").each(function() {
+			  if($('#reply_'+$(this).val()).prop("checked")) {
+			    commentIds.push($(this).val());
+			  }
+			});
+            
+			if(commentIds.length == 0){
+				alert("请选中要回复的评论!");
+				return;
+			}
+			
+			var replyContent = $("#replyContentId").val();
+			if (replyContent == "") {
+				alert("回复内容不得为空！");
+				return;
+			}
+
+			var param = {
+				commentIds : commentIds.join(),
+				replyContent : replyContent
+			};
+
+			$.ajax({
+				url : "/ump/voccomments/sendReply",
+				type : "POST",
+				data : param,
+				error : function(msg) {
+					alert("请求错误! ");
+				},
+				success : function(text) {
+					var jsonStr = eval("(" + text + ")");
+					if (jsonStr.success) {
+						alert("回复成功!");
+						queryComment($("#page").val());
+					} else {
+						alert("回复失败!");
+					}
+					
+					if(commentIds.length == 1){
+					   var tabId = 'commentId_'+commentIds[0];
+					   closeTable(tabId);	
+					}else{ 
+					  var tabId = 'commentId_'+commentIds[0];
+					  closeTable(tabId);
+						
+					}
+					
+				}
+			});
+
+		}
+
+		/**
+		 *修改回复状态
+		 */
+		function changeReplyState(commentIds) {
+		   var param = {
+					commentIds : commentIds
+				};
+		   
+				$.ajax({
+					url : "/ump/voccomments/changeReplyState",
+					type : "POST",
+					data : param,
+					error : function(msg) {
+						alert("请求错误! ");
+					},
+					success : function(text) {
+						var jsonStr = eval("(" + text + ")");
+						if (jsonStr.success) {
+							alert("修改成功!");
+							queryComment($("#page").val());
+						} else {
+							alert("修改失败!");
+						}
+
+					}
+				});
+		}
+		
+		
+		/**
+		 * 回复状态修改检查
+		 */
+		function checkChangeReplyState(commentId){
+			var str = $("#"+commentId).val();
+			var jsonStr = eval("("+str+")");
+			 var replySateStr = jsonStr.replyState;
+			 replySateStr = replySateStr=='待回复'?'不回复':'待回复';
+			 
+			 if(confirm('确定把状态改为'+replySateStr+'吗')){
+			   changeReplyState(commentId);	 
+			 }
+		}
+
+		/**
+		 * 批量不回复
+		 */
+		function batchChangeReplyState() {
+			var commentIds = new Array();
+			var flag = true;
+			var defalutState = "";
+			var replySateStr = "";
+			$("[name = checkbox]:checkbox").each(function() {
+				if ($(this).prop('checked')) {
+					var jsonStr = eval("(" + $(this).val() + ")");
+					replySateStr = jsonStr.replyState;
+                     if(defalutState == ""){
+                       defalutState = jsonStr.replyState;
+                     }else{
+                      if(defalutState != jsonStr.replyState){
+                    	alert("请选择同一回复状态!!!");
+  						flag = false;
+  						return false
+                      }
+                    	 
+                     }
+                     
+					
+					if (jsonStr.replyState != '已回复') {
+						commentIds.push(jsonStr.commentId);
+					} else {
+						alert("请选择回复状态的评论");
+						flag = false;
+						return false
+					}
+				}
+			});
+
+			if (!flag) {
+				return;
+			}
+
+			if (commentIds.length == 0) {
+				alert("请选择评论!");
+				return;
+			}
+			
+			 replySateStr = replySateStr=='待回复'?'不回复':'待回复';
+			 if(confirm('确定把状态改为'+replySateStr+'吗')){
+			   changeReplyState(commentIds.join());
+			 }
+			
+		}
+		
+		
+
+		/**
+		 *调用模板
+		 */
+		function callTemplate(brandId,commentLevel) {
+			 $("#showTemplateId").toggle();
+			 createTree(brandId,commentLevel);
+			 showtk("showTemplateId");
+		}
+		
+		function addOnclickEvent(){
+			$("#treeDemo7").find("a[class='level3'] span[class != 'button ico_docu']").each(function(){
+				$(this).attr("onclick","chooseTemplatContent('"+$(this).text()+"')");
+			});
+		
+		}
+		
+		/**
+		 *将选中的模板内容设置到回复框
+		 */
+		function chooseTemplatContent(content){
+			$("#replyContentId").val(content);
+		    $("#showTemplateId").hide();
+		    changeNumTips($("#replyContentId")[0]);
+		}
+		
+		var setting = {
+				data : {
+					simpleData : {
+						enable : true
+					}
+				},
+				callback: {
+					onNodeCreated: this.onNodeCreated,
+					beforeClick: this.beforeClick,
+					onClick: this.onClick
+				}
+			};
+		
+		function onClick(e, treeId, node) {
+			if(node.isLeaf){
+				$("#replyContentId").val(node.content);
+				 $("#showTemplateId").hide();
+				 $("#treeDemo7").html('');
+			}
+			
+		}
+		
+		function createTree(brandId,commentLevel){
+			$.ajax({
+				url : "/ump/voctemplates/callTemplate",
+				dataType : "text",
+				type : "POST",
+				data : {
+					'brandId':brandId,
+					'commentLevel' : commentLevel
+				},
+				error : function(msg) {
+				},
+				success : function(data) {
+					var str = '[' + data + ']';
+					zNodes = eval('(' + str + ')');
+					zTree.init($("#treeDemo7"), setting, zNodes);
+					addOnclickEvent();
+				}
+			});
+			
+		}
+		
+		 //下拉复选
+		 var setting1 = {
+			check : {
+				enable : true,
+				chkboxType : {
+					"Y" : "",
+					"N" : ""
+				}
+			},
+			view : {
+				showLine : false,
+				dblClickExpand : false
+			},
+			data : {
+				simpleData : {
+					enable : true
+				}
+			},
+			callback : {
+				beforeClick : beforeClick,
+				onCheck : onCheck
+			}
+		};
+		
+		
+		/**
+		 *下拉复选
+		 */
+		function createMultSelected(treeDemoId,zNodes1){
+			$.fn.zTree.init($("#"+treeDemoId), setting1, zNodes1);
+		} 
+		
+		function beforeClick(treeId, treeNode) {
+			var zTree = $.fn.zTree.getZTreeObj(treeId);
+			zTree.checkNode(treeNode, !treeNode.checked, null, true);
+			return false;
+		}
+
+		function onCheck(e, treeId, treeNode) {
+			var zTree = $.fn.zTree.getZTreeObj(treeId), nodes = zTree
+					.getCheckedNodes(true), v = "", vid = "";
+			for (var i = 0, l = nodes.length; i < l; i++) {
+				v += nodes[i].name + ",";
+				vid += nodes[i].id + ",";
+			}
+		  if (v.length > 0)
+		    v = v.substring(0, v.length - 1);
+			vid = vid.substring(0, vid.length - 1);
+			/* var re = /((?:.?)+(?:[^,]))/ig;   
+			v = re.exec(v);
+			var re1 = /((?:.?)+(?:[^,]))/ig; 
+            vid = re1.exec(vid);
+            v = v[0];
+            vid = vid[0]; */
+            
+			 globalInputId = $("#"+treeId).attr("name");
+			 //$("#"+globalInputId).attr("value", v);
+			 $("#"+globalInputId)[0].value = v;
+			 $("#"+globalInputId.replace("_","")).attr("value", vid);
+			 if($("#"+globalInputId).val() == ""){
+			   $("#"+globalInputId)[0].value = "请选择";
+			 }
+		}
+		
+		/**
+		 *隐藏下拉复选
+		 */
+		function slelctHideMenu() {
+			 if("" != globalMenuContentId){
+				$("#"+globalMenuContentId).fadeOut("fast");
+				$("#shopsIdMenuContentId").fadeOut("fast");
+				$("#channelsIdMenuContentId").fadeOut("fast");
+				$("#brandsIdMenuContentId").fadeOut("fast");
+				$("#replyStateMenuContentId").fadeOut("fast");
+				$("#commentLevelsMenuContentId").fadeOut("fast");
+				$("#dispatchOperatorsIdMenuContentId").fadeOut("fast");
+				
+				$("body").unbind("mousedown", selectOnBodyDown);
+				globalMenuContentId = "";
+				globalInputId = "";
+			 }
+		}
+		
+		function selectOnBodyDown(event) {
+			/* if (!(event.target.id == "menuBtn" || event.target.id == "SelVals"|| event.target.id == "menuContent" || $(event.target).parents("#menuContent").length > 0)) {
+				slelctHideMenu();
+			} */
+			
+			if(event.target.id == ""){
+				slelctHideMenu();
+			}
+			
+			
+		}
+
+		function showMenu(inputId,menuContentId) {
+			globalMenuContentId = menuContentId;
+			globalInputId = inputId;
+			var SelObj = $("#"+inputId);
+			var SelOffset = $("#"+inputId).offset();
+			$("#"+menuContentId).css({
+			}).slideDown("fast");
+
+			$("body").bind("mousedown", selectOnBodyDown);
+		}
+		
+	/**
+	 * 工单升级弹出
+	 */
+	function showWorkOrderUpdate(checkBoxId){
+		 searchPage('workOrderUpdateId','fade');
+		 showtk('workOrderUpdateId');
+		  
+		var str = $("#"+checkBoxId).val();
+		var jsonStr = eval("("+str+")");
+		var commentId = jsonStr.commentId;
+		var tableStr = '';
+		
+		var parmam = {
+		  commentId : commentId
+		 };
+
+		$.ajax({
+			type : "post",
+			url : "/ump/voccomments/getCommentById",
+			data : parmam,
+			cache : false,
+			async : false,
+			success : function(text) {
+			var jsonStr = eval("(" + text + ")");
+			var comment = jsonStr.comment;
+			 $("#w_showWorkOrderCommentId").val(comment.id);
+			 $("#w_channelNameId").val(comment.channelName);
+			 $("#w_shopNameId").val(comment.shopName);
+			 $("#w_brandNameId").val(comment.brandName);
+			 $("#w_tagsNameId").val('');
+			 $("#w_dispatchOperatorNameId").val(comment.operatorName);	 
+			 $("#w_goodsNameId").val(comment.goodsName);
+			 $("#w_goodsUrlId").val(comment.goodsUrl);
+			 $("#w_commentLevelId").val(comment.commentLevel);
+			 $("#w_commentContentId").val(comment.commentContent);
+			 
+			 
+			 
+			 var workOrderEmergency = jsonStr.workOrderEmergency;
+			 $("#w_emergencyLevelId").empty();
+			 var defaultVal = "\'\'";
+			  $("#w_emergencyLevelId").append("<option value="+defaultVal+">请选择</option>");
+			  $.each(workOrderEmergency,function(id,data){
+				  $("#w_emergencyLevelId").append("<option value="+data.id+">"+data.name+"</option>");
+			  });
+			  
+			  
+			
+			  var workType = jsonStr.workType;
+				 $("#w_workOrderTypeId").empty();
+				  $("#w_workOrderTypeId").append("<option value="+defaultVal+">请选择</option>");
+				  $.each(workType,function(id,data){
+					  $("#w_workOrderTypeId").append("<option value="+data.id+">"+data.name+"</option>");
+				  });
+			 
+				  
+				  var emallGroup = jsonStr.emallGroup;
+					 $("#w_emallGroupId").empty();
+					  $("#w_emallGroupId").append("<option value="+defaultVal+">请选择</option>");
+					  $.each(emallGroup,function(id,data){
+						 $("#w_emallGroupId").append("<option value="+data.id+">"+data.name+"</option>");
+					 });
+			 
+			}
+		});			
+			
+	}	
+	
+	
+	/**
+	 *显示工单升级信息
+	 */
+	function showWorkOrderInfo(){
+		var channelName = $("#w_channelNameId").val();
+		var shopName =  $("#w_shopNameId").val();
+		var brandName =  $("#w_brandNameId").val();
+		var tagsName = $("#w_tagsNameId").val();
+		var dispatchOperatorName = $("#w_dispatchOperatorNameId").val();	 
+		var goodsName = $("#w_goodsNameId").val();
+		var goodsUrl = $("#w_goodsUrlId").val();
+		var commentLevel = $("#w_commentLevelId").val();
+		var commentContent = $("#w_commentContentId").val();
+		var emergencyLevel =  $("#w_emergencyLevelId").find("option:selected").text();
+		var workOrderType =  $("#w_workOrderTypeId").find("option:selected").text();
+		var emallGroup = $("#w_emallGroupId").find("option:selected").text();
+		var updateReason = $("#updateReasonId").val();
+		
+		$("#showWorkOrderInfoDetailId").toggle();
+		var html = '<table class="table striped hovered" style="table-layout:fixed;margin-bottom:5px">';
+		html += '<thead><th>平台名称</th><th>店铺名称</th><th>品牌名称</th><th>会员名</th><th>商品名称</th><th>评论内容</th><th>链接</th><th>工单类型</th><th>优先级</th><th>升级原因</th></thead>';
+		html += '<tr><td>'+channelName+'</td><td>'+shopName+'</td><td>'+brandName+'</td><td>会员名</td><td>'+goodsName+'</td><td>'+commentContent+'</td><td>'+goodsUrl+'</td><td>'+workOrderType+'</td><td>'+emergencyLevel+'</td><td>'+updateReason+'</td></tr>';
+		html += '</table>';
+		html += '<input type="button" class="warning" style="margin-left:0px;margin-bottom:10px;" value="取消" onclick="javascript:closeShowWorkOrderInfoDetailId()"/>';
+		$("#showWorkOrderInfoDetailId_").html(html);
+	}
+		
+ /**
+  * 关闭工单详细展示页面
+  */
+function closeShowWorkOrderInfoDetailId(){
+	$("#showWorkOrderInfoDetailId").hide();
+}
+ 
+ /**
+  *保存工单
+  */
+ function saveWorkOrder(){
+   var commentId = $("#w_showWorkOrderCommentId").val();
+   var updateReason = $("#updateReasonId").val();
+   var emailGroupId = $("#w_emallGroupId").val();
+   var workOrderTypeId = $("#w_workOrderTypeId").val();
+   var workOrderEmergency = $("#w_emergencyLevelId").val();
+   
+    if(null == updateReason ||'' == updateReason){
+    	alert("请输入升级原因!");
+    	return;
+    }
+    
+    if(emailGroupId == ''){
+    	alert("请选择邮件组!");
+    	return;
+    }
+    
+    if(workOrderTypeId == ''){
+    	alert("请选择工单类型!");
+    	return;
+    }
+    
+    if(workOrderEmergency == ''){
+    	alert("请选择优先级!");
+    	return;
+    }
+    
+    
+   
+	 var param = {
+			 commentId : commentId,
+			 updateReason:updateReason,
+			 emailGroupId:emailGroupId,
+			 workOrderEmergency:workOrderEmergency,
+			 workOrderTypeId:workOrderTypeId	 
+			};
+	 
+			$.ajax({
+				url : "/ump/voccomments/saveWorkOrder",
+				type : "POST",
+				data : param,
+				error : function(msg) {
+					alert("请求错误! ");
+				},
+				success : function(text) {
+					var jsonStr = eval("(" + text + ")");
+					if (jsonStr.success) {
+						alert("升级成功!");
+						closeAll('workOrderUpdateId','fade');
+					} else {
+						alert("修改失败!");
+					}
+
+				}
+			});
+	 
+ }
+ 
+ //切换标签
+ function changeTab(){
+	 $("#showWebSearchId").toggle();
+	 $("#showReplyPage").toggle();
+ }
+ function hideReplayPage(){
+	 $("#showReplyPage").hide();
+ }
+	
+ ]]>
+	</script>
+	
+  <div id="showWebSearchId">
+	<div>
+		<div style="height: 46px; background: #edf1f9; border: 1px solid #e4e4e4; border-bottom: none;" class="buttondiv">
+		                  <a onclick="showQueryDiv()" style="cursor: pointer;">
+		                  <i class="on-left"><img height="14" width="14" src="/ump/images/search.png"/></i>查询
+						</a>
+						<a onclick="showBatchReply();" style="cursor: pointer;">
+							<i class="on-left"><img height="14" width="14" src="/ump/images/group_answer.png"/></i>批量回复
+						</a>
+						<a onclick="batchChangeReplyState()" style="cursor: pointer;">
+						<i class="on-left"><img height="14" width="14" src="/ump/images/change_status.png"/></i>批量状态改变
+						</a>
+						<a onclick="showTransferDialog('批量转移','')" style="cursor: pointer;">
+							<i class="on-left"><img height="14" width="14" src="/ump/images/turn_move.png"/></i>批量转移
+						</a>
+						<a onclick="exportExcl();" style="cursor: pointer;">
+							<i class="on-left"><img height="14" width="14" src="/ump/images/excel.png"/></i>导出Excel
+						</a>
+					</div>
+
+	 </div>
+	 <div id="showResult" style="overflow:auto;">暂无数据</div>
+	</div>
+	
+	<div id="showReplyPage" style="display: none;">
+	  <div id="showReplyResult" style="overflow:auto;">暂无数据</div>
+	</div>
+	
+	<input type="hidden" id="limit" value="${limit}" />
+<div class="mySearch"  id="webSerachId" style="display: none;width:800px;padding: 10px;">
+      <div style="border-bottom: 1px solid #e5e5e5;height: 40px;line-height: 40px;font-size:16px;font-family: '微软雅黑'"> <i class="on-left"><img src="/ump/images/search.png" width="14" height="14" style="margin-left:10px;"/></i>查 询</div>
+		<div class="close">
+			<img src="images/close.png" width="29" height="29"
+				onclick="javascript:closeAll('webSerachId','fade');"
+				style="cursor: pointer;" />
+		</div>
+		
+			<div class="grid" style="margin:0 auto;">
+			 <div class="row"> 
+			         <div class="span4"><LABEL>平台名称：</LABEL>
+					 <div  class="input-control text" style="width:145px;">
+							<input id="channelsId_" type="text" readonly="readonly" value="请选择"
+								style="width:135px;" onclick="showMenu('channelsId_','channelsIdMenuContentId');" class="publicSize"/> 
+								<input id="channelsId" type="hidden" value="" />
+							<div id="channelsIdMenuContentId" class="menuContent"
+								style="display: none; position: absolute;left:10px; z-index: 99;">
+								<ul id="treeDemo5" name="channelsId_" class="ztree"
+									style="margin-top: 0px; width:135px;margin-left: 0px;padding-left:0px; -moz-user-select: none;"></ul>
+							</div>
+						</div>
+			         </div>
+			      
+			         
+			          <div class="span4"><LABEL>店铺名称：</LABEL>
+					 <div  class="input-control text" style="width:145px;">
+							<input id="shopsId_" type="text" readonly="readonly" value="请选择"
+								style="width:135px;" onclick="showMenu('shopsId_','shopsIdMenuContentId');" class="publicSize"/> 
+								<input id="shopsId" type="hidden" value="" />
+							<div id="shopsIdMenuContentId" class="menuContent"
+								style="display: none; position: absolute;left:10px; z-index: 99;">
+								<ul id="treeDemo3" name = "shopsId_" class="ztree"
+									style="margin-top: 0px; width:135px;margin-left: 0px;padding-left:0px; -moz-user-select: none;"></ul>
+							</div>
+						</div>
+			         </div>
+			        
+			         
+			         <div class="span4"><LABEL>品牌名称：</LABEL>
+					 <div  class="input-control text" style="width:145px;">
+							<input id="brandsId_" type="text" readonly="readonly" value="请选择"
+								style="width:135px;" onclick="showMenu('brandsId_','brandsIdMenuContentId');" class="publicSize"/> 
+								<input id="brandsId" type="hidden" value="" />
+							<div id="brandsIdMenuContentId" class="menuContent"
+								style="display: none; position: absolute;left:10px; z-index: 99;">
+								<ul id="treeDemo4" name="brandsId_" class="ztree"
+									style="margin-top: 0px; width:135px;margin-left: 0px;padding-left:0px; -moz-user-select: none;"></ul>
+							</div>
+						</div>
+					
+			         </div>
+			        
+			</div>
+			
+			
+			<div class="row"> 
+			         <div class="span4"><LABEL>商品名称：</LABEL> <input type="text" id="goodsNameId" class="publicSize"/></div>
+			         
+			          <div class="span4"><LABEL>分配坐席：</LABEL>
+				   <div  class="input-control text" style="width:145px;">
+							<input id="dispatchOperatorsId_" type="text" readonly="readonly" value="请选择"
+								style="width:135px;" onclick="showMenu('dispatchOperatorsId_','dispatchOperatorsIdMenuContentId');" class="publicSize"/> 
+								<input id="dispatchOperatorsId" type="hidden" value="" />
+							<div id="dispatchOperatorsIdMenuContentId" class="menuContent"
+								style="display: none; position: absolute;left:10px; z-index: 99;">
+								<ul id="treeDemo6" name="dispatchOperatorsId_" class="ztree"
+									style="margin-top: 0px; width:135px;margin-left: 0px;padding-left:0px; -moz-user-select: none;"></ul>
+							</div>
+						</div>
+			          </div>
+			        
+			         
+			         <div class="span4"><LABEL>评论内容：</LABEL>
+			          <input class="publicSize" type="text" id="commentContentId" />
+			         </div>
+			</div>
+			
+			
+			<div class="row">
+			 <div class="span4"><LABEL>会员名：</LABEL><input type="text" id="userNameId" class="publicSize"/></div>
+			 <div class="span4"><LABEL>评论时间：</LABEL>
+			 <input type="text" class="Wdate publicSize" id="commentStartTimeId" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" /></div>
+			 <div class="span4"><LABEL>至：</LABEL><input  type="text" class="Wdate publicSize" id="commentEndTimeId" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" /></div>
+			</div>
+			
+			<div class="row">
+			 <div class="span4"><LABEL>回复状态：</LABEL>
+					<div  class="input-control text" style="width:145px;">
+							<input id="replyStatesId_" type="text" readonly="readonly" value="请选择"
+								style="width:135px;" onclick="showMenu('replyStatesId_','replyStateMenuContentId');" class="publicSize"/> 
+								<input id="replyStatesId" type="hidden" value="" />
+							<div id="replyStateMenuContentId" class="menuContent"
+								style="display: none; position: absolute;left:10px; z-index: 99;">
+								<ul id="treeDemo1" name="replyStatesId_" class="ztree"
+									style="margin-top: 0px; width:135px;margin-left: 0px;padding-left:0px; -moz-user-select: none;"></ul>
+							</div>
+						</div>
+			 </div>
+			 
+			 <div class="span4"><LABEL>导入时间：</LABEL><input  type="text" class="Wdate publicSize" id="createStartTimeId" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" /></div>
+			 <div class="span4"><LABEL>至：</LABEL><input type="text" class="Wdate publicSize" id="createEndTimeId" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" /></div>
+			</div>
+			
+			<div class="row">
+			 <div class="span4"><LABEL>评论类型：</LABEL>
+			    <div  class="input-control text" style="width:145px;">
+							<input id="commentLevelsId_" type="text" readonly="readonly" value="请选择"
+								style="width:135px;" onclick="showMenu('commentLevelsId_','commentLevelsMenuContentId');" class="publicSize"/> 
+								<input id="commentLevelsId" type="hidden" value="" />
+							<div id="commentLevelsMenuContentId" class="menuContent"
+								style="display: none; position: absolute;left:10px; z-index: 99;">
+								<ul id="treeDemo2" name="commentLevelsId_" class="ztree"
+									style="margin-top: 0px; width:135px;margin-left: 0px;padding-left:0px; -moz-user-select: none;"></ul>
+							</div>
+				</div>	
+					
+			</div>
+			 <div class="span4"><LABEL>回复时间：</LABEL><input  type="text" class="Wdate publicSize" id="replyStartTimeId" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" /></div>
+			 <div class="span4"><LABEL>至：</LABEL><input type="text" class="Wdate publicSize" id="replyEndTimeId" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" /></div>
+			</div>
+			
+			<div class="row">
+			 <div class="span4"><LABEL>标签：</LABEL><input class="publicSize" type="text" id="tagNameId"/></div>
+			</div>
+
+			<div style="width: 186px; margin: 20px auto">
+				<input class="info" type="submit" value="查询"
+					onclick="queryComment()"/> <input class="warning" type="reset"
+					value="重置" onclick="javascript:reset()" />
+			</div>
+		</div>
+	</div>
+
+	<div id="showTemplateId" class="showTemplate" 
+		style="display: none;">
+		<div class="close">
+			<img src="images/close.png" width="29" height="29"
+				onclick="$('#showTemplateId').toggle()" style="cursor: pointer;" />
+		</div>
+		<div class="zTreeDemoBackground left"
+			style="width: 400px; height: 300px; overflow-y: scroll; border: 0px solid;">
+			<ul id="treeDemo7" class="ztree"></ul>
+		</div>
+	</div>
+	
+	<div class="myReply" id="showReplyId" style="display: none; width: 800px;">
+		<div class="close">
+			<img src="images/close.png" width="29" height="29"
+				onclick="javascript:closeAll('showReplyId','fade');"
+				style="cursor: pointer;" />
+   </div>
+	  <div id="replyId">默认值</div>
+  </div>
+  
+	<div class="myWorkOrder" id="workOrderUpdateId" style="display: none;">
+			<div class="close">
+				<img src="images/close.png" width="29" height="29"
+					onclick="javascript:closeAll('workOrderUpdateId','fade');"
+					style="cursor: pointer;" />
+				
+	        </div>
+	   
+	    <div id="showWorkOrderInfoId" style="display: none;">
+			<div class="close">
+				<img src="images/close.png" width="29" height="29"
+					onclick="javascript:closeAll('showWorkOrderInfoId','fade');"
+					style="cursor: pointer;" />
+			</div>
+	  </div>
+	  
+	  
+	  
+	  <div class="grid fluid" style="margin:0 auto;" >
+	       <div><input type="hidden" id="w_showWorkOrderCommentId"/></div>
+	       <div class="row" >
+	        <div class="span6">
+	         <div class="row">
+	          <div class="span4"><LABEL>平台名称：</LABEL></div> <div class="span8"><input class="publicSize" id="w_channelNameId" type="text" readonly="readonly"/></div>
+	          </div>
+	        </div>
+	        <div class="span6">
+	        <div class="row">
+	         <div class="span4"><LABEL>店铺名称：</LABEL></div><div class="span8"><input class="publicSize" id="w_shopNameId" type="text" readonly="readonly"/></div>
+	         </div>
+	        </div>
+	       </div>
+	       
+	      <div class="row" >
+	        <div class="span6">
+	         <div class="row">
+	          <div class="span4"><LABEL>品牌名称：</LABEL></div> <div class="span8"><input class="publicSize" id="w_brandNameId" type="text" readonly="readonly"/></div>
+	          </div>
+	        </div>
+	        <div class="span6">
+	        <div class="row">
+	         <div class="span4"><LABEL>标签：</LABEL></div><div class="span8"><input class="publicSize" id="w_tagsNameId" type="text" readonly="readonly"/></div>
+	         </div>
+	        </div>
+	       </div>
+	       
+	       <div class="row" >
+	        <div class="span6">
+	         <div class="row">
+	          <div class="span4"><LABEL>分配坐席：</LABEL></div> <div class="span8"><input class="publicSize" id="w_dispatchOperatorNameId" type="text" readonly="readonly"/></div>
+	          </div>
+	        </div>
+	        <div class="span6">
+	        <div class="row">
+	         <div class="span4"><LABEL>商品名称：</LABEL></div><div class="span8"><input class="publicSize" id="w_goodsNameId" type="text" readonly="readonly"/></div>
+	         </div>
+	        </div>
+	       </div>
+	       
+	       <div class="row" >
+	        <div class="span6">
+	         <div class="row">
+	          <div class="span4"><LABEL>优先级：</LABEL></div>
+	          <div class="span8"><select id="w_emergencyLevelId" class="publicSize"><option id="">请选择</option></select></div>
+	          </div>
+	          </div>
+	          
+	          <div class="span6">
+	         <div class="row">
+	          <div class="span4"><LABEL>商品链接：</LABEL></div> <div class="span8"><input class="publicSize" id="w_goodsUrlId" type="text" readonly="readonly"/></div>
+	          </div>
+	        </div>
+	        </div>
+	        
+	        <div class="row" >
+	        <div class="span6">
+	         <div class="row">
+	          <div class="span4"><LABEL>工单类型：</LABEL></div> <div class="span8"><select class="publicSize" id="w_workOrderTypeId"><option id="">请选择</option></select></div>
+	          </div>
+	        </div>
+	        <div class="span6">
+	        <div class="row">
+	         <div class="span4"><LABEL>评论类型：</LABEL></div><div class="span8"><input class="publicSize" id="w_commentLevelId" type="text" readonly="readonly"/></div>
+	         </div>
+	        </div>
+	       </div>
+	       
+	       
+	       <div class="row" >
+	        <div class="span6">
+	         <div class="row">
+	          <div class="span4"><LABEL>邮件组：</LABEL></div> <div class="span8"><select class="publicSize" id="w_emallGroupId" ><option id="">请选择</option></select></div>
+	          </div>
+	        </div>
+	        <div class="span6">
+	        <div class="row">
+	         <div class="span4"><LABEL>评论内容：</LABEL></div><div class="span8"><input class="publicSize" id="w_commentContentId" type="text" readonly="readonly"/></div>
+	         </div>
+	        </div>
+	       </div>
+	       
+	       <div class="row" >
+	        <div class="span6">
+	         <div class="row">
+	          <div class="span4"><LABEL>邮件信息：</LABEL></div> <div class="span8"><input class="publicSize" type="button" value="查看" onclick="showWorkOrderInfo()"/></div>
+	          </div>
+	        </div>
+	        <div class="span6">
+	        <div class="row">
+	         <div class="span4"><LABEL>升级原因：</LABEL></div><div class="span8"><![CDATA[<textarea class="publicSize" id="updateReasonId" cols="30" rows="3"></textarea>]]></div>
+	         </div>
+	        </div>
+	       </div>
+	       <div>
+	       
+	       <div style="width: 186px; margin: 20px auto">
+			 <input type="button" class="info"   value="确定" onclick="saveWorkOrder()"/> 
+			 <input type="button" class="warning" value="取消" onclick="javascript:closeAll('workOrderUpdateId','fade');"/>
+			</div>
+	         
+	       </div>
+			
+	       </div>
+	     
+  </div>
+  
+  
+  <div class="myWorkOrderInfoDetail" id="showWorkOrderInfoDetailId" style="display: none;">
+		<div class="close">
+			<img src="images/close.png" width="29" height="29"
+				onclick="javascript:$('#showWorkOrderInfoDetailId').hide();"
+				style="cursor: pointer;" />
+			
+   </div>
+   
+  <div style="height: 40px;line-height: 40px;font-family: '微软雅黑';font-size:16px;">
+        电商工单升级邮件
+  </div>
+  <div id="showWorkOrderInfoDetailId_"><!--  --></div>
+  </div>
+  
+  
+	
+<div id="fade" class="black_overlay">默认值</div>
+	
+ <script type="text/javascript">
+ <![CDATA[
+	 var html = "";
+	 var transFerCommentIds;
+	 function showTransferDialog(title,checkBoxId) {
+		 transFerCommentIds = new Array();
+		 var channelId = '' ,brandId = '',replyState;
+		 if(checkBoxId == ''){ //批量转移,从选中的checkbox里获取参数
+			 var flag = true;
+				$("[name = checkbox]:checkbox").each(function() {
+					if ($(this).prop('checked')) {
+						var jsonStr = eval("(" + $(this).val() + ")");
+						 if(jsonStr.replyState == '已回复'){
+						   alert("不能选择已回复的评论!");
+						   flag = false;
+						   return false
+						 }
+						if (brandId == '') {
+							brandId = jsonStr.brandId;
+						} else {
+							if (brandId != jsonStr.brandId) {
+								alert("品牌不一致!");
+								flag = false;
+								return false
+							}
+						}
+						
+						if (channelId == '') {
+							channelId = jsonStr.channelId;
+						} else {
+							if (channelId != jsonStr.channelId) {
+								alert("渠道不一致!");
+								flag = false;
+								return false
+							}
+						}
+						transFerCommentIds.push(jsonStr.commentId);
+						
+					}
+				});
+
+				if (!flag) {
+				   transFerCommentIds = null;
+					return;
+				}
+				
+			 
+		 }else{ //单个转移，从checkbox里获取相关数据
+			 var str = $("#"+checkBoxId).val();
+			 var jsonStr = eval("("+str+")"); 
+			 channelId = jsonStr.channelId;
+			 brandId = jsonStr.brandId;
+			 transFerCommentIds.push(jsonStr.commentId);
+		 }
+		
+		if(channelId==''){
+			alert("请选择评论！");
+			return;
+		}
+		 
+		if(brandId==''){
+			alert("选择记录！");
+			return;
+		}
+		
+		$.Dialog({
+				overlay : true,
+				shadow : true,
+				flat : true,
+				icon : '<img src="images/turn_move.png"/>',
+				title : title,
+				content : '',
+				padding : 20,
+				width : 300,
+				onShow : function(_dialog) {
+					if(html==""){
+					  html = $("#transferDialogId").html();
+					  $("#transferDialogId").remove();
+					}
+					$.Dialog.content(html);
+					$.Metro.initInputs();
+					
+					getTransferOper($.Dialog,channelId,brandId);
+				}
+			});
+	 }
+	 
+	    /**
+		 *转移
+		 */
+		function getTransferOper(obj,channelId,brandId){
+	    	var param = {
+				channelId:channelId,
+				brandId:brandId
+				};
+	    	
+				$.ajax({
+					url : "/ump/voccomments/getTransferOperator",
+					type : "POST",
+					data : param,
+					error : function(msg) {
+						alert("请求错误! ");
+					},
+					success : function(text) {
+						var jsonStr = eval("(" + text + ")");
+						var buttonStr = '<br/><div style="text-align:center;margin-top:90px;"><input type="button" value="确定" class="info" onclick="doTransfer()"/><input type="button" value="取消" class="warning" onclick="$.Dialog.close()"/></div>';
+						var operators = "";
+						var flag = true;
+						$.each(jsonStr,function(id,data){
+							if(flag){
+								operators += '<div style="width:50%;overflow:hidden;float:left;"><input type="radio" name="transforOperator" value="'+data.id+'" checked="checked" style="width:15px;height:15px;margin-right:10px;" />'+data.name+"</div>";
+							 flag = false;
+							}else{
+								operators += '<div style="width:50%;overflow:hidden;float:left"><input type="radio" name="transforOperator" value="'+data.id+'" style="width:15px;height:15px;margin-right:10px;" />'+data.name+"</div>";	
+							}
+							
+						});
+						obj.content(operators+buttonStr);
+					}
+				});
+				 
+		}
+	    
+	    /**
+	    * 提交转移数据
+	    */
+	  function doTransfer(){
+		  var operatorId = $('input:radio:checked').val();
+		    var param = {
+			  operatorId:operatorId,
+			  commentIds:transFerCommentIds.join()
+			 };
+		    	
+		    $.ajax({
+				url : "/ump/voccomments/doTransfer",
+				type : "POST",
+				data : param,
+				error : function(msg) {
+					alert("请求错误! ");
+				},
+				success : function(text) {
+					var jsonStr = eval("(" + text + ")");
+					if(jsonStr.success){
+					 alert("操作成功!");
+					 queryComment($("#page").val());
+					 $.Dialog.close();	
+					}
+				}
+			});				
+					 
+		  transFerCommentIds = null;
+	  }
+
+	  function changeNumTips(_this){
+			var txt =   _this.value  ;
+			var spans = $("#numbertips");
+			
+			if(txt.length == 0){
+				spans[0].innerText = "500";
+			}else{
+				var remain = 500 - txt.length;
+				if(remain < 0){
+					remain = 0 ;
+					var val =  txt.substr(0,500);
+					_this.value = val ; 
+				}
+				spans[0].innerHTML = remain;
+			}
+			
+			//重新显示 限制字符
+			var key = "commentId_"+$("#hiddenReplyId").val();
+			var json_ = localStorage.getItem(key);
+			if(json_){
+				var jsonStr = JSON.parse(json_);
+				jsonStr.replyContent = txt;
+				removeObjByKey(jsonStr.commentId);
+				saveObj(jsonStr);
+			}
+			
+		}
+	  
+	  //排序改变
+	  function changeSort(id){
+		 var cssVal = $("#"+id).attr("class");
+		  
+		if(cssVal == 'text-left sorting_asc'){
+			$("#"+id).attr("class","text-left sorting_desc");
+			fieldSortInfo = '[{"id":"'+id+'","value":"text-left sorting_desc"}]';
+		}else{
+			$("#"+id).attr("class","text-left sorting_asc");
+			fieldSortInfo = '[{"id":"'+id+'","value":"text-left sorting_asc"}]';
+		}
+		
+		queryComment($("#page").val());
+		
+	  }
+	  
+	  ]]>	
+	</script>
+	
+  <div id="fade" style="display: none">
+  <!--  -->
+  </div>	
+  
+</div>
+
+

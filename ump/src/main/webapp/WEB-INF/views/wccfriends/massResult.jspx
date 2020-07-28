@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	 xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<style>
+		.imgc{
+			width:60px;
+			height:60px;
+			margin-top: 20px;
+			margin-bottom: 20px
+		}
+	</style>
+	<script src="/ump/js/jquery.widget.min.js" type="text/javascript"><!-- required for FF3 and Opera --></script>
+	<script src="/ump/ui/metro/js/metro.min.js" type="text/javascript"><!-- required for FF3 and Opera --></script>
+	<SCRIPT type="text/javascript">
+	function changeState2(url) {
+		var myAuto = document.getElementById('myaudio');
+		$("#myaudio").attr("src", url);
+		myAuto.play();
+	}
+	</SCRIPT>
+<div style="overflow:auto;">
+<table id="ss" class ="table striped hovered">
+		<tbody>
+			<c:if test="${empty wccMassMessage}">
+				<tr>
+					<td>没有群发信息</td>
+				</tr>
+			</c:if>
+			<c:forEach var="massMsg" items="${wccMassMessage}">
+				<tr>
+					<c:if test="${massMsg.type == 1 }">
+						<td>
+							<div style="float: left;">
+								<img src="/ump/images/text.png" class="imgc" />
+							</div>
+							<div style="float: left;margin-left: 20px">
+								<ul>
+									<li><c:if test="${fn:length(massMsg.content) gt 20 }"><div class="text-center" style="word-wrap : break-word; 
+word-break: break-all;" data-hint="[文字]|${massMsg.content}">${fn:substring(massMsg.content,1,20)}...</div></c:if>
+										<c:if test="${fn:length(massMsg.content) lt 20 }">${massMsg.content}</c:if></li>
+								</ul>
+							</div>
+						</td>
+					</c:if>
+					<c:if test="${massMsg.type == 2 }">
+						<td>
+							<div style="float: left;">
+								<img src="${massMsg.material.thumbnailUrl }" class="imgc" />
+							</div>
+							<div style="float: left;margin-left: 20px">
+								<ul>
+									<li>[图片]${massMsg.material.title }</li>
+								</ul>
+							</div>
+						</td>
+					</c:if>
+					<c:if test="${massMsg.type == 3 }">
+						<td>
+							<div style="float: left;">
+								<video class="imgc" controls="controls" src="${massMsg.material.thumbnailUrl }">您的浏览器不支持此种视频格式。</video>
+							</div>
+							<div style="float: left;margin-left: 20px">
+								<ul>
+									<li>[视频]${massMsg.material.title }</li>
+								</ul>
+							</div>
+						</td>
+					</c:if>
+					<c:if test="${massMsg.type == 4 }">
+						<td>
+							<div style="float: left;">
+								<div onclick="changeState2('${massMsg.material.thumbnailUrl}');">
+									<img class="imgc" src="/ump/resources/images/sound_03.png"/>
+								</div>
+							</div>
+							<div style="float: left;margin-left: 20px">
+								<ul>
+									<li>[语音]${massMsg.material.title }</li>
+								</ul>
+							</div>
+						</td>
+					</c:if>
+					<c:if test="${massMsg.type == 5 }">
+						<td>
+							<div style="float: left;">
+								<img src="${massMsg.material.thumbnailUrl }" class="imgc" />
+							</div>
+							<div style="float: left;margin-left: 20px">
+								<ul>
+									<li>[图文消息]${massMsg.material.title }</li>
+									<c:forEach items="${massMsg.material.children }" var="child">
+										<li>[图文消息]${child.title }</li>
+									</c:forEach>
+								</ul>
+							</div>
+						</td>
+					</c:if>
+						<td>
+							<fmt:formatDate value="${massMsg.insertTime }" pattern="MM月dd号 HH:mm" />
+						</td>
+				</tr>
+			</c:forEach>
+			<audio id="myaudio" src="" controls="controls"
+										hidden="true" style="display: none;">您的浏览器不支持此播放器。
+									</audio>
+		</tbody>
+	</table>
+
+		<div style="float:right;">
+			<input id="pageNum" type="hidden" value="${page}" />
+			<c:if test="${page>1 }">
+				<a class="default" href="#" onclick="massMessageList(1)"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px">
+					<img alt="首页" src="/ump/resources/images/resultset_first.png" title="首页" style="float:left"/>
+				</a>
+				<a class="default"
+					href="javascript:void(0);" onclick="massMessageList(${page-1})"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px">
+					<img alt="前一页" src="/ump/resources/images/resultset_previous.png" title="前一页" style="float:left"/>
+				</a>
+			</c:if>
+			<c:if test="${wccMassMessage!= null and fn:length(wccMassMessage) > 0}">
+				<TFOOT>
+					<span style="color: #069dd5; height: 22px; line-height: 22px;float:left;padding-left: 6px">${page}</span>
+					<span style="float:left;padding-top: 4px;padding-left: 6px"> /</span>
+					<span style="color: #069dd5;float:left;padding-top: 4px;padding-left:6px">${maxPages}</span>
+					<input type="text" value="" style="width: 30px; height: 22px;float:left;margin-left:6px" id="pageStr" />
+					<a href="javascript:void(0);"
+						style="width: 28px; height: 22px; background-color: #069dd5; color: white; display: inline-block; font-family: Arial; font-size: 10px; line-height: 22px; text-align: center; cursor: pointer;float:left"
+						onclick="goPage(${maxPages});">GO</a>
+
+				</TFOOT>
+			</c:if>
+			<c:if test="${page!=maxPages}">
+				<a class="default"
+					href="javascript:void(0);" onclick="massMessageList(${page+1})"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left:6px"> 
+					<img alt="下一页" src="/ump/resources/images/resultset_next.png" title="下一页" style="float:left"/>
+				</a>
+				<a class="default"
+					href="javascript:void(0);" onclick="massMessageList(${maxPages})"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px">
+					<img alt="末页" src="/ump/resources/images/resultset_last.png" title="末页" style="float:left"/>
+				</a>
+			</c:if>
+			<span style="float:left;padding-top: 3px;padding-left: 6px">每页<span  style="color:#069dd5;">${limit}</span>条</span>
+		</div>
+	</div>
+	<style>
+		.metro .button .ztree{
+ 			padding: 0px;
+ 		}
+ 		box-sizing:content-box;
+ 		 input[type="checkbox"]{
+ 	width:20px;
+ }
+	</style>
+</div>

@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <style>@IMPORT url("/ump/styles/selectTree.css");</style>
+	<SCRIPT type="text/javascript" src="/ump/js/selectUmpChannelTree.js">/*selectTree*/</SCRIPT><!-- 加载平台 -->
+	<SCRIPT type="text/javascript" src="/ump/js/selectVocShopsTree.js">/*selectTree*/</SCRIPT><!-- 加载店铺 -->
+	<SCRIPT type="text/javascript" src="/ump/js/selectVocBrandTree.js">/*selectTree*/</SCRIPT><!-- 加载品牌 -->
+	<SCRIPT type="text/javascript" src="/ump/js/selectVocAccountTree.js">/*selectTree*/</SCRIPT><!-- 加载账号 -->
+	<SCRIPT type="text/javascript" src="/ump/js/selectStoreOrPubTree.js">/*selectTree*/</SCRIPT><!-- 加载公众平台 -->
+    <style>
+    	input,select{
+			width: 135px;
+			height: 28px;
+			border: 1px solid #e4e4e4;
+		}
+    </style>
+    <script type="text/javascript">
+	<![CDATA[
+		$(document).ready(function() {
+			loadUmpChannelTree('/ump/umpchannels/tree','${umpChannels}');//加载平台
+			loadVocShopsTree('/ump/vocshops/tree','${vocShopIds}',false,'${umpChannels}');//加载店铺
+			loadVocBrandTree('/ump/vocbrands/tree','${vocBrandIds}',false,'${vocShopIds}');//加载品牌
+			loadVocAccountTree('/ump/vocaccounts/tree','${vocAccounts}',false,'${vocShopIds}');//加载电商账号
+			
+			loadTree('/ump/wccplatformusers/tree','${platformUserIds}');//加载公众平台
+		});
+		
+		function changeOnOff() {
+			if ($("#active").val() == "true") {
+				$("#activeOn").hide();
+				$("#activeOff").show();
+				$("#active").val("false");
+			} else {
+				$("#activeOn").show();
+				$("#activeOff").hide();
+				$("#active").val("true");
+			}
+		}
+		
+		function returnForm(){
+			var vocChannIds = $("#vocChannIds").val();
+			var vocShopIds = $("#vocShopIds").val();
+			var vocBrandIds = $("#vocBrandIds").val();
+			var vocAccountIds = $("#vocAccountIds").val();
+			if($.trim(vocChannIds) == ""){
+				$("#channelMsg").html("请选择平台");
+				return false;
+			}
+			if($.trim(vocShopIds) == " "){
+				$("#vocShopMsg").html("请选择店铺")
+				return false;
+			}
+			if($.trim(vocBrandIds) == ""){
+				$("#vocBrandMsg").html("请选择品牌");
+				return false;
+			}
+			if($.trim(vocAccountIds) == ""){
+				$("#vocAccountMsg").html("请选择电商账号");
+				return false;
+			}
+			$("#vocForm").submit();
+		}
+		
+		function commWcc(){
+			var platStr = $("#SelIds").val();
+			if($.trim(platStr) == ""){
+				$("#platformMsg").html("请选择需要分配的公众号！");
+				return;
+			}
+			$("#wccStr").submit();
+		}
+		
+		//改变账号类型后加载不同的公众平台
+	  function changeThePlatform(){
+		var selectplattype = $('#plattype>option:selected').attr("value");
+		
+		loadTheNewTree('/ump/wccplatformusers/newtree','${platformUserIds}');//加载公众平台 
+		//loadTree('/ump/wccplatformusers/newtree','${platformUserIds}',selectplattype);
+	  }
+		
+		]]>		
+	 </script>
+    <div class="tab-control" data-role="tab-control">
+		    <ul class="tabs">
+		    	<c:forEach items="${companyProducts}" var="data">
+		    		<li>	
+		    			<a href="#_page_${data.id}">${data.productName}</a>
+		    		</li> 
+		    	</c:forEach>
+		    </ul>
+		    
+		     <div class="frames">
+		   		 <c:forEach items="${companyProducts}" var="data">
+		    		 <div class="frame" id="_page_${data.id}" style="height: 400px;">
+		        		<c:if test="${data.id == 3}">
+		        			<div class="grid">
+				    			<form action="/ump/puboperators/disSkillWccOper" method="post" id="wccStr">
+				    			<input type="hidden" name="id" value="${pubOperator.id}" />
+				    			<input type="hidden" name="page" value="${page}" />
+				    			<input type="hidden" name="size" value="${size}" />
+					    			<div class="row">
+					    				<div class="span12">
+					    					<label>公众平台：</label>
+											<div class="input-control text" style="width:135px;">
+												<input id="SelVals" type="text" readonly="readonly"
+													value="" style="width: 135px;" onclick="selectShowMenu();" /> 
+												<input id="SelIds" name="relatedIssues" type="hidden" value="" />
+												<div id="selectMenuContent" class="menuContent"
+													style="display: none; position: absolute; z-index: 99;">
+													<ul id="selectTreeDemo" class="ztree"
+														style="margin-left: 0px; margin-top: 0; width: 270px; height: 300px;"></ul>
+												</div>
+											</div>
+					    					<span style="color:red;padding-left:5px;" id="platformMsg" ></span>
+					    				</div>
+					    			</div>
+					    			<div class="row">
+					    				<div class="span6" style="margin-left: 40px;"> 
+											<input type="button" value="确定" class="info" onclick="commWcc();"/>
+											<input class="warning" type="button" value="返 回" style="font-family:'微软雅黑'" onclick="history.back(-1)"></input>
+									   </div>
+					    			</div>
+				    			</form>
+		    				</div>
+		        		</c:if>
+		        		<c:if test="${data.id == 2}">
+		        			<div class="grid">
+		        				<form action="/ump/puboperators/disSkillOperVOC" method="post" id="vocForm">
+				   		 		<input type="hidden" name="id" value="${pubOperator.id}" />
+				   		 		<input type="hidden" name="page" value="${page}" />
+				    			<input type="hidden" name="size" value="${size}" />
+				   		 		<div class="row">
+				   		 			<div class="span6">
+				   		 				<label>平台：</label>
+				   		 				<div class="input-control text" style="width:135px;">
+												<input id="channelVals" type="text" readonly="readonly"
+													value="" style="width: 135px;" onclick="selectVocChannMenu();" /> 
+												<input id="vocChannIds" name="vocChannel" type="hidden" value="${umpChannels}" />
+												<div id="selectvocChannContent" class="menuContent"
+													style="display: none; position: absolute; z-index: 99;">
+													<ul id="selectVocChannTreeDemo" class="ztree"
+														style="margin-left: 0px; margin-top: 0; width: 200px; height: 150px;">
+													</ul>
+												</div>
+										</div>
+					    				<span style="color:red;padding-left:5px;" id="channelMsg" ></span>
+				   		 			</div>
+				   		 		</div>
+				   		 		<div class="row">
+				   		 			<div class="span6">
+				   		 				<label>店铺：</label>
+							   		 	<div class="input-control text" style="width:135px;">
+												<input id="vocShopVals" type="text" readonly="readonly"
+													value="" style="width: 135px;" onclick="selectVocShopMenu();" /> 
+												<input id="vocShopIds" name="vocShop" type="hidden" value="${vocShopIds}" />
+												<div id="selectVocShopContent" class="menuContent"
+													style="display: none; position: absolute; z-index: 99;">
+													<ul id="selectVocShopTreeDemo" class="ztree"
+														style="margin-left: 0px; margin-top: 0; width: 200px; height: 150px;">
+													</ul>
+												</div>
+										</div>
+					    				<span style="color:red;padding-left:5px;" id="vocShopMsg" ></span>
+				   		 			</div>
+				   		 		</div>
+				   		 		<div class="row">
+				   		 			<div class="span6">
+				   		 				<label>品牌：</label>
+				   		 				<div class="input-control text" style="width:135px;">
+												<input id="vocBrandVals" type="text" readonly="readonly"
+													value="" style="width: 135px;" onclick="selectVocBrandMenu();" /> 
+												<input id="vocBrandIds" name="vocBrand" type="hidden" value="${vocBrandIds}" />
+												<div id="selectVocBrandContent" class="menuContent"
+													style="display: none; position: absolute; z-index: 99;">
+													<ul id="selectVocBrandTreeDemo" class="ztree"
+														style="margin-left: 0px; margin-top: 0; width: 200px; height: 150px;">
+													</ul>
+												</div>
+										</div>
+					    				<span style="color:red;padding-left:5px;" id="vocBrandMsg" ></span>
+				   		 			</div>
+				   		 		</div>
+				   		 		<div class="row">
+				   		 			<div class="span6" id="tests">
+				   		 				<label>电商账号：</label>
+				   		 				<div class="input-control text" style="width:135px;">
+												<input id="vocAccountVals" type="text" readonly="readonly"
+													value="" style="width: 135px;" onclick="selectVocAccountMenu();" /> 
+												<input id="vocAccountIds" name="vocAccount" type="hidden" value="${vocAccounts}" />
+												<div id="selectVocAccountContent" class="menuContent"
+													style="display: none; position: absolute; z-index: 99;">
+													<ul id="selectVocAccountTreeDemo" class="ztree"
+														style="margin-left: 0px; margin-top: 0; width: 200px; height: 150px;">
+													</ul>
+												</div>
+										</div>
+					    				<span style="color:red;padding-left:5px;" id="vocAccountMsg" ></span>
+				   		 			</div>
+				   		 		</div>
+				   		 		<div class="row">
+				   		 			<div class="span6">
+				    					<label style="width: 120px;">是否自动分配：</label>
+					    				<input id="active" type="hidden" name="autoAllocate" value="true" />
+										<img id="activeOn" onclick="changeOnOff()" src="/ump/images/ON.png" />
+										<img src="/ump/images/OFF.png" id="activeOff" onclick="changeOnOff();" style="display: none;"/>
+				    				</div>
+				   		 		</div>
+				    			<div class="row">
+					    			<div class="span6" style="margin-left: 40px;"> 
+											<input type="button" value="确定" class="info" onclick="returnForm();"/>
+											<input class="warning" type="button" value="返 回" style="font-family:'微软雅黑'" onclick="history.back(-1)"></input>
+									  </div>
+					    		</div>
+					    		</form>
+				   		 	</div>
+		        		</c:if>
+		        		<c:if test="${data.id == 4}">
+		        			<div class="grid">
+				    			<div class="row">
+				    				<div class="span3">
+				    					<lable>业务类型：</lable>
+				    					<select name="" style="width: 100px;">
+				    						<option value="1">咨询</option>
+				    						<option value="2">解答</option>
+				    					</select>
+				    				</div>
+				    				<div class="span3">
+				    					<label>是否自动分配</label>
+				    					<div class="input-control switch">
+											<label style="width: auto;"> 
+												<input type="checkbox" checked="checked" name=""/>
+											<span class="check"></span>
+											</label>
+										</div>
+				    				</div>
+				    			</div>
+				    			<div class="row" id="maxSize">
+				    				<div class="span12">
+				    					<label>最大分配数：</label><input type="text" name="" value="" />
+				    				</div>
+				    			</div>
+				    			<div class="row">
+					    				<div class="span3">
+											<input type="button" value="确定" onclick="returnForm();return false;"  class="info" style="width: 70px; margin-right: 30px;" /> 
+											<input type="reset" value="重置" style="width: 70px;" />
+										</div>
+					    		</div>
+				    		</div>
+		        		</c:if>
+					</div>
+		    	</c:forEach>
+		     </div>
+    </div>
+    
+</div>

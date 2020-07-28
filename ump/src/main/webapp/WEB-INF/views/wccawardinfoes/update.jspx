@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_nineclient_model_WccAwardInfo" modelAttribute="wccAwardInfo" path="/wccawardinfoes" versionField="Version" z="CMGAPQaXHIRCOgclqJIBW840N5I=">
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_WccAwardInfo_isDeleted" z="YPT9QHqwKXBKBd8QQBOXgHprDI8="/>
+        <field:textarea field="awardName" id="c_com_nineclient_model_WccAwardInfo_awardName" required="true" z="n72+tKVBqgT8rZSZTH1Wd65Ojxg="/>
+        <field:textarea field="awardInfo" id="c_com_nineclient_model_WccAwardInfo_awardInfo" required="true" z="uq6kEEH0GZDST5UItmsjZ7QLbns="/>
+        <field:input field="winRate" id="c_com_nineclient_model_WccAwardInfo_winRate" required="true" z="9ixPvTyhgZrmumOsXZ6e1GvAqHE="/>
+        <field:textarea field="cdkey" id="c_com_nineclient_model_WccAwardInfo_cdkey" required="true" z="Fe7la9ZImP3cANEUn8/J92wmNg4="/>
+        <field:input field="awardNum" id="c_com_nineclient_model_WccAwardInfo_awardNum" required="true" z="iuPSIysoSKJ6wu72jKAMs4TMaqk="/>
+    </form:update>
+</div>

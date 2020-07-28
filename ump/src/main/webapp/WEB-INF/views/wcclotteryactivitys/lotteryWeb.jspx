@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+<jsp:directive.page contentType="text/html;charset=UTF-8"/>
+<jsp:output omit-xml-declaration="yes"/>
+<style>
+	*{padding:0;margin:0}
+	body{text-align:center}
+	.ly-plate{ width:100%; max-width:640px; height:auto;position:relative;  clear:both;margin:0px auto; margin-top:10px; z-index:5}
+    .ly-plate img{ width:90%;margin-left:5%}
+	.ly-plate div.lottery-star{width:100%; height:auto;outline:none; z-index:99}
+	.ly-plate div.lottery-star img{ width:58%; height:auto; margin:0px auto;}
+	.ly-plate div.lottery-star
+	.bg{width:100%; max-width:640px; min-width:320px; height:100%; background:rgba(0,0,0,0.7); position:fixed; left:0px; top:0px; z-index:5; }
+	.tc{width:50%; clear:both; background:#FFF; position:absolute; top:30%; z-index:10;left:10%;}
+	.tishi{background-color: red;color: white;font-size: 16px;font-style:微软雅黑;padding-left: 2.5%;}
+</style>
+<script src="/ump/js/lottery/jquery.easing.min.js"><!-- jquery --></script>
+<script src="/ump/js/lottery/jQueryRotate.2.2.js"><!-- lottery --></script>
+	<div style=" width: 100%; max-width: 640px;margin: 0px auto; ">
+		<div class="grid" align="center">
+			<input type="hidden" id="oneProbability" value="${award1.winRate }"/>
+			<input type="hidden" id="twoProbability" value="${award2.winRate }"/>
+			<input type="hidden" id="threeProbability" value="${award3.winRate }"/>
+			<input type="hidden" id="fourProbability" value="${award4.winRate }"/>
+			<input type="hidden" id="fiveProbability" value="${award5.winRate }"/>
+			<input type="hidden" id="sixProbability" value="${award6.winRate }"/>
+			<input type="hidden" id="oneAwardInfo" value="${award1.awardInfo }"/>
+			<input type="hidden" id="twoAwardInfo" value="${award2.awardInfo }"/>
+			<input type="hidden" id="threeAwardInfo" value="${award3.awardInfo }"/>
+			<input type="hidden" id="fourAwardInfo" value="${award4.awardInfo }"/>
+			<input type="hidden" id="fiveAwardInfo" value="${award5.awardInfo }"/>
+			<input type="hidden" id="sixAwardInfo" value="${award6.awardInfo }"/>
+			<input type="hidden" id="noAwardInfo" value="${lotteryActivity.repeatAwardReply }"/>
+			<input type="hidden" id="friendId" value="${friendId }"/>
+			<input type="hidden" id="lotteryId" value="${lotteryActivity.id }"/>
+			<input type="hidden" id="platformUserId" value="${platformUserId }"/>
+			<input type="hidden" id="lotteryNumber" value="${lotteryActivity.lotteryNum }"/>
+			<input type="hidden" id="lotteryDayNum" value="${lotteryActivity.lotteryDayNum }"/>
+			<input type="hidden" id="userNumber" value="${number }"/>
+			<input type="hidden" id="flag" value="${flag }"/>
+		    <input type="hidden" id="dayNumbers" value="${daynNumber }"/>
+			<div class="row">
+				<div class="ly-plate">
+					<div class="rotate-bg" ><img src="/ump/images/lottery/ly-plate.png"/></div>
+					<div class="lottery-star"><img src="/ump/images/lottery/rotate-static.png" id="lotteryBtn" style="position: absolute;top:18%;left:20.5%;"/></div>
+				</div>
+			</div>
+			<div class="row" style="border-radius:10px;border: 3px solid red;padding-bottom: 16px;">
+				<fieldset>
+					<legend  class="tishi">奖项设置</legend>
+						<div style="border: 1px dashed red;width: 95%;margin: 0px auto;padding: 1%;">
+							<span>一等奖：${award1.awardName }</span><br/>
+							<span>二等奖：${award2.awardName }</span><br/>
+							<span>三等奖：${award3.awardName }</span><br/>
+							<span>四等奖：${award4.awardName }</span><br/>
+							<span>五等奖：${award5.awardName }</span><br/>
+							<span>六等奖：${award6.awardName }</span>
+						</div>
+				</fieldset>
+			</div>
+			<div class="row" style="border-radius:10px;border: 3px solid red;;padding-bottom: 16px;">
+				<fieldset>
+					<legend class="tishi">活动说明</legend>
+						<div style="border: 1px dashed red;width: 95%;margin: 0px auto;padding: 1%;">
+							<span style="color:red;">本次活动可以转${lotteryActivity.lotteryNum } 次！
+								<c:if test="${lotteryActivity.lotteryDayNum gt 0}">
+									每日可以转${lotteryActivity.lotteryDayNum}次！
+								</c:if>
+							你已经转了<span id = "userNumbers">${number }</span>次，如果已中奖，则不可再转！
+							</span><br/>
+							<span>${lotteryActivity.activityIntroduction }</span>
+						</div>	
+				</fieldset>
+			</div>
+		</div>
+	</div>
+	<div id="tdiv" class="grid tc fluid" style="width:80%;display: none;">
+		<div class="row">
+			<div class="span12" style="text-align: center;">
+				<span id="awardid_" style="color: red"></span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="span12" style="text-align: center;">
+				兑奖SN:<span id="snid_"></span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="span12" style="text-align: center;">
+				<input id="tel" type="text" value="" style='height:30px;border-radius:0px;-webkit-appearance:none;appearance:none;border: 1px solid #e5e5e5;' placeholder='请输入您的手机号码'/>
+			</div>
+		</div>
+		<div class="row" style="margin-bottom: 10px;">
+			<div class="span12" style="text-align: center;">
+				<button class='info' onclick='lucky()'>提交</button> <button class='warning' onclick='qx()'>取消</button>
+			</div>
+		</div>
+	</div>
+	<div id="bdiv" class="bg" style="display: none"></div>
+<script>
+<![CDATA[
+document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+	WeixinJSBridge.call('hideOptionMenu');
+});
+var sncode = '';
+$(function(){
+	var oneProbability = $('#oneProbability')[0].value;//一等奖概率
+	var twoProbability = $('#twoProbability')[0].value;//二等奖概率
+	var threeProbability = $('#threeProbability')[0].value;//三等奖概率
+	var fourProbability = $('#fourProbability')[0].value;//四等奖概率
+	var fiveProbability = $('#fiveProbability')[0].value;//五等奖概率
+	var sixProbability = $('#sixProbability')[0].value;//六等奖概率
+	var oneAwarInfo = $('#oneAwardInfo')[0].value;//一等奖中奖信息
+	var twoAwarInfo = $('#twoAwardInfo')[0].value;//二等奖中奖信息
+	var threeAwarInfo = $('#threeAwardInfo')[0].value;//三等奖中奖信息
+	var fourAwarInfo = $('#fourAwardInfo')[0].value;//四等奖中奖信息
+	var fiveAwarInfo = $('#fiveAwardInfo')[0].value;//五等奖中奖信息
+	var sixAwarInfo = $('#sixAwardInfo')[0].value;//六等奖中奖信息
+	var noAwardInfo = $('#noAwardInfo')[0].value;//未中奖信息
+	var friendId = $('#friendId')[0].value;//粉丝ID
+	var platformUserId = $('#platformUserId')[0].value;//公众平台ID
+	var lotteryId = $('#lotteryId')[0].value;//抽奖活动ID
+	var lotteryNumber = $('#lotteryNumber')[0].value;//总抽奖次数
+	var lotteryDayNum = $('#lotteryDayNum')[0].value;//每日可抽奖次数
+	var userNumber = $('#userNumber')[0].innerHTML;//粉丝已抽奖次数
+	var userflag = $('#flag')[0].value;//用户是否中奖
+	var numbers = 0;
+	var dayNumbers = 0;//每日抽奖次数
+	var flag = false;
+	var rotateFunc = function(awards,angle,text){  //awards:奖项，angle:奖项对应的角度
+		$('#lotteryBtn').stopRotate();
+		$("#lotteryBtn").rotate({
+			angle:0, 
+			duration: 5000, 
+			animateTo: angle+1440, //angle是图片上各奖项对应的角度，1440是我要让指针旋转4圈。所以最后的结束的角度就是这样子^^
+			callback:function(){
+				flag = false;
+				//userflag = 'true';
+				$('#userNumbers')[0].innerHTML=numbers;
+			
+				if(awards=='0'){
+					userflag = 'false'
+					$.Dialog({
+					overlay : true,
+					shadow : true,
+					flat : true,
+					title : 'Flat window',
+					content : '',
+					padding : 10,
+					onShow : function(_dialog) {
+						var content = "<div><span style='color:red;'>"+noAwardInfo+"</span></div>";
+						$.Dialog.title("提示");
+						$.Dialog.content(content);
+						$.Metro.initInputs();
+					}
+					});
+				}else{
+					userflag = 'true';
+					$('#awardid_').html(text);
+					$('#snid_').html(sncode);
+					$('#tdiv').css('display','block');
+					$('#bdiv').css('display','block');
+				}
+			}
+		}); 
+	};
+	
+	$("#lotteryBtn").rotate({ 
+	   bind: 
+		 { 
+			click: function(){//点击抽奖
+				if(userflag=='true'){
+					$.Dialog({
+					overlay : true,
+					shadow : true,
+					flat : true,
+					title : 'Flat window',
+					content : '',
+					padding : 10,
+					onShow : function(_dialog) {
+						var content = "<div><span style='color:red;'>您已经中奖过一次，不能再抽了，下次再来吧！</span></div>";
+						$.Dialog.title("提示");
+						$.Dialog.content(content);
+						$.Metro.initInputs();
+					}
+					});
+					return;
+				}
+			    dayNumbers = $('#dayNumbers').val();//每日抽奖次数
+				if(lotteryDayNum == dayNumbers&&dayNumbers!=0){
+					$.Dialog({
+					overlay : true,
+					shadow : true,
+					flat : true,
+					title : 'Flat window',
+					content : '',
+					padding : 10,
+					onShow : function(_dialog) {
+						var content = "<div><span style='color:red;'>你每日的抽奖次数已用完.</span></div>";
+						$.Dialog.title("提示");
+						$.Dialog.content(content);
+						$.Metro.initInputs();
+					}
+					});
+					return;
+				}
+				if(flag){//本次抽奖还没转完
+						return;
+				}
+				userNumber = $('#userNumbers')[0].innerHTML;
+				if(userNumber == lotteryNumber){//粉丝已无抽奖次数
+					return;
+				}
+				flag = true;
+				var id = 5;
+					$.ajax({
+    				url:"/ump/wcclotteryactivitys/lotteryClick",
+    				type:"Post",
+    				data:{'id':id,'oneProbability':oneProbability,'twoProbability':twoProbability,
+    				'threeProbability':threeProbability,'fourProbability':fourProbability,
+    				'fiveProbability':fiveProbability,'sixProbability':sixProbability,
+    				'friendId':friendId,'platformUserId':platformUserId,'lotteryId':lotteryId,'lotteryNumber':lotteryNumber},
+    				dataType:"json",
+    				error:function(msg){
+    				},
+    				success:function(data){
+    					sncode = data.snCode;//中奖sn码
+    					numbers = data.number;//粉丝已抽奖次数
+    					$('#userNumbers').text(data.number);
+    					$('#dayNumbers').val(data.dayNumber);//每日可抽奖次数
+    					if(data.awardLevel=='1'){//一等奖
+    						number = Math.floor(Math.random()*45);//一等奖转的角度
+							rotateFunc(1,number,oneAwarInfo)
+						}
+						if(data.awardLevel=='2'){//二等奖
+							number = Math.floor(Math.random()*45+90);//二等奖转的角度
+							rotateFunc(2,number,twoAwarInfo)
+						}
+						if(data.awardLevel=='3'){//三等奖
+							number = Math.floor(Math.random()*45+180);//三等奖转的角度
+							rotateFunc(3,number,threeAwarInfo)
+						}
+						if(data.awardLevel=='4'){//四等奖
+							number = Math.floor(Math.random()*45+270);//四等奖转的角度
+							rotateFunc(4,number,fourAwarInfo)
+						}
+						if(data.awardLevel=='5'){//五等奖
+							number = Math.floor(Math.random()*45+315);//五等奖转的角度
+							rotateFunc(5,number,fiveAwarInfo)
+						}
+						if(data.awardLevel=='6'){//六等奖
+							number = Math.floor(Math.random()*45+135);//六等奖转的角度
+							rotateFunc(6,number,sixAwarInfo)
+						}
+						if(data.awardLevel==0){//未中奖
+							number1 = Math.floor(Math.random()*45+45);
+							number2 = Math.floor(Math.random()*45+225);
+							var angle = [number1,number2];
+							angle = angle[Math.floor(Math.random()*angle.length)]//未中奖转的角度
+							rotateFunc(0,angle,noAwardInfo)
+						}
+    					}
+    				})
+			}
+		 } 
+	   
+	});
+	
+})
+
+function qx(){
+	$('#tdiv').css('display','none');
+	$('#bdiv').css('display','none');
+}
+//提交中奖信息
+function lucky(){
+	var tel = $('#tel')[0].value;
+	if(tel){
+		var patrn=/^(13[0-9]|15[0-9]|18[0-9]|14[0-9])\d{8}$/;
+			 if (!patrn.exec(tel)){
+				 $('#msg')[0].innerHTML='手机号码错误';
+				 return;
+			 }
+	}
+	$.ajax({
+    			url:"/ump/wcclotteryactivitys/saveTel",
+    			type:"Post",
+    			data:{'tel':tel,'sncode':sncode},
+    			error:function(msg){
+    			},
+    			success:function(data){
+    				if(data){
+    					$('#tdiv').css('display','none');
+    					$('#bdiv').css('display','none');
+    				}
+    			}
+    		})
+}
+]]>
+</script>
+</div>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+ 
+<definition extends="cbdwcc_culture" name="page/MyCard">
+   <put-attribute name="body"  value="/WEB-INF/views/cbdwcc_pages/myOne_Card/index.jsp"/>
+</definition>
+
+<definition extends="cbdwcc_culture" name="page/showMyCard">
+   <put-attribute name="body"  value="/WEB-INF/views/cbdwcc_pages/myOne_Card/mycard.jsp"/>
+</definition>
+</tiles-definitions>

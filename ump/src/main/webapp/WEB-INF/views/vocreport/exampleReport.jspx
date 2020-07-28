@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+
+	<script type="text/javascript"
+		src="/ump/js/nineclient/vocreport/nineclient.js">
+		//---
+	</script>
+	<div id="hchartPie" style="min-width:700px;height:300px">111</div>
+	<div id="barChar" style="min-width:700px;height:300px">222</div>
+	<div id="initHlineChart" style="min-width:700px;height:300px">333</div>
+	<div id="initSpiderHchart" style="min-width:700px;height:300px">444</div>
+	<div id="initBarHchartY" style="min-width:700px;height:300px">444</div>
+
+<SCRIPT type="text/javascript">
+var chars =initHchartPie("饼形图",null);
+$('#hchartPie').highcharts(chars);
+var chars =inithBarChar("条形图",null);
+$('#barChar').highcharts(chars);
+var chars =initHlineChart("折线",null);
+$('#initHlineChart').highcharts(chars);
+var chars =initSpiderHchart("蛛网图",null);
+$('#initSpiderHchart').highcharts(chars);
+var chars =initBarHchartY("柱状 图",null);
+$('#initBarHchartY').highcharts(chars);
+</SCRIPT>
+</div>

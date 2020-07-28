@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_PubOperator" object="${puboperator}" path="/puboperators" z="3ohXeYgK0NN4Q1+SJ47hIc+SeJE=">
+        <field:display field="email" id="s_com_nineclient_model_PubOperator_email" object="${puboperator}" z="oFT65FAtdJagxQSB5GQOQ4QKkqc="/>
+        <field:display field="operatorName" id="s_com_nineclient_model_PubOperator_operatorName" object="${puboperator}" z="Pao1qLrX5l4hl2CB/2PVOoeaxrc="/>
+        <field:display field="account" id="s_com_nineclient_model_PubOperator_account" object="${puboperator}" z="N1N1H4Wb4gFPUT8wXuyhMREC0ws="/>
+        <field:display field="password" id="s_com_nineclient_model_PubOperator_password" object="${puboperator}" z="VR7NvlNNN9jU2Fb+B53Z5D3Rtko="/>
+        <field:display field="mobile" id="s_com_nineclient_model_PubOperator_mobile" object="${puboperator}" z="hCppqOK2vJyp967xVRVwtGCoGPs="/>
+        <field:display field="active" id="s_com_nineclient_model_PubOperator_active" object="${puboperator}" z="ZK4mt86Ge3n9XWM/lYo/bsVchHU="/>
+    </page:show>
+</div>

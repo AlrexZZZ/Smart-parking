@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default_pub" name="hotwordreports/hotWord">
+        <put-attribute name="body" value="/WEB-INF/views/vocreport/hotWord.jspx"/>
+    </definition>
+     <definition extends="default_pub" name="skurankreports/skuRank">
+        <put-attribute name="body" value="/WEB-INF/views/vocreport/skuRank.jspx"/>
+    </definition>
+    <definition extends="default_pub" name="vocreports/productProblem">
+        <put-attribute name="body" value="/WEB-INF/views/vocreport/ProductProblem.jspx"/>
+    </definition>
+    <definition extends="default_pub" name="labelratioreport/label">
+        <put-attribute name="body" value="/WEB-INF/views/vocreport/labelRatio.jspx"/>
+    </definition>
+    <definition extends="pub" name="vocreports/productProblemTable">
+        <put-attribute name="body" value="/WEB-INF/views/vocreport/productProblemTable.jspx"/>
+    </definition>
+     <definition extends="default_pub" name="commentratiotrends/commentratiotrend">
+        <put-attribute name="body" value="/WEB-INF/views/vocreport/commentratiotrend.jspx"/>
+    </definition>
+           <definition extends="default_pub" name="vocreports/skuRange">
+        <put-attribute name="body" value="/WEB-INF/views/vocreport/skuRange.jspx"/>
+    </definition>
+         <definition extends="default_pub" name="vocreports/operatorReport">
+        <put-attribute name="body" value="/WEB-INF/views/vocreport/operatorReport.jspx"/>
+    </definition>
+    <definition extends="default_pub" name="vocreports/purchaeReport">
+        <put-attribute name="body" value="/WEB-INF/views/vocreport/purchaseMotive.jspx"/>
+    </definition>
+      <definition extends="default_pub" name="vocreports/commentReport">
+        <put-attribute name="body" value="/WEB-INF/views/vocreport/commentReport.jspx"/>
+    </definition>
+</tiles-definitions>

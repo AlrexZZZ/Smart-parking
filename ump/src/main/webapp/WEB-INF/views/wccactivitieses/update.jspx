@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_nineclient_model_WccActivities" modelAttribute="wccActivities" path="/wccactivitieses" versionField="Version" z="O6ERxbBWUdwcf4+XYslkakBQrGg=">
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_WccActivities_isDeleted" z="SUpYvVtZQP2LD3HVNQ/8eUHi6dc="/>
+        <field:textarea field="activitiesName" id="c_com_nineclient_model_WccActivities_activitiesName" required="true" z="8LJVjKbP6LV/FV04tJNhueqd8IY="/>
+        <field:textarea field="activitiesTopic" id="c_com_nineclient_model_WccActivities_activitiesTopic" required="true" z="VYiDyb6X9GC/hYRYfcZjKrw0q/A="/>
+        <field:datetime dateTimePattern="${wccActivities_begintime_date_format}" field="beginTime" id="c_com_nineclient_model_WccActivities_beginTime" required="true" z="6jmdQqCQpWOoph9RaJjkG8zrsDk="/>
+        <field:datetime dateTimePattern="${wccActivities_endtime_date_format}" field="endTime" id="c_com_nineclient_model_WccActivities_endTime" required="true" z="dLhAcdDdCwWQfi1wRF6ph71CSvM="/>
+        <field:checkbox field="isAudit" id="c_com_nineclient_model_WccActivities_isAudit" z="FDaNYec4lKeJyfQkU48dbEoaMIk="/>
+        <field:datetime dateTimePattern="${wccActivities_codevalidtime_date_format}" field="codeValidtime" id="c_com_nineclient_model_WccActivities_codeValidtime" z="g47opQKB6yl/2y8fD3guyI8mKRA="/>
+        <field:textarea field="activitiesUrl" id="c_com_nineclient_model_WccActivities_activitiesUrl" required="true" z="jbIotRx4pFfV90IduBgaWkvebxM="/>
+        <field:textarea field="imageUrl" id="c_com_nineclient_model_WccActivities_imageUrl" required="true" z="hS76DllMf3be+7ylCKC0YlreOpk="/>
+        <field:textarea field="activityProvince" id="c_com_nineclient_model_WccActivities_activityProvince" required="true" z="e4SqQZepfNA7nurddbMcmJAptTk="/>
+        <field:textarea field="activityCity" id="c_com_nineclient_model_WccActivities_activityCity" required="true" z="ZG3mX0sJenaL+hk0YKJZy4Fl1iM="/>
+    </form:update>
+</div>

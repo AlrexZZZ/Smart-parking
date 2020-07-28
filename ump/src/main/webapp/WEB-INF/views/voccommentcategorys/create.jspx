@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_com_nineclient_model_VocCommentCategory" modelAttribute="vocCommentCategory" path="/voccommentcategorys" render="${empty dependencies}" z="JNfQ+D4Vwm82S18j6vwK23QDjF4=">
+        <field:textarea field="name" id="c_com_nineclient_model_VocCommentCategory_name" z="QhPHQMyZ78U9PMPW/dGl5WwFvqY="/>
+        <field:input field="sort" id="c_com_nineclient_model_VocCommentCategory_sort" z="c1HoNY24gmRUeXuB+davcXPLe4g="/>
+        <field:checkbox field="isVisable" id="c_com_nineclient_model_VocCommentCategory_isVisable" z="fOTna9rXxEfJIuP/5relJIDeh/Q="/>
+        <field:datetime dateTimePattern="${vocCommentCategory_createtime_date_format}" field="createTime" id="c_com_nineclient_model_VocCommentCategory_createTime" z="4HAXGuFfVnDbbNo80ZkEeh7dRDM="/>
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_VocCommentCategory_isDeleted" z="tOGt8MoxotvfLIc5Tjk3U9oULzQ="/>
+        <field:textarea field="remark" id="c_com_nineclient_model_VocCommentCategory_remark" z="SMfXdRuqPF80CQuGO0u2qmmXQhc="/>
+        <field:input field="parentId" id="c_com_nineclient_model_VocCommentCategory_parentId" z="kpOlNKzk/bHIHDE6FgVeS1y73Fw="/>
+        <field:textarea field="displayName" id="c_com_nineclient_model_VocCommentCategory_displayName" required="true" z="J7VfMR/+Z8f7WLro1/rLFzJo39w="/>
+        <field:checkbox field="isLeaf" id="c_com_nineclient_model_VocCommentCategory_isLeaf" z="Eo2aZWG/vQ0w7KZhoDvZbKYnc1o="/>
+        <field:input field="deepth" id="c_com_nineclient_model_VocCommentCategory_deepth" z="Ela2+xjIG30lRA+89UxTBrZtVuU="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_nineclient_model_VocCommentCategory" render="${not empty dependencies}" z="3NSlBlYvPSvdBDPUQBt5rYppke4="/>
+</div>

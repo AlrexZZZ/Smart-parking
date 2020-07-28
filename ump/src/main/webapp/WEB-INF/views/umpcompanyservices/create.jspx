@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_com_nineclient_model_UmpCompanyService" modelAttribute="umpCompanyService" path="/umpcompanyservices" render="${empty dependencies}" z="l4C8t7r/OClQXGRT4vpD8l/XjkA=">
+        <field:input field="companyId" id="c_com_nineclient_model_UmpCompanyService_companyId" required="true" validationMessageCode="field_invalid_integer" z="fWG4srkX1qaq0kdTmaGNO39yD3Q="/>
+        <field:input field="productId" id="c_com_nineclient_model_UmpCompanyService_productId" required="true" validationMessageCode="field_invalid_integer" z="nFVnRHO3Dxznj7diZrHpcxof7eU="/>
+        <field:input field="versionId" id="c_com_nineclient_model_UmpCompanyService_versionId" required="true" validationMessageCode="field_invalid_integer" z="5DjFSqxAtxeyBvz0d41OMqSwumE="/>
+        <field:input field="maxAccount" id="c_com_nineclient_model_UmpCompanyService_maxAccount" z="dFhKkDjvw8eN3W9bzNqNhbtBE/A="/>
+        <field:datetime dateTimePattern="${umpCompanyService_servicestarttime_date_format}" field="serviceStartTime" id="c_com_nineclient_model_UmpCompanyService_serviceStartTime" required="true" z="udIDMSVpI1gSvAp80sXox4mzlX8="/>
+        <field:datetime dateTimePattern="${umpCompanyService_serviceendtime_date_format}" field="serviceEndTime" id="c_com_nineclient_model_UmpCompanyService_serviceEndTime" required="true" z="cYugOCQMmHryCc8rPF5ItNOLQ98="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_nineclient_model_UmpCompanyService" render="${not empty dependencies}" z="aPizbBT1FpTAOIsTvldZq6pwyus="/>
+</div>

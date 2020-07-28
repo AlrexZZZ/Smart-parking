@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_nineclient_model_VocWordExpressions" modelAttribute="vocWordExpressions" path="/vocwordexpressionses" versionField="Version" z="RFpNHg8VcS7TF7UjJ8qu7oJEDoc=">
+        <field:input field="name" id="c_com_nineclient_model_VocWordExpressions_name" required="true" z="GLY5z8sh26LAQllYWQj6ZJpOrDQ="/>
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_VocWordExpressions_isDeleted" z="OPOokdLr86EK+dACHcmE1Xu9FVY="/>
+        <field:datetime dateTimePattern="${vocWordExpressions_createtime_date_format}" field="createTime" id="c_com_nineclient_model_VocWordExpressions_createTime" z="MAtcDvWZNWlixAWZ5kB10N9wsbQ="/>
+        <field:select field="auditStatus" id="c_com_nineclient_model_VocWordExpressions_auditStatus" items="${vocauditstatuses}" path="vocauditstatuses" z="SVofDHQotE8lIM7Qvvof6n9M3fg="/>
+    </form:update>
+</div>

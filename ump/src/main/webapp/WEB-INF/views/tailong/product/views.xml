@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+
+<definition extends="default_pub" name="tailong/product">
+ <put-attribute name="body" value="/WEB-INF/views/tailong/product/product.jspx"/>
+</definition>
+
+<definition extends="default_pub" name="tailong/create">
+ <put-attribute name="body" value="/WEB-INF/views/tailong/product/create.jspx"/>
+</definition>
+
+<definition extends="default_pub" name="tailong/productResult">
+ <put-attribute name="body" value="/WEB-INF/views/tailong/product/productResult.jspx"/>
+</definition>
+</tiles-definitions>

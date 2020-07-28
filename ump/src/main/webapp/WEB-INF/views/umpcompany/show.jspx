@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_UmpCompany" object="${umpcompany}" path="/umpcompanys" z="b/NEEssJn/UmUoaqW0xHw4IpIPs=">
+        <field:display field="name" id="s_com_nineclient_model_UmpCompany_name" object="${umpcompany}" z="zOKIKBE67kvR0D00mQzuTFYgUs0="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_UmpCompany_isDeleted" object="${umpcompany}" z="nWSUe0hmEn5uqNKJcpytRFS3Rj4="/>
+        <field:display field="isVisable" id="s_com_nineclient_model_UmpCompany_isVisable" object="${umpcompany}" z="SwEu0eHotqWqkcBl0Fhfku+d258="/>
+        <field:display date="true" dateTimePattern="${umpCompany_createtime_date_format}" field="createTime" id="s_com_nineclient_model_UmpCompany_createTime" object="${umpcompany}" z="21uWG/pTSslNTIU3It0zX/VuF10="/>
+        <field:display field="companyCode" id="s_com_nineclient_model_UmpCompany_companyCode" object="${umpcompany}" z="kxsV6Fjg9cEp2oa0Hh2LjGzQuKo="/>
+        <field:display field="maxAccount" id="s_com_nineclient_model_UmpCompany_maxAccount" object="${umpcompany}" z="cFesr0kpnTB+TtcxfJxHpCdyIuk="/>
+        <field:display date="true" dateTimePattern="${umpCompany_servicestarttime_date_format}" field="serviceStartTime" id="s_com_nineclient_model_UmpCompany_serviceStartTime" object="${umpcompany}" z="lyJu9zpgEtqkoSmshC8dy8kr7cs="/>
+        <field:display date="true" dateTimePattern="${umpCompany_serviceendtime_date_format}" field="serviceEndTime" id="s_com_nineclient_model_UmpCompany_serviceEndTime" object="${umpcompany}" z="xb/j16LXoZvVW8KJZwKAZmhcRGo="/>
+        <field:display field="status" id="s_com_nineclient_model_UmpCompany_status" object="${umpcompany}" z="x86kQdVyyIp8M8ncb3Q+BqLNoN0="/>
+        <field:display field="products" id="s_com_nineclient_model_UmpCompany_products" object="${umpcompany}" z="DZ5dLXmed2SxooiO9tTjsKvSdCc="/>
+        <field:display field="url" id="s_com_nineclient_model_UmpCompany_url" object="${umpcompany}" z="m6KkK0MzowSCrSU0cRVl8lPuoZc="/>
+        <field:display field="mobilePhone" id="s_com_nineclient_model_UmpCompany_mobilePhone" object="${umpcompany}" z="1g7lJkTq1E80YHtc/lg5Noo87wM="/>
+        <field:display field="email" id="s_com_nineclient_model_UmpCompany_email" object="${umpcompany}" z="cDyPJXMCYOfMpngTHxfvvjOse5E="/>
+    </page:show>
+</div>

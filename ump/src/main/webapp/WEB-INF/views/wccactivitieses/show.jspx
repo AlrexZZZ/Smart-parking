@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccActivities" object="${wccactivities}" path="/wccactivitieses" z="BFkKW7vEsMus7AsV5cRt0+2Lr2I=">
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccActivities_isDeleted" object="${wccactivities}" z="YagV5tOGgcO/q+keByyQr/7CXdc="/>
+        <field:display field="activitiesName" id="s_com_nineclient_model_WccActivities_activitiesName" object="${wccactivities}" z="ZGcot+OEsrYE7l/P5xwcQn5Wqw0="/>
+        <field:display field="activitiesTopic" id="s_com_nineclient_model_WccActivities_activitiesTopic" object="${wccactivities}" z="DQc6JxfhKNhG4kFACN3av47+uyg="/>
+        <field:display date="true" dateTimePattern="${wccActivities_begintime_date_format}" field="beginTime" id="s_com_nineclient_model_WccActivities_beginTime" object="${wccactivities}" z="+c/my1k0Nod4vyG7dOQLmD7KbXk="/>
+        <field:display date="true" dateTimePattern="${wccActivities_endtime_date_format}" field="endTime" id="s_com_nineclient_model_WccActivities_endTime" object="${wccactivities}" z="BvwKaVx7F1upMHb+S7oDWMsMH2Q="/>
+        <field:display field="isAudit" id="s_com_nineclient_model_WccActivities_isAudit" object="${wccactivities}" z="4Qwvs4ncENhv8MT2mp7Jy6//G4U="/>
+        <field:display date="true" dateTimePattern="${wccActivities_codevalidtime_date_format}" field="codeValidtime" id="s_com_nineclient_model_WccActivities_codeValidtime" object="${wccactivities}" z="2hcomefGWP2y9CqM61wvhSUadz4="/>
+        <field:display field="activitiesUrl" id="s_com_nineclient_model_WccActivities_activitiesUrl" object="${wccactivities}" z="cZycsfU5r+Mp3Usb3otz2PR6pwM="/>
+        <field:display field="imageUrl" id="s_com_nineclient_model_WccActivities_imageUrl" object="${wccactivities}" z="y+OwqOIN/tdNRr73iXqY1Hs+XDU="/>
+        <field:display field="activityProvince" id="s_com_nineclient_model_WccActivities_activityProvince" object="${wccactivities}" z="o1G/vi1ZNRRNjY97ME9E0XOWzeE="/>
+        <field:display field="activityCity" id="s_com_nineclient_model_WccActivities_activityCity" object="${wccactivities}" z="LMOjrsrk2x5SHuHhzp9M79gQikw="/>
+    </page:show>
+</div>

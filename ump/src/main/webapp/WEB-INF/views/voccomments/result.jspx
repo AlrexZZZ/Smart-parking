@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+<style type="text/css">
+
+td {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+td {
+	white-space: nowrap
+}
+.limitWidth{
+
+ text-align: center;
+}
+
+.limitOperator{
+
+ text-align: center;
+}
+.k_width{margin-right: 5px;}
+.k_width th{text-align: left;width:95px}
+.k_width td{text-align: left;}
+.k_width td a img{margin-right:5px}
+.k_width tr th:first-child,.k_width tr td:first-child{width:50px;text-align:center;}
+</style>
+<div style="width:100%; height:auto; overflow-x:scroll; clear:both;">
+<table class="table striped  hovered k_width dataTable " style="table-layout:fixed;" >
+		<thead>
+			<tr>
+			   <th >
+			    <input name="checkboxAll" style="box-sizing: content-box;border: 0px;" id="checkboxAll" type="checkbox" value="all" onclick="javascript:checkBoxAll();"/>
+			   </th>
+			    <th>
+					操作
+				</th>
+			    <th>
+					标签
+				</th>
+				 <th class="text-left sorting_asc" id="sortCommentLevelsId" onclick="changeSort('sortCommentLevelsId');" style="cursor: pointer;">
+					评论类型
+				</th>
+				<th style="width:500px">
+					评论内容
+				</th>
+				
+				<th class="text-left sorting_asc" id="sortReplyStateId" onclick="changeSort('sortReplyStateId');" style="cursor: pointer;">
+					回复状态
+				</th>
+				<th>
+					回复内容
+				</th>
+				<th style="width:300px;cursor: pointer;" class="text-left sorting_asc" id="sortGoodsNameId" onclick="changeSort('sortGoodsNameId');">
+					商品名称
+				</th>
+				<th class="text-left sorting_asc" id="sortBrandNameId" onclick="changeSort('sortBrandNameId');" style="cursor: pointer;">
+					商品品牌
+				</th>
+				<th>
+					店铺名称
+				</th>
+				<th class="text-left sorting_asc" id="sortChannelNameId" onclick="changeSort('sortChannelNameId');" style="cursor: pointer;">
+					平台名称
+				</th>
+				
+				<th>
+					分配坐席
+				</th>
+				<th class="text-left sorting_asc" id="sortCommentTimeId" onclick="changeSort('sortCommentTimeId');" style="cursor: pointer;">
+					评论时间
+				</th>
+				<th>
+					导入时间
+				</th>
+				<th>
+					回复时间
+				</th>
+				<th class="text-left sorting_asc" id="sortReplyOperatorId" onclick="changeSort('sortReplyOperatorId');" style="cursor: pointer;">
+					回复坐席
+				</th>
+				<th>
+					会员名
+				</th>
+				
+			</tr>
+		</thead>
+		<tbody>
+		<c:choose>
+		 <c:when test="${page>0}">
+		   <c:forEach var="comment" items="${voccomments}" >
+			<tr>
+			  <td class="limitWidth">
+			   <input name="checkbox" style="box-sizing: content-box;border: 0px;" type="checkbox" id="${comment.id}" value="{commentId:${comment.id},replyState:'${comment.replyState}',channelId:${comment.goods.channel.id},brandId:${comment.goods.vocBrand.id},shopId:${comment.goods.shop.id},commnetLevel:${comment.commentLevel.id},platformName:'${comment.goods.channel.channelName}',commentContent:'${comment.commentContent}',goodsName:'${comment.goods.name}',commentTime:'${comment.commentTime}'}"/>
+			  </td>
+			   <td class="limitOperator">
+			    <!-- 
+				 <a href="javascript:;" onclick="showWorkOrderUpdate('${comment.id}')" title="工单升级" ><img src="./images/shengji.png" width="14" height="14"/></a> 
+				 --> 
+				  <c:if test="${comment.replyState ne '已回复'}">
+				  <a href="javascript:;" onclick="showTransferDialog('转移',${comment.id})" title="转移"><img src="./images/turn_move.png" width="14" height="14"/></a>
+			      <a href="javascript:;" onclick="checkChangeReplyState('${comment.id}')" title="状态改变"><img src="./images/change_status.png" width="14" height="14"/></a>
+			     </c:if>
+			      <c:if test="${comment.replyState eq '待回复'}">
+			      <a href="javascript:;" onclick="displayReplyPage('${comment.id}',0)" title="回复"><img src="./images/group_answer.png" width="14" height="14"/></a>
+			      </c:if>
+			      
+			   </td>
+			    <td title="${comment.tagName}"> ${comment.tagName} </td>
+			    <td title="${comment.commentLevel}"> ${comment.commentLevel} </td>
+			    <td title="${comment.commentContent}"> 
+			     <c:choose>
+			      <c:when test="${not empty comment.replyUrl}">  
+			       <a href="${comment.replyUrl}" target="_blank"  style="color: #0000FF; text-decoration: underline;">
+			        ${comment.commentContent}
+			       </a>
+			      </c:when>
+			      <c:otherwise>
+			        ${comment.commentContent}
+			      </c:otherwise>
+			    </c:choose>
+			    </td>
+			    
+			    <td title="${comment.replyState}"> ${comment.replyState} </td>
+			    <td title="${comment.replyContent}"> ${comment.replyContent} </td>
+			    <td title="${comment.goods.name}"> 
+			    <c:choose>
+			      <c:when test="${not empty comment.goods.url}">  
+			       <a href="${comment.goods.url}" target="_blank"  style="color: #0000FF; text-decoration: underline;">
+			        ${comment.goods.name}
+			       </a>
+			      </c:when>
+			      <c:otherwise>
+			        ${comment.goods.name}
+			      </c:otherwise>
+			    </c:choose>
+			    </td>
+			    <td title="${comment.goods.vocBrand.brandName}"> ${comment.goods.vocBrand.brandName} </td>
+			    <td title="${comment.goods.shop.name}"> ${comment.goods.shop.name} </td>
+			    <td title="${comment.goods.channel.channelName}"> ${comment.goods.channel.channelName} </td>
+				<td title="${comment.dispatchOperator.operatorName}"> ${comment.dispatchOperator.operatorName} </td>
+				<td id="commentTime_${comment.id}" title="${comment.commentTime}">
+				<script>
+				 var commentTime = '<fmt:formatDate value="${comment.commentTime}" pattern="yyyy-MM-dd HH:mm:ss" />';
+				 $('#commentTime_${comment.id}')[0].title=commentTime;
+				 </script>
+				<fmt:formatDate value="${comment.commentTime}" pattern="yyyy-MM-dd HH:mm:ss" />
+				</td>
+				<td  id="createTime_${comment.id}"  title="${comment.createTime}">
+				<script>
+				 var createTime = '<fmt:formatDate value="${comment.createTime}" pattern="yyyy-MM-dd HH:mm:ss" />';
+				 $('#createTime_${comment.id}')[0].title=createTime;
+				 </script>
+				<fmt:formatDate value="${comment.createTime}" pattern="yyyy-MM-dd HH:mm:ss" />
+				</td>
+				<td  id="replyTime_${comment.id}"  title="${comment.replyTime}">
+				<script>
+				 var replyTime = '<fmt:formatDate value="${comment.replyTime}" pattern="yyyy-MM-dd HH:mm:ss" />';
+				 $('#replyTime_${comment.id}')[0].title=replyTime;
+				 </script>
+				<fmt:formatDate value="${comment.replyTime}" pattern="yyyy-MM-dd HH:mm:ss" />
+				 </td>
+				<td title="${comment.replyOperator.operatorName}"> ${comment.replyOperator.operatorName} </td>
+				<td title="${comment.userName}"> ${comment.userName} </td>
+			</tr>
+			</c:forEach>
+		 </c:when>
+		 <c:otherwise>
+		 <tr>
+          <td colspan="17" style="text-align: left"></td>		 
+		 </tr>
+		 </c:otherwise>
+		</c:choose>
+
+		
+		</tbody>
+	</table>
+
+</div>
+
+	 <div style="text-align: right;margin-top:20px">
+		  <c:if test="${page>1}">
+			<a class="default"  style="cursor: pointer;" onclick="queryComment(1)"><img src="/ump/images/resultset_first.png"/></a>
+		 </c:if>
+
+		<c:if test="${page>1}">
+			<a class="default"  style="cursor: pointer;margin-left:10px;" onclick="queryComment(${page-1})"><img src="/ump/images/resultset_previous.png"/></a>
+		</c:if>
+		
+		 <span style="color:#069dd5;height: 22px;line-height: 22px;margin-left:10px;">${page} / ${maxPages}</span><INPUT id="_go" style="margin-left:10px;width: 30px;height:22px"/><a class="info" style="width: 28px;height:22px;background-color:#069dd5;color: white;display:inline-block;font-family:Arial;font-size: 10px;line-height: 22px;text-align:center;cursor: pointer;" onclick="queryComment($('#_go').val())">GO</a>
+
+		 <c:if test="${page != maxPages}">
+			<a onclick="queryComment(${page+1})" style="cursor: pointer;margin-left:10px;"><img src="/ump/images/resultset_next.png"/></a>
+	  	 </c:if>
+
+		  <c:if test="${page != maxPages}">
+			<a class="default" style="cursor: pointer;margin-left:5px;" onclick="queryComment(${maxPages})"><img src="/ump/images/resultset_last.png"/></a>
+		 </c:if>
+		<span style="margin-left:10px;">每页<span style="color:#069dd5;">${limit}</span>条</span>
+	        <input type="hidden" id="page" value="${page}" />
+   </div>
+	  
+	   
+</div>

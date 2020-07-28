@@ -1,0 +1,586 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" 
+xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" 
+xmlns:client="urn:jsptagdir:/WEB-INF/tags/client" 
+xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" 
+xmlns:jsp="http://java.sun.com/JSP/Page" 
+xmlns:spring="http://www.springframework.org/tags" version="2.0">
+ <style>
+	@IMPORT url("/ump/ui/kindeditor/plugins/code/prettify.css");
+</style>  
+<style>
+	@IMPORT url("/ump/ui/dtGrid/dependents/datePicker/skin/WdatePicker.css");
+</style>
+  <!-- 复选框引用css -->
+  <style>@IMPORT url("/ump/styles/selectTree.css");</style>
+  
+<spring:url value="/ui/kindeditor/kindeditor.js" var="kind"></spring:url>
+<spring:url value="/ui/kindeditor/lang/zh_CN.js" var="zhcn"></spring:url>
+
+<script src="${kind}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+<script src="${zhch}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+
+<!-- 复选框引用js -->
+<SCRIPT type="text/javascript" src="/ump/js/selectStoreOrPubTree.js">/*selectTree*/</SCRIPT>
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+
+    <style>
+
+	
+ .ke-button{background:#e5e5e5 !important;font-family:"微软雅黑" !important; font-size:14px !important;
+ cursor:pointer !important; }
+    	
+    label{width: 110px; text-align: right; display:inline-block; cursor:default !important;}
+
+/* input[name='imgFile']{cursor:pointer;opacity:0;left:111px;position:absolute;} */
+
+.up_button{ width:270px;height:28px; appearance:none; -webkit-appearance:none; border:1px solid #e5e5e5; background:#fff;}
+
+/* .spanText{width: 110px; text-align: right; display:inline-block;} */
+    .sp{
+    	text-align: left;
+    	padding-left: 5px;
+    	width : 10px;
+    } 
+    .select_cheally{border: 1px solid #e5e5e5;width: 270px;height: 28px;margin-left: 5px;}
+    </style>
+    
+    	<SCRIPT type="text/javascript">
+	<![CDATA[
+	$(function () {
+		KindEditor.ready(function(K) {
+	        window.editor = K.create('#editor_id',{
+		            uploadJson : '/ump/ui/kindeditor/jsp/upload_json.jsp',
+		            fileManagerJson : '/ump/ui/kindeditor/jsp/file_manager_json.jsp',
+		            allowFileManager : true,
+		        	items : [
+								'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+								'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright','image', 'link'],
+							    afterCreate : function() { 
+							         this.sync(); 
+							        },
+							        afterBlur:function(){ 
+							            this.sync(); 
+							        }    
+		        });	 
+	
+			//图片上传
+			var uploadbutton = K.uploadbutton({
+				button : K('#uploadButton')[0],
+				fieldName : 'imgFile',
+				url : '/ump/ui/kindeditor/jsp/upload_json.jsp?dir=wx_image&maxSize=1024',
+				afterUpload : function(data) {
+					if (data.error === 0) {
+						var url = K.formatUrl(data.url,'absolute');
+						$("#themeImage_").val(url);
+						$("#image_src").attr("src",url);
+					} else {
+						alert(data.message);
+					}
+				},
+				afterError : function(str) {
+					alert('自定义错误信息: ' + str);
+				}
+			});
+			
+ 			$("input[name='imgFile']")
+			 .css("width","110px").css("height","28px;")
+			 .css('cursor','pointer').css('opacity','0')
+			 .css("background","#fff");
+ 			
+			uploadbutton.fileBox.change(function(e) {
+				uploadbutton.submit();
+			});
+			
+		});
+	});
+	 ]]> 
+	</SCRIPT>
+    <script type="text/javascript">
+    <![CDATA[
+         var flag1 = true;
+         var flag2 = true;
+     		function changeType(){
+    			$("#password_").attr("Type","password");
+    		}
+    	
+    	function checkPlat(o){
+    		var name = $(o).val();
+    		if(!name){
+    			flag1 = false;
+    			$('#aerrMsg').html('公众平台名不能为空');
+    			return;
+    		}
+    		$.ajax({
+    			url : "/ump/wccplatformusers/checkPlat",
+    			type : "POST",
+    			data : {'name':name},
+    			error : function(msg) {
+    				alert("error " + msg);
+    			},
+    			success : function(text) {
+    				if(text=='false'){
+    					flag1 = false;
+	    				$('#aerrMsg').html('公众平台名重复');
+	    				return;
+    				}
+    				flag1 = true;
+    				$('#aerrMsg').html('');
+    			}
+    		});
+    	}
+    	
+    	function checkPlatid(o){
+    		var platId = $(o).val();
+    		if(!platId){
+    			flag2 = false;
+    			$('#perrMsg').html('原始ID不能为空');
+    			return;
+    		}
+    		$.ajax({
+    			url : "/ump/wccplatformusers/checkPlatId",
+    			type : "POST",
+    			data : {'platId':platId},
+    			error : function(msg) {
+    				alert("error " + msg);
+    			},
+    			success : function(text) {
+    				if(text=='false'){
+    					flag2 = false;
+	    				$('#perrMsg').html('原始ID重复');
+	    				return;
+    				}
+    				flag2 = true;
+    				$('#perrMsg').html('');
+    			}
+    		});
+    	}
+    	
+
+    	$(document).ready(function(){
+    		
+    		loadTree('/ump/wccplatformusers/tree','${pltIds}');
+    		
+    		$('#proceed').unbind().bind('click',function(){
+    			var platformId = $('#platformId_').val();
+    			var appId = $('#appId_').val();
+    			var appSecret = $('#appSecret_').val();
+    			var account = $('#paccount_').val();
+    			var platReg=/^\w{15}$/;
+    			var appReg=/^[0-9a-zA-Z_]{18}$/;
+    			var sercReg=/^[0-9a-zA-Z_]{32}$/;
+    			if(!flag1){
+    				return false;
+    			}
+    			if(!flag2){
+    				return false;
+    			}
+    			if(!account){
+    				$('#aerrMsg').html('公众平台不能为空');
+    				return false;
+    			}
+    			$('#aerrMsg').html('');
+    			if(!platformId){
+    				$('#perrMsg').html('原始ID不能为空');
+    				return false;
+    			}
+    			if(!platReg.test(platformId)){
+    				$('#perrMsg').html('原始ID格式不正确');
+    				return false;
+    			}
+    			
+    			$('#perrMsg').html('');
+
+    		});
+    	});
+    	
+    	function check(){
+    		editor.sync();
+
+            editor.sync();
+            console.log($('#editor_id').val());
+    	// return false;
+    	}
+    	
+        function selectShowMenu2() {
+    		var SelObj = $("#SelVals");
+    		var SelOffset = $("#SelVals").offset();
+    		$("#selectMenuContent").css({
+    		}).slideDown("fast");
+    		$("body").bind("mousedown", selectOnBodyDown);
+    	}
+		function checkPlatForm(){
+			var platId = $("#platId").val();
+			if($.trim(platId) == ""){
+				$("#platformMsg").html("请选择公众平台");
+				return false;
+			}
+			$("#platformMsg").html("");
+			return true;
+		}
+		
+		function getId(){
+			if (checkForm()) {
+				document.forms[0].submit();
+			} else {
+				return false;
+			}
+		}
+		
+		function checkForm(){
+			var flag = true;
+			var SelIds = $("#SelIds").val();
+			var financialName = $("#financialName_").val();
+			var productCode = $("#productCode_").val();
+			var riskLevel = $("#riskLevel_").val();
+			var productType = $("#productType_").val();
+			var saleBeginDate = $("#saleBeginDateId").val();
+			var saleEndDate = $("#saleEndDateId").val();
+			var valueDate = $("#valueDateId").val();
+			var endDate = $("#endDateId").val();
+			var arrivalDate = $("#arrivalDateId").val();
+			var investmentHorizon = $("#investmentHorizon_").val();
+			var expectedYield = $("#expectedYield_").val();
+			var minMoney =parseInt($("#minMoney_").val());
+			var maxMoney = parseInt($("#maxMoney_").val());
+			var increasingMoney = parseInt($("#increasingMoney_").val());
+			var totalMoney = parseInt($("#totalMoney_").val());
+			
+			if (SelIds == "") {
+				$("#platMsg").html('平台不能为空');
+				flag = false;
+			} else {
+				$("#platMsg").html('');
+			}
+			
+			if (financialName == "") {
+				$("#financialNameMsg").html('理财产品名称不能为空');
+				flag = false;
+			} else if (financialName.length > 10) {
+				$("#financialNameMsg").html('理财产品名称建议10个字符以内');
+				flag = false;
+			} else {
+				$("#financialNameMsg").html('');
+			}
+			
+			if (productCode == "") {
+				$("#productCodeMsg").html('产品代码不能为空');
+				flag = false;
+			} else {
+				$("#productCodeMsg").html('');
+			}
+			
+			if (riskLevel == '') {
+				$("#riskLevelMsg").html('风险等级不能为空');
+				flag = false;
+			} else {
+				$("#riskLevelMsg").html('');
+			}
+			
+			if (productType == '') {
+				$("#productTypeMsg").html('产品类型不能为空');
+				flag = false;
+			} else {
+				$("#productTypeMsg").html('');
+			}
+			
+			if (saleBeginDate == '') {
+				$("#saleBeginDateMsg").html('销售起日不能为空');
+				flag = false;
+			} else if (saleBeginDate > saleEndDate) {
+				$("#saleBeginDateMsg").html('销售起日大于销售止日');
+				flag = false;
+			} else {
+				$("#saleBeginDateMsg").html('');
+			}
+			
+			if (saleEndDate == '') {
+				$("#saleEndDateMsg").html('销售止日不能为空');
+				flag = false;
+			} else {
+				$("#saleEndDateMsg").html('');
+			}
+			
+			if (valueDate == '') {
+				$("#valueDateMsg").html('起息日不能为空');
+				flag = false;
+			} else {
+				$("#valueDateMsg").html('');
+			}
+			
+			if(endDate == ''){
+				$("#endDateMsg").html('到期不能为空');
+				flag = false;
+			}else if (valueDate > endDate) {
+						$("#valueDateMsg").html('起息日大于到期日');
+						flag = false;
+					} else {
+						$("#endDateMsg").html('');
+					}
+			
+			
+		
+			
+			if (arrivalDate == '') {
+				$("#arrivalDateMsg").html('到账日不能为空');
+				flag = false;
+			} else {
+				$("#arrivalDateMsg").html('');
+			}
+			
+			if (investmentHorizon == '') {
+				$("#investmentHorizonMsg").html('投资期限不能为空');
+				flag = false;
+			} else {
+				$("#investmentHorizonMsg").html('');
+			}
+			
+			if (expectedYield == '') {
+				$("#expectedYieldMsg").html('预期收益率不能为空');
+				flag = false;
+			} else {
+				$("#expectedYieldMsg").html('');
+			}
+			
+			if (minMoney == '') {
+				$("#minMoneyMsg").html('产品起点金额不能为空');
+				flag = false;
+			} else if (minMoney > maxMoney) {
+				$("#minMoneyMsg").html('产品起点金额大于上限金额');
+				flag = false;
+			} else {
+				$("#minMoneyMsg").html('');
+			}
+			
+			if (maxMoney == '') {
+				$("#maxMoneyMsg").html('产品上限金额不能为空');
+				flag = false;
+			} else {
+				$("#maxMoneyMsg").html('');
+			}
+			
+			if (increasingMoney == '') {
+				$("#increasingMoneyMsg").html('递增金额不能为空');
+				flag = false;
+			} else {
+				$("#increasingMoneyMsg").html('');
+			}
+			
+			if (totalMoney == '') {
+				$("#totalMoneyMsg").html('微信预约总额不能为空');
+				flag = false;
+			} else {
+				$("#totalMoneyMsg").html('');
+			}
+			
+			return flag;
+		}
+		
+		function saleBeginDateFocus() {
+			$('#saleBeginDateId').focus();
+		};
+		function saleEndDateFocus() {
+			$('#saleEndDateId').focus();
+		};
+		function valueDateFocus() {
+			$('#valueDateId').focus();
+		};
+		function arrivalDateFocus() {
+			$('#arrivalDateId').focus();
+		};
+    ]]>
+    </script>
+    <client:create modelAttribute="wccFinancialProduct"  path="financialProduct" id="WccFinancialProductId">
+       <div class="grid">
+          <div class="row">
+            	<div class="span12" style="display: none;">
+                    <label>主键id_：</label>
+                    <input class="select_cheally" type="text" id="id_" value="${wccFinancialProduct.id}" name="id" onfocus="changeType();"/>
+                </div>
+            </div>
+                 <div class="row" style="display: none;">
+            	<div class="span12" style="">
+                    <label>时间_：</label>
+                    <input class="select_cheally" type="text" id="insertTimeStr_" value="${insertTimeStr}" name="insertTimeStr" onfocus="changeType();"/>
+                </div>
+            </div>  
+            <div class="row">
+                <div class="span12" id="platId" >
+					<label>公众平台：</label>
+			<!-- 		<select id="platformUsers_" name="platformUsers" class="select_cheally">
+						<option value=""></option>
+						<c:forEach var="data" items="${platformUser}">
+							<option value="${data.id}">${data.account}</option>
+						</c:forEach>
+					</select> -->
+					<div class="input-control text" style="width: 270px;">
+						<input id="SelVals" type="text" readonly="readonly"
+							value="" style="width: 270px;" onclick="selectShowMenu2();" onblur="checkPlatForm();"/> 
+						<input id="SelIds" name="platformUsers" type="hidden" value="${pltIds}" />
+						<div id="selectMenuContent" class="menuContent"
+							style="display: none; position: absolute; z-index: 999999999;">
+							<ul id="selectTreeDemo" class="ztree"
+								style="margin-left: 0px; margin-top: 0;border: 1px solid #e5e5e5;"></ul>
+						</div>
+					</div><span class="sp" style="color: red">*</span><span id="platMsg" style="color: red"></span>
+				</div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <label>理财产品名称：</label>
+                    <input type="text" id="financialName_" value="${wccFinancialProduct.financialName}" name="financialName" class="select_cheally"/>
+                    <span class="sp" style="color: red">*</span><span id="financialNameMsg" style="color: red"></span>
+                </div>
+            </div>
+            <div class="row"> 
+            	<div class="span12" style="display: none;">
+                    <label>缩略图：</label>
+                    <input class="select_cheally" type="text" id="themeImage_" value="${wccFinancialProduct.themeImage}" name="themeImage" />
+                </div>
+            </div>
+              <div class="row">
+            	<div class="span12" style="position:relative;"> 
+                   <label>缩略图：</label> 
+                   <div  style="margin-left: 116px;" >
+                   <input type="button"   id="uploadButton" value="点击选择图片" />
+                   <span style="color: red;margin-left: 5px;">*图片大小不大于1M的图片，只支持JPG格式，建议大小300*300</span>
+                      <div style="height: 110px; width: 150px;background-color: #ccc;text-align: center;margin-top: 10px;" >  
+	                   <img alt="" id="image_src" width="100px;" height="100px;" style="margin-top: 4px;" src="${wccFinancialProduct.themeImage}" />
+	                   </div>
+                   </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <label>产品代码：</label>
+                    <input type="text" id="productCode_" value="${wccFinancialProduct.productCode}" name="productCode" class="select_cheally"/>
+                    <span class="sp" style="color: red">*</span><span id="productCodeMsg" style="color: red"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <label>风险等级：</label>
+                    <input type="text" id="riskLevel_" value="${wccFinancialProduct.riskLevel}" name="riskLevel" class="select_cheally"/>
+                    <span class="sp" style="color: red">*</span><span id="riskLevelMsg" style="color: red"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <label>产品类型：</label>
+                    <input type="text" id="productType_" value="${wccFinancialProduct.productType}" name="productType" class="select_cheally"/>
+                    <span class="sp" style="color: red">*</span><span id="productTypeMsg" style="color: red"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+	                <div class="input-control text">
+	                    <label>销售起日：</label>
+	                    <input type="text" class="Wdate" id="saleBeginDateId" name="saleBeginDateStr" style="margin-left: 5px;width: 270px;"
+									onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" value="${fn:substring(wccFinancialProduct.saleBeginDate, 0, 10)}" readonly="readonly" />
+						<IMG style="margin-left: -22px;" onclick="saleBeginDateFocus();" src="/ump/js/date/skin/datePicker.gif" width="20" height="16" />
+	                    <span class="sp" style="color: red">*</span><span id="saleBeginDateMsg" style="color: red"></span>
+	                </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <div class="input-control text">
+	                    <label>销售止日：</label>
+	                    <input type="text" class="Wdate" id="saleEndDateId" name="saleEndDateStr" style="margin-left: 5px;width: 270px;"
+									onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" value="${fn:substring(wccFinancialProduct.saleEndDate, 0, 10)}" readonly="readonly" />
+						<IMG style="margin-left: -22px;" onclick="saleEndDateFocus();" src="/ump/js/date/skin/datePicker.gif" width="20" height="16" />
+	                    <span class="sp" style="color: red">*</span><span id="saleEndDateMsg" style="color: red"></span>
+	                </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <div class="input-control text">
+	                    <label>起息日：</label>
+	                    <input type="text" class="Wdate" id="valueDateId" name="valueDateStr" style="margin-left: 5px;width: 270px;"
+									onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" value="${fn:substring(wccFinancialProduct.valueDate, 0, 10)}" readonly="readonly" />
+						<IMG style="margin-left: -22px;" onclick="valueDateFocus();" src="/ump/js/date/skin/datePicker.gif" width="20" height="16" />
+	                    <span class="sp" style="color: red">*</span><span id="valueDateMsg" style="color: red"></span>
+	                </div>
+                </div>
+            </div>
+               <div class="row">
+                <div class="span12">
+                    <div class="input-control text">
+	                    <label>到期日：</label>
+	                    <input type="text" class="Wdate" id="endDateId" name="endDate" style="margin-left: 5px;width: 270px;"
+									onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" value="${fn:substring(wccFinancialProduct.endDate, 0, 10)}" readonly="readonly" />
+						<IMG style="margin-left: -22px;" onclick="valueDateFocus();" src="/ump/js/date/skin/datePicker.gif" width="20" height="16" />
+	                    <span class="sp" style="color: red">*</span><span id="endDateMsg" style="color: red"></span>
+	                </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <div class="input-control text">
+	                    <label>到账日：</label>
+	                    <input type="text" class="Wdate" id="arrivalDateId" name="arrivalDateStr" style="margin-left: 5px;width: 270px;"
+									onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" value="${fn:substring(wccFinancialProduct.arrivalDate, 0, 10)}" readonly="readonly" />
+						<IMG style="margin-left: -22px;" onclick="arrivalDateFocus();" src="/ump/js/date/skin/datePicker.gif" width="20" height="16" />
+	                    <span class="sp" style="color: red">*</span><span id="arrivalDateMsg" style="color: red"></span>
+	                </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <label>投资期限：</label>
+                    <input type="text" id="investmentHorizon_" value="${wccFinancialProduct.investmentHorizon}" name="investmentHorizon" class="select_cheally"/>
+                    <span class="sp" style="color: red">*</span><span id="investmentHorizonMsg" style="color: red"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <label>预期收益率：</label>
+                    <input type="text" id="expectedYield_" value="${wccFinancialProduct.expectedYield}" name="expectedYield" class="select_cheally"/>
+                    <span class="sp" style="color: red">*</span><span id="expectedYieldMsg" style="color: red"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <label>产品起点金额：</label>
+                    <input type="text" id="minMoney_" value="${wccFinancialProduct.minMoney}" name="minMoney" class="select_cheally"/>
+                    <span class="sp" style="color: red">*</span><span id="minMoneyMsg" style="color: red"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <label>产品上限金额：</label>
+                    <input type="text" id="maxMoney_" value="${wccFinancialProduct.maxMoney}" name="maxMoney" class="select_cheally"/>
+                    <span class="sp" style="color: red">*</span><span id="maxMoneyMsg" style="color: red"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <label>递增金额：</label>
+                    <input type="text" id="increasingMoney_" value="${wccFinancialProduct.increasingMoney}" name="increasingMoney" class="select_cheally"/>
+                    <span class="sp" style="color: red">*</span><span id="increasingMoneyMsg" style="color: red"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <label>微信预约总额：</label>
+                    <input type="text" id="totalMoney_" value="${wccFinancialProduct.totalMoney}" name="totalMoney" class="select_cheally"/>
+                    <span class="sp" style="color: red">*</span><span id="totalMoneyMsg" style="color: red"></span>
+                </div>
+            </div>
+        </div>
+        <div  id="editor_z" >
+			<textarea id="editor_id" name="themeImageText" style="width:500px;height:200px;" >${wccFinancialProduct.themeImageText}<!--ssssssdfsdfsdf  --></textarea>
+		</div>
+     <client:button  submit="true" onclick="getId();" cancel="true"></client:button> 
+    </client:create>
+
+<!-- 复选框div -->
+     <div id="menuContent" class="menuContent"
+		style="display: none;position: absolute;background: #fff;padding: 20px;border: 1px solid #e4e4e4;box-shadow: -0px 6px 10px #888888;">
+		<ul id="treeDemo" class="ztree" style="margin-top: 0;"></ul>
+	</div>
+ 
+</div>

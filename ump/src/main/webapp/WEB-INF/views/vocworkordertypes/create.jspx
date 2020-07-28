@@ -1,0 +1,738 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DIV xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:spring="http://www.springframework.org/tags" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<DIV>
+		<style>
+@IMPORT url("/ump/styles/url.css");
+@IMPORT url("/ump/styles/validation.css");
+.full {
+	width: 100%;
+}
+a{
+cursor: pointer;
+}
+.selectGroup{
+	color:blue;
+}
+.metro .button {
+	padding: 0px;
+}
+
+.zTreeDemoBackground {
+	overflow-x: auto;
+	white-space: nowrap;
+}
+</style>
+<SCRIPT type="text/javascript"
+		src="/ump/ui/jquery-validation/jquery.validate.js">
+		//--
+	</SCRIPT>
+<SCRIPT type="text/javascript"
+		src="/ump/js/nineclient/vocreport/nineclient.js">
+		//--
+	</SCRIPT>
+	</DIV>
+	<TABLE class="gridBackGround tableWidth" style="display:none;">
+		<THEAD>
+			<TR class="title" style="background-color:#EDF7F9;height: 46px;">
+				<th>工单类型管理</th>
+			</TR>
+		</THEAD>
+		<TBODY style="background-color: #FFFFFF;">
+			<TR id="orderTypeList" style="background-color:#FFFFFF;height: 30px;">
+			</TR>
+		</TBODY>
+	</TABLE>
+	<TABLE class="gridBackGround tableWidth" style="display:none;">
+		<THEAD>
+			<TR class="title" style="background-color: #EDF7F9;height: 46px;">
+				<th rowspan="2">未处理到期预警</th>
+			</TR>
+		</THEAD>
+		<TBODY style="background-color: #FFFFFF;">
+			<TR>
+				<TD><INPUT type="hidden" id="dicId" name="id"
+					value="${vocwarningtime.id}" /> <LABEL>预警时间:</LABEL> <INPUT
+					type="text" id="warningTime" style="width: 100px;"
+					value="${vocwarningtime.warningTime}" />小时<SPAN
+					id="timeValidataId" style="color: red; display: none;">必须为正整数</SPAN>
+					<input class="info" onclick="saveTime();"
+						style="margin-left: 50px;" type="button" value="确定"></input></TD>
+			</TR>
+			<tr>
+				<td><span style="color: red;">*</span>备注：填写预警时间，则从评论时间开始经过设定的预警时间还未发生处理的评论记录将发出预警
+				</td>
+			</tr>
+			<tr>
+				<td><span style="color: red;">*</span>例如：预警时间填写为“24”小时，则评论时间开始24小时候未作处理的记录发出预警提示。
+				</td>
+			</tr>
+		</TBODY>
+	</TABLE>
+	<SCRIPT type="text/javascript">
+		<![CDATA[
+		$(document).ready(function() {
+			//loadWorkOrderType();
+			/* $("#warningTime").blur(function() {
+				numberValidata();
+			});
+			$("#warningTime").focus(function() {
+				$("#timeValidataId").hide();
+			}); */
+			validataAddEmailGroupName();
+			validataEmail();
+			loadTree();
+		});
+		function numberValidata() {
+			var v = $("#warningTime").val();
+			var reg = new RegExp(/^\d+$/g);
+			if (reg.test(v) && parseInt(v) > 0) {
+
+			} else {
+				$("#timeValidataId").toggle();
+				return;
+			}
+		}
+		function saveTime() {
+			var param = {};
+			var v = $("#warningTime").val();
+			var reg = new RegExp(/^\d+$/g);
+			if (reg.test(v) && parseInt(v) > 0) {
+				param.warningTime = v;
+			} else {
+				$("#timeValidataId").toggle();
+				return;
+			}
+
+			var id = $("#dicId").val();
+			if (id != null && id != '' && id != undefined) {
+				param.id = id;
+			}
+			$.ajax({
+				url : "/ump/vocworkordertypes/addValue",
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data : param,
+				error : function(msg) {
+				},
+				success : function(data) {
+					Notify(data);
+				}
+			});
+		}
+		function stopPOP(event){
+			//var e=event || window.event;
+	       // if (e && e.stopPropagation){
+	      //      e.stopPropagation();    
+	      //  }
+	       // else{
+	      //      e.cancelBubble=true;
+	       // }
+			return false;
+		}
+		function selectGroup(obj,id){
+			$(".selectGroup").each(function(){
+				$(this).removeClass("selectGroup");
+			});
+			$(obj).addClass("selectGroup");
+			$("#selectedEmailGroup").val(id);
+		}
+		function selectLI(obj){
+			if($(obj).hasClass("collapsed")){
+				$(obj).removeClass("collapsed");
+				$(obj).find("ul").css("display","block");
+			}else{
+				$(obj).addClass("collapsed");
+				$(obj).find("ul").css("display","none");
+			}
+			
+			
+		}
+		function editEmailGroup(){
+			var emailGroup = [];
+			var editGroupName =$("#editGroupName").val();
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+			var nodess = zTree.getSelectedNodes();
+			if (nodess == null || nodess.length < 1) {
+				Notify("请选择一个邮件组");
+				return;
+			}
+			if(!nodess[0].isParent){
+				Notify("请选择一个邮件组");
+				return;
+			}
+			if(!$("#editGroupForm").valid()){
+				return;
+			}
+			var url="/ump/vocemailgroups/editeEmailGroup";
+			var param={id:nodess[0].id};
+			param.name=editGroupName;
+			ajax(url, param, Notify, null, null);
+			//刷新邮件组
+			url ="/ump/vocemailgroups/emailGroupUl";
+			ajax(url, {}, null, null, flusEmailGroup);
+			loadTree();
+			dilogWindow('edit_email_group_window');
+		}
+		function deleteEmailGroup(){
+			var emailGroup = [];
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+			var nodess = zTree.getSelectedNodes();
+			if (nodess == null || nodess.length < 1) {
+				Notify("请选择一个邮件组");
+				return false;
+			}
+			if(!confirm("确定删除?")){
+				return;
+			}
+			var param={id:nodess[0].id};
+			var url="/ump/vocemailgroups/delete";
+			if(!nodess[0].isParent){
+				//移除邮件
+				url="/ump/vocemailgroups/removeEmail";
+				param.groupId=nodess[0].getParentNode().id;
+			}
+			ajax(url, param, Notify, null, null);
+			//刷新邮件组
+			//url ="/ump/vocemailgroups/emailGroupUl";
+			//ajax(url, {}, null, null, flusEmailGroup);
+			loadTree();
+			
+		}
+		function createSelect(dataList) {
+			$("#add_selectEmailGroup").html("");
+			var sel = "<option value='-1'>请选择</option>";
+			for (var i = 0; i < dataList.length; i++) {
+				sel += "<option value="+dataList[i].id+">"
+						+ dataList[i].name + "</option>";
+			}
+			$("#add_selectEmailGroup").html(sel);
+		}
+		]]>
+	</SCRIPT>
+
+	<TABLE class="gridBackGround tableWidth">
+		<THEAD>
+			<TR class="mtitle" style="background-color:#EDF7F9;height: 46px;">
+				<th colspan="4">邮件组管理</th>
+			</TR>
+		</THEAD>
+		<TBODY style="background-color: #FFFFFF;">
+			<TR>
+				<td align="right">
+					<input class="info" type="button" style="width: auto;" onclick="dilogWindow('add_email_window');" value="添加新邮件"></input>
+				</td>
+				<td></td>
+				<td align="left">
+					<input class="info"
+						onclick="dilogWindow('add_email_group_window');" style="width: auto;" type="button" value="新增邮件组"></input>
+				</td>
+				<td></td>
+			</TR>
+			<tr>
+				<td align="right">账户:</td>
+				<td></td>
+				<td align="left">邮件组:</td>
+				<td></td>
+			</tr>
+			<tr style="height: 200px;">
+				<td align="center" style="width: 30%;">
+					<DIV class="gridBackGround borderLine"
+						style="height: 200px; width: 100%; overflow: auto;padding-top: 10px;padding-left: 20px;" id="vocEmails_DIV">
+						<c:forEach items="${vocemails}" var="item">
+						<DIV>
+							<INPUT type="checkbox" name="vocEmailName" value="${item.id}"/><span>${item.name}</span>
+						</DIV>
+						</c:forEach>
+					</DIV>
+				</td>
+				<td align="center"><input class="info" type="button" onclick="addEmailToGroup();"
+					value="加入组" /></td>
+				<td style="width: 30%;">
+				<INPUT type="hidden" id="selectedEmailGroup" value="" />
+					<div class="gridBackGround borderLine zTreeDemoBackground" 
+					style="height: 200px; width: 100%; overflow: auto;" align="left" id="emailGroup_DIV">
+						<ul id="treeDemo" class="ztree"></ul>
+					</div>
+					<!-- 
+					<DIV class="span2 gridBackGround borderLine"
+						style="height: 200px; width: 100%; overflow: auto;" id="emailGroup_DIV">
+						<ul class="treeview" data-role="treeview" style="width: 100%">
+							<c:forEach items="${vocemailgroups}" var="item">
+								<li class="node"
+									style="float: left; width: 100%; margin-top: 15px;">
+									<a><span onclick="selectGroup(this,${item.id});"
+										class="node-toggle" style="padding-left: 20px;">${item.name}</span></a>
+									<ul style="width: 100%">
+										<c:forEach items="${item.vocEmails}" var="email">
+										<li style="float: left; width: 100%; margin-top: 15px;"><a onclick="stopPOP();"
+											>${email.name}</a></li>
+											</c:forEach>
+									</ul></li>
+							</c:forEach>
+						</ul>
+					</DIV> -->
+				</td>
+				<td align="left">
+					<DIV>
+						<INPUT type="button" class="info" style="margin-left: 30px;" onclick="editDilogWindow('edit_email_group_window',true);" value="编辑" />
+					</DIV>
+					<div style="margin-top: 30px;">
+						<INPUT type="button" class="warning" onclick="deleteEmailGroup();" value="删除" />
+					</div>
+				</td>
+			</tr>
+		</TBODY>
+	</TABLE>
+	<!-- 添加邮件-->
+	<SCRIPT type="text/javascript">
+		<![CDATA[
+		function addEmailToGroup(){
+			var arr=[];
+			var emailIds='';
+			$("input[name='vocEmailName']:checked").each(function(){
+				arr.push($(this).val());
+			});
+			emailIds=arr.join(',');
+			if(emailIds==''||emailIds==null||emailIds==undefined){
+				Notify("请选择一个邮件");
+				return;
+			}
+			var url ="/ump/vocemailgroups/addEmailToGroup";
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+			var nodess = zTree.getSelectedNodes();
+			if (nodess == null || nodess.length < 1) {
+				Notify("请选择一个邮件组");
+				return false;
+			}
+			var param={};
+			param.emailIds=emailIds;
+			param.groupId=nodess[0].id;
+			ajax(url, param, Notify, null, null);
+			//刷新邮件组
+			url ="/ump/vocemailgroups/emailGroupUl";
+			ajax(url, {}, null, null, flusEmailGroup);
+			loadTree();
+		}
+		var addEmailFormValid;
+		function validataEmail(){
+			//TODO
+			addEmailFormValid=$("#addEmailForm").validate({
+				rules : {
+					addEmailName:{required:true,remote:{
+						 url:"/ump/commentvalidata/validataUniqueId",
+						 type: "post", 
+						 data: {
+							field:'name',
+							value:function(){
+								return $("#addEmailName").val();
+							},
+							table:"VocEmail",
+							isCompany:true,
+							companyField:"umpCompanyId"
+						 }
+						}},
+					addEmailAddress:{required:true,email: true}
+				},
+				messages : {
+					addEmailName :{
+						required:"收件人不能为空",
+						remote:"收件人重复"
+					},
+					addEmailAddress:{required:"邮件地址不能为空",email:"请输入正确的邮件地址"}
+				},
+				errorElement:"em",
+				focusCleanup:true,
+				errorClass:"invalid"
+			});
+		}
+	      function addEmail(){
+	    	  if(!$("#addEmailForm").valid()){
+	    		  return;
+	    	  }
+	    	  var param={};
+	    	  var addEmailName = $("#addEmailName").val();
+				if (addEmailName == '' || addEmailName == undefined
+						|| $.trim(addEmailName) == '') {
+					$("#addEmailSpan").toggle();
+					return;
+				}
+				param.name=addEmailName;
+	    	 	var address = $("#addEmailAddress").val();
+				param.email=address;
+				var groupId= $("#add_selectEmailGroup").val();
+				
+				if(groupId!=-1){
+					param.groupId=groupId;
+				}
+				var url ="/ump/vocemails/addEmail";
+				ajax(url, param, Notify);
+				url="/ump/vocemails/emailList";
+				ajax(url, param,null,null,flushEmail);
+				loadTree();
+				dilogWindow('add_email_window');
+	      }   
+	    function flushEmail(data){
+	    	var html="";
+	    	var datalist=eval("("+data+")");
+	    	$("#vocEmails_DIV").html("");
+	    	for(var i = 0;i<datalist.length;i++){
+	    		html+='<div><INPUT type="checkbox" name="vocEmailName" value="'+datalist[i].id+'"/><span>'+datalist[i].name+'</span></div>';
+	    	}
+	    	$("#vocEmails_DIV").html(html);
+	    }     
+	         ]]>
+	
+	</SCRIPT>
+	<DIV style="display: none;" class="search" id="add_email_window">
+		<div class="close">
+			<img src="/ump/images/close.png" width="24" height="24"
+				onclick="javascript:dilogWindow('add_email_window');$('#addEmailForm')[0].reset();addEmailFormValid.resetForm();"
+				style="cursor: pointer;" />
+		</div>
+		<DIV class="mtitle">
+						<img src="/ump/images/add.png" width="14" height="14"
+							style="cursor: pointer;" />添加
+					</DIV>
+		<form id="addEmailForm">
+		<DIV class="grid">
+			<DIV class="row">
+				<DIV class="span gridTitle">
+					收件人：
+				</DIV>
+				<DIV class="span gridInputWAuto">
+					<INPUT type="text" id="addEmailName" class="publicSize" name="addEmailName" />
+				</DIV>
+			</DIV>
+			<DIV class="row">
+				<DIV class="span gridTitle">
+					<SPAN>邮件地址：</SPAN>
+				</DIV>
+				<DIV class="span gridInputWAuto">
+						<INPUT type="text" id="addEmailAddress" class="publicSize" name="addEmailAddress"/>
+				</DIV>
+			</DIV>
+			<DIV class="row">
+				<DIV class="span gridTitle">
+					邮件组：
+				</DIV>
+				<DIV class="span gridInputWAuto">
+					<SELECT id="add_selectEmailGroup" name="add_selectEmailGroup" class="publicSize">
+						<OPTION value="-1" selected="selected">请选择</OPTION>
+						<c:forEach items="${vocemailgroups}" var="item">
+							<OPTION value="${item.id}">${item.name}</OPTION>
+						</c:forEach>
+					</SELECT>
+				</DIV>
+			</DIV>
+		</DIV>
+		</form>
+		<DIV class="btnCenter">
+				<INPUT type="button" class="info" onclick="addEmail();$('#addEmailForm')[0].reset();"
+						value="确定" />
+				<INPUT type="button" class="warning"
+						onclick="dilogWindow('add_email_window');addEmailFormValid.resetForm();$('#addEmailForm')[0].reset();" style="margin-left: 30px;" value="取消" />
+		</DIV>
+	</DIV>
+	<!-- 添加邮件组 -->
+	<DIV style="display: none;width: 460px;" class="search" id="add_email_group_window" >
+		<div class="close">
+			<img src="/ump/images/close.png" width="24" height="24"
+				onclick="javascript:dilogWindow('add_email_group_window');$('#addEmailGroupForm')[0].reset();"
+				style="cursor: pointer;" />
+		</div>
+		<DIV class="mtitle">
+						<img src="/ump/images/add.png" width="14" height="14"
+							style="cursor: pointer;" />添加
+					</DIV>
+		<form id="addEmailGroupForm">	
+		<DIV class="grid">
+			<DIV class="row">
+				<DIV class="span gridTitleBig">
+					邮件组名称：
+				</DIV>
+				<DIV class="span gridInputWAuto">
+					<INPUT type="text"  class="publicSize" id="addGroupName" name="addGroupName"/>
+				</DIV>
+			</DIV>
+		</DIV>
+		</form>		
+		<DIV class="btnCenter">
+					<INPUT type="button" class="info" onclick="addEmailGroup();$('#addEmailGroupForm')[0].reset();"
+						value="确定" />
+				<INPUT type="button" class="warning"
+						onclick="dilogWindow('add_email_group_window');$('#addEmailGroupForm')[0].reset();" style="margin-left: 30px;" value="取消" />
+			</DIV>
+	</DIV>
+	<!-- 编辑邮件组 -->
+	<DIV style="display: none;" class="search" id="edit_email_group_window">
+		<div class="close">
+			<img src="/ump/images/close.png" width="24" height="24"
+				onclick="javascript:dilogWindow('edit_email_group_window',false);$('#editGroupForm')[0].reset();"
+				style="cursor: pointer;" />
+		</div>
+		<DIV class="mtitle">
+						<img src="/ump/images/editor.png" width="14" height="14"
+							style="cursor: pointer;" />编辑
+					</DIV>
+		<form id="editGroupForm">
+		<DIV class="grid">
+			<DIV class="row">
+				<DIV class="span gridTitleBig">
+					邮件组名称：
+				</DIV>
+				<DIV class="span gridInputWAuto">
+					<INPUT type="text" id="editGroupName" class="publicSize" name="editGroupName"/>
+				</DIV>
+			</DIV>
+		</DIV>
+		</form>
+			<DIV class="btnCenter">
+					<INPUT type="button" class="info" onclick="javascript:editEmailGroup();editorValid.resetForm();$('#editGroupForm')[0].reset();"
+						value="确定"/>
+				<INPUT type="button" class="warning"
+						onclick="javascript:dilogWindow('edit_email_group_window');editorValid.resetForm();$('#editGroupForm')[0].reset();" style="margin-left: 30px;" value="取消" />
+			</DIV>
+	</DIV>
+	<div id="fade" class="black_overlay"></div>
+	<DIV>
+		<SCRIPT type="text/javascript">
+			<![CDATA[
+			function validataAddEmailGroupName() {
+				$("#addEmailGroupForm").validate({
+					rules : {
+						addGroupName:{required:true,remote:{
+									 url:"/ump/commentvalidata/validataUniqueId",
+									 type: "post", 
+									 data: {
+										field:'name',
+										value:function(){
+											return $("#addGroupName").val();
+										},
+										table:"VocEmailGroup",
+										isCompany:true,
+										companyField:"umpCompanyId"
+									 }
+						}}
+					},
+					messages : {
+						addGroupName :{
+							required:"邮件组名称不能为空",
+							remote:"邮件组名称重复"
+						}
+					},
+					errorElement:"em",
+					focusCleanup:true,
+					errorClass:"invalid"
+				});
+			}
+			function validataEditeEmailGroupName() {
+				
+			}
+			function addEmailGroup() {
+				if(!$("#addEmailGroupForm").valid()){
+					return;
+				}
+				var addGroupName = $("#addGroupName").val();
+				if (addGroupName == '' || addGroupName == undefined
+						|| $.trim(addGroupName) == '') {
+					$("#addSpan").toggle();
+					return;
+				}
+				var name = $.trim(addGroupName);
+				var url="/ump/vocemailgroups/addEmailGroup";
+				var param={name:name};
+				ajax(url, param, Notify, null, null);
+				////刷新邮件组
+				url ="/ump/vocemailgroups/emailGroupUl";
+				ajax(url, {}, null, null, flusEmailGroup);
+				loadTree();
+				dilogWindow('add_email_group_window');
+				
+			}	
+			function flusEmailGroup(data){
+				var dataList =eval("("+data+")");
+				 createSelect(dataList);
+			}
+			var editorValid;
+			function editDilogWindow(id){
+				var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+				var nodess = zTree.getSelectedNodes();
+				if (nodess == null || nodess.length < 1) {
+					Notify("请选择一个邮件组");
+					return;
+				}
+				if(!nodess[0].isParent){
+					Notify("请选择一个邮件组");
+					return;
+				}
+				$("#editGroupName").val(nodess[0].name);
+				var groupId = nodess[0].id;
+				dilogCenter(id);
+				$("#" + id).toggle();
+				$("#fade").toggle();
+				editorValid=$("#editGroupForm").validate({
+					rules : {
+						editGroupName:{required:true,remote:{
+									 url:"/ump/commentvalidata/validataUniqueId",
+									 type: "post", 
+									 data: {
+										field:'name',
+										value:function(){
+											return $("#editGroupName").val();
+										},
+										table:"VocEmailGroup",
+										id:function (){
+											return groupId;
+										},
+										isCompany:true,
+										companyField:"umpCompanyId"
+									 }
+						}}
+					},
+					messages : {
+						editGroupName :{
+							required:"邮件组名称不能为空",
+							remote:"邮件组名称重复"
+						}
+					},
+					errorElement:"em",
+					focusCleanup:true,
+					errorClass:"invalid"
+				});
+			}
+			function dilogWindow(id,flag) {
+				dilogCenter(id);
+					$("#" + id).toggle();
+					$("#fade").toggle();
+				
+			}
+
+			function loadWorkOrderType() {
+				$("#orderTypeList").html("");
+				$.ajax({
+					url : "/ump/vocworkordertypes/querWorkOrderTypeListAll",
+					async : false,
+					dataType : "text",
+					type : "POST",
+					data : {},
+					error : function(msg) {
+					},
+					success : function(data) {
+						var dataList = eval(data);
+						$("#orderTypeList").append(
+								createWorkOrderTypeSpan(dataList));
+					}
+				});
+
+			}
+			function createWorkOrderTypeSpan(dataList) {
+				var span = "";
+				for (var i = 0; i < dataList.length; i++) {
+					span += "<a>" + dataList[i].name
+							+ "</a><img class='pointer' onclick='deleteType("
+							+ dataList[i].id + ");' src='/ump/images/cl.png'/>";
+				}
+				span += "<IMG alt='添加'  class='pointer' onclick='addSpan(this);' src='/ump/images/add.png' />";
+				return span;
+			}
+			function addSpan(obj) {
+				var input = "<input class='orderAddInput' type='text' value=''  onblur='addWorkOrderType(this);'/>";
+				$(obj).before(input);
+				$(".orderAddInput")[0].focus();
+			}
+			function addWorkOrderType(obj) {
+				var url = "/ump/vocworkordertypes/addWordOrderType";
+				var workOrderTypeName = $(obj).val();
+				if ($.trim(workOrderTypeName) == ""
+						|| workOrderTypeName == null
+						|| workOrderTypeName == undefined) {
+					Notify("工单类型名称不能为空");
+					$(obj).remove();
+					return;
+				}
+				var param = {
+					name : workOrderTypeName
+				};
+				ajax(url, param, Notify, loadWorkOrderType);
+				$(obj).remove();
+				loadWorkOrderType();
+			}
+			function deleteType(id) {
+				if (!confirm("确定要删除该工单类型吗？")) {
+					return;
+				}
+				var url = "/ump/vocworkordertypes/delete";
+				var param = {
+					id : id
+				};
+				ajax(url, param, Notify, loadWorkOrderType);
+				loadWorkOrderType();
+			}
+			function Notify(msg) {
+				$.Notify({
+					caption : "",
+					content : msg,
+					timeout : 5000
+				});
+			}
+			function ajax(url, param, notifyCallBack, callBack,callBackData) {
+				$.ajax({
+					url : url,
+					async : false,
+					dataType : "text",
+					type : "POST",
+					data : param,
+					error : function(msg) {
+					},
+					success : function(data) {
+						if(notifyCallBack){
+							notifyCallBack(data);
+						}
+						if(callBack){
+							callBack;
+						}
+						if(callBackData){
+							callBackData(data);
+						}
+					}
+				});
+			}
+			
+			function loadTree(){
+				$.ajax({
+					url : "/ump/vocemailgroups/loadTree",
+					dataType : "text",
+					type : "POST",
+					data : {},
+					error : function(msg) {
+					},
+					success : function(data) {
+						zNodes = eval('(' + data + ')');
+						var setting = {
+									view: {
+										showIcon:false,
+										selectedMulti: false
+										},
+									data: {
+										simpleData: {
+										enable:true,
+										rootPId: ""
+										}
+									}
+								};
+						$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+					}
+				});
+				
+			}
+			]]>
+		</SCRIPT>
+	</DIV>
+</DIV>

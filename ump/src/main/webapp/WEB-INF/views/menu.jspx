@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:menu="urn:jsptagdir:/WEB-INF/tags/menu" id="menu" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <menu:menu id="_menu" z="nZaf43BjUg1iM0v70HJVEsXDopc=">
+
+        <menu:category id="c_umpcompany" z="VJj5VVEcI67C4p1/GuqqJtBMy5I=">
+            <menu:item id="i_umpcompany_new" messageCode="global_menu_new" url="/umpcompanys?form" z="EgIfei+yMsrKqRSqBKsa7MQR9OY="/>
+            <menu:item id="i_umpcompany_service" url="/umpcompanys/companyService"/>
+            <menu:item id="i_umpcompany_register" url="/umpcompanys/companyRegisterList"/>
+            <menu:item id="i_umpcompany_list" messageCode="global_menu_list" url="/umpcompanys?page=1&amp;size=${empty param.size ? 10 : param.size}" z="DtkwrJhmajKaZSzW7rTqgbTZEKI="/>
+         </menu:category>
+
+        <menu:category id="c_wccgroup" z="user-managed">
+            <menu:item id="i_wccgroup_list" messageCode="global_menu_list" url="/wccgroups/show?page=1&amp;size=${empty param.size ? 10 : param.size}" z="user-managed"/>
+
+        </menu:category>
+        <menu:category id="c_wccplatformuser" z="MK+7oi6Ae+8g1iD6NXMb/OAPvws=">
+            <menu:item id="i_wccplatformuser_new" messageCode="global_menu_new" url="/wccplatformusers?form" z="6HzPwK0P2Pp9TNBy75leITyr9FY="/>
+            <menu:item id="i_wccplatformuser_list" messageCode="global_menu_list" url="/wccplatformusers?page=1&amp;size=${empty param.size ? 10 : param.size}" z="AeGU3t/5MWgsZgHuA8sFER54Z7E="/>
+        </menu:category>
+        <menu:category id="c_umpauthority" z="ZSjpwfUb59WIo0oHXFloVLfrrjM=">
+            <menu:item id="i_umpauthority_new" messageCode="global_menu_new" url="/umpauthoritys?form" z="yqy/jAz0kW0rI/C/THCudao0Kes="/>
+            <menu:item id="i_umpauthority_list" messageCode="global_menu_list" url="/umpauthoritys?page=1&amp;size=${empty param.size ? 10 : param.size}" z="1y6H+gi+1h4xpfadHU8If9MGjXo="/>
+        </menu:category>
+        <menu:category id="c_umpbusinesstype" z="+ScrhOFSKzLIeZNEiKyMkwWOTmY=">
+            <menu:item id="i_umpbusinesstype_new" messageCode="global_menu_new" url="/umpbusinesstypes?form" z="lHgsLQPBf8yUR9g7euSyoGT2+Us="/>
+            <menu:item id="i_umpbusinesstype_list" messageCode="global_menu_list" url="/umpbusinesstypes?page=1&amp;size=${empty param.size ? 10 : param.size}" z="oHjdEUWu/iwP5V6jK6vNNAfpBg4="/>
+        </menu:category>
+        <menu:category id="c_wccuserpagetemp" z="rfl1kaJy+w6QmFA+1XW9yXqENTw=">
+            <menu:item id="i_wccuserpagetemp_new" messageCode="global_menu_new" url="/wccuserpagetemps?form" z="D6OajcraXFAbWgipzfSQNLNVnkI="/>
+            <menu:item id="i_wccuserpagetemp_list" messageCode="global_menu_list" url="/wccuserpagetemps?page=1&amp;size=${empty param.size ? 10 : param.size}" z="J3ZXmsVJgN1FnVRCydQR60ASOcY="/>
+        </menu:category>
+        <menu:category id="c_wccmembershiplevel" z="zdJZj6XkXXtJrsP143c82dnD1Mo=">
+            <menu:item id="i_wccmembershiplevel_new" messageCode="global_menu_new" url="/wccmembershiplevels?form" z="kWOPseSAQhhNBxgouPVpSgKJCs8="/>
+            <menu:item id="i_wccmembershiplevel_list" messageCode="global_menu_list" url="/wccmembershiplevels?page=1&amp;size=${empty param.size ? 10 : param.size}" z="XZpjxM7sTECwuAxDgzRT2M9VraI="/>
+        </menu:category>
+        <menu:category id="c_umpproduct" z="NAM/WaY9a40OtkS5MUH87w9SRuA=">
+            <menu:item id="i_umpproduct_new" messageCode="global_menu_new" url="/umpproducts?form" z="sQkxNbtC8s2PqVvOf2WaJyv/zeA="/>
+            <menu:item id="i_umpproduct_list" messageCode="global_menu_list" url="/umpproducts?page=1&amp;size=${empty param.size ? 10 : param.size}" z="foQDMbURZTawZ0cknK0pNkx8WNQ="/>
+        </menu:category>
+        <menu:category id="c_wccgroup" z="C827yqtG5mZTyBAD7bjs+UqHPJw=">
+            <menu:item id="i_wccgroup_new" messageCode="global_menu_new" url="/wccgroups?form" z="gqs4hFaAfS7rrl08QXC5jFcqzzk="/>
+            <menu:item id="i_wccgroup_list" messageCode="global_menu_list" url="/wccgroups?page=1&amp;size=${empty param.size ? 10 : param.size}" z="7bfIpR/aYn3Yt88Slj/4R6YfsQE="/>
+        </menu:category>
+        <menu:category id="c_wcclotteryactivity" z="AwnCZskJPg59jWfNPHOJLP2Sc+0=">
+            <menu:item id="i_wcclotteryactivity_new" messageCode="global_menu_new" url="/wcclotteryactivitys?form" z="08KxDY7a86ImfUThGwZTVAr4QFI="/>
+            <menu:item id="i_wcclotteryactivity_list" messageCode="global_menu_list" url="/wcclotteryactivitys?page=1&amp;size=${empty param.size ? 10 : param.size}" z="XEOpZvD/fL8mzuCBjrFkA88ynso="/>
+        </menu:category>
+        <menu:category id="c_wccactivities" z="adkhlkxF+OfLwh3LHxO83Txe3rg=">
+            <menu:item id="i_wccactivities_new" messageCode="global_menu_new" url="/wccactivitieses?form" z="K2Fu/f7op3riTIf/C2hIRdtt6pY="/>
+            <menu:item id="i_wccactivities_list" messageCode="global_menu_list" url="/wccactivitieses?page=1&amp;size=${empty param.size ? 10 : param.size}" z="6sdM5Oonxtf8CVLrJ2pD5VoDT8g="/>
+        </menu:category>
+        <menu:category id="c_wccmaterials" z="LyS09WkgxbMAt2UYKGC6gjJQB1s=">
+            <menu:item id="i_wccmaterials_new" messageCode="global_menu_new" url="/wccmaterialses?form" z="zsiK2nvxX5B6IqWBKoE7ICViiOc="/>
+            <menu:item id="i_wccmaterials_list" messageCode="global_menu_list" url="/wccmaterialses?page=1&amp;size=${empty param.size ? 10 : param.size}" z="l6vLs45rxutOeA2jk8h03xUVOy4="/>
+        </menu:category>
+        <menu:category id="c_wccoption" z="ASUl0LeYwZ0W1qLSO/ix4mHnGO8=">
+            <menu:item id="i_wccoption_new" messageCode="global_menu_new" url="/wccoptions?form" z="M6uyligYFJn2MTwq6qaGtH97r6Q="/>
+            <menu:item id="i_wccoption_list" messageCode="global_menu_list" url="/wccoptions?page=1&amp;size=${empty param.size ? 10 : param.size}" z="6/aFsVQiz7aegLuHGq7QY2ZeLxk="/>
+        </menu:category>
+        <menu:category id="c_wccsncode" z="/hcSNmj1ZMnlOk6HGL+/nT8JywM=">
+            <menu:item id="i_wccsncode_new" messageCode="global_menu_new" url="/wccsncodes?form" z="IrvtBizGvhuW5qUNFhXyPY9bsXI="/>
+            <menu:item id="i_wccsncode_list" messageCode="global_menu_list" url="/wccsncodes?page=1&amp;size=${empty param.size ? 10 : param.size}" z="tIqpEteVtCOkQPxwLvOVSvRwCs8="/>
+        </menu:category>
+        <menu:category id="c_wccfriend" z="yDDvK+eMjIZaIibpKYGo+MllfcQ=">
+            <menu:item id="i_wccfriend_new" messageCode="global_menu_new" url="/wccfriends?form" z="hLporM8oCUhYPfAXUR3bP9sOGgU="/>
+            <menu:item id="i_wccfriend_list" messageCode="global_menu_list" url="/wccfriends?page=1&amp;size=${empty param.size ? 10 : param.size}" z="ACb683YeMewKLpzfBxbxlUSjb/U="/>
+        </menu:category>
+        <menu:category id="c_wccinteractiveapp" z="hkVJDu7MBF8WUY7W2fYhTbFuroY=">
+            <menu:item id="i_wccinteractiveapp_new" messageCode="global_menu_new" url="/wccinteractiveapps?form" z="uD77y656XxYdCvH4VZmtu0lyMr0="/>
+            <menu:item id="i_wccinteractiveapp_list" messageCode="global_menu_list" url="/wccinteractiveapps?page=1&amp;size=${empty param.size ? 10 : param.size}" z="jLHbB57Ewaxiw4G5LbTbZr93wf4="/>
+        </menu:category>
+        <menu:category id="c_wccgroupmessfriend" z="o0C5KqM/KVpRxYW8tOc//bL5qbc=">
+            <menu:item id="i_wccgroupmessfriend_new" messageCode="global_menu_new" url="/wccgroupmessfriends?form" z="XAI/7rqgxEn1lIMRye7TvvVlHNg="/>
+            <menu:item id="i_wccgroupmessfriend_list" messageCode="global_menu_list" url="/wccgroupmessfriends?page=1&amp;size=${empty param.size ? 10 : param.size}" z="vXWiarHqEl/JUoQg+CBa0r9ZEGo="/>
+        </menu:category>
+        <menu:category id="c_wccmessage" z="vyHupW872GHCGvxBhxNNfTovTls=">
+            <menu:item id="i_wccmessage_new" messageCode="global_menu_new" url="/wccmessages?form" z="yi8mq1GoVGgumW9IdbBcTWLVrVc="/>
+            <menu:item id="i_wccmessage_list" messageCode="global_menu_list" url="/wccmessages?page=1&amp;size=${empty param.size ? 10 : param.size}" z="IU3S2fLUNy2HoNKFaaOCAnPz7zU="/>
+        </menu:category>
+        <menu:category id="c_wccpraise" z="UyYIg1NLG7Uv82gHk3rXIJHssBU=">
+            <menu:item id="i_wccpraise_new" messageCode="global_menu_new" url="/wccpraises?form" z="LVgR0nv4PfQ7Fh1oIZbDZhDOnJ4="/>
+            <menu:item id="i_wccpraise_list" messageCode="global_menu_list" url="/wccpraises?page=1&amp;size=${empty param.size ? 10 : param.size}" z="YOgAm6g/5OUblk+U2Uzlt9/jBq4="/>
+        </menu:category>
+        <menu:category id="c_wcccommunity" z="7IH/2D/Dl8zcE7egdoW5AFZPHDo=">
+            <menu:item id="i_wcccommunity_new" messageCode="global_menu_new" url="/wcccommunitys?form" z="/V0KUu177jY4wxlyyF6n/zHa3Sw="/>
+            <menu:item id="i_wcccommunity_list" messageCode="global_menu_list" url="/wcccommunitys?page=1&amp;size=${empty param.size ? 10 : param.size}" z="dzy5KFf87aTiI58s/KkxjaThdvY="/>
+        </menu:category>
+        <menu:category id="c_wcctopic" z="zQOTaDTIPrv5pSf2os9SBIkPCYY=">
+            <menu:item id="i_wcctopic_new" messageCode="global_menu_new" url="/wcctopics?form" z="mRpNh8EiQcLitZyjhhH2vU3ejoI="/>
+            <menu:item id="i_wcctopic_list" messageCode="global_menu_list" url="/wcctopics?page=1&amp;size=${empty param.size ? 10 : param.size}" z="g5PkLaKNhjVvVvwgsyWK/oZ/tAE="/>
+        </menu:category>
+        <menu:category id="c_wccutility" z="BQPS21o2QneiJUIndPlJ9eH5gWk=">
+            <menu:item id="i_wccutility_new" messageCode="global_menu_new" url="/wccutilitys?form" z="UfvZG8Iu4Y1n86CneYQfShSFys4="/>
+            <menu:item id="i_wccutility_list" messageCode="global_menu_list" url="/wccutilitys?page=1&amp;size=${empty param.size ? 10 : param.size}" z="eRtGtplOZrdeP3puShyrru0LqWg="/>
+        </menu:category>
+        <menu:category id="c_wccgroupmessage" z="VX1tnQL51jLgZ1aJJDKiKC0szm0=">
+            <menu:item id="i_wccgroupmessage_new" messageCode="global_menu_new" url="/wccgroupmessages?form" z="H2pXavSL8M8Vb+jcBRikaztKZ5U="/>
+            <menu:item id="i_wccgroupmessage_list" messageCode="global_menu_list" url="/wccgroupmessages?page=1&amp;size=${empty param.size ? 10 : param.size}" z="sm74rgoZN9dwpwZYBqM/m5TQ5Z4="/>
+        </menu:category>
+        <menu:category id="c_wccstore" z="F4UoJW+AlA9bDJcPkpa3mJJK56c=">
+            <menu:item id="i_wccstore_new" messageCode="global_menu_new" url="/wccstores?form" z="yphj9aVWnQSbfxyUR8dme7FL/e8="/>
+            <menu:item id="i_wccstore_list" messageCode="global_menu_list" url="/wccstores?page=1&amp;size=${empty param.size ? 10 : param.size}" z="S0hW+L4HszAzgQhewsToOvPacdI="/>
+        </menu:category>
+        <menu:category id="c_wccanswer" z="n4E0zci2P8N0TdWGnAhzAl/+Ia8=">
+            <menu:item id="i_wccanswer_new" messageCode="global_menu_new" url="/wccanswers?form" z="VfAsKzVslWhddlSAtOvJwaCq27w="/>
+            <menu:item id="i_wccanswer_list" messageCode="global_menu_list" url="/wccanswers?page=1&amp;size=${empty param.size ? 10 : param.size}" z="QGZP34y1Qy1V1vg+9p7LRTI/+CA="/>
+        </menu:category>
+        <menu:category id="c_wccleavemsgrecord" z="CaydYRkEijp0sbALmZiTq/A4q34=">
+            <menu:item id="i_wccleavemsgrecord_new" messageCode="global_menu_new" url="/wccleavemsgrecords?form" z="814VMj18Q4xLM940t22SrxcJuCE="/>
+            <menu:item id="i_wccleavemsgrecord_list" messageCode="global_menu_list" url="/wccleavemsgrecords?page=1&amp;size=${empty param.size ? 10 : param.size}" z="MzQSUyIaVJQcmnPrL+tEaWf9Jhg="/>
+        </menu:category>
+        <menu:category id="c_wccquestion" z="UGWUfgz5z9xsqopOaKDvLAjTz3E=">
+            <menu:item id="i_wccquestion_new" messageCode="global_menu_new" url="/wccquestions?form" z="Cw3pLOFKx5wwhRkKviSZQupvabY="/>
+            <menu:item id="i_wccquestion_list" messageCode="global_menu_list" url="/wccquestions?page=1&amp;size=${empty param.size ? 10 : param.size}" z="0x7TfNDPWiXEjxMW8JeyMvf+b4M="/>
+        </menu:category>
+        <menu:category id="c_wccquestionnaire" z="3vtDzAmnvAEBS4VTaAz96k6ewAk=">
+            <menu:item id="i_wccquestionnaire_new" messageCode="global_menu_new" url="/wccquestionnaires?form" z="0VQUEqjL0oFIUW/RubF9PKFgwbI="/>
+            <menu:item id="i_wccquestionnaire_list" messageCode="global_menu_list" url="/wccquestionnaires?page=1&amp;size=${empty param.size ? 10 : param.size}" z="QOCDREFtTS+DOLvQBOtSS3kec48="/>
+        </menu:category>
+        <menu:category id="c_wccqrcode" z="ipvp3uoekGqr2V1mNwEH1w1NCIQ=">
+            <menu:item id="i_wccqrcode_new" messageCode="global_menu_new" url="/wccqrcodes?form" z="c8sjraKXEeqCcmagR4ednkabpv0="/>
+            <menu:item id="i_wccqrcode_list" messageCode="global_menu_list" url="/wccqrcodes?page=1&amp;size=${empty param.size ? 10 : param.size}" z="FUaSkVUu+sefDJCIWVGXHJBDmVc="/>
+        </menu:category>
+        <menu:category id="c_wccwelcomkbs" z="n4SuDdIV5DiFzhD3YW5x/7rXsmU=">
+            <menu:item id="i_wccwelcomkbs_new" messageCode="global_menu_new" url="/wccwelcomkbses?form" z="jt6nq39TfQ43rRJpieRjS8cdyZ8="/>
+            <menu:item id="i_wccwelcomkbs_list" messageCode="global_menu_list" url="/wccwelcomkbses?page=1&amp;size=${empty param.size ? 10 : param.size}" z="fkaThiENjJyQViFrfSF8wuNYOVw="/>
+        </menu:category>
+        <menu:category id="c_wccplate" z="GJisvwJ67vvDrFdYLFmWcjwWrjs=">
+            <menu:item id="i_wccplate_new" messageCode="global_menu_new" url="/wccplates?form" z="sXvtFQIM6tqQwZwKCHNQZ05Q6fc="/>
+            <menu:item id="i_wccplate_list" messageCode="global_menu_list" url="/wccplates?page=1&amp;size=${empty param.size ? 10 : param.size}" z="K0RVayG9SGSxjElHbBZ5orvwlAw="/>
+        </menu:category>
+        <menu:category id="c_umpoperator" z="tEjv9LAiG3RPe6qi6qQDv9c30jo=">
+            <menu:item id="i_umpoperator_new" messageCode="global_menu_new" url="/umpoperators?form" z="lIBUpQyLJy/C64VmRXRk5MeDGeo="/>
+            <menu:item id="i_umpoperator_list" messageCode="global_menu_list" url="/umpoperators?page=1&amp;size=${empty param.size ? 10 : param.size}" z="fy5xqtLZRgajfQLQSe/QQ57UM8g="/>
+        </menu:category>
+        <menu:category id="c_wccuserfieldvalue" z="qmiuoBK5zUPw7SVSd0msQaJHEIc=">
+            <menu:item id="i_wccuserfieldvalue_new" messageCode="global_menu_new" url="/wccuserfieldvalues?form" z="YOn6XDrPAzgmX59WKvRFUpgDvCE="/>
+            <menu:item id="i_wccuserfieldvalue_list" messageCode="global_menu_list" url="/wccuserfieldvalues?page=1&amp;size=${empty param.size ? 10 : param.size}" z="v+M5HKis/FBXnaXosfXHMJWxhsY="/>
+        </menu:category>
+        <menu:category id="c_wccuserlottery" z="9N8GytubMNAupTtyhon1aZ0TvlU=">
+            <menu:item id="i_wccuserlottery_new" messageCode="global_menu_new" url="/wccuserlotterys?form" z="4M9oIbeX5R9AWQ/fRdOUdhIimzo="/>
+            <menu:item id="i_wccuserlottery_list" messageCode="global_menu_list" url="/wccuserlotterys?page=1&amp;size=${empty param.size ? 10 : param.size}" z="o6XpdI3Ekrga4WnD9dPJ4/FiZcA="/>
+        </menu:category>
+        <menu:category id="c_umprole" z="KSy6KbgxsgQTAFJWs9JYFYVCvsA=">
+            <menu:item id="i_umprole_new" messageCode="global_menu_new" url="/umproles?form" z="mLtSCZmhmJrRmmXeIFbKfFjK+eU="/>
+            <menu:item id="i_umprole_list" messageCode="global_menu_list" url="/umproles?page=1&amp;size=${empty param.size ? 10 : param.size}" z="M7WcqqEFcG/CCqI01Afa/7VxcNA="/>
+        </menu:category>
+        <menu:category id="c_wccchatrecourds" z="crPWHB7OJ+quuSh6Bv1lbnn3iP8=">
+            <menu:item id="i_wccchatrecourds_new" messageCode="global_menu_new" url="/wccchatrecourdses?form" z="YQThPxkp6SWoIb/eNg/DJ7vD1eM="/>
+            <menu:item id="i_wccchatrecourds_list" messageCode="global_menu_list" url="/wccchatrecourdses?page=1&amp;size=${empty param.size ? 10 : param.size}" z="RNIu14zEylJOECAuD5GJEeo1UZY="/>
+        </menu:category>
+        <menu:category id="c_wccautokbs" z="WQDOcqymyxZqylEfnhSbeautl0s=">
+            <menu:item id="i_wccautokbs_new" messageCode="global_menu_new" url="/wccautokbses?form" z="HGcsRRWilYfJkCuXh0MGDZqmxYs="/>
+            <menu:item id="i_wccautokbs_list" messageCode="global_menu_list" url="/wccautokbses?page=1&amp;size=${empty param.size ? 10 : param.size}" z="BgIFk/C/aRxO1KL3M7SwLQciXo4="/>
+        </menu:category>
+        <menu:category id="c_umpbrand" z="0IGBfo7zRHFeBqZzDjpsQoe7j34=">
+            <menu:item id="i_umpbrand_new" messageCode="global_menu_new" url="/umpbrands?form" z="2eVkwlilIJXefqruGBzZvcRSbjs="/>
+            <menu:item id="i_umpbrand_list" messageCode="global_menu_list" url="/umpbrands?page=1&amp;size=${empty param.size ? 10 : param.size}" z="/KILxcWHFzLvBy+fldXS7OyYBPQ="/>
+        </menu:category>
+        <menu:category id="c_wcctemplate" z="5DXcfVzsOJTciYxaL7TOB4QYGxw=">
+            <menu:item id="i_wcctemplate_new" messageCode="global_menu_new" url="/wcctemplates?form" z="DJ0EVrDeG01ZacCZoFXjcLR+39Q="/>
+            <menu:item id="i_wcctemplate_list" messageCode="global_menu_list" url="/wcctemplates?page=1&amp;size=${empty param.size ? 10 : param.size}"/>
+            <menu:item id="i_wcctemplate_list" messageCode="global_menu_list" url="/wcctemplates/show?page=1&amp;size=${empty param.size ? 10 : param.size}"/>
+        </menu:category>
+        <menu:category id="c_umprole" z="user-managed">
+            <menu:item id="i_umprole_new" messageCode="global_menu_new" url="/umproles/create?form" z="user-managed"/>
+            <menu:item id="i_umprole_list" messageCode="global_menu_list" url="/umproles?page=1&amp;size=${empty param.size ? 10 : param.size}"/>
+        </menu:category>
+        <menu:category id="c_wcctemplate" z="5DXcfVzsOJTciYxaL7TOB4QYGxw=">
+            <menu:item id="i_wcctemplate_new" messageCode="global_menu_new" url="/wcctemplates?form" z="DJ0EVrDeG01ZacCZoFXjcLR+39Q="/>
+            <menu:item id="i_wcctemplate_list" messageCode="global_menu_list" url="/wcctemplates?page=1&amp;size=${empty param.size ? 10 : param.size}" z="CWaPMdnFbBLMNcxuqMTe4HzLukI="/>
+        </menu:category>
+    </menu:menu>
+</div>

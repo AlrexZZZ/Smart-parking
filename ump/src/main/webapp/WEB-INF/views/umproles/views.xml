@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default_pub" name="umproles/list">
+        <put-attribute name="body" value="/WEB-INF/views/umproles/list.jspx"/>
+    </definition>
+    <definition extends="default_pub" name="umproles/lists">
+        <put-attribute name="body" value="/WEB-INF/views/umproles/lists.jspx"/>
+    </definition>
+<definition extends="default_pub" name="umproles/show">
+        <put-attribute name="body" value="/WEB-INF/views/umproles/show.jspx"/>
+    </definition>
+<definition extends="default_pub" name="umproles/create">
+        <put-attribute name="body" value="/WEB-INF/views/umproles/create.jspx"/>
+    </definition>
+    <definition extends="default_pub" name="umproles/creates">
+        <put-attribute name="body" value="/WEB-INF/views/umproles/creates.jspx"/>
+    </definition>
+<definition extends="default_pub" name="umproles/update">
+        <put-attribute name="body" value="/WEB-INF/views/umproles/update.jspx"/>
+    </definition>
+    <definition extends="pub" name="umproles/result">
+        <put-attribute name="body" value="/WEB-INF/views/umproles/result.jspx"/>
+    </definition>
+</tiles-definitions>

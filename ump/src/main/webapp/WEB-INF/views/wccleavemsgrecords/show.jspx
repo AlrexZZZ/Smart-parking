@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccLeavemsgRecord" object="${wccleavemsgrecord}" path="/wccleavemsgrecords" z="A3kwYZ7n3i4kjvIL7SKIPSKZd3M=">
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccLeavemsgRecord_isDeleted" object="${wccleavemsgrecord}" z="F1FbT5SAOIvMWfjNPepMF3DuTx4="/>
+        <field:display field="msgUserName" id="s_com_nineclient_model_WccLeavemsgRecord_msgUserName" object="${wccleavemsgrecord}" z="CnDI1p/w7wjmTY+CSVsflGi1IX0="/>
+        <field:display field="msgContent" id="s_com_nineclient_model_WccLeavemsgRecord_msgContent" object="${wccleavemsgrecord}" z="5vkHzC5oMONILBREx80IVOoLZmY="/>
+        <field:display date="true" dateTimePattern="${wccLeavemsgRecord_msgtime_date_format}" field="msgTime" id="s_com_nineclient_model_WccLeavemsgRecord_msgTime" object="${wccleavemsgrecord}" z="+j3BSv1No82jjWYh1MO68w9Bs7I="/>
+    </page:show>
+</div>

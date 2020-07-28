@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_com_nineclient_model_VocTemplateCategory" modelAttribute="vocTemplateCategory" path="/voctemplatecategorys" render="${empty dependencies}" z="qwyiLPSpv22a96ZMQ6cpuk2kw2M=">
+        <field:input field="name" id="c_com_nineclient_model_VocTemplateCategory_name" required="true" z="eEx/flhDIEA9cDyWPANxaZDofMY="/>
+        <field:input field="sort" id="c_com_nineclient_model_VocTemplateCategory_sort" z="etsesvuY+8oeMVOaophxr/Ad23c="/>
+        <field:checkbox field="isVisable" id="c_com_nineclient_model_VocTemplateCategory_isVisable" z="y8HF2kBDEurjOPJEYyvMmUpLahc="/>
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_VocTemplateCategory_isDeleted" z="KdNhr0n7gGpXSnrYOPiyx1PavD4="/>
+        <field:datetime dateTimePattern="${vocTemplateCategory_createtime_date_format}" field="createTime" id="c_com_nineclient_model_VocTemplateCategory_createTime" z="+Uf6AMoCEajxCsdS71gXW46XGZo="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_nineclient_model_VocTemplateCategory" render="${not empty dependencies}" z="GYKKqjbM1bQxIHiw3I0R9SYs1OY="/>
+</div>

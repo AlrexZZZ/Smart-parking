@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_VocGoodsProperty" object="${vocgoodsproperty}" path="/vocgoodspropertys" z="ZvVuL4ioN4ER7Ms8/pDBD9W+RLo=">
+        <field:display field="propertyName" id="s_com_nineclient_model_VocGoodsProperty_propertyName" object="${vocgoodsproperty}" z="WG7BEXgsY+l/A5GWYw9QSby4v1Y="/>
+        <field:display field="propertyValue" id="s_com_nineclient_model_VocGoodsProperty_propertyValue" object="${vocgoodsproperty}" z="okYTMiuHhGiMZeUGsEKtEhy7Ml4="/>
+        <field:display field="valueType" id="s_com_nineclient_model_VocGoodsProperty_valueType" object="${vocgoodsproperty}" z="Uhg3rJ2krT/Eim4Mpaq8EYw+/NY="/>
+    </page:show>
+</div>

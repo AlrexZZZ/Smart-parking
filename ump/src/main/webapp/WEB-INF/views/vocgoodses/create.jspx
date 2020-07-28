@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_com_nineclient_model_VocGoods" modelAttribute="vocGoods" path="/vocgoodses" render="${empty dependencies}" z="wWOtvNO+HsDyywrOPHIT08MLTIk=">
+        <field:input field="name" id="c_com_nineclient_model_VocGoods_name" required="true" z="IAUX0VgE1jNj25wIojX1odb5yjU="/>
+        <field:input field="goodsId" id="c_com_nineclient_model_VocGoods_goodsId" z="m4v1uAILF7HNnHd60gS1+/W2l0w="/>
+        <field:input field="url" id="c_com_nineclient_model_VocGoods_url" required="true" z="pvZATA0A82YviUBrDly7lwr6Agc="/>
+        <field:datetime dateTimePattern="${vocGoods_createtime_date_format}" field="createTime" id="c_com_nineclient_model_VocGoods_createTime" z="aXysPL3kAu6+JCUrpvG5p3KX6wc="/>
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_VocGoods_isDeleted" z="P3607GHqb5CZ80QA5EY3Sh1t2Jg="/>
+        <field:input field="goodsNumber" id="c_com_nineclient_model_VocGoods_goodsNumber" z="z5fx9pteQWe51tO/IBa8//IVu7Q="/>
+        <field:select id="c_com_nineclient_model_vocgoods_channel" items="${channels}" field="channel" itemValue="id"  path="channels"></field:select>
+        <field:select id="label_com_nineclient_model_vocgoods_shop" items="${shops}" field="shop" itemValue="id"  path="shops"></field:select>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_nineclient_model_VocGoods" render="${not empty dependencies}" z="PIatvjXFdHRYY5Yi1jew7pIt8pQ="/>
+</div>

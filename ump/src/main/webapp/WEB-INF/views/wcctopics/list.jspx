@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_WccTopic" items="${wcctopics}" z="9RUdSEQGrAFtKNJ4w2cAE7o/VkE=">
+        <table:table data="${wcctopics}" id="l_com_nineclient_model_WccTopic" path="/wcctopics" z="DR2JEI6wphpoB3KtOsaxzCRhACU=">
+            <table:column id="c_com_nineclient_model_WccTopic_isDeleted" property="isDeleted" z="ONqcXFo+LV8+Oz9LgJTgILsYIxU="/>
+            <table:column id="c_com_nineclient_model_WccTopic_status" property="status" z="35bOJAK5GfiDzknXO6eHZsC6HSU="/>
+            <table:column id="c_com_nineclient_model_WccTopic_content" property="content" z="baggWMR19CqbLVJt5xphYxeh49Y="/>
+            <table:column id="c_com_nineclient_model_WccTopic_isOfficial" property="isOfficial" z="Eu5C+9rQ7T8VxRJ4jwr/2tvi2cA="/>
+            <table:column id="c_com_nineclient_model_WccTopic_commentCount" property="commentCount" z="/PPXLuGm1xq1LiKSSvJI0JYXUa8="/>
+            <table:column id="c_com_nineclient_model_WccTopic_praiseCount" property="praiseCount" z="rvdgE3dEgPYvEZpAT/lRXil0XPw="/>
+        </table:table>
+    </page:list>
+</div>

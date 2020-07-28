@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default_pub" name="vocworkorders/list">
+        <put-attribute name="body" value="/WEB-INF/views/vocworkorders/list.jspx"/>
+    </definition>
+<definition extends="default_pub" name="vocworkorders/show">
+        <put-attribute name="body" value="/WEB-INF/views/vocworkorders/show.jspx"/>
+    </definition>
+<definition extends="default_pub" name="vocworkorders/create">
+        <put-attribute name="body" value="/WEB-INF/views/vocworkorders/create.jspx"/>
+    </definition>
+<definition extends="default_pub" name="vocworkorders/update">
+        <put-attribute name="body" value="/WEB-INF/views/vocworkorders/update.jspx"/>
+    </definition>
+</tiles-definitions>

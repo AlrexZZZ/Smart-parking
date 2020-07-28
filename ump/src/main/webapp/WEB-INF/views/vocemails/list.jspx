@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_VocEmail" items="${vocemails}" z="X8Ce42ihSLCPET8X5c7oeiJtAdk=">
+        <table:table data="${vocemails}" id="l_com_nineclient_model_VocEmail" path="/vocemails" z="f9ZXF5fz32AhjH8NQ3PFljs0e0Q=">
+            <table:column id="c_com_nineclient_model_VocEmail_name" property="name" z="cbCCoPj7eMLIcelSNlhLxIpFpjs="/>
+            <table:column id="c_com_nineclient_model_VocEmail_email" property="email" z="PViLRD2apHZFXgNViKq7d0eDa2k="/>
+            <table:column id="c_com_nineclient_model_VocEmail_remark" property="remark" z="U8xIVgzMYBwAECjsYbEcdz4PdTE="/>
+            <table:column id="c_com_nineclient_model_VocEmail_isDeleted" property="isDeleted" z="99Y5a8YqHSF1d1rAtDh+8jugXpk="/>
+            <table:column id="c_com_nineclient_model_VocEmail_isVisable" property="isVisable" z="mCJSfddRuhVGmRNsbl76qgU4eLw="/>
+            <table:column date="true" dateTimePattern="${vocEmail_createtime_date_format}" id="c_com_nineclient_model_VocEmail_createTime" property="createTime" z="bsKgXHmZk9Bim/HKQGMMavnZZCo="/>
+        </table:table>
+    </page:list>
+</div>

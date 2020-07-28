@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="http://www.springframework.org/tags/form" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<SCRIPT type="text/javascript">
+	$(document).ready(function() {
+		queryCompanyRegister();
+	 });
+	
+	
+	function queryCompanyRegister() {
+		var start = 0;
+		var limit = 10;
+		var companyCode = $("#companyCodeId").val();
+		var channelId = $("#channels").val();
+		var versionId = $("#version").val();
+		var productId = $("#productId").val();
+		var parentBusinessType = $("#bussinessTypeId").val();
+		
+		var parmam = {
+			start : start,
+			limit : limit,
+			companyCode:companyCode,
+			channelId:channelId,
+			versionId:versionId,
+			productId:productId,
+			parentBusinessType:parentBusinessType
+		};
+
+		$.ajax({
+			url : "/ump/umpcompanys/queryCompanyRegister",
+			type : "POST",
+			data : parmam,
+			error : function(msg) {
+				alert("error " + msg);
+			},
+			success : function(text) {
+				$("#showResult").html(text);
+			}
+		});
+	}
+	
+      function createSelect(id){
+    	   $.ajax({
+	            url:"/ump/umpcompanys/getUmpChanelByProduct",
+	            //dataType:"json",
+	            type:"POST",
+	            data:{'id':id},
+	            error: function(msg){
+	            	alert("msg "+msg);
+	            },
+	            success: function(text) { //若Ajax处理成功后的回调函数，text是返回的页面信息
+	            	  $("#divChannelId").html('');
+	            	  $("#divChannelId").html(text);
+	            }
+	        }); 
+    	   
+    	   $.ajax({
+	            url:"/ump/umpcompanys/getUmpVersionByProduct",
+	            //dataType:"json",
+	            type:"POST",
+	            data:{'id':id},
+	            error: function(msg){
+	            	alert("msg "+msg);
+	            },
+	            success: function(text) { //若Ajax处理成功后的回调函数，text是返回的页面信息
+	            	  $("#divVersionId").html('');
+	            	  $("#divVersionId").html(text);
+	            }
+	        }); 
+
+      }
+      
+   
+      
+      function changeStatus(){
+    	  var status = $('input:radio:checked').val();
+    	  var id= $("#companyId").val();
+    	  
+    	  $.ajax({
+	            url:"/ump/umpcompanys/changeStatus",
+	            type:"POST",
+	            data:{'id':id,status:status},
+	            error: function(msg){
+	            	alert("操作失败!");
+	            	$.Dialog.close();
+	            },
+	            success: function(text) { //若Ajax处理成功后的回调函数，text是返回的页面信息
+	            	queryCompanyRegister(); 
+	            	$.Dialog.close();
+	            }
+	        }); 
+      }
+      
+      var html = "";
+ 	 function checkStatus(id) {
+ 			$.Dialog({
+ 				overlay : true,
+ 				shadow : true,
+ 				flat : true,
+ 				icon : '<img src="images/excel2013icon.png"/>',
+ 				title : '审核',
+ 				content : '',
+ 				padding : 20,
+ 				height : 300,
+ 				width : 500,
+ 				onShow : function(_dialog) {
+ 					if(html==""){
+ 					  html = $("#dialogId").html();
+ 					  $("#dialogId").remove();
+ 					}
+ 					$.Dialog.content(html);
+ 					$.Metro.initInputs();
+ 					$("#companyId").val(id);
+ 				}
+ 			});
+ 		}
+ 		
+    
+    </SCRIPT>
+	<style>
+#seacher {
+	width: 100%;
+}
+
+#seacher tr {
+	height: 30px
+}
+
+#seacher input, select {
+	//margin: 0 30px;
+	font-size: 100%;
+	vertical-align: middle;
+	width: 160px;
+	height: 22px;
+}
+#buttons{
+	margin: 20px 0 ;
+}
+#buttons input {
+	padding: 2px;
+	margin: 0 10px;
+	width: 120px;
+}
+</style>
+	<div id="dialogId" style="display: none">
+	<input type="hidden" id="companyId"/>
+			<table>
+				<tr>
+					<td>审核状态:</td>
+					<td>通 过 <input name="status" value="1" type="radio" checked="checked" /></td>
+					<td>不通过 <input name="status" value="2" type="radio" /></td>
+				</tr>
+				<tr>
+					<td><input type="button" value="提交" onclick="javascript:changeStatus()" /></td>
+					<td><input type="button" value="取消" onclick="$.Dialog.close()" /></td>
+				</tr>
+			</table>
+	</div>
+
+	<div id="seacher">
+		<div style="border-bottom: thin solid black; margin-bottom: 28px; padding-bottom: 10px;">
+			<h4>查询条件</h4>
+		</div>
+			<table>
+				<tr>
+					<td>公司code:</td>
+					<td><div><input name="companyCode" id="companyCodeId"/></div></td>
+
+					<td>所在行业:</td>
+					<td><select id="bussinessTypeId">
+					    <option value="">请选择</option>
+					    <c:forEach var="parentBusinessType" items="${parentBusinessTypes}">
+					      <option value="${parentBusinessType.id}">${parentBusinessType.businessName}</option>
+					    </c:forEach>
+					  </select>
+					</td>
+
+					<td>审核状态:</td>
+					<td>
+					<select id="statusId">
+					    <option value="">请选择</option>
+					    <c:forEach var="status" items="${status}">
+					      <option value="${status.id}">${status.name}</option>
+					    </c:forEach>
+					  </select>
+					</td>
+				</tr>
+
+				<tr>
+					<td>申请版本:</td>
+					<td>
+						<div id="divVersionId">
+							<select id="version" name="version">
+								<c:forEach var="version" items="${versionList}">
+									<option value="${version.id}">${version.versionName}</option>
+								</c:forEach>
+							</select>
+						</div>
+
+					</td>
+
+					<td>选择渠道:</td>
+					<td>
+						<div id="divChannelId">
+							<select id="channels" name="channels">
+								<c:forEach var="channel" items="${channelList}">
+									<option value="${channel.id}">${channel.channelName}</option>
+								</c:forEach>
+							</select>
+						</div>
+					</td>
+
+					<td>申请时间</td>
+					<td><input type="text" class="Wdate" id="commentStartTimeId" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" /></td>
+				
+				
+				</tr>
+
+				<tr>
+					<td>申请产品:</td>
+					<td>
+					<select id="productId">
+					    <option value="">请选择</option>
+					    <c:forEach var="products" items="${products}">
+					      <option value="${products.id}">${products.productName}</option>
+					    </c:forEach>
+					  </select>
+					
+					
+					</td>
+				</tr>
+
+			</table>
+
+			<div id="buttons">
+				<input type="submit" value="查询" class="info" onclick="javascript:queryCompanyRegister()" /> <input type="button" value="重置" />
+			</div>
+	</div>
+
+
+	<div id="showResult"></div>
+</div>

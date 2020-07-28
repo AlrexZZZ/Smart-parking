@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccGroupMessage" object="${wccgroupmessage}" path="/wccgroupmessages" z="1+ioFYnTC5sHisR6Vq0N2NgxB0k=">
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccGroupMessage_isDeleted" object="${wccgroupmessage}" z="HcsNYy4kPGN4qN3T/sjAm5qcoeg="/>
+        <field:display date="true" dateTimePattern="${wccGroupMessage_createtime_date_format}" field="createTime" id="s_com_nineclient_model_WccGroupMessage_createTime" object="${wccgroupmessage}" z="cVjZ08+MZKEgN+Y8WK2WXQgOojg="/>
+        <field:display field="sendStatus" id="s_com_nineclient_model_WccGroupMessage_sendStatus" object="${wccgroupmessage}" z="fDB9nMfZjE7zfJywd2Xe5QpUJTI="/>
+        <field:display field="title" id="s_com_nineclient_model_WccGroupMessage_title" object="${wccgroupmessage}" z="0Tid7g+KHZRsw1o43JNBkOiIyTA="/>
+        <field:display field="author" id="s_com_nineclient_model_WccGroupMessage_author" object="${wccgroupmessage}" z="q1zsOxzO9IF0nHrqq/PBp2eL3yg="/>
+        <field:display field="content" id="s_com_nineclient_model_WccGroupMessage_content" object="${wccgroupmessage}" z="8DfE+1/zlZP4kmxbG1lq0sU0QWk="/>
+        <field:display field="digest" id="s_com_nineclient_model_WccGroupMessage_digest" object="${wccgroupmessage}" z="pfuV7vUQYpF2ICyvjnKj8JsMb1k="/>
+        <field:display field="url" id="s_com_nineclient_model_WccGroupMessage_url" object="${wccgroupmessage}" z="fK/kfvF1ReUNWOfYHk3i7z4TKEI="/>
+        <field:display field="sex" id="s_com_nineclient_model_WccGroupMessage_sex" object="${wccgroupmessage}" z="TKWtoqHTgLo8ijgwerIofMbY63s="/>
+        <field:display field="area" id="s_com_nineclient_model_WccGroupMessage_area" object="${wccgroupmessage}" z="fr1xFmHyGNh7D8a/BW7y5Tvwmvc="/>
+        <field:display field="mediaUrl" id="s_com_nineclient_model_WccGroupMessage_mediaUrl" object="${wccgroupmessage}" z="gspxuGNSNNJIlIKGFK3DJG3nuT8="/>
+        <field:display field="msgNum" id="s_com_nineclient_model_WccGroupMessage_msgNum" object="${wccgroupmessage}" z="ME0kTHcC5YCaeA7I/syn6NMTCKk="/>
+    </page:show>
+</div>

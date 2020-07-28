@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <style>
+    .sel {margin: 0 0px;font-size: 100%;width: 135px;border:1px solid #e4e4e4;height: 28px;}
+	select{width: 135px;height: 28px;background-color: #fff;border: 1px solid #e4e4e4;}
+	.metro label { display: block;font-size: 12px;font-weight: normal; margin: 5px 0;text-align: right;}
+    </style>
+    
+      <script type="text/javascript">
+      <![CDATA[
+               
+              var sn = '';
+              var tel = '';
+             $(document).ready(function() {
+            	 querySncode(1);
+           	});
+               
+               
+      		function query(){
+      			sn = $('#sn_')[0].value;
+      			tel = $('#ztel_')[0].value;
+      			querySncode(1);
+      		}
+      		
+      		function awardSncode(sncodeId,lotteryId){
+      			sn = $('#sn_')[0].value;
+      			tel = $('#ztel_')[0].value;
+      			var parmam = {
+          				sncodeId : sncodeId,
+          				lotteryId : lotteryId
+          			};
+      			$.ajax({
+      				url : "/ump/wccsncodes/awardSncode",
+      				type : "POST",
+      				data : parmam,
+      				error : function(msg) {
+      					alert("error " + msg);
+      				},
+      				success : function(text) {
+      					querySncode(1);
+      				}
+      			});
+      			
+      		}
+      		
+      		function awards(){
+      			var checks = $(":checkbox[class='scheck']:checked");
+				var num = checks.length;
+				if(num==0){
+					alert('请选择要兑奖的信息');
+					return;
+				}
+			    var n = parseInt(num)-1;
+			    for(i=0;i<num;i++){
+			       	var sid = checks[i].value.split(',')[0];
+			       	sncodes.push(sid);
+			       	lotteryId= checks[i].value.split(',')[1];
+			    }
+			    var sns = sncodes.join(',');
+      			awardSncode(sns,lotteryId);
+      		}
+      		
+      		function goPage(page){
+    			var pageStr = $("#pageStr").val();
+    	    	if($.trim(pageStr) == ""){
+    	    		alert("请输入需要跳转的页数！");
+    	    		return;
+    	    	}
+    	    	if(isNaN(pageStr)){
+    	    		alert("格式错误，请输入数字！");
+    	    		return;
+    	    	}
+    	    	if(pageStr > page){
+    	    		alert("你输入的页数大于最大页数");
+    	    		return;
+    	    	}
+    	    	if(pageStr <= 0){
+    	    		alert("你输入的页数不符合要求");
+    	    		return;
+    	    	}
+    	    	querySncode(pageStr);
+    		}
+      		
+      		function querySncode(pageNo) {
+      			var start = 0;
+      			var limit = $("#limit").val();
+      			var platformId =$('#platformUser_').val();
+      			if (pageNo > 0) {
+      				start = (pageNo - 1) * limit;
+      			}
+      			
+      			var parmam = {
+      				start : start,
+      				limit : limit,
+      				sn : sn,
+      				tel : tel,
+      				platformId : platformId
+      			};
+
+      			$.ajax({
+      				url : "/ump/wccsncodes/querySncode",
+      				type : "POST",
+      				data : parmam,
+      				error : function(msg) {
+      					alert("error " + msg);
+      				},
+      				success : function(text) {
+      					$("#showResult").html(text);
+      				}
+      			});
+      		}
+      		
+      		function reset(){
+      			$('#sn_').val('');
+      			$('#ztel_').val('');
+      			$('#platformUser_').val('');
+      		}
+      		
+      		function checkall(){
+    			var acheck =$(":checkbox[class='acheck']");
+    			var ischeck = acheck[0].checked;
+    			var checks =$(":checkbox[class='scheck']");
+    			var num = checks.length;
+    			for(i=0;i<num;i++){
+    				if(ischeck==true){
+	    			    checks[i].checked=true;
+    				}else if(ischeck==false){
+    					checks[i].checked=false;
+    				}
+    			}
+    		}
+    		
+    		var sncodes = new Array();
+    		var lotteryId = '';
+    		function award(){
+    			var checks = $(":checkbox[class='scheck']:checked");
+    				var num = checks.length;
+    				if(num==0){
+    					alert('请选择要兑奖的信息');
+    					return;
+    				}
+    			    var n = parseInt(num)-1;
+    			    for(i=0;i<num;i++){
+    			       	var sid = checks[i].value.split(',')[0];
+    			       	sncodes.push(sid);
+    			       	lotteryId= checks[i].value.split(',')[1];
+    			    }
+    			    var sns = sncodes.join(',');
+    			    window.location.href='/ump/wccsncodes/update?id='+sns+'&activityId='+lotteryId;
+    		}
+      ]]>
+      </script>
+      <div class="grid">
+      		<div class="row">
+      			<div class="span3">
+					<Label>公众平台： </Label> 
+					<select id="platformUser_" class="sel" name="platformUserId">
+						<option value="">全部</option>
+						<c:forEach var="data" items="${platformUser}">
+							<option value="${data.id}">${data.account}</option>
+						</c:forEach>
+					</select>
+				</div>
+      			<div class="span3">
+      				<Label>SN码：</Label><input style="width: 135px;height: 28px;background-color: #fff;
+			border: 1px solid #e4e4e4;" id="sn_" name="sn" value="${sn }" type="text"/>
+      			</div>
+      			<div class="span3">
+      				<Label>中奖人电话：</Label><input style="width: 135px;height: 28px;background-color: #fff;
+			border: 1px solid #e4e4e4;" id="ztel_" name="ztel" value="${tel }" type="text"/>
+      			</div>
+      		</div>
+      		<div class="row">
+      			<div class="span6" style="margin-left: 20px;">
+      				<button class="info" onclick="query()">查询</button>
+      				<button onclick="reset()" class="warning">重置</button>
+      			</div>
+      		</div>
+      </div>
+      <input type="hidden" id="activityId" value="${activityId }"/>
+       <div class="buttondiv"
+			style="height: 46px; background: #edf1f9; border: 1px solid #e4e4e4; border-bottom: none;">
+			<a href="javascript:void(0);" onclick="awards()">
+				<img alt="添加门店" src="/ump/images/wccImg/pldh.png" title="批量兑奖"></img>批量兑奖
+			</a>
+      	</div>
+        <input type="hidden" id="limit" value="${limit}"/>
+        <div id="showResult" class="showResult">
+			暂无信息
+		</div>
+        
+</div>

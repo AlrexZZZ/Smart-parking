@@ -1,0 +1,533 @@
+<html xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:tiles="http://tiles.apache.org/tags-tiles" xmlns:spring="http://www.springframework.org/tags" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" >  
+	<jsp:output doctype-root-element="HTML" doctype-system="about:legacy-compat" />
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />  
+	<jsp:directive.page pageEncoding="UTF-8" /> 
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<util:load-scripts/>
+		<title>xxxxxxx管理平台</title>	
+		<link rel="stylesheet" href="/ump/styles/homePage.css" />
+		<script src="/ump/js/nineclient/index_pub.js"><!--该页面js--></script>
+		<script src="/ump/js/voc_comment/vocLocalStorage.js"><!--voc消息回复js--></script>
+		<script src="/ump/js/voc_comment/loadWebSearchLabel.js"><!--voc消息回复js--></script>
+		<script src="/ump/js/voc_comment/tabController.js"><!--voc消息回复js--></script>
+		<style>
+			.metro .sidebar > ul li a.dropdown-toggle:after { right: 10px;bottom: 5px;}
+			.float_left{float:left;}
+		</style>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				loadVocWebSearchLabel();
+				vocWebSearchLabelControl();
+				 
+				var flag = parseInt(${flags});
+				if(flag == 1){
+					$("#shezhiStr").hide();
+					$("#shezhiStr2").hide();
+					$("#meun1").hide();
+					$("#wccSHZN").show();
+					$("#voclocation").hide();
+					if($("#meun3").css('display') == 'block'){
+						$("#meun2").hide();
+						$("#meun3").show();
+						$("#vocServiceDate").show();
+					}else{
+						$("#meun2").show();
+						$("#meun3").hide();
+						$("#wccServiceDate").show();
+					}
+					$("#goSYZN").attr('href','http://www.9client.com/wechat-web/home.do?method=getSmartHome&amp;title=wcc'); 
+				}
+				if(flag == 2){
+					$("#shezhiStr2").hide();
+					$("#meun1").hide();
+					showWCCMenu();
+				}
+				if(flag == 3){
+					$("#shezhiStr2").hide();
+					$("#meun1").hide();
+					showVOCMenu();
+				}
+				if(flag == 4){
+					$("#shezhiStr2").hide();
+					$("#meun1").hide();
+					showVOCMenu();
+				}
+				if(flag == 6){
+					$("#shezhiStr2").hide();
+					$("#meun1").hide();
+					showWCCMenu();
+				}
+				
+			});
+			
+		</script>
+	</head>
+	<body style="background: #f5f5f5;" class="metro">
+		<div class="grid fluid">
+			<div class="topmenu">
+				<div class="topmenu_L">
+					<img src="" alt="" />
+				</div>
+				<div class="topmenu_R">
+					<div id="shezhiStr" class="qixian" style="color: white;color: #fff; font-family: Microsoft Yahei, Arial;display: none;">
+							<div class="float_left">&#160;</div>
+								<div  style="color: white;color: #fff; font-family: Microsoft Yahei, Arial;font-size:14px;" class="float_left">&#160;</div>
+					</div>
+<!-- 					<c:if test="${flagOperator == 1}">
+						<div id="wccServiceDate" class="qixian" style="color: white;color: #fff; font-family: Microsoft Yahei, Arial;display: none;">
+							<div class="float_left"><img src="/ump/images/pub/light_title.png" alt="" /></div>
+								<div  style="color: white;color: #fff; font-family: Microsoft Yahei, Arial;font-size:14px;" class="float_left">试用期还有</div><div class="time_day float_left" style="font-weight: bold;"> ${wccServiceDate} </div>天。&#160;
+						</div>
+						<div id="vocServiceDate" class="qixian" style="color: white;color: #fff; font-family: Microsoft Yahei, Arial;display: none;">
+							<div class="float_left"><img src="/ump/images/pub/light_title.png" alt="" /></div>
+								<div  style="color: white;color: #fff; font-family: Microsoft Yahei, Arial;font-size:14px;" class="float_left">试用期还有</div><div class="time_day float_left" style="font-weight: bold;"> ${vocServiceDate} </div>天。&#160;
+						</div>
+						
+					</c:if> -->
+					<div class="yonghuming">
+						<div class="float_left" style="font-family:'微软雅黑'; font-size:14px; color:#FFF;">您好！</div><div class="float_left" style="font-family:'微软雅黑'; font-size:14px; color:#FFF;">
+								<c:if test="${flagOperator == 0}">${operatorName}</c:if><c:if test="${flagOperator == 1}">${puboperatorName}</c:if>
+							</div>
+					</div>
+					<div class="shezhi">
+						<div class="float_left" style="border-right: 1px solid #0789b9;font-family:'微软雅黑'; font-size:14px; color:#FFF;cursor: pointer;" onclick="openDialog();"> <img
+							src="/ump/images/pub/people_02.png" alt="" class="k_touxiang" />
+								 用户设置  <img src="/ump/images/pub/jiantou.png"  alt="" class="jiantou"/>
+						</div>
+						<div class="float_left" style="margin-left: 5px; display: inline-block;font-family:'微软雅黑'; font-size:14px; color:#FFF;cursor: pointer;" onclick="loginOut();">
+							退出
+						</div>
+					</div>
+					
+				</div>
+			</div>
+			<c:if test="${flagOperator == 1}">
+				<div class="topmenu2">
+					<div class="row" style="margin-top: 0px;">
+						<div class="span2">
+							<!--k_tab-->
+							<div class="k_tab">
+								<div id="shezhiStr2" class="cp_logo1" style="border-right: 1px solid #e5e5e5;">
+										<a onclick="showPublic();" title="设置中心"><img src="/ump/images/pub/shezhi _menu.png" alt="设置" style="cursor: pointer;"/></a>
+								</div>
+								<div class="cp_logo_con">
+									 <div class="cp_logo_line1">
+										<!-- <img src="/ump/images/pub/xiala.png" alt="" /> -->
+									</div> 
+									<div class="cp_logo_line2">
+										<div class="cp_logo">
+											<c:if test="${!empty wccauthoritys}">
+												<a onclick="showWCCMenu();" title="WCC菜单"><img src="/ump/images/pub/WCC.png" alt="WCC菜单" style="cursor: pointer;"/></a>
+											</c:if>
+											<c:if test="${empty wccauthoritys}">
+												<img src="/ump/images/pub/WCC_02.png" alt="WCC菜单"/>
+											</c:if>
+										</div>
+										<div class="cp_logo">
+											<img src="/ump/images/pub/UCC_02.png" alt="" />
+										</div>
+										<div class="cp_logo">
+											<c:if test="${!empty vocauthoritys}">
+												<a onclick="showVOCMenu();" title="VOC菜单"><img src="/ump/images/pub/VOC.png" alt="VOC菜单" style="cursor: pointer;"/></a>
+											</c:if>
+											<c:if test="${empty vocauthoritys}">
+												<img src="/ump/images/pub/VOC_02.png" alt="VOC菜单" />
+											</c:if>
+										</div>
+										<div class="cp_logo">
+											<img src="/ump/images/pub/Weibo_02.png" alt="" />
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--k_tab end-->
+						
+								<div id="voclocation"  class="alllacation" style="display: none;">
+									<ul id="vocWebSearchUlId">
+										<li><img src="/ump/images/pub/VOC.png" alt="VOC菜单"/>&#160;</li>
+										<li id="onevocMenuName" onclick="turnToWebSearch()" style="cursor: pointer;"><span id="websearchNamelabelId">全网搜索</span></li>
+									</ul>
+								</div>
+					</div>
+				</div>
+			</c:if>
+			<div class="k_contain">
+				<!--k_contain-->
+				<div class="row">
+				<c:if test="${flagOperator == 1}">
+						<!--设置中心菜单-->
+							<div class="span2" id="meun1" style="max-height:620px;min-height:620px;overflow-y:auto;background:#fff;border:1px solid #e5e5e5;margin-left: 0px; z-index: 0; position: relative; height: 440px;">
+								<nav class="sidebar light" style="font-family:Microsoft Yahei;border: 0px;">
+									<ul>
+										<li class="stick">
+											 <a class="dropdown-toggle" href="javascript:void(0);" style="font-size: 16px;"><img src="/ump/images/pub/work_manger.png" alt=""/> 管理中心</a>
+											 <!-- class="dropdown-menu" -->
+											 <ul data-role="dropdown" style="display: block;" id="pubMenu">
+								               <c:if test="${displayId == 998}">
+								                <script type="text/javascript">
+														showPublic();
+												</script>
+								                	<li style="padding-left: 10px;"><a style="background-color: #069dd5;color: #fff;" title="组织架构" href="/ump/puborganizations?page=1&amp;size=10&amp;displayId=998">组织架构</a></li>
+								              	</c:if>
+								              	<c:if test="${displayId != 998}">
+								              		<li style="padding-left: 10px;"><a title="组织架构" href="/ump/puborganizations?page=1&amp;size=10&amp;displayId=998">组织架构</a></li>
+								              	</c:if>
+								              	<c:if test="${displayId == 997}">
+								              		 <script type="text/javascript">
+														showPublic();
+													</script>
+								               		<li style="padding-left: 10px;"><a style="background-color: #069dd5;color: #fff;padding-left: 10px;" title="权限管理" href="/ump/pubroles?page=1&amp;size=10&amp;displayId=997">权限管理</a></li>
+								               	</c:if>
+								               	<c:if test="${displayId != 997}">
+								              	 	<li style="padding-left: 10px;"><a title="权限管理" href="/ump/pubroles?page=1&amp;size=10&amp;displayId=997">权限管理</a></li>
+								               	</c:if>
+								               <c:if test="${displayId == 999}"> 
+								               		 <script type="text/javascript">
+														showPublic();
+													</script>
+								               		<li style="padding-left: 10px;"><a style="background-color: #069dd5;color: #fff;padding-left: 10px;" title="账号管理" href="/ump/puboperators?page=1&amp;size=10&amp;displayId=999">账号管理</a></li>
+								               	</c:if>
+								               	<c:if test="${displayId != 999}"> 
+								               		<li style="padding-left: 10px;"><a title="账号管理" href="/ump/puboperators?page=1&amp;size=10&amp;displayId=999">账号管理</a></li>
+								               	</c:if>
+								               	<c:if test="${displayId == 996}">
+								               		 <script type="text/javascript">
+														showPublic();
+													</script>
+								              	  <li style="padding-left: 10px;"><a style="background-color: #069dd5;color: #fff;padding-left: 10px;" title="系统设置" href="/ump/umpconfigs/wccEmailConfig?displayId=996">系统设置</a></li>
+								               	</c:if>
+								               		<c:if test="${displayId != 996}">
+								              	  <li style="padding-left: 10px;"><a  title="系统设置" href="/ump/umpconfigs/wccEmailConfig?displayId=996">系统设置</a></li>
+								               	</c:if>
+								            </ul>
+								        </li>
+							        </ul>
+								</nav>
+							</div>
+						<!--设置中心菜单结束-->
+						<!--WCC菜单-->
+							<div class="span2" id="meun2" style="display:none;max-height:620px;min-height:620px;overflow-y:auto;background:#fff;border:1px solid #e5e5e5;margin-left: 0px; z-index: 0; position: relative; height: 440px;margin-bottom: 40px;">
+								<nav class="sidebar light" style="border: 0px;">
+									<c:forEach items="${wccauthoritys}" var="data">
+										<c:if test="${data.parentId == '0' and data.displayName !='运营报告'}">
+											<ul>
+												<li class="stick">
+													<a href="javascript:void(0);" class="dropdown-toggle" style="font-size: 16px;"><i class="on-left"><img style="vertical-align:top;" src="/ump/images/wccImg/${data.remark}.png" alt=""/></i>${data.displayName}</a>
+													<ul data-role="dropdown" id="wccStr${data.id}">
+														<c:forEach items="${wccauthoritys }" var="auths">
+															<c:if test="${auths.parentId == data.id}">
+																<c:if test="${auths.displayName != '调查问卷' and auths.displayName != '微社区'}">
+																	<li style="padding-left: 10px;">
+																		<c:if test="${displayId == auths.id}">
+																			<script type="text/javascript">
+																				$("#wccStr"+${auths.parentId}).show();
+																				showWCCMenu();
+																			</script>
+																			<a style="background-color: #069dd5;color: #fff;" title="${auths.displayName}" href="${auths.url}&amp;displayId=${auths.id}">${auths.displayName }</a>
+																		</c:if>
+																		<c:if test="${displayId != auths.id}">
+																			<a title="${auths.displayName}" href="${auths.url}&amp;displayId=${auths.id}">${auths.displayName }</a>
+																		</c:if>
+																	</li>
+																</c:if>
+																<c:if test="${auths.displayName == '调查问卷' or auths.displayName == '微社区'}">
+																	<li style="padding-left: 10px;">
+																		<c:if test="${displayId != auths.id}">
+																			<a target="_blank" title="${auths.displayName}" href="${auths.url}">${auths.displayName }</a>
+																		</c:if>
+																	</li>
+																</c:if>
+															</c:if>
+													</c:forEach>
+												  </ul>
+												</li>
+											</ul>
+										</c:if>
+										<c:if test="${data.parentId == '0' and data.displayName =='运营报告'}">
+											<ul>
+												<li class="stick">
+													<a href="javascript:void(0);" class="dropdown-toggle" style="font-size: 16px;"><i class="on-left"><img style="vertical-align:top;" src="/ump/images/wccImg/${data.remark}.png" alt=""/></i>${data.displayName}</a>
+													<ul data-role="dropdown" id="wccStr${data.id}">
+														<c:forEach items="${wccauthoritys }" var="auths">
+															<c:if test="${auths.parentId == data.id}">
+																<!-- <li style="padding-left: 10px;">
+																<a target="_blank" title="${auths.displayName}" href="${auths.url}&amp;displayId=${auths.id}">${auths.displayName }</a> 
+																</li> -->
+																<li style="padding-left: 10px;">
+																		<c:if test="${displayId == auths.id}">
+																			<script type="text/javascript">
+																				$("#wccStr"+${auths.parentId}).show();
+																				showWCCMenu();
+																			</script>
+																			<a style="background-color: #069dd5;color: #fff;" title="${auths.displayName}" href="${auths.url}&amp;displayId=${auths.id}">${auths.displayName }</a>
+																		</c:if>
+																		<c:if test="${displayId != auths.id}">
+																			<a title="${auths.displayName}" href="${auths.url}&amp;displayId=${auths.id}">${auths.displayName }</a>
+																		</c:if>
+																	</li>
+															</c:if>
+													</c:forEach>
+												  </ul>
+												</li>
+											</ul>
+										</c:if>
+										
+									</c:forEach>
+								</nav>
+							</div>
+						<!--WCC菜单结束-->
+						
+						<!--VOC菜单-->
+						<div class="span2" id="meun3" style="display: none;max-height:620px;min-height:620px;overflow-y:auto;background:#fff;border:1px solid #e5e5e5;margin-left: 0px; z-index: 0; position: relative; height: 440px;margin-bottom: 40px;">
+							<nav class="sidebar light" style="border: 0px;">
+								<c:forEach items="${vocauthoritys}" var="data">
+									<c:if test="${data.parentId == '0'}">
+										<ul>
+										<li class="stick">
+											<a href=" javascript:void(0);" class="dropdown-toggle" style="font-size: 16px;"><i class="on-left"><img style="vertical-align:top;" src="/ump/images/wccImg/${data.remark}.png" alt=""/></i>${data.displayName}</a>
+												<ul  data-role="dropdown" id="vocStr${data.id}">
+													<c:forEach items="${vocauthoritys }" var="auths">
+														<c:if test="${auths.parentId == data.id}">
+															<li style="padding-left: 10px;">
+																<c:if test="${displayId == auths.id}">
+																	<script type="text/javascript">
+																		$("#vocStr"+${auths.parentId}).show();
+																		showVOCMenu();
+																	</script>
+																	<a style="background-color: #069dd5;color: #fff;" title="${auths.displayName}" href="${auths.url}&amp;displayId=${auths.id}">${auths.displayName }</a>
+																</c:if>
+																<c:if test="${displayId != auths.id}">
+																	<a title="${auths.displayName}" href="${auths.url}&amp;displayId=${auths.id}">${auths.displayName }</a>
+																</c:if>
+															</li>
+														</c:if>
+												</c:forEach>
+											</ul>
+										  </li>
+										</ul>
+									</c:if>
+								</c:forEach>
+							</nav>
+						</div>
+						<!--VOC菜单结束-->
+				</c:if>
+				
+				<!-- ump菜单 开始-->
+				<c:if test="${flagOperator == 0}">
+						<div class="span2">
+							<nav class="sidebar light">
+								<c:forEach items="${umpauthorityss}" var="data">
+								<c:if test="${data.parentId == '0'}">
+										<ul>
+											<li class="stick"><a class="dropdown-toggle">${data.displayName }</a>
+												<ul data-role="dropdown" id="umpStr${data.id}">
+													<c:forEach items="${umpauthorityss }" var="auths">
+														<c:if test="${auths.parentId == data.id }">
+															<li>
+															   <c:if test="${displayId == auths.id}">
+																	<script type="text/javascript">
+																		$("#umpStr"+${auths.parentId}).show();
+																	</script>
+																	<a style="background-color: #069dd5;" title="${auths.displayName }" href="${auths.url}&amp;displayId=${auths.id}">${auths.displayName }</a>
+																</c:if>
+																<c:if test="${displayId != auths.id}">
+																	<a title="${auths.displayName}" href="${auths.url}&amp;displayId=${auths.id}">${auths.displayName }</a>
+																</c:if>
+																</li>
+														</c:if>
+													</c:forEach>
+												</ul></li>
+											</ul>
+									</c:if>
+								</c:forEach>
+							</nav>
+						</div>
+					</c:if>
+				<!-- ump菜单结束 -->	
+				<!--left end-->
+					
+					<!--right-->
+					<div class="span10" style="background: #fff;width: 100%;height: 100%;">
+						<div id="main" style="background:#fff;min-height: 620px;">
+							<tiles:insertAttribute name="body" />
+						</div>
+					<!--right end-->
+					</div>
+			</div>
+			<!--k_contain end-->
+		</div>
+
+		<div class="k_foot">
+			<span style="color: #fff;">版权所有:xxxxxxx  &#160;| </span>
+			<c:if test="${flagOperator == 0}">
+				<a target="_blank" href="http://www.9client.com/wechat-web/home.do?method=getSmartHome&amp;title=ump" style="cursor: pointer;color: #fff;text-decoration:underline;">
+				使用指南</a>
+			</c:if>
+			<c:if test="${flagOperator == 1}">
+				<a target="_blank" id="goSYZN" href="http://www.9client.com/wechat-web/home.do?method=getSmartHome&amp;title=wcc" style="cursor: pointer;color: #fff;text-decoration:underline;">
+					使用指南
+				</a>
+			</c:if>
+			&#160;|
+			<a href="javascript:void(0);" onclick="proposeDelog(${flagOperator});" style="cursor: pointer;color: #fff;text-decoration:underline;">建议反馈</a>
+		</div>
+		</div>
+		<!--footer-->
+	</body>
+	
+	<!-- 修改密码 -->
+	<div id="center" class="frames" style="display: none;">
+		<c:if test="${flagOperator == 0}">
+			<div class="grid" style="width: 300px;">
+				<input type="hidden" id="useId" value="${umpOperator.id}" /> 
+				<input type="hidden" id="flagOperator" value="${flagOperator}" />
+				<div class="row">
+					<div class="span3">
+						<label style="text-align: right;font-weight: normal;">用户账号：</label>
+						<div class="input-control text"
+							style="width: 20%; margin-left: 10px;">
+							<input type="text" id="account" name="account" disabled="disabled"
+								value="${umpOperator.account}" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span3">
+						<label style="text-align: right;font-weight: normal;">用户名称：</label>
+						<div class="input-control text"
+							style="width: 20%; margin-left: 10px;">
+							<input type="text" id="operatorName" name="operatorName"
+								value="${umpOperator.operatorName}" />
+								<div id="userHint1" style="color: red;margin-left: 30px;"><!-- hint1 --></div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span3">
+						<label style="text-align: right;font-weight: normal;">密码：</label>
+						<div class="input-control text"
+							style="width: 20%; margin-left: 10px;">
+							<input type="password" id="password" name="password" value="${umpOperator.password}"/>
+						</div>
+						<div id="userHint2" style="color: red;margin-left: 30px;width: 230px;"><!-- hint2 --></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span3">
+						<label style="text-align: right;font-weight: normal;">重复密码：</label>
+						<div class="input-control text"
+							style="width: 20%; margin-left: 10px;">
+							<input type="password" id="repass" name="repass"  value="${umpOperator.password}"/>
+						</div>
+						<div id="userHint3" style="color: red;margin-left: 30px;"><!-- hint3 --></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span4" style="margin: 0px auto;text-align: center;">
+						<button style="padding: 4px;" class="info"
+							onclick="updatePassword();">确定</button>
+						<button class="warning" style="margin-left: 30px;padding: 4px;"
+							onclick="javascript:exit();">取消</button>
+					</div>
+				</div>
+			</div>
+		</c:if>
+		<c:if test="${flagOperator == 1}">
+			<div class="grid" style="width: 300px;">
+				<input type="hidden" id="useId" value="${pubOperator.id}" /> 
+				<input type="hidden" id="flagOperator" value="${flagOperator}" />
+				<div class="row">
+					<div class="span3">
+						<label style="text-align: right;font-weight: normal;">用户账号：</label>
+						<div class="input-control text"
+							style="width: 20%; margin-left: 10px;">
+							<input type="text" id="account" name="account" disabled="disabled"
+								value="${pubOperator.account}" />
+						</div>
+						<div id="hint2" style="color: red;margin-left: 30px;width: 230px;"><!-- hint2 --></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span3">
+						<label style="text-align: right;font-weight: normal;">用户名称：</label>
+						<div class="input-control text"
+							style="width: 20%; margin-left: 10px;">
+							<input type="text" id="operatorName" name="operatorName"
+								value="${pubOperator.operatorName}" />
+						</div>
+						<div id="userHint1" style="color: red;margin-left: 30px;"><!-- hint1 --></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span3">
+						<label style="text-align: right;font-weight: normal;">密码：</label>
+						<div class="input-control text"
+							style="width: 20%; margin-left: 10px;">
+							<input type="password" id="password" name="password" value="${pubOperator.password}"/>
+						</div>
+						<div id="userHint2" style="color: red;margin-left: 30px;width: 230px;"><!-- hint2 --></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span3">
+						<label style="text-align: right;font-weight: normal;">重复密码：</label>
+						<div class="input-control text"
+							style="width: 20%; margin-left: 10px;">
+							<input type="password" id="repass" name="repass"  value="${pubOperator.password}"/>
+						</div>
+						<div id="userHint3" style="color: red;margin-left: 30px;"><!-- hint3 --></div>
+					</div>
+				</div>
+					<div class="row">
+						<div class="span4" style="margin: 0px auto;text-align: center;">
+							<button style="padding: 4px;" class="info"
+								onclick="updatePassword();">确定</button>
+							<button class="warning" style="margin-left: 30px;padding: 4px;"
+								onclick="javascript:exit();">取消</button>
+						</div>
+					</div>
+			</div>
+		</c:if>
+	</div>
+	
+	<div id="sendEmail" style="display: none;">
+		<div class="grid" style="width: 350px;">
+			<div class="row">
+				<div class="span5">
+					<span style="text-align: center;">建议内容：</span><br/><br/>
+					<div class="input-control textarea">
+						<textarea id="adviceContent" name="content"
+								style="resize: none; width: 300px;">${test}</textarea>
+					</div><br/>
+					<span id="conetStr" style="color: red;"></span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span10">
+					<a style="margin-left: 80px;padding: 4px;" class="button info" onclick="commitPropose(${flagOperator});">确定</a>
+					<a class="button warning" style="margin-left: 40px;padding: 4px;"
+						onclick="javascript:exit();">取消</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div id="exitDialog" style="display: none;">
+		<div class="grid" style="width: 350px;">
+			<div class="row">
+				<div class="span4" style="margin-left: 100px;">你确定退出系统吗？</div>
+			</div>
+			<div class="row">
+				<div class="span12">
+					<a style="margin-left: 80px;padding: 4px;" class="button info"
+						href="/ump/loginOut" onclick="removeAllObj();">确定</a>
+					<a class="button warning" style="margin-left: 40px;padding: 4px;"
+						onclick="javascript:exit();">取消</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</html>

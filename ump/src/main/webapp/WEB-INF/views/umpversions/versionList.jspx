@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:prefix="fmt"
+	uri="http://java.sun.com/jstl/fmt"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<SCRIPT type="text/javascript">
+		var html = "";
+	</SCRIPT>
+	<TABLE class="table striped tabbordered"
+		style="margin-left: 30px; width: 100%; background-color: #FFFFFF">
+		<THEAD>
+			<TR>
+				<TD>产品</TD>
+				<TD>版本</TD>
+				<TD>发版时间</TD>
+				<TD>操作</TD>
+			</TR>
+		</THEAD>
+		<TBODY>
+			<c:forEach items="${umpversions}" var="verison">
+				<TR>
+					<TD>${verison.product.productName}</TD>
+					<TD>${verison.versionName}</TD>
+					<TD>${verison.createTime}</TD>
+					<TD><a href="/ump/umpversions/updateForm?id=${verison.id}"
+						alt="Update Ump Product" title="修改"> <img class="image"
+							alt="修改" src="/ump/resources/images/update.png" title="修改" /></a> <a
+						href="#" onclick="deleteVersion(${verison.id},${page},${size});"
+						alt="删除" title="删除"><img class="image" alt="删除"
+							src="/ump/resources/images/delete.png" title="删除" /></a></TD>
+				</TR>
+			</c:forEach>
+		</TBODY>
+		<c:if test="${umpversions!= null and fn:length(umpversions) > 0}">
+			<TFOOT>
+				<tr>
+					<td colspan="4"><span class="new"><a href="#"
+							id="createVersoinBtn"><img alt="版本"
+								src="/ump/images/add_01.png" title="版本" /></a></span> <c:if
+							test="${page>1 }">
+							<a class="default"
+								href="/ump/umpversions/versionList?page=${page-1 }&amp;size=10"
+								style="cursor: hand; cursor: pointer;">上一页</a>
+						</c:if> <SPAN>当前第${page}页</SPAN> <SPAN>共${maxPages}页</SPAN><SPAN>每页${size}条</SPAN>
+						<c:if test="${page!=maxPages}">
+							<a class="default"
+								href="/ump/umpversions/versionList?page=${page+1}&amp;size=10"
+								style="cursor: hand; cursor: pointer;">下一页</a>
+						</c:if></td>
+				</tr>
+
+			</TFOOT>
+		</c:if>
+		<c:if test="${umpversions== null or fn:length(umpversions) == 0}">
+			<tr>
+				<TD colspan="4"><span class="new"><a href="#"
+						id="createVersoinBtn"><img alt="版本"
+							src="/ump/images/add_01.png" title="版本" /></a></span></TD>
+			</tr>
+		</c:if>
+	</TABLE>
+
+	<DIV id="versionForm" style="display: none;">
+		<form id="versionForm" action="/ump/umpversions/createVersion"
+			method="post">
+			<div class="grid">
+				<div class="row">
+					<div class="span1">
+						<SPAN style="width: 100%;">产品:</SPAN>
+					</div>
+					<div class="span2">
+						<SELECT id="productId" name="product.id" style="width: 100%;"
+							onchange="selectProduct(this.value);">
+							<c:forEach items="${productList}" var="product" varStatus="index">
+								<option value="${product.id}">${product.productName}</option>
+							</c:forEach>
+						</SELECT>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span1">
+						<SPAN style="width: 100%;">版本名称:</SPAN>
+					</div>
+					<div class="span2">
+						<input id="versionName" type="text" name="versionName" value=""
+							required="required" style="width: 100%;" />
+					</div>
+				</div>
+			</div>
+			<div>
+				版本设置:<em id="versionIdEm" style="color: red; display: none;">请选择菜单</em>
+			</div>
+			<div class="content_wrap" id="sourceDiv">
+				<div class="zTreeDemoBackground left"
+					style="width: 400px; height: 300px; overflow-y: scroll; border: 0px solid;">
+					<ul id="treeDemo" class="ztree"></ul>
+				</div>
+			</div>
+			<INPUT type="hidden" id="authortyId" name="authortyId" />
+			<div class="form-actions" style="margin-top: 5px; margin-left: 60px;">
+				<input type="button" class="info" value="确定"
+					onclick="save('versionForm');" style="margin-right: 30px;" />
+				<button class="warning" type="button" onclick="$.Dialog.close();">取消</button>
+			</div>
+		</form>
+	</DIV>
+	<style>
+.metro .button {
+	padding: 0px;
+}
+
+.zTreeDemoBackground {
+	overflow-x: auto;
+	white-space: nowrap;
+}
+</style>
+	<style>
+@IMPORT url("/ump/styles/validation.css");
+</style>
+	<SCRIPT type="text/javascript"
+		src="/ump/ui/jquery-validation/jquery.validate.js">
+	//--
+</SCRIPT>
+	<SCRIPT type="text/javascript">
+	<![CDATA[
+		var setting = {
+			check : {
+				enable : true
+			},
+			data : {
+				simpleData : {
+					enable : true
+				}
+			}
+		};
+		var code;
+		function setCheck() {
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+			type = {
+				"Y" : "s",
+				"N" : "s"
+			};
+			zTree.setting.check.chkboxType = type;
+			showCode('setting.check.chkboxType = { "Y" : "' + type.Y
+					+ '", "N" : "' + type.N + '" };');
+		}
+		function showCode(str) {
+			if (!code)
+				code = $("#code");
+			code.empty();
+			code.append("<li>" + str + "</li>");
+		}
+
+		function save(id) {
+			if(!$("#" + id).valid()){
+				return;
+			}
+			var productId = $("#productId").val();
+			if(productId==""){
+				$("#productId").after("<em style='color:red;' class='selectId'>请选择产品</em>");
+				return;
+			}
+			var arr = new Array();
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo"), nodes = zTree
+					.getSelectedNodes();
+			var nodess = zTree.getCheckedNodes();
+			for(var num=0;num<nodess.length;num++){
+				arr.push(nodess[num].id);
+			}
+			var stt=arr.join(",");
+			$("#authortyId").val(stt);
+			var versionName = $("#versionName").val();
+			if(stt==null||stt==""||stt==undefined){
+				$("#versionIdEm").show();
+				return false;
+			}else{
+				$("#versionIdEm").hide();
+			}
+			  $.ajax({
+	                type: "post",
+	                url: "/ump/umpversions/createVersion",     
+	                data: $("#versionForm").serialize(),    
+	                success: function(data) {
+	                var msg=eval("("+data+")");
+             		$.Notify({
+             			caption: "",
+             			content: msg.msg,
+             			timeout: 5000 // 10 seconds
+             			});
+	                	window.location.href="/ump/umpversions/versionList?page=1&amp;size=10";
+	                	$.Dialog.close();
+	                },
+	                error: function(data) {
+	                	$.Dialog.close();
+	                }
+	            })
+		}
+		$("#createVersoinBtn").on('click', function() {
+			$.Dialog({
+				overlay : true,
+				shadow : true,
+				flat : true,
+				icon : '<img src="/ump/images/add.png"/>',
+				title : '添加版本',
+				content : '',
+				draggable:true,
+				padding : 10,
+				width:300,
+				height:500,
+				onShow : function(_dialog) {
+					if (html == "") {
+						html = $("#versionForm").html();
+						$("#versionForm").remove();
+					}
+					var content = html;
+					$.Dialog.title("添加版本");
+					$.Dialog.content(content);
+					$.Metro.initInputs();
+					 $("#versionForm").validate({
+			 				rules : {
+			 					versionName : {required:true,
+			 						remote:{
+										 url:"/ump/commentvalidata/uniqueVersionName",
+										 type: "post", 
+										 data: {
+											versionName:function (){
+												return $("#versionName").val();
+											},
+											productId:function (){
+												return $("#productId").val();
+											}
+										 }
+										}
+										}
+			 					},
+			 				messages : {
+			 					versionName : {required:"请输入版本名称",remote:"版本名称不能重复"}
+			 				},
+			 				errorElement:"em",
+			 				focusCleanup:true,
+			 				errorClass:"invalid"
+			 			});
+			        	$("#productId").change(function(){
+			 				$(".selectId").remove();
+			 			}) 
+					$.ajax({
+						url : "/ump/umpversions/tree",
+						dataType : "text",
+						type : "POST",
+						data : {
+							'productId' :$("#productId").val()
+						},
+						error : function(msg) {
+						},
+						success : function(data) {
+							var str = '[' + data + ']';
+							zNodes = eval('(' + str + ')');
+							$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+							setCheck();
+							$("#py").bind("change", setCheck);
+							$("#sy").bind("change", setCheck);
+							$("#pn").bind("change", setCheck);
+							$("#sn").bind("change", setCheck);
+
+						}
+					});
+				}
+			});
+		})
+		function selectProduct(id){
+			$.ajax({
+				url : "/ump/umpversions/tree",
+				dataType : "text",
+				type : "POST",
+				data : {
+					'productId' : id
+				},
+				error : function(msg) {
+				},
+				success : function(data) {
+					var str = '[' + data + ']';
+					zNodes = eval('(' + str + ')');
+					$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+					setCheck();
+					$("#py").bind("change", setCheck);
+					$("#sy").bind("change", setCheck);
+					$("#pn").bind("change", setCheck);
+					$("#sn").bind("change", setCheck);
+
+				}
+			});
+		}
+	function deleteVersion(id,page,size){
+		if(confirm("是否确认删除?")){
+			window.location.href="/ump/umpversions/delete?id="+id+"&amp;page="+page+"&amp;size="+size;
+		}
+	} ]]>
+	</SCRIPT>
+</div>

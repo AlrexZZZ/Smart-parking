@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_com_nineclient_model_WccUserPagetemp" modelAttribute="wccUserPagetemp" path="/wccuserpagetemps" render="${empty dependencies}" z="oYgyda/VdRyiOMRciFhv3uKi5do=">
+        <field:textarea field="pageTitle" id="c_com_nineclient_model_WccUserPagetemp_pageTitle" required="true" z="fmTYlLgVR5kxrGkq0YsU5Bm88Vo="/>
+        <field:textarea field="proName" id="c_com_nineclient_model_WccUserPagetemp_proName" required="true" z="FeM+Y8iGEF3IkBPlKfBFvjT2YOA="/>
+        <field:textarea field="temImage" id="c_com_nineclient_model_WccUserPagetemp_temImage" z="IghUqTS4407A0Scf0j9bWcoicz4="/>
+        <field:textarea field="remark" id="c_com_nineclient_model_WccUserPagetemp_remark" z="9F8hj4U5xt+l0gWiCZvyoeTq7OA="/>
+        <field:datetime dateTimePattern="${wccUserPagetemp_createtime_date_format}" field="createTime" id="c_com_nineclient_model_WccUserPagetemp_createTime" required="true" z="6MS2JreF5E5Rc4qw5GtUV+mxyyo="/>
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_WccUserPagetemp_isDeleted" z="geXqAdOwN18PXbGRohtADZF8AiM="/>
+        <field:checkbox field="isVisable" id="c_com_nineclient_model_WccUserPagetemp_isVisable" z="4Bk1KlpYWVufxNpsETl1bsQXxAo="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_nineclient_model_WccUserPagetemp" render="${not empty dependencies}" z="C/Ojdc7F707Fj/7VVm/eC8OuTfs="/>
+</div>

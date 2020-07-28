@@ -1,0 +1,910 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <style>
+	@IMPORT url("/ump/styles/css.css");
+	@IMPORT url("/ump/styles/jquery.customSelect.css");
+	</style>
+      <SCRIPT type="text/javascript" src="/ump/js/jquery.customSelect.js"><!----></SCRIPT> 
+	<style>
+	@IMPORT url("/ump/styles/url.css");
+	</style>
+	<style>
+		.container-fluid {
+	padding: 20px;
+	margin-top: 10px;
+}
+
+.tuwen_dandiv_newlist li:last-child {
+	border: 0px;
+}
+
+.tuwen_dandiv_newlist li {
+	width: 94%;
+	height: auto;
+	margin: 0 auto;
+	clear: both;
+	overflow: hidden;
+	border-bottom: 1px solid #e5e5e5;
+	font-family: Microsoft Yahei;
+	font-size: 14px;
+	color: #7d7d7d;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.boxs {
+	margin-bottom: 20px;
+	border: 1px solid #e5e5e5;
+}
+
+.tuwen_dandiv_newlist {
+	width: 100%;
+	height: auto;
+	clear: both;
+	overflow: hidden;
+	margin: 0 auto;
+}
+
+.tuwen_listw {
+	padding: 0px;
+	width: 120px;
+	height: auto;
+	float: left;
+	overflow: hidden;
+	font-family: Microsoft Yahei;
+}
+
+.tuwen_listw a {
+	color: #7d7d7d;
+	font-family: Microsoft Yahei;
+}
+
+.tuwen_listw a:hover {
+	text-decoration: underline;
+}
+
+.tuwen_dandiv_newlist li {
+	list-style: none;
+}
+
+.tuwen_listt {
+	width: 40px;
+	height: 40px;
+	float: right;
+	overflow: hidden;
+}
+
+.tuwen_listt img {
+	width: 40px;
+	height: 40px;
+}
+
+.boxs img {
+	max-width: 100%
+}
+
+.tupian_dandiv_img {
+	width: 170px;
+	height: 170px;
+	overflow: hidden;
+	margin-right: 20px;
+	margin-bottom: 20px;
+	float: left;
+	margin-bottom: 20px;
+}
+
+.metro label {
+display: block;
+margin: 5px 0px;
+font-weight: normal;
+font-size: 12px;
+text-align: right;
+width: 100px;
+float: left;
+padding-right: 10px;
+font-family: Arial,"微软雅黑";
+font-size: 12px;
+color: #333;
+}
+
+
+.tupian_dandiv_img img {
+	width: 170px;
+	height: 170px;
+}
+	</style>
+
+    <div class="tab-control" data-role="tab-control">
+    <ul class="tabs">
+        <li id="massMsg_" class="active"><a href="#_page_1">服务号群发管理</a></li>
+        <li id="msgInfo_" onclick="showMsg()"><a href="#_page_2">消息管理</a></li>
+        <li id="dymassMsg_" onclick="showDyh()" ><a href="#_page_3">订阅号群发管理</a></li>
+    </ul>
+ 
+    <div class="frames" style="position: relative">
+        <div class="frame" id="_page_1">
+        	<div class="grid">
+        		<div class="row">
+        		<div class="span3">
+        				<label>公众平台：</label>
+        				<div style="float: left;">
+	        				<select id="platformUser_" name="platformUser" class="publicSize" onchange="javascript:querySelect(this.value);">
+								<option value="">全部</option>
+								<c:forEach items="${platformUser }" var="platform1">
+								<option value="${platform1.id }">${platform1.account }</option>
+							</c:forEach>
+							</select>
+						</div>
+        			</div> 
+        			<div class="span3">
+        				<label>粉丝性别：</label>
+        				<select id="gender_" name="gender" class="publicSize" >
+							<option value="" selected="selected">全部</option>
+							<option value="0">男</option>
+							<option value="1">女</option>
+							<option value="2">未知</option>		
+						</select>
+        			</div>
+        			<div id="groupDiv" class="span3">
+        				<label>粉丝分组：</label>
+        				<select id="groups" name="group" class="publicSize">
+							<option value="">全部</option>
+						</select>
+        			</div>
+        			<div calss="span3">
+        				<span>(仅选择粉丝分组且多选时会产生多条记录)</span>
+        			</div>
+        		</div>
+        		<div class="row">
+        			<div class="span3">
+        				<label>所在省份：</label>
+        				<div style="float: left;">
+        				<select id="province_" name="province" class="publicSize" onchange="javascript:queryCitys(this.value);">
+							<option value="">全部</option>
+							<c:forEach items="${provinces }" var="province">
+								<option value="${province.id }">${province.name }</option>
+							</c:forEach>
+						</select>
+						</div>
+        			</div>
+        			<div id="cityDiv" class="span3">
+        				<label>所在城市：</label>
+        				<div style="float: left;">
+        				<select id="citys"  name="cityName" class="publicSize" >
+							<option value="">全部</option>
+						</select>
+						</div>
+        			</div>
+        			<div class="span3">
+        				<label>消息数目：</label>
+        				<div style="float: left;">
+	        				<select id="messNum_" name="messNum" class="publicSize" multiple="multiple">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+							</select>
+						</div>
+        			</div>
+        			<div calss="span3">
+        				<span>(粉丝本月可接收消息数，以实际群发时间为准)</span>
+        			</div>
+        		</div>
+        		<div class="row">
+        		<div class="span3">
+        				<label>粉丝来源：</label>
+        				<select id="fromType" name="fromType" class="publicSize">
+							<option value="">请选择</option>
+							<option value="0">直接获取</option>
+							<option value="1">关注</option>
+							<option value="4">活动二维码</option>
+						</select>
+        			</div>
+        			<div class="span3">
+        				<label>消息类型：</label>
+        				<select id="messType_" name="messType" class="publicSize" onchange="javascript:queryMaterials(this.value);">
+								<option value="1">文本</option>
+								<option value="2">图片</option>
+								<option value="3">视频</option>
+								<option value="4">语音</option>
+								<option value="5">图文</option>
+						</select>
+        			</div>
+        		</div>
+        	</div>
+        	<div id="materials">
+					<div class="row" id="contents1"
+						style="width: 700px; display: block;">
+						<div class="span12">
+							<label>发送内容：</label>
+						</div>
+						<div class="input-control textarea">
+							<textarea id="content1" name="content"
+								oninput="changeNumTips(this,'hint1','numbertips1')"
+								style="resize: none; margin-left: 30px; width: 550px" onclick="inContent(this)" onblur="outContent(this)">请输入内容</textarea>
+							<font id="hint1"
+								style="color: red; line-height: 100px; margin-left: 5px;">*</font>
+							<div
+								style="height: 24px; line-height: 24px; margin-left: 30px; width: 550px;">
+								<span style="float: right; color: #069dd5;">可输入<span
+									id="numbertips1">600</span>字
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+    				<div id="loadgif" style="text-align:center;display: none; width: 100%; height:100%; background:rgba(255,255,255,0.5) ; position:absolute;top:0px;left:0px;z-index: 10">
+    					<img style="margin: 0px auto;margin-top: 150px;" src="/ump/images/loading2.gif"/>
+    				</div>
+					<div id="buttons" style="margin-top: 20px;margin-left: 30px;">
+						<button class="info" style="width: 64px;height: 28px;" onclick="massMess()">群 发</button>
+						<button class="warning" style="width: 64px;height: 28px;" onclick="preview()">预 览</button>
+					</div>
+			
+				<div id="preview_" style="display: none;">
+					<div class="grid">
+						<div class="row">
+							<div class="span4">
+		        				<label onclick="bufu()">公众平台：</label>
+		        				<select id="platformUser2_" name="platformUser2" class="publicSize" onchange="javascript:querySelect2(this.value);">
+									<option value="">全部</option>
+									<c:forEach items="${platformUser2 }" var="plat">
+										<option value="${plat.id }">${plat.account }</option>
+									</c:forEach>
+								</select>
+		        			</div>
+						</div>
+						<div class="row">
+							<div id="groupDiv2" class="span4">
+		        				<label>粉丝分组：</label>
+		        				<select id="groups2" name="group2" class="publicSize">
+									<option value="">全部</option>
+								</select>
+	        				</div>
+						</div>
+						<div class="row">
+							<div class="span4">
+								<label>粉丝昵称：</label>
+								<input type="text" id="nickName_" name="nickName" onblur="checkFriend(this)" placeholder="此消息将发送至该粉丝的微信上预览"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="span4">
+								<span id="errmsg" style="color: red"></span>
+							</div>
+						</div>
+						<div class="row">
+							<div class="span4" style="text-align: center;">
+								<button type="submit" class="info" onclick="messPreview()">确定</button>
+								<button class="warning" onclick="exit()">取消</button>
+							</div>
+						</div>
+					</div>
+        		</div>
+        </div>
+        <input type="hidden" id="limit" value="${limit}"/>
+        <div class="frame" id="_page_2">正在建设中...</div>
+         <div class="frame" id="_page_3"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+<![CDATA[
+	var messType = 1;
+	var mid = "";
+	var previewDiv = "";
+		function masonry() {
+			var $container = $('#masonry');
+			$container.imagesLoaded(function() {
+				$container.masonry({
+					itemSelector : '.boxs',
+					gutterWidth : 20,
+					isAnimated : true,
+				});
+			});
+		}
+		
+		
+	   $(document).ready(function() {
+		   massMessageList(1);
+		  //$("#province_").customSelect({});
+		  //$("#citys").customSelect({});
+		   $('#messNum_').customSelect({});
+		   var conlength = $('#content1').val().length;
+		   var remain = 600 - conlength;
+		   $('#numbertips1').html(remain);
+		   
+		});
+	   
+	 //根据公众号查询粉丝分组
+   	function querySelect(id){
+   		$.ajax({
+   			url:"/ump/wccmassmessage/getGroupByPlatformUser",
+   			type:"Post",
+   			data:{'id':id},
+   			error:function(msg){
+   				
+   			},
+   			success:function(data){
+   				$('#groupDiv').html('<label>粉丝分组 ：</label><div style="float: left;">'+ data +'</div>');
+   				$('#groups').customSelect({});
+   			}
+   		})
+	 }
+	 
+    //根据公众号查询粉丝分组
+   	function querySelect2(id){
+   		$.ajax({
+   			url:"/ump/wccmassmessage/getGroupByPlatformUser2",
+   			type:"Post",
+   			data:{'id':id},
+   			error:function(msg){
+   				
+   			},
+   			success:function(data){
+   				$('#groupDiv2').html('<label>粉丝分组 ：</label><div style="float: left;">'+ data +'</div>');
+   				
+   			}
+   		})
+   	}
+    
+    //根据省份查询城市
+   	function queryCitys(id){
+   		$.ajax({
+   			url:"/ump/wccmassmessage/getCityByProvince",
+   			type:"Post",
+   			data:{'id':id},
+   			error:function(msg){
+   				
+   			},
+   			success:function(data){
+   				$('#cityDiv').html('<label>所在城市 ：</label><div style="float: left;">'+ data +'</div>');
+   				//$("#citys").customSelect({});
+   			}
+   		})
+   	}
+    
+    function queryMaterials(){
+    	var platform = $("#platformUser_").val();
+    	
+		$.post("/ump/wccmassmessage/materialsList", {
+			"platformUserId" : platform,
+		}, function(data) {
+				$("#materials").html(data);
+				changeDiv1();
+		});
+    }
+
+    
+  //勾选状态
+	function changeState1(id, url) {
+	    mid = id;
+	    messType = $('#messType_').val();
+		var picId = $("#selectId1").val();
+		$("#" + picId).toggleClass("selected")
+		$("#" + id).toggleClass("selected")
+		$("#selectId1").val(id);
+		if (url) {
+			var myAuto = document.getElementById('myaudio');
+			$("#myaudio").attr("src", url);
+			myAuto.play();
+		}
+	}
+	//切换回复类型
+	function changeDiv1() {
+		mid = '';
+		messType = $("#messType_").val();
+		if (messType == "1") {
+			$("#images1").hide();
+			$("#pictures1").hide();
+			$("#sounds").hide();
+			$("#video").hide();
+			$("#contents1").show();
+		}
+		if (messType == "2") {
+			$("#contents1").hide();
+			$("#images1").hide();
+			$("#sounds").hide();
+			$("#video").hide();
+			$("#pictures1").show();
+		}
+		if (messType == "3") {
+			$("#contents1").hide();
+			$("#images1").hide();
+			$("#sounds").hide();
+			$("#video").show();
+			$("#pictures1").hide();
+		}
+		if (messType == "4") {
+			$("#contents1").hide();
+			$("#images1").hide();
+			$("#sounds").show();
+			$("#video").hide();
+			$("#pictures1").hide();
+		}
+		if (messType == "5") {
+			$("#contents1").hide();
+			$("#images1").show();
+			$("#sounds").hide();
+			$("#video").hide();
+			masonry();
+			$("#pictures1").hide();
+		}
+	}
+	
+	/**
+	*服务号群发
+	*/
+	function massMess(){
+	    
+		var tab = $('.tab-control').tabcontrol();
+		var mplat = $('#platformUser_').val();
+		var mcon = $('#content1').val();
+		
+		if(!mplat){
+			console.log(1);
+			alert('请选择公众平台');
+			return;
+		}
+		console.log('type='+messType);
+		if(messType == 1){
+			if(mcon == '请输入内容' || !mcon){
+				console.log('sssss');
+				$('#hint1').html('* 请输入内容');
+				return;
+			}
+		}else{
+			if(mid==""){
+				alert('请选择素材');
+				return;
+			}
+		}
+		
+		$('#loadgif').css('display','block');
+		console.log(2);
+		console.log('mplat='+mplat);
+		var citys = $('#citys').find('option:selected');
+		console.log(citys.length);
+		var cityss = '';
+		for(var i=0;i<citys.length;i++){
+			if(i == citys.length-1){
+				cityss += citys[i].text;
+				break;
+			}
+			cityss += citys[i].text+',';
+		}
+		
+		var groups = $('#groups').find('option:selected');
+		console.log(groups.length);
+		var groupss = '';
+		for(var i=0;i<groups.length;i++){
+			if(i == groups.length-1){
+				groupss += groups[i].text;
+				break;
+			}
+			groupss += groups[i].text+',';
+		}
+		var parmam = {
+				gender : $('#gender_').val(),
+				group : ''+$('#groups').val(),
+				province :$('#province_').find('option:selected').text(),
+				city : cityss,
+				fromType:$("#fromType").val(),
+				messNum : ''+$('#messNum_').val(),
+				platformUser : ''+$('#platformUser_').val(),
+				messType : messType,
+				content : $('#content1').val(),
+				sid : mid.split('_')[1]
+				};
+		
+		 if(confirm("确认要进行群发操作吗?")==true){
+			 $.ajax({
+		            url:"/ump/wccmassmessage/sendMessage?timestamp="+new Date().getTime(),
+		            datatype :"text",
+		            type: "POST",
+		            data : parmam,
+		            error: function(msg){
+		            },
+		            success:function(data){
+		            	console.log(data);
+		            	var res = eval('([{'+data+'}])');
+		            	console.log(res[0]);
+		            	console.log(res[0].susscess);
+		            	$('#loadgif').css('display','none');
+		            	alert(res[0].msg);
+		            	$('#content1').val('');
+		            	//$('#massTime_').val('');
+					  }
+		        });
+			  }else{
+				  $('#loadgif').css('display','none');
+			      return;
+			  }
+		
+	}
+	
+	
+	/**
+	*订阅号群发
+	*/
+	function massMess1(){
+		var tab = $('.tab-control').tabcontrol();
+		var mplat = $('#dyplatformUser_').val();
+		var mcon = $('#content1').val();
+		
+		if(!mplat){
+			alert('请选择公众平台');
+			return;
+		}
+		if(messType == 1){
+			if(mcon == '请输入内容' || !mcon){
+				$('#hint1').html('* 请输入内容');
+				return;
+			}
+		}
+		$('#loadgif').css('display','block');
+		var groups = $('#dygroups').find('option:selected');
+		var groupss = '';
+		for(var i=0;i<groups.length;i++){
+			if(i == groups.length-1){
+				groupss += groups[i].text;
+				break;
+			}
+			groupss += groups[i].text+',';
+		}
+		var parmam = {
+				group : ''+$('#dygroups').val(),
+				platformUser : ''+$('#dyplatformUser_').val(),
+				messType : messType,
+				content : $('#dycontent1').val(),
+				sid : mid.split('_')[1]
+				};
+		$.ajax({
+            url:"/ump/wccmassmessage/sendMessage1?timestamp="+new Date().getTime(),
+            datatype :"text",
+            type: "POST",
+            data : parmam,
+            error: function(msg){
+            },
+            success:function(data){
+            	console.log(data);
+            	var res = eval('([{'+data+'}])');
+            	$('#loadgif').css('display','none');
+            	alert(res[0].msg);
+            	$('#dycontent1').val('');
+			  }
+        });
+	}
+	
+	
+	function changeNumTips(_this, hintId, num) {
+		var txt = _this.value;
+		var spans = $("#" + num);
+		if (txt.length == 0) {
+			$("#" + hintId).html("* 请输入内容");
+		} else {
+			$("#" + hintId).html(" ");
+		}
+		var remain = 600 - txt.length;
+		if (remain < 0) {
+			remain = 0;
+			var val = txt.substr(0, 600);
+			_this.value = val;
+		}
+		spans[0].innerHTML = remain;
+	}
+	
+	function preview(){
+		var mmid = mid.split('_')[1];
+		console.log('素材ID='+mid.split('_')[1]);
+		var type = $('#messType_').val();
+		console.log('type='+type);
+		var con = $('#content1').val();
+		if(type == 1 && con == '请输入内容' || !con){
+			$('#hint1').html('* 请输入内容');
+			return;
+		}
+		if(!mmid && type != 1){
+			alert('请选择素材');
+			return;
+		}
+		console.log('con='+con);
+		$.Dialog({
+		        overlay: true,
+		        shadow: true,
+		        flat: true,
+		        title: 'Flat window',
+		        content: '',
+		        padding: 10,
+		        onShow: function(_dialog){
+		            var content = $('#preview_').html();
+		            if(!content){
+		            	content = previewDiv;
+		            }
+		            previewDiv = content;
+		            $('#preview_').html('');
+		            $.Dialog.title("发送预览");
+		            $.Dialog.content(content);
+		           	$.Metro.initInputs();
+		        }
+		    });
+	}
+	
+	function exit(){
+		$.Dialog.close();
+	}
+	
+	/**
+	*预览
+	*/
+	function messPreview(){
+		var pplatformUser = $('#platformUser2_').val();
+		var pgroup = $('#groups2').val();
+		var pnickName = $('#nickName_').val();
+		
+		if(!pplatformUser){
+			$('#errmsg').html('请选择公众平台');
+			return;
+		}
+		if(!pgroup){
+			$('#errmsg').html('请选择分组');
+			return;
+		}
+		if(!pnickName){
+			$('#errmsg').html('粉丝昵称不能为空');
+			return;
+		}
+		var errMsg = $('#errmsg').html();
+		console.log('errMsg='+errMsg);
+		if(errMsg){
+			return;
+		}
+		
+		/* console.log('公众平台='+$('#platformUser2_').val());
+		console.log('素材ID='+mid.split('_')[1]);
+		console.log('分组ID'+$('#groups2').val());
+		console.log('消息类型='+messType);
+		console.log('内容='+$('#content1').val());
+		console.log('预览粉丝='+$('#nickName_').val()); */
+		
+		
+		
+		var parmam = {
+				platformUser : $('#platformUser2_').val(),
+				sid : mid.split('_')[1],
+				group : ''+$('#groups2').val(),
+				nickName : $('#nickName_').val(),
+				//phoneStr:phoneStr,
+				messType : messType,
+				content : $('#content1').val()
+				};
+		$.ajax({
+            url:"/ump/wccmassmessage/messPreview?timestamp="+new Date().getTime(),
+            datatype :"text",
+            type: "POST",
+            data : parmam,
+            error: function(msg){
+            },
+            success:function(data){
+            	/* var res = eval('('+data+')');
+            	console.log(res); */
+            	$.Dialog.close();
+            	alert('发送预览成功，请注意查收您的微信！');
+			  }
+        });
+	}
+	
+	function inContent(o){
+		var text = $(o).val();
+		if( text == '请输入内容'){
+			$(o).val('');
+		}
+	}
+	
+	function outContent(o){
+		var con = $(o).val();
+		if(!con){
+			$('#hint1').html('* 请输入内容');
+		}
+	}
+	
+	function massMessageList(pageNo) {
+		var start = 0;
+		var limit = 10;
+		if (pageNo > 0) {
+			start = (pageNo - 1) * limit;
+		}
+		
+		var parmam = {
+			start : start,
+			limit : limit
+		};
+		
+		$.ajax({
+			url : "/ump/wccmassmessage/massMessageList",
+			type : "POST",
+			data :parmam,
+			error : function(msg) {
+				alert("error " + msg);
+			},
+			success : function(text) {
+				$("#_page_2").html(text);
+			}
+		});
+	}
+	
+		function showMsg(){
+			massMessageList(1);
+		}
+		
+		
+		function showDyh(){
+			$.ajax({
+				url : "/ump/wccmassmessage/dymassMessage",
+				type : "POST",
+				error : function(msg) {
+					alert("error " + msg);
+				},
+				success : function(text) {
+					$("#_page_3").html(text);
+				}
+			});
+		}
+		
+		
+		
+		function goPage(page){
+			var pageStr = $("#pageStr").val();
+	    	if($.trim(pageStr) == ""){
+	    		alert("请输入需要跳转的页数！");
+	    		return;
+	    	}
+	    	if(isNaN(pageStr)){
+	    		alert("格式错误，请输入数字！");
+	    		return;
+	    	}
+	    	if(pageStr > page){
+	    		alert("你输入的页数大于最大页数");
+	    		return;
+	    	}
+	    	if(pageStr <= 0){
+	    		alert("你输入的页数不符合要求");
+	    		return;
+	    	}
+	    	queryFriend(pageStr);
+		}
+		
+		function dele(id){
+			if (!confirm("确定要删除吗？")) {
+				return;
+			}
+			var parmam = {
+					id : id
+				};
+				
+				$.ajax({
+					url : "/ump/wccmassmessage/delMassMsg",
+					type : "POST",
+					data :parmam,
+					error : function(msg) {
+						alert("error " + msg);
+					},
+					success : function(text) {
+						massMessageList(1);
+					}
+				});
+		}
+		
+		//跳转素材页面
+		function goUrl() {
+			var type = $('#messType_').val();
+			if(type == "2"){
+				window.open("/ump/wccmaterialses?&displayId=27&type=PICTURE");
+			}else if(type == "3"){
+				window.open("/ump/wccmaterialses?&displayId=27&type=VIDEO");
+			}else if(type == "4"){
+				window.open("/ump/wccmaterialses?&displayId=27&type=SOUNDS");
+			}else if(type == "5"){
+				window.open("/ump/wccmaterialses?&displayId=27&type=IMAGETEXT");
+			}
+		}
+		//刷新素材
+		function refresh() {
+			var platform = $("#platformUser_").val();
+			$.post("/ump/wccmassmessage/materialsList", {
+				"platformUserId" : platform,
+			}, function(data) {
+					$("#materials").html(data);
+					changeDiv1();
+			});
+		/* 	$.post("/ump/wccwelcomkbses/materialsList", {
+				"platformUserId" : platform,
+			}, function(data) {
+				$("#materials").html(data);
+				var type = $('#messType_').val();
+				//location.hash="botom";
+				if(type == "2"){
+					$("#contents1").hide();
+					$("#video").hide();
+					$("#sounds").hide();
+					$("#images1").hide();
+					$("#pictures1").show();
+				}else if(type == "3"){
+					$("#contents1").hide();
+					$("#pictures1").hide();
+					$("#sounds").hide();
+					$("#images1").hide();
+					$("#video").show();
+				}else if(type == "4"){
+					$("#contents1").hide();
+					$("#pictures1").hide();
+					$("#video").hide();
+					$("#images1").hide();
+					$("#sounds").show();
+				}else if(type == "5"){
+					$("#contents1").hide();
+					$("#pictures1").hide();
+					$("#video").hide();
+					$("#sounds").hide();
+					$("#images1").show();
+				//	masonry();
+				}
+			}); */
+		}
+		
+		function checkFriend(o){
+			var pplatformUser = $('#platformUser2_').val();
+			var pgroup = $('#groups2').val();
+			var pnickName = $('#nickName_').val();
+			if(!pplatformUser){
+				$('#errmsg').html('请选择公众平台');
+				return;
+			}
+			if(!pgroup){
+				$('#errmsg').html('请选择分组');
+				return;
+			}
+			if(!pnickName){
+				$('#errmsg').html('粉丝昵称不能为空');
+				return;
+			}
+			var parmam = {
+					platformUser : $('#platformUser2_').val(),
+					group : ''+$('#groups2').val(),
+					phoneStr:phoneStr,
+					nickName : $('#nickName_').val()
+					};
+			$.ajax({
+	            url:"/ump/wccmassmessage/checkFriend?timestamp="+new Date().getTime(),
+	            datatype :"text",
+	            type: "POST",
+	            data : parmam,
+	            error: function(msg){
+	            },
+	            success:function(data){
+	            	console.log(data);
+	            	if(data=="false"){
+	            		console.log('查无此粉丝');
+	            		$('#errmsg').html('查无此粉丝');
+	            		return;
+	            	}
+	            	$('#errmsg').html('');
+				  }
+	        });
+		}
+	]]>
+   </script>
+
+</div>
+
+

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_com_nineclient_model_VocShop" modelAttribute="vocShop" path="/vocshops" render="${empty dependencies}" z="AsgYhlgvoK8MEFHTvAaIY2zID/I=">
+        <field:input field="name" id="c_com_nineclient_model_VocShop_name" required="true" z="OkFL7rY9IOKRgCKSNTmjrlVvt68="/>
+        <field:input field="url" id="c_com_nineclient_model_VocShop_url" required="true" z="xpgwitMa8zZlh/d32raslh2xmLo="/>
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_VocShop_isDeleted" z="v39TSPiFptXgMkWSNwTZJLkgEqs="/>
+        <field:datetime dateTimePattern="${vocShop_createtime_date_format}" field="createTime" id="c_com_nineclient_model_VocShop_createTime" z="rXDU+fpj4LMV7t0dCI+R7AGFhV4="/>
+        <field:select id="c_com_nineclient_model_vocGoods_channel" items="${channels}" field="channel" itemValue="id"  path="channel"></field:select>
+        
+       <!--
+         <field:select field="auditStatus" id="c_com_nineclient_model_VocWordExpressions_auditStatus" items="${vocauditstatuses}" path="vocauditstatuses" z="SVofDHQotE8lIM7Qvvof6n9M3fg="/>
+        -->
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_nineclient_model_VocShop" render="${not empty dependencies}" z="AP4VaVHXAZ25TMTTMxb3yKAZgZg="/>
+</div>

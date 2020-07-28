@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default_pub" name="reportfriends/report">
+        <put-attribute name="body" value="/WEB-INF/views/wccreport/friends.jsp"/>
+    </definition>
+     <definition extends="default_pub" name="reportMassPicText/report">
+        <put-attribute name="body" value="/WEB-INF/views/wccreport/massPicText.jsp"/>
+    </definition>
+     <definition extends="pub" name="reportMassPicText/result">
+        <put-attribute name="body" value="/WEB-INF/views/wccreport/massPicResult.jspx"/>
+    </definition>
+    <definition extends="pub" name="reportcontents/report">
+        <put-attribute name="body" value="/WEB-INF/views/wccreport/contents.jsp"/>
+    </definition>
+    <definition extends="pub" name="wxdatas">
+        <put-attribute name="body" value="/WEB-INF/views/wccreport/wxData.jsp"/>
+    </definition>
+    <definition extends="default_pub" name="reportmessages/report">
+        <put-attribute name="body" value="/WEB-INF/views/wccreport/message.jsp"/>
+    </definition>
+     <definition extends="default_pub" name="reportReply/report">
+        <put-attribute name="body" value="/WEB-INF/views/wccreport/reply.jspx"/>
+    </definition>
+    <definition extends="default_pub" name="reportArticle/report">
+        <put-attribute name="body" value="/WEB-INF/views/wccreport/article.jspx"/>
+    </definition>
+    <definition extends="default_pub" name="reportOperator/report">
+        <put-attribute name="body" value="/WEB-INF/views/wccreport/operatorLogin.jspx"/>
+    </definition>
+    <definition extends="default_pub" name="reporterpuse/report">
+        <put-attribute name="body" value="/WEB-INF/views/wccreport/erpuse.jspx"/>
+    </definition>
+    <definition extends="default_pub" name="reportForward/report">
+        <put-attribute name="body" value="/WEB-INF/views/wccreport/forwardMaterial.jspx"/>
+    </definition>
+
+    <definition extends="default_pub" name="reportMaterialDealerToSend/report">
+        <put-attribute name="body" value="/WEB-INF/views/wccreport/materialSend.jspx"/>
+    </definition>
+    <definition extends="default_pub" name="reportSingleDealerSendMaterFr/report">
+        <put-attribute name="body" value="/WEB-INF/views/wccreport/singleDealerSendFr.jspx"/>
+    </definition>
+    <definition extends="pub" name="reportForward/result">
+        <put-attribute name="body" value="/WEB-INF/views/wccreport/forwardMaterialResult.jspx"/>
+    </definition>
+
+</tiles-definitions>

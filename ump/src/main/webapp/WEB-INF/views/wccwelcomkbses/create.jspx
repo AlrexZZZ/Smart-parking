@@ -1,0 +1,953 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:spring="http://www.springframework.org/tags" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<style>
+.container-fluid {
+	padding: 20px;
+	margin-top: 10px;
+}
+
+.tuwen_dandiv_newlist li:last-child {
+	border: 0px;
+}
+
+.tuwen_dandiv_newlist li {
+	width: 94%;
+	height: auto;
+	margin: 0 auto;
+	clear: both;
+	overflow: hidden;
+	border-bottom: 1px solid #e5e5e5;
+	font-family: Microsoft Yahei;
+	font-size: 14px;
+	color: #7d7d7d;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.boxs {
+	margin-bottom: 20px;
+	border: 1px solid #e5e5e5;
+}
+
+.tuwen_dandiv_newlist {
+	width: 100%;
+	height: auto;
+	clear: both;
+	overflow: hidden;
+	margin: 0 auto;
+}
+
+.tuwen_listw {
+	padding: 0px;
+	width: 120px;
+	height: auto;
+	float: left;
+	overflow: hidden;
+	font-family: Microsoft Yahei;
+}
+
+.tuwen_listw a {
+	color: #7d7d7d;
+	font-family: Microsoft Yahei;
+}
+
+.tuwen_listw a:hover {
+	text-decoration: underline;
+}
+
+.tuwen_dandiv_newlist li {
+	list-style: none;
+}
+
+.tuwen_listt {
+	width: 40px;
+	height: 40px;
+	float: right;
+	overflow: hidden;
+}
+
+.tuwen_listt img {
+	width: 40px;
+	height: 40px;
+}
+
+.boxs img {
+	max-width: 100%
+}
+
+.tupian_dandiv_img {
+	width: 170px;
+	height: 170px;
+	overflow: hidden;
+	margin-right: 20px;
+	margin-bottom: 20px;
+	float: left;
+	margin-bottom: 20px;
+}
+
+.tupian_dandiv_img img {
+	width: 170px;
+	height: 170px;
+}
+</style>
+	<script type="text/javascript">
+		<![CDATA[
+		$(function() {
+			masonry();
+		});
+		function masonry() {
+			var $container = $('#masonry');
+			$container.imagesLoaded(function() {
+				$container.masonry({
+					itemSelector : '.boxs',
+					gutterWidth : 20,
+					isAnimated : true,
+				});
+			});
+		}
+		//欢迎语提交
+		function submitForm1() {
+			if ($("#replyType1").val() == "文本") {
+				var content = $('#content1').val();
+				if (content.trim().length == 0) {
+					return false;
+				}
+			} else {
+				if ($("#selectId1").val() == "div1_") {
+					alert("选择素材不能为空");
+					return false;
+				}
+			}
+			$.post("/ump/wccwelcomkbses/create", $('#form1').serialize(),
+					function(data) {
+						var str = '[' + data + ']';
+						dataStr = eval('(' + str + ')');
+						if (dataStr[0].state == 0) {
+							alert('欢迎语修改成功！');
+						} else if (dataStr[0].state == 1) {
+							alert('欢迎语保存成功！');
+						} else {
+							alert('欢迎语修改失败！');
+						}
+					});
+		}
+		//机器人欢迎语提交
+		function submitForm2() {
+			var content = $('#content2').val();
+			if (content.trim().length == 0) {
+				return false;
+			}
+			$.post("/ump/wccwelcomkbses/create", $('#form2').serialize(),
+					function(data) {
+						var str = '[' + data + ']';
+						dataStr = eval('(' + str + ')');
+						if (dataStr[0].state == 0) {
+							alert('欢迎语修改成功！');
+						} else if (dataStr[0].state == 1) {
+							alert('欢迎语保存成功！');
+						} else {
+							alert('欢迎语修改失败！');
+						}
+					});
+		}
+		//欢迎语切换平台
+		function selectPlatformUser1() {
+			var platformUser = $('#platformUser1').val();
+			$
+					.post(
+							"/ump/wccwelcomkbses/changePlatformUser",
+							{
+								"platformUser" : platformUser,
+								"type" : "1"
+							},
+							function(data) {
+								if (data == "0") {
+									$("#replyType1 ").val("文本");
+									$("#active1").val("false");
+									changeOnOff1();
+									//取消选中
+									var picId = $("#selectId1").val();
+									$("#" + picId).toggleClass("selected")
+									$("#selectId1").val("div_");
+									var platform = $("#platformUser1").val();
+									$.post("/ump/wccwelcomkbses/materialsList", {
+										"platformUserId" : platform,
+									}, function(data) {
+										$("#materials").html(data);
+									});
+								} else {
+									json = eval(data);
+									if (json.active == "true") {
+										$("#active1").val("false");
+										changeOnOff1();
+									} else {
+										$("#active1").val("true");
+										changeOnOff1();
+									}
+									$('#replyType1').val(json.replyType);
+									refresh();
+								}
+							});
+		}
+		//机器人欢迎语切换平台
+		function selectPlatformUser2() {
+			var platformUser = $('#platformUser2').val();
+			$
+					.post(
+							"/ump/wccwelcomkbses/changePlatformUser",
+							{
+								"platformUser" : platformUser,
+								"type" : "0"
+							},
+							function(data) {
+								if (data == "0") {
+									//激活状态
+									$("#active2").val("false");
+									changeOnOff2();
+									//人工客服
+									if($('#isCustomer').val()=='false'){
+										$('#isCustomer').val(true);
+										$('#ischeck').prop("checked", true);
+									}
+									$("#content2")
+											.val(
+													"真抱歉，小久不是很理解您的需求，请尝试换个词吧~您也可以输入感兴趣的内容前的编号获取更多详细信息哦~");
+									var conlength = $('#content2').val().length;
+									var remain = 600 - conlength;
+									$('#numbertips2').html(remain);
+								} else {
+									json = eval(data);
+									if (json.active == "true") {
+										$("#active2").val("false");
+										changeOnOff2();
+									} else {
+										$("#active2").val("true");
+										changeOnOff2();
+									}
+									//人工客服
+									if($('#isCustomer').val()!=json.isCustomer){
+										if(json.isCustomer=="true"){
+											$('#isCustomer').val(true);
+											$('#ischeck').prop("checked", true);
+										}else{
+											$('#isCustomer').val(false);
+											$('#ischeck').prop("checked", false);
+										}
+									}
+									$('#content2').val(json.content);
+									var conlength = $('#content2').val().length;
+									var remain = 600 - conlength;
+									$('#numbertips2').html(remain);
+								}
+							});
+		}
+		//勾选状态
+		function changeState1(id, url) {
+			var picId = $("#selectId1").val();
+			$("#" + picId).toggleClass("selected")
+			$("#" + id).toggleClass("selected")
+			$("#selectId1").val(id);
+			if (url.length > 0) {
+				if(id == picId&&$("#myaudio").attr("src")!=""){
+					var myAuto = document.getElementById('myaudio');
+					$("#myaudio").attr("src", "");
+					myAuto.play();
+				}else{
+					var myAuto = document.getElementById('myaudio');
+					$("#myaudio").attr("src",url);
+					myAuto.play();
+				}
+			}
+		}
+		//切换回复类型
+		function changeDiv1() {
+			var reply = $("#replyType1").val();
+			if (reply == "图片") {
+				$("#contents1").hide();
+				$("#images1").hide();
+				$("#sounds").hide();
+				$("#video").hide();
+				$("#pictures1").show();
+			}
+			if (reply == "语音") {
+				$("#contents1").hide();
+				$("#images1").hide();
+				$("#sounds").show();
+				$("#video").hide();
+				$("#pictures1").hide();
+			}
+			if (reply == "视频") {
+				$("#contents1").hide();
+				$("#images1").hide();
+				$("#sounds").hide();
+				$("#video").show();
+				$("#pictures1").hide();
+			}
+			if (reply == "文本") {
+				$("#images1").hide();
+				$("#pictures1").hide();
+				$("#sounds").hide();
+				$("#video").hide();
+				$("#contents1").show();
+			}
+			if (reply == "图文") {
+				$("#contents1").hide();
+				$("#images1").show();
+				$("#sounds").hide();
+				$("#video").hide();
+				masonry();
+				$("#pictures1").hide();
+			}
+		}
+		//欢迎语激活状态切换
+		function changeOnOff1() {
+			if ($("#active1").val() == "true") {
+				$("#activeOn1").hide();
+				$("#activeOff1").show();
+				$("#active1").val("false");
+			} else {
+				$("#activeOn1").show();
+				$("#activeOff1").hide();
+				$("#active1").val("true");
+			}
+		}
+		//机器人欢迎语激活状态切换
+		function changeOnOff2() {
+			if ($("#active2").val() == "true") {
+				$("#activeOn2").hide();
+				$("#activeOff2").show();
+				$("#active2").val("false");
+			} else {
+				$("#activeOn2").show();
+				$("#activeOff2").hide();
+				$("#active2").val("true");
+			}
+		}
+		function changeNumTips(_this, hintId, num) {
+			var txt = _this.value;
+			var spans = $("#" + num);
+			if (txt.length == 0) {
+				$("#" + hintId).html("* 请输入内容");
+			} else {
+				$("#" + hintId).html(" ");
+			}
+			var remain = 600 - txt.length;
+			if (remain < 0) {
+				remain = 0;
+				var val = txt.substr(0, 600);
+				_this.value = val;
+			}
+			spans[0].innerHTML = remain;
+		}
+		//跳转素材页面
+		function goUrl() {
+			var type = $('#replyType1').val();
+			if(type == "图片"){
+				window.open("/ump/wccmaterialses?&displayId=27&type=PICTURE");
+			}else if(type == "视频"){
+				window.open("/ump/wccmaterialses?&displayId=27&type=VIDEO");
+			}else if(type == "语音"){
+				window.open("/ump/wccmaterialses?&displayId=27&type=SOUNDS");
+			}else if(type == "图文"){
+				window.open("/ump/wccmaterialses?&displayId=27&type=IMAGETEXT");
+			}
+		}
+		//刷新素材
+		function refresh() {
+			var platform = $("#platformUser1").val();
+			$.post("/ump/wccwelcomkbses/materialsList", {
+				"platformUserId" : platform,
+			}, function(data) {
+				$("#materials").html(data);
+				var type = $('#replyType1').val();
+				location.hash="botom";
+				if(type == "图片"){
+					$("#contents1").hide();
+					$("#video").hide();
+					$("#sounds").hide();
+					$("#images1").hide();
+					$("#pictures1").show();
+				}else if(type == "视频"){
+					$("#contents1").hide();
+					$("#pictures1").hide();
+					$("#sounds").hide();
+					$("#images1").hide();
+					$("#video").show();
+				}else if(type == "语音"){
+					$("#contents1").hide();
+					$("#pictures1").hide();
+					$("#video").hide();
+					$("#images1").hide();
+					$("#sounds").show();
+				}else if(type == "图文"){
+					$("#contents1").hide();
+					$("#pictures1").hide();
+					$("#video").hide();
+					$("#sounds").hide();
+					$("#images1").show();
+					masonry();
+				}
+			});
+		}
+		
+		//判断是否选中
+		function isChecked() {
+			if($('#ischeck:checked').val() == undefined){
+				$('#isCustomer').val(false);
+				$('#ischeck').prop("checked", false);
+			}else{
+				$('#isCustomer').val(true);
+				$('#ischeck').prop("checked", true);
+			}
+		}
+		]]>
+	</script>
+	<!-- 自动回复js以及css -->
+	<style>
+@IMPORT url("/ump/styles/selectTree.css");
+</style>
+	<SCRIPT type="text/javascript" src="/ump/js/selectTree.js">
+		//selectTree;
+	</SCRIPT>
+	<SCRIPT type="text/javascript">
+		<![CDATA[
+		function fuzzy(pageNo) {
+			var start = 0;
+			var limit = 10;
+			if (pageNo > 0) {
+				start = (pageNo - 1) * limit;
+			}
+			var platformUser = $('#SelIds').val();
+			var title = $('#title').val();
+			var keyWord = $('#keyWord').val();
+			var active = $('#active').val();
+			var isReview = $('#isReview').val();
+			var content = $('#content').val();
+			var showWay = $('#showWay').val();
+			var commentStartTimeId = $('#commentStartTimeId').val();
+			var commentEndTimeId = $('#commentEndTimeId').val();
+
+			if (commentStartTimeId != "") {
+				if (commentEndTimeId != "") {
+					if (commentStartTimeId > commentEndTimeId) {
+						alert("开始时间大于结束时间，请重新选择！");
+						return false;
+					}
+				}
+			}
+			$.post("/ump/wccautokbses/fuzzyQuery", {
+				"platformUser" : platformUser,
+				"title" : title,
+				"keyWord" : keyWord,
+				"active" : active,
+				"isReview" : isReview,
+				"content" : content,
+				"showWay" : showWay,
+				"commentStartTimeId" : commentStartTimeId,
+				"commentEndTimeId" : commentEndTimeId,
+				"start" : start,
+				"limit" : limit
+			}, function(data) {
+				$("#page1").html(data);
+			});
+		}
+		var htmlVar = "";
+		function reviewDialog(id) {
+			if ($('#dialog').html()) {
+				htmlVar = $('#dialog').html();
+			} else {
+				$('#dialog').html(htmlVar);
+			}
+			var arrChk = $("input[name='checkbox']:checked");
+			if (id == 0) {
+				if (arrChk.val() == null) {
+					alert("请选择后进行批量审批！");
+					return false;
+				}
+			}
+			$.Dialog({
+				overlay : true,
+				shadow : true,
+				flat : true,
+				icon : '<img src="/ump/resources/images/swatch.png"/>',
+				title : '审核自动回复',
+				content : '',
+				padding : 20,
+				onShow : function(_dialog) {
+					var html = htmlVar;
+					$('#dialog').html('');
+					$.Dialog.content(html);
+					$.Metro.initInputs();
+				}
+			});
+			$('#id').val(id);
+		};
+		function reviews() {
+			var id = $('#id').val();
+			var arrChk = $("input[name='checkbox']:checked");
+			var isReview = $('#isReview:checked').val();
+			if (id != 0) {
+				$.post("/ump/wccautokbses/reviews", {
+					"id" : id,
+					"isReview" : isReview,
+				}, function(data) {
+					if (data == 1) {
+						$.Dialog.close();
+						location.href = "/ump/wccautokbses/showList";
+					} else {
+						alert("审核失败");
+					}
+				})
+			} else {
+				var arrStr = "";
+				$(arrChk).each(function() {
+					arrStr += this.value + ",";
+					
+				});
+				$.post("/ump/wccautokbses/batchReviews", {
+					"isReview" : isReview,
+					"arrStr" : arrStr
+				}, function(data) {
+					if (data == 1) {
+						$.Dialog.close();
+						location.href = "/ump/wccautokbses/showList";
+					} else {
+						alert("审核失败");
+					}
+				})
+			}
+		}
+		function checkBoxAll() {
+			if ($('#checkboxAll').prop('checked')) {
+				$("[name = checkbox]:checkbox").prop("checked", true);
+			} else {
+				$("[name = checkbox]:checkbox").prop("checked", false);
+			}
+		}
+		function goEditUrl(gid) {
+			location.href = "/ump/wccautokbses?form"
+		}
+
+		//重置模糊查询
+		function resetFuzzy() {
+			$("#title").val("");
+			$("#keyWord").val("");
+			$("#active").val("");
+			$("#isReview").val("");
+			$("#content").val("");
+			$("#commentStartTimeId").val("");
+			$("#commentEndTimeId").val("");
+			$("#showWay").val("");
+			loadTree("/ump/wccautokbses/treePlatform");
+			//清空多选框
+			$("#SelVals").attr("value", "");
+			$("#SelIds").attr("value", "");
+		}
+
+		$(document).ready(function() {
+			loadTree("/ump/wccautokbses/treePlatform");
+			fuzzy();
+		});
+
+		function deleteAuto(id) {
+			//验证相关问题是否存在 		//type 0 : 单独的删除  1 ： 单独的删除  2 ： 验证是否有相关问题存在 
+			$.post("/ump/wccautokbses/deleteAuto", {
+				"id" : id,
+				type : 2
+			}, function(data) {
+				if (data == 0) {
+					if (confirm('确定要删除吗？')) {
+						$.post("/ump/wccautokbses/deleteAuto", {
+							"id" : id,
+							type : 0
+						}, function(data) {
+							if (data == 2) {
+								fuzzy();
+							} else {
+								alert("删除失败");
+							}
+						})
+					}
+				} else if (data == 1) {
+					if (confirm('该问题为其它问题的相关问题，确定删除么？')) {
+						$.post("/ump/wccautokbses/deleteAuto", {
+							"id" : id,
+							type : 1
+						}, function(data) {
+							if (data == 2) {
+								fuzzy();
+							} else {
+								alert("删除失败");
+							}
+						})
+					}
+				}
+			})
+		}
+		function isReviewed() {
+			alert("已审核，请勿重复审核！");
+		}
+		function goPage(page) {
+			var pageStr = $("#pageStr").val();
+			if ($.trim(pageStr) == "") {
+				alert("请输入需要跳转的页数！");
+				return false;
+			}
+			if (isNaN(pageStr)) {
+				alert("格式错误，请输入数字！");
+				return false;
+			}
+			if (pageStr > page) {
+				alert("你输入的页数大于最大页数");
+				return false;
+			}
+			if (pageStr <= 0) {
+				alert("你输入的页数不符合要求");
+				return false;
+			}
+			fuzzy(pageStr);
+		}
+		]]>
+	</SCRIPT>
+	
+	
+	
+	<div class="tab-control" data-role="tab-control">
+		<ul class="tabs">
+			<li id="tabsLi1" class="active"><a href="#_page_1">关注欢迎语</a></li>
+			<li id="tabsLi2" class=""><a href="#_page_2">消息自动回复</a></li>
+			<li id="tabsLi3" class=""><a href="#_page_3">关键词自动回复</a></li>
+		</ul>
+		<SCRIPT type="text/javascript">
+			var welType = ${welType};
+			if(welType==3){
+				$("#tabsLi3").attr("class", "active");
+				$("#tabsLi1").removeAttr("class");
+			}
+		</SCRIPT>
+		<div class="frames" style="width: 98%; background-color: #fff;">
+			<!-- 关注欢迎语  -->
+			<div class="frame" id="_page_1" style="display: block;">
+				<div class="grid">
+					<form:form id="form1" action="wccwelcomkbses" method="POST"
+						modelAttribute="wccWelcomkbs">
+						<input type="hidden" id="type1" name="type" value="WELCOME" />
+						<input type="hidden" id="id1" name="id"
+							value="${welcomeWelcom.id}" />
+						<div class="row">
+							<div class="span12">
+								<label>公众平台：</label>
+								<div class="input-control select" style="width: 20%">
+									<select name="platformUser" id="platformUser1"
+										style="width: 270px;" onchange="selectPlatformUser1()">
+										<c:forEach items="${platformUsers}" var="platformUser">
+											<option value="${platformUser.id}">${platformUser.account}</option>
+										</c:forEach>
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<SCRIPT type="text/javascript">
+							var platform = $("#platformUser1").val();
+							$.post("/ump/wccwelcomkbses/materialsList", {
+								"platformUserId" : platform,
+							}, function(data) {
+								$("#materials").html(data);
+								masonry();
+							});
+						</SCRIPT>
+
+						<div class="row">
+							<div class="span12">
+								<label>启用状态：</label>
+								<div class="input-control switch" style="width: 20%">
+									<div> <c:if
+											test="${welcomeWelcom.active==true||empty welcomeWelcom}">
+											<input id="active1" type="hidden" name="active" value="true" />
+											<img id="activeOn1" onclick="changeOnOff1()"
+												src="images/ON.png" />
+											<img src="images/OFF.png" id="activeOff1"
+												onclick="changeOnOff1()" style="display: none;" />
+
+										</c:if> <c:if test="${welcomeWelcom.active==false}">
+											<input id="active1" type="hidden" name="active" value="false" />
+											<img src="images/ON.png" id="activeOn1"
+												onclick="changeOnOff1()" style="display: none;" />
+											<img src="images/OFF.png" id="activeOff1"
+												onclick="changeOnOff1()" />
+										</c:if></div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="span12">
+								<label>回复类型：</label>
+								<div class="input-control select" style="width: 20%">
+									<c:if test="${empty welcomeWelcom}">
+										<select id="replyType1" name="replyType" style="width: 270px;"
+											onchange="changeDiv1();">
+											<c:forEach items="${wccwelcomkbsreplytypes}" var="replyType">
+												<option value="${replyType}">${replyType}</option>
+											</c:forEach>
+										</select>
+									</c:if>
+									<c:if test="${not empty welcomeWelcom}">
+										<select id="replyType1" name="replyType" style="width: 270px;"
+											onchange="changeDiv1();">
+											<c:forEach items="${wccwelcomkbsreplytypes}" var="replyType">
+												<c:if test="${welcomeWelcom.replyType==replyType}">
+													<option value="${replyType}" selected="selected">${replyType}</option>
+												</c:if>
+												<c:if test="${welcomeWelcom.replyType!=replyType}">
+													<option value="${replyType}">${replyType}</option>
+												</c:if>
+											</c:forEach>
+										</select>
+									</c:if>
+								</div>
+							</div>
+						</div>
+
+						<div id="materials">
+							<!-- materials -->
+						</div>
+						<div class="row">
+							<div class="span12">
+								<a class="button info" style="margin-left: 30px;padding: 4px;"
+									onclick="submitForm1();">保 存</a>
+							</div>
+						</div>
+						<a name="botom"></a>
+					</form:form>
+				</div>
+			</div>
+			<!-- 机器人欢迎语 -->
+			<div class="frame" id="_page_2" style="display: none;">
+				<div class="grid">
+					<form:form id="form2" action="wccwelcomkbses" method="POST"
+						modelAttribute="wccWelcomkbs">
+						<input type="hidden" id="type2" name="type" value="ROBOT" />
+						<input type="hidden" id="id2" name="id" value="${robotWelcom.id}" />
+						<div class="row">
+							<div class="span12">
+								<label>公众平台：</label>
+								<div class="input-control select" style="width: 20%">
+									<select name="platformUser" id="platformUser2"
+										style="width: 270px;" onchange="selectPlatformUser2()">
+										<c:forEach items="${platformUsers}" var="platformUser">
+											<option value="${platformUser.id}">${platformUser.account}</option>
+										</c:forEach>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="span12">
+								<label>启用状态：</label>
+								<div class="input-control switch" style="width: 20%">
+									<div> <c:if
+											test="${welcomeWelcom.active==true||empty welcomeWelcom}">
+											<input id="active2" type="hidden" name="active" value="true" />
+											<img id="activeOn2" onclick="changeOnOff2()"
+												src="images/ON.png" />
+											<img src="images/OFF.png" id="activeOff2"
+												onclick="changeOnOff2()" style="display: none;" />
+
+										</c:if> <c:if test="${welcomeWelcom.active==false}">
+											<input id="active2" type="hidden" name="active" value="false" />
+											<img src="images/ON.png" id="activeOn2"
+												onclick="changeOnOff2()" style="display: none;" />
+											<img src="images/OFF.png" id="activeOff2"
+												onclick="changeOnOff2()" />
+										</c:if></div>
+								</div>
+							</div>
+						</div>
+						<div class="row" id="contents2" style="width: 700px;">
+							<div class="span12">
+								<label>回复内容：</label>
+							</div>
+							<div class="input-control textarea">
+								<INPUT type="hidden" name="replyType" value="文本" />
+								<c:if test="${not empty robotWelcom.content}">
+									<textarea id="content2" name="content"
+										oninput="changeNumTips(this,'hint2','numbertips2')"
+										style="resize: none; margin-left: 30px; width: 550px">${robotWelcom.content}</textarea>
+									<font id="hint2"
+										style="color: red; line-height: 100px; margin-left: 5px;">*</font>
+									<div
+										style="height: 24px; line-height: 24px; margin-left: 30px; width: 550px;">
+										<span style="float: right; color: #069dd5;">可输入<span
+											id="numbertips2">600</span>字
+										</span>
+									</div>
+									<c:if test="${robotWelcom.isCustomer==true}">
+										<span style="float: left;margin-left: 30px;"><input  type="checkbox" checked="checked" id="ischeck" onclick="isChecked();"/><input name="isCustomer" id="isCustomer" type="hidden" value="${robotWelcom.isCustomer}"/>启用人工客服(启用后将会在消息自动回复列表中显示人工客服)</span>
+									</c:if>
+									<c:if test="${robotWelcom.isCustomer==false}">
+										<span style="float: left;margin-left: 30px;"><input  type="checkbox" id="ischeck" onclick="isChecked();"/><input name="isCustomer" id="isCustomer" type="hidden" value="${robotWelcom.isCustomer}"/>启用人工客服(启用后将会在消息自动回复列表中显示人工客服)</span>
+									</c:if>
+								</c:if>
+								<c:if test="${empty robotWelcom.content}">
+									<textarea id="content2" name="content"
+										oninput="changeNumTips(this,'hint2','numbertips2')"
+										style="resize: none; margin-left: 30px; width: 550px">真抱歉，小久不是很理解您的需求，请尝试换个词吧~您也可以输入感兴趣的内容前的编号获取更多详细信息哦~</textarea>
+									<font id="hint2"
+										style="color: red; line-height: 100px; margin-left: 5px;">*</font>
+									<div
+										style="height: 24px; line-height: 24px; margin-left: 30px; width: 550px;">
+										<span style="float: right; color: #069dd5;">可输入<span
+											id="numbertips2">600</span>字
+										</span>
+									</div>
+									<span style="float: left;margin-left: 30px;"><input  type="checkbox" checked="checked" id="ischeck" onclick="isChecked();"/><input name="isCustomer" id="isCustomer" type="hidden" value="true"/>启用人工客服(启用后将会在消息自动回复列表中显示人工客服)</span>
+								</c:if>
+							</div>
+						</div>
+						<SCRIPT type="text/javascript">
+							var conlength = $('#content2').val().length;
+							var remain = 600 - conlength;
+							$('#numbertips2').html(remain);
+						</SCRIPT>
+						<div class="row">
+							<div class="span12">
+								<a class="button info" style="margin-left: 30px;padding: 4px;"
+									onclick="submitForm2();">保 存</a>
+							</div>
+						</div>
+					</form:form>
+				</div>
+			</div>
+			<div class="frame" id="_page_3" style="display: none;">
+					<form:form id="form3" action="wccAutokbs" modelAttribute="wccAutokbs">
+						<div class="row">
+							<div class="span3">
+								<div class="input-control text">
+									<label>公众平台：
+									</label>
+									<div class="input-control text" style="width: 135px;">
+										<input id="SelVals" type="text" readonly="readonly"
+											style="width: 135px;" placeholder="全部"
+											onclick="selectShowMenu();" /> <input id="SelIds"
+											name="platformUser" type="hidden" />
+										<div id="selectMenuContent" class="menuContent"
+											style="display: none; position: absolute; z-index: 99;">
+											<ul id="selectTreeDemo" class="ztree"
+												style="margin-top: 0; width: 135px; max-height: 300px; padding-left: 0px; margin-left: 0px;"></ul>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="span3">
+								<div class="input-control text">
+									<label>标题：
+									</label>
+									<form:input path="title" />
+								</div>
+							</div>
+							<div class="span3">
+								<div class="input-control text">
+									<label>关键词：
+									</label>
+									<form:input path="keyWord" />
+								</div>
+							</div>
+							<div class="span3">
+								<div class="input-control select">
+									<label>启用状态：
+									</label> <select id="active" name="active">
+										<option value="">全部</option>
+										<option value="1">启用</option>
+										<option value="0">不启用</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="span3">
+								<div class="input-control select">
+									<label>审核状态：</label>
+									<select id="isReview" name="isReview">
+										<option value="">全部</option>
+										<option value="0">待审核</option>
+										<option value="1">审核通过</option>
+										<option value="2">审核未通过</option>
+									</select>
+								</div>
+							</div>
+							<div class="span3">
+								<div class="input-control text">
+									<label>内容：</label>
+									<form:input path="content" />
+								</div>
+							</div>
+							<div class="span3">
+								<div class="input-control text">
+									<label>添加时间：</label><input
+										type="text" class="Wdate" id="commentStartTimeId"
+										onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+								</div>
+							</div>
+							<div class="span3">
+								<div class="input-control text">
+									<label>至 &#160;&#160;</label><input
+										type="text" class="Wdate" id="commentEndTimeId"
+										onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="span3">
+								<div class="input-control select">
+									<label>展示方式：</label>
+									<select id="showWay" name="showWay">
+										<option value="">全部</option>
+										<option value="0">默认回复</option>
+										<option value="1">相关回复</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="span3" style="margin-left: 20px;">
+								<a class="button info" style="padding: 4px;" onclick="fuzzy();">查
+									询</a> <a class="button warning" style="padding: 4px;"
+									onclick="resetFuzzy();">重 置</a>
+							</div>
+						</div>
+					</form:form>
+				<div id="dialog" style="display: none;">
+					<div class="grid"
+						style="width: 200px; margin: 0px auto; text-align: center;"
+						align="center">
+						<div class="row">
+							<div style="text-align: center;">
+								<input type="hidden" id="id" /> <span>审核通过：<input
+									id="isReview" name="isReview" type="radio" value="1"
+									style="border: 0px; box-sizing: content-box;" checked="checked" /></span>
+								<span style="margin-left: 20px;">审核未通过：<input id="isReview"
+									name="isReview" type="radio" value="2"
+									style="border: 0px; box-sizing: content-box;" /></span>
+							</div>
+						</div>
+						<div class="row" style="text-align: center;">
+							<a class="button info" onclick="reviews();" style="padding: 4px;">确
+								定</a> <a class="button warning"
+								style="margin-left: 20px; padding: 4px;" onclick="$.Dialog.close()">取
+								消</a>
+						</div>
+					</div>
+				</div>
+				<div id="page1"></div>
+			</div>
+		</div>
+	</div>
+</div>

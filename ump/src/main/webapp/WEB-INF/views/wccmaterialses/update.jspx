@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_nineclient_model_WccMaterials" modelAttribute="wccMaterials" path="/wccmaterialses" versionField="Version" z="LqoWr/PvvuKmdP32jGG7YqKdDRQ=">
+        <field:select field="type" id="c_com_nineclient_model_WccMaterials_type" items="${wccmaterialstypes}" path="wccmaterialstypes" z="/FwTm5lGCw1+a6syyGy8DQAEJcc="/>
+        <field:textarea field="title" id="c_com_nineclient_model_WccMaterials_title" z="UJegmU4BYtN0viTxGOvFHryPfNY="/>
+        <field:textarea field="content" id="c_com_nineclient_model_WccMaterials_content" z="VxGv6vbdKGVwC9BJ8/cRx9+RQnA="/>
+        <field:textarea field="resourceUrl" id="c_com_nineclient_model_WccMaterials_resourceUrl" z="v93kf4cKOznl9dNIxhhtHbSVgGA="/>
+        <field:textarea field="thumbnailUrl" id="c_com_nineclient_model_WccMaterials_thumbnailUrl" z="DNWVEoyl38I8xUJ+QieCkRZMcJg="/>
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_WccMaterials_isDeleted" z="zFi38uiQcDfZpIglu6IkEI2L07c="/>
+        <field:datetime dateTimePattern="${wccMaterials_inserttime_date_format}" field="insertTime" id="c_com_nineclient_model_WccMaterials_insertTime" z="ggtD9MLDrkj6np3GWi+oTvIm1LM="/>
+        <field:textarea field="remakeUrl" id="c_com_nineclient_model_WccMaterials_remakeUrl" z="r9MLLyqWykiFWErqhqDGuABK0I4="/>
+        <field:checkbox field="urlBoolean" id="c_com_nineclient_model_WccMaterials_urlBoolean" z="1DDBoeyjX+A83W2Hnd29kfrK30o="/>
+        <field:textarea field="token" id="c_com_nineclient_model_WccMaterials_token" z="0XMwUOPcwNc4I9I2ZuLD5Q19Jpc="/>
+        <field:textarea field="sort" id="c_com_nineclient_model_WccMaterials_sort" z="sMv+tE+/Q+gQyxBfWijB19+u52I="/>
+    </form:update>
+</div>

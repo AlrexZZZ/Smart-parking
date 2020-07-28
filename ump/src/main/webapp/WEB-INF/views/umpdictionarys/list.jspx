@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_UmpDictionary" items="${umpdictionarys}" z="rewvTIuIoPY//EGTvlMnXl8DT1E=">
+        <table:table data="${umpdictionarys}" id="l_com_nineclient_model_UmpDictionary" path="/umpdictionarys" z="Ar/yArvJqLm/QV0djFOMadFI5ws=">
+            <table:column id="c_com_nineclient_model_UmpDictionary_isDeleted" property="isDeleted" z="P9cQ3/awsBLJzVFOMkle30a29GU="/>
+            <table:column id="c_com_nineclient_model_UmpDictionary_typeCode" property="typeCode" z="fYzGc7WDM/z47mOdQumLQKBnppE="/>
+            <table:column id="c_com_nineclient_model_UmpDictionary_typeName" property="typeName" z="qMHeNnw1Ckz9ZiPh94l6vgULl0E="/>
+            <table:column id="c_com_nineclient_model_UmpDictionary_typeTitle" property="typeTitle" z="EuqYJKJIMVGJHKlbX4MaIxJ//zU="/>
+            <table:column id="c_com_nineclient_model_UmpDictionary_typeTitleCh" property="typeTitleCh" z="FdwtePcNcgO2C7c1lK3fQ1WR+UE="/>
+            <table:column date="true" dateTimePattern="${umpDictionary_inserttime_date_format}" id="c_com_nineclient_model_UmpDictionary_insertTime" property="insertTime" z="D8PYM0z6MQx0/5zix84cR0p2VBA="/>
+        </table:table>
+    </page:list>
+</div>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default_pub" name="wccquestions/list">
+        <put-attribute name="body" value="/WEB-INF/views/wccquestions/list.jspx"/>
+    </definition>
+<definition extends="default_pub" name="wccquestions/show">
+        <put-attribute name="body" value="/WEB-INF/views/wccquestions/show.jspx"/>
+    </definition>
+<definition extends="default_pub" name="wccquestions/create">
+        <put-attribute name="body" value="/WEB-INF/views/wccquestions/create.jspx"/>
+    </definition>
+<definition extends="default_pub" name="wccquestions/update">
+        <put-attribute name="body" value="/WEB-INF/views/wccquestions/update.jspx"/>
+    </definition>
+</tiles-definitions>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<div
+		style="height: 46px; background: #edf1f9; border: 1px solid #e4e4e4; border-bottom: none;"
+		class="buttondiv">
+		<a onclick="addClassify();" style="cursor: pointer;"><i
+			class="on-left"><img width="14" height="14"
+				src="/ump/resources/images/add.png" /></i>添加分类 </a> <a onclick="addText();"
+			style="cursor: pointer;"><i class="on-left"><img width="14"
+				height="14" src="/ump/resources/images/add.png" /></i>添加文本 </a>
+	</div>
+	<div class="frame" id="_page_1" style="display: block;">
+		<table class="table striped hovered">
+			<thead>
+				<tr>
+					<th>名称</th>
+					<th>添加时间</th>
+					<th>添加人</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach items="${wcctemplates}" var="template" varStatus="tem">
+					<tr>
+						<c:if test="${template.type eq 'TEMPLATE'}">
+							<td onmouseout="hidendiv(${tem.count});"
+								onmouseover="showdiv(${tem.count});" style="text-align: left;"><i
+			class="on-left"><img
+								class="image" src="/ump/resources/images/document.png" /></i>${template.title}</td>
+						</c:if>
+						<c:if test="${template.type eq 'CLASSIFY'}">
+							<td
+								onclick="findDirectories(${template.id},'${template.title}');"
+								style="text-align: left;"><i
+			class="on-left"><img class="image"
+								src="/ump/resources/images/folder.png" /></i>${template.title}</td>
+						</c:if>
+
+						<td>${fn:substring(template.insertTime,0,19)}</td>
+						<td>${template.name.account}</td>
+						<td class="utilbox"><c:if
+								test="${template.type eq 'CLASSIFY'}">
+								<a href="#" alt="编辑" title="编辑"><img alt="编辑"
+									class="image"
+									onclick="updateClassifyForm(${template.id},'${template.title}');"
+									src="/ump/resources/images/update.png" title="编辑" /></a>
+							</c:if> <c:if test="${template.type eq 'TEMPLATE'}">
+								<a href="#" alt="编辑" title="编辑"><img alt="编辑"
+									class="image"
+									onclick="updateTextForm(${template.id},'${template.title}','${template.sort}','${template.content}');"
+									src="/ump/resources/images/update.png" title="编辑" /></a>
+							</c:if> <c:if test="${template.type eq 'CLASSIFY'}">
+								<input type="hidden" value="DELETE" name="_method" />
+								<input type="image" alt="删除" class="image"
+									onclick="deleteClassify(${template.id},${template.parentId});"
+									src="/ump/resources/images/delete.png" title="删除"
+									value="删除" />
+							</c:if> <c:if test="${template.type eq 'TEMPLATE'}">
+								<input type="hidden" value="DELETE" name="_method" />
+								<input type="image" alt="删除" class="image"
+									onclick="deleteText(${template.id},${template.parentId});"
+									src="/ump/resources/images/delete.png" title="删除"
+									value="删除" />
+							</c:if></td>
+					</tr>
+					<c:if test="${template.type eq 'TEMPLATE'}">
+						<tr id="content${tem.count}" style="display: none;">
+							<td colspan="5">
+								<div class="notice marker-on-top">
+									<div class="fg-white">${template.content}</div>
+								</div>
+							</td>
+						</tr>
+					</c:if>
+				</c:forEach>
+			</tbody>
+		</table>
+		<div style="float: right;">
+			<c:if test="${wcctemplates!= null and fn:length(wcctemplates) > 0}">
+				<c:if test="${page>1 }">
+					<a class="default" onclick="findByPid(-1,1);"
+						style="cursor: hand; cursor: pointer; float: left; margin-left: 10px; height: 22px; line-height: 22px;">
+						<img alt="首页" src="/ump/resources/images/resultset_first.png"
+						title="首页	" />
+					</a>
+					<a class="default" onclick="findByPid(-1,${page-1});"
+						style="cursor: hand; cursor: pointer; float: left; margin-left: 10px; height: 22px; line-height: 22px;">
+						<img alt="前一页" src="/ump/resources/images/resultset_previous.png"
+						title="前一页" />
+					</a>
+				</c:if>
+				<span
+					style="color: #069dd5; height: 22px; line-height: 22px; float: left; margin-left: 10px;">
+					${page} <span style="color: black;">/</span> ${maxPages}
+				</span>
+				<input type="text" value=""
+					style="width: 30px; height: 22px; float: left; border: 1px solid #e4e4e4; margin-left: 10px;"
+					id="pageStr" />
+				<a
+					style="width: 28px; height: 22px; background-color: #069dd5; color: white; display: inline-block; font-family: Arial; float: left; font-size: 10px; line-height: 22px; text-align: center; cursor: pointer;"
+					onclick="goPage(${maxPages});">GO</a>
+				<c:if test="${page!=maxPages}">
+					<a class="default" onclick="findByPid(-1,${page+1});"
+						style="cursor: hand; cursor: pointer; float: left; margin-left: 10px; height: 22px; line-height: 22px;">
+						<img alt="下一页" src="/ump/resources/images/resultset_next.png"
+						title="下一页" />
+					</a>
+					<a class="default" onclick="findByPid(-1,${maxPages});"
+						style="cursor: hand; cursor: pointer; float: left; margin-left: 10px; height: 22px; line-height: 22px;">
+						<img alt="末页" src="/ump/resources/images/resultset_last.png"
+						title="末页" />
+					</a>
+				</c:if>
+				<span
+					style="margin-left: 10px; float: left; height: 22px; line-height: 22px;">
+					每页 <span style="color: #069dd5;">10</span> 条
+				</span>
+			</c:if>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_WccChatRecourds" items="${wccchatrecourdses}" z="BeTPxG7XxGxRkrb/z0+QJud/WLw=">
+        <table:table data="${wccchatrecourdses}" id="l_com_nineclient_model_WccChatRecourds" path="/wccchatrecourdses" z="3ETWRBQqS3RjEFbl7CtzaA5AHhg=">
+            <table:column id="c_com_nineclient_model_WccChatRecourds_isDeleted" property="isDeleted" z="Vo/9ExmkuVKQ9y/snBtlxjabGOw="/>
+            <table:column date="true" dateTimePattern="${wccChatRecourds_inserttime_date_format}" id="c_com_nineclient_model_WccChatRecourds_insertTime" property="insertTime" z="TvLTLtyx5IT2hveZx3SET+0mFSg="/>
+            <table:column date="true" dateTimePattern="${wccChatRecourds_starttime_date_format}" id="c_com_nineclient_model_WccChatRecourds_startTime" property="startTime" z="obj42ScgqwAb+mf8YHYBUtbYIeA="/>
+            <table:column date="true" dateTimePattern="${wccChatRecourds_endtime_date_format}" id="c_com_nineclient_model_WccChatRecourds_endTime" property="endTime" z="fSygJcAfsgzSWDMzvPFun8NE57Q="/>
+        </table:table>
+    </page:list>
+</div>

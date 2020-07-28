@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="http://www.springframework.org/tags/form" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+
+	<SCRIPT type="text/javascript">
+	  var html ="";
+	 function addCompanyService () {
+			$.Dialog({
+				overlay : true,
+				shadow : true,
+				flat : true,
+				icon : '<img src="images/excel2013icon.png"/>',
+				title : '添加服务',
+				content : '',
+				padding : 20,
+				height : 300,
+				width : 500,
+				onShow : function(_dialog) {
+					if(html==""){
+					  html = $("#dialogId").html();
+					  $("#dialogId").remove();
+					}
+					$.Dialog.content(html);
+					$.Metro.initInputs();
+				}
+			});
+		}
+		
+		
+		function createSelect(id, channelId, versionId) {
+			$.ajax({
+				url : "/ump/umpcompanys/getUmpChanelByProduct",
+				//dataType:"json",
+				type : "POST",
+				data : {
+					'id' : id
+				},
+				error : function(msg) {
+					alert("msg " + msg);
+				},
+				success : function(text) { //若Ajax处理成功后的回调函数，text是返回的页面信息
+					var id_ = "#" + channelId;
+					$(id_).html('');
+					if (channelId.indexOf("_") > 0) {
+						var reCat = /\bchannels\b/g;  //•g（全文查找）；•i（忽略大小写）；•m（多行查找）  
+						 text = text.replace(reCat,"channels_");  
+					}
+					$(id_).append(text);
+				}
+			});
+
+			$.ajax({
+				url : "/ump/umpcompanys/getUmpVersionByProduct",
+				//dataType:"json",
+				type : "POST",
+				data : {
+					'id' : id
+				},
+				error : function(msg) {
+					alert("msg " + msg);
+				},
+				success : function(text) { //若Ajax处理成功后的回调函数，text是返回的页面信息
+					var id_ = "#" + versionId;
+					$(id_).html('');
+					if (versionId.indexOf("_") > 0) {
+						var reCat = /\bversion\b/g;  //•g（全文查找）；•i（忽略大小写）；•m（多行查找）  
+						 text = text.replace(reCat,"version_");  
+					}
+					
+					$(id_).append(text);
+				}
+			});
+
+		}
+	</SCRIPT>
+	<style>
+#seacher {
+	width: 100%;
+}
+
+#seacher tr {
+	height: 30px
+}
+
+#seacher input, select {
+	margin: 0 30px;
+	font-size: 100%;
+	vertical-align: middle;
+	width: 160px;
+	height: 22px;
+}
+#buttons{
+	margin: 20px 0 ;
+}
+#buttons input {
+	padding: 2px;
+	margin: 0 10px;
+	width: 120px;
+}
+</style>
+	<DIV id="dialogId" style="display: none">
+		<form:form action="/ump/umpcompanys/addService" modelAttribute="umpCompany" method="post">
+			<TABLE>
+				<tr>
+					<td>公司ID</td>
+					<td><select id="id" name="id">
+							<c:forEach var="umpcompany" items="${umpcompanys}">
+								<option value="${umpcompany.id}">${umpcompany.name}</option>
+							</c:forEach>
+					</select></td>
+				</tr>
+				<tr>
+					<td>申请产品</td>
+					<td><form:select items="${productMap}" path="products" multiple="false" onchange="createSelect(this.value,'divChannelId_','divVersionId_')" /></td>
+				</tr>
+
+				<tr>
+					<td>版本选择</td>
+					<td>
+						<div id="divVersionId_">
+							<select id="version_" name="version_">
+								<c:forEach var="version" items="${versionList}">
+									<option value="${version.id}">${version.versionName}</option>
+								</c:forEach>
+							</select>
+						</div>
+
+					</td>
+				</tr>
+
+				<tr>
+					<td>渠道选择</td>
+					<td>
+						<div id="divChannelId_">
+							<select id="channels_" name="channels_">
+								<c:forEach var="channel" items="${channelList}">
+									<option value="${channel.id}">${channel.channelName}</option>
+								</c:forEach>
+							</select>
+						</div>
+					</td>
+				</tr>
+
+
+				<tr>
+					<td>开通账号数</td>
+					<td><input name="maxAccount" id="maxAccount" /></td>
+				</tr>
+				<tr>
+					<td>开通时间</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>到期时间</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td><input type="submit" value="提交" /><input type="button" value="取消" onclick="$.Dialog.close()" /></td>
+				</tr>
+			</TABLE>
+		</form:form>
+	</DIV>
+
+	<div id="seacher">
+		<div style="border-bottom: thin solid black; margin-bottom: 28px; padding-bottom: 10px;">
+			<h4>查询条件</h4>
+		</div>
+		<form:form action="/ump/umpcompanys/queryCompanyService" modelAttribute="umpCompany" method="post">
+			<table>
+				<tr>
+					<td>公司ID:</td>
+					<td><form:input path="companyCode" /></td>
+
+
+
+					<td>状态:</td>
+					<td><form:select items="${serviceStatus}" path="status" multiple="false" /></td>
+					<td>申请产品:</td>
+					<td><form:select items="${productMap}" path="products" multiple="false" onchange="createSelect(this.value,'divChannelId','divVersionId')" /></td>
+				</tr>
+
+				<tr>
+					<td>申请版本:</td>
+					<td>
+						<div id="divVersionId">
+							<select id="version" name="version">
+								<c:forEach var="version" items="${versionList}">
+									<option value="${version.id}">${version.versionName}</option>
+								</c:forEach>
+							</select>
+						</div>
+
+					</td>
+
+					<td>选择渠道:</td>
+					<td>
+						<div id="divChannelId">
+							<select id="channels" name="channels">
+								<c:forEach var="channel" items="${channelList}">
+									<option value="${channel.id}">${channel.channelName}</option>
+								</c:forEach>
+							</select>
+						</div>
+
+
+
+					</td>
+
+					<td>申请时间</td>
+					<td><input type="text" name="createTime" value="" /></td>
+				</tr>
+
+
+
+			</table>
+			<div id="buttons">
+				<input type="submit" value="查询" class="info" /> <input type="button" value="添加服务" onclick="addCompanyService()" />
+			</div>
+		</form:form>
+	</div>
+
+	<table class="table hovered">
+		<thead>
+			<tr>
+				<th>公司ID</th>
+				<th>申请产品</th>
+				<th>申请版本</th>
+				<th>接入渠道</th>
+				<th>开通账号数</th>
+				<th>开通时间</th>
+				<th>到期时间</th>
+				<th>状态</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+
+
+		<tbody>
+			<c:forEach var="company" items="${umpcompanys}">
+				<tr>
+					<td>${company.companyCode}</td>
+
+
+
+					<td><c:forEach var="product" items="${company.products}">
+					   ${product.productName}
+					</c:forEach></td>
+
+					<td><c:forEach var="product" items="${company.products}">
+							<c:forEach var="version" items="${product.versions}">
+					     ${version.versionName}
+					  </c:forEach>
+						</c:forEach></td>
+
+					<td><c:forEach var="product" items="${company.products}">
+							<c:forEach var="channel" items="${product.channels}">
+					     ${channel.channelName}
+					  </c:forEach>
+						</c:forEach></td>
+
+					<td>${company.maxAccount}</td>
+					<td>${company.serviceStartTime}</td>
+					<td>${company.serviceEndTime}</td>
+					<td>${company.companyServiceStatus}</td>
+					<td><a title="操作" alt="操作" href="#" onclick="addCompanyService()"> <img title="操作" src="/ump/resources/images/update.png" class="image" alt="操作" />
+					</a></td>
+
+				</tr>
+
+			</c:forEach>
+
+			<tr>
+				<td colspan="10">
+					<div>
+						<util:pagination maxPages="${maxPages}" page="${param.page}" size="${param.size}" />
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+

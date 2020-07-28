@@ -1,0 +1,903 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	 xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	 xmlns:jsp="http://java.sun.com/JSP/Page"
+	 xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	 xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" 
+	 xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+	<style>@IMPORT url("/ump/styles/selectTree.css");</style>
+	<SCRIPT type="text/javascript" src="/ump/js/selectTree.js">/*selectTree*/</SCRIPT>
+	<script type="text/javascript" src="/ump/js/nineclient/vocreport/nineclient.js"><!--加载alert--></script>
+    <style>
+    .metro .button {padding: 0px;}
+	.k_width tr th:first-child, .k_width tr td:first-child {width: 50px;text-align: center;}
+	input,select{width: 135px;height: 28px;background-color: #fff;border: 1px solid #e4e4e4;}	
+	input[type="checkbox"]{width: 14px;height: 14px;}
+	ul.ztree {background: none repeat scroll 0 0 #fff;border: 0px solid #e5e5e5;overflow-x: auto;overflow-y: auto;}
+	.metro label { display: block;font-size: 12px;font-weight: normal; margin: 5px 0;text-align: right;}
+	</style>
+    <script type="text/javascript">
+    <![CDATA[
+	$(document).ready(function() {
+		var msg="${wxErrorMsg}";
+		if(msg!=""){
+			if(msg==48001){
+				alert("该公众号无二维码接口权限，二维码生成失败");
+			}
+		}
+		ToListByAjax();
+		loadTree('/ump/wccplatformusers/tree');
+		var zNodes = new Array();
+		$.ajax({
+			url : "/ump/puborganizations/tree",
+			datatype : "text",
+			type : "POST",
+			error : function(msg) {
+			},
+				success : function(data) {
+					var str = '[' + data + ']';
+					zNodes = eval('(' + str + ')');
+					$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+				}
+			});
+			var msg = $("#msg_id").val();
+			if (msg) {
+				$.ajax({
+					url : "/ump/wccstores/excuteClean",
+					data : {},
+					dataType : "text",
+					type : "POST",
+					cache : false,
+					async : false,
+					success : function() {
+					alertCon(msg);
+				 }
+			 });
+			}
+		});
+		
+		var setting = {
+			view : {
+				dblClickExpand : false
+			},
+			data : {
+				simpleData : {
+					enable : true
+				}
+			},
+			callback : {
+				onClick : onClick
+			}
+		};
+		
+		function onClick(e, treeId, treeNode) {
+			var id = treeNode.id;
+			if(id == 0){
+				alert("不能选择全部");
+				return;
+			}
+			$("#organId").val(treeNode.id);
+			$("#organSel").val(treeNode.name);
+			$("#menuContent").fadeOut("fast");
+		}
+		function showMenu() {
+			var cityObj = $("#organSel");
+			var cityOffset = $("#organSel").offset();
+			$("#menuContent").css({
+				left : cityOffset.left + "px",
+				top : cityOffset.top + cityObj.outerHeight() + "px"
+			}).slideDown("fast");
+			$("body").bind("mousedown", onBodyDown);
+		}
+		function hideMenu() {
+			$("#menuContent").fadeOut("fast");
+			$("body").unbind("mousedown", onBodyDown);
+		}
+		function onBodyDown(event) {
+			if (!(event.target.id == "menuBtn"
+					|| event.target.id == "menuContent" || $(event.target)
+					.parents("#menuContent").length > 0)) {
+				hideMenu();
+			}
+		}
+		
+		function checkedAll(){
+    		if(document.getElementById("checkedAll").checked){
+    			var arr = document.getElementsByName("checkBoxName");
+    			for(var j=0;j<arr.length;j++){
+    				arr[j].checked=true;
+    			}
+    		}else{
+    			var arr = document.getElementsByName("checkBoxName");
+    			for(var j=0;j<arr.length;j++){
+    				arr[j].checked=false;
+    			}
+    		}
+    	}
+		
+		function bacthCheckStatus(page,size){
+     	   var values=new Array();
+     	   var valuestr="";
+     	   var arr = document.getElementsByName("checkBoxName");
+				for(var j=0;j<arr.length;j++){
+					if(arr[j].checked){
+						values.push(arr[j].value);
+					}
+				}
+				valuestr=values.join(",");
+				if(valuestr==""||valuestr.length<1){
+					alert("请选择需要审核的门店");
+					return;
+				}
+				window.location.href="/ump/wccstores/checkStatusByIds?valuestr="+valuestr+"&page="+page+"&size="+size;
+        }
+		
+		//删除
+		function deleteForm(id){
+			if(confirm("确定要删除吗？")){
+    			window.location.href="/ump/wccstores/delete?id="+id;
+    		}
+		}
+		
+		 //查看二维码
+		function seaPrcode(id,isStoreCode){
+			if(isStoreCode == false){
+				alert("该门店还没有二维码");
+				return;
+			}
+    		window.location.href="/ump/wccstores/seaPrcode?id="+id;
+		}
+		
+		 //审核状态
+	    var htmlVar = "";
+	    function checkStatus(id,page,size,showAdui){
+	    	if(showAdui == 1){
+	    		alert("该门店已审核不能再审核");
+	    		return;
+	    	}
+	    	if(showAdui == 2){
+	    		alert("该门店审核不通过不能再审核");
+	    		return;
+	    	}
+	    	var values = new Array();
+	   	    var valuestr="";
+	    	if($('#dialog').html()){
+				htmlVar = $('#dialog').html();
+			}else{
+				$('#dialog').html(htmlVar);
+			}
+	    	var arr = document.getElementsByName("checkBoxName");
+	 		for(var j = 0;j<arr.length;j++){
+	 			if(arr[j].checked){
+	 				values.push(arr[j].value);
+	 			}
+	 		}
+	 		valuestr=values.join(",");
+			if(id==0){
+				if(valuestr==""||valuestr.length<1){
+		 			alert("请选择需要审核的内容");
+		 			return false;
+		 		}
+			}
+			$.Dialog({
+				overlay : true,
+				shadow : true,
+				flat : true,
+				icon : '<img src="/ump/resources/images/swatch.png"/>',
+				title : '审核',
+				content : '',
+				padding : 20,
+				onShow : function(_dialog) {
+					var html = htmlVar;
+					$('#dialog').html('');
+					$.Dialog.content(html);
+					$.Metro.initInputs();
+				}
+			});
+			$('#id').val(id);
+			$('#page').val(page);
+			$('#size').val(size);
+	    }
+	    
+	    function reviews() {
+	    	var values = new Array();
+	   	    var valuestr="";
+			var id  = $('#id').val();
+			var page = $('#page').val();
+			var size = $('#size').val();
+			var arr = document.getElementsByName("checkBoxName");
+			var isCheck  = $('#isCheck:checked').val();
+			if(id != 0){
+				$.post("/ump/wccstores/checkStatus",{
+					"id":id,
+					"isCheck":isCheck,
+					"page":page,
+					"size":size,
+				},function(data){
+					if(data == 1){
+						$.Dialog.close();
+							location.href = "/ump/wccstores?page="+page+"&size="+size;
+					}else{
+						alert("审核失败");
+					}
+				})
+			}else{
+				for(var j = 0;j<arr.length;j++){
+		 			if(arr[j].checked){
+		 				values.push(arr[j].value);
+		 			}
+		 		}
+		 		valuestr=values.join(",");
+				$.post("/ump/wccstores/checkStatusByIds",{
+					"isCheck":isCheck,
+					"valuestr":valuestr,
+					"page":page,
+					"size":size,
+				},function(data){
+					if(data == 1){
+						$.Dialog.close();
+						location.href = "/ump/wccstores?page="+page+"&size="+size;
+					}else{
+						alert("审核失败");
+					}
+				})
+			}
+		}
+	    
+	    Date.prototype.Format = function(fmt) { //author: meizz   
+			var o = {
+				"M+" : this.getMonth() + 1, //月份   
+				"d+" : this.getDate(), //日   
+				"h+" : this.getHours(), //小时   
+				"m+" : this.getMinutes(), //分   
+				"s+" : this.getSeconds(), //秒   
+				"q+" : Math.floor((this.getMonth() + 3) / 3), //季度   
+				"S" : this.getMilliseconds()
+			//毫秒   
+			};
+			if (/(y+)/.test(fmt))
+				fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "")
+						.substr(4 - RegExp.$1.length));
+			for ( var k in o)
+				if (new RegExp("(" + k + ")").test(fmt))
+					fmt = fmt.replace(RegExp.$1,
+							(RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k])
+									.substr(("" + o[k]).length)));
+			return fmt;
+		}
+		function formatData(time) {
+			var date = new Date(time);
+			var str = date.Format("yyyy-MM-dd hh:mm:ss");
+			return str;
+		}
+	    
+	    //查询分页
+	    function ToListByAjax(page){
+	    	var pageNo;
+			if (page) {
+				pageNo = page
+			} else {
+				pageNo = 1;
+			}
+	    	var param={};
+	    	param.page=pageNo;
+			param.size=10;
+			
+	    	var SelIds = $("#SelIds").val();
+	    	var starTime = $("#starTime").val();
+	    	var endTime = $("#endTime").val();
+	    	var storeName = $("#storeName").val();
+	    	var isSendMail = $("#isSendStr").val();
+	    	var organSel =  $("#organSel").val();
+	    	var storeAuditing = $("#storeAudo").val();
+			
+			if(SelIds != ""){
+				param.platId=SelIds;
+			}
+			if(starTime!=undefined&&starTime!=null&&$.trim(starTime)!=""){
+				param.starTime=starTime;
+			}
+			if(endTime!=undefined&&endTime!=null&&$.trim(endTime)!=""){
+				param.endTime=endTime;
+			}
+			if(starTime!=null&&$.trim(starTime)!=""){
+				if(endTime!=null&&$.trim(endTime)!=""){
+					if(starTime >= endTime){
+						alert("开始时间不能大于结束时间");
+						return;
+					}
+				}
+			}
+			if(storeName!=undefined&&storeName!=null&&$.trim(storeName)!=""){
+				param.storeName=storeName;
+			}
+			if(storeAuditing!=99){ 
+				param.storeAuditing=storeAuditing;
+			}
+			if(isSendMail!=99){ 
+				param.isSendMail=isSendMail;
+			}
+			if(organSel!=undefined&&organSel!=null&&$.trim(organSel)!=""){
+				param.organName=organSel;
+			}
+			var url = "/ump/wccstores/getStoreListByFiled";
+	    	$.ajax({
+				url : url,
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data :param,
+				error : function(msg) {
+				},
+				success : function(data) {
+					createData_Gride(data, "");
+				}
+			});
+	    }
+	    
+	    function goUpdate(id){
+	    	window.location.href = '/ump/wccstores/'+id+'?form';
+	    }
+	    
+	    function createData_Gride(data) {
+			var model = eval("(" + data + ")");
+			var list = eval(model.dataJson);
+			var table = "";
+			for (var i = 0; i < list.length; i++) {
+				table += "<tr>";
+				table += "<td>";
+				table += "<input type='checkBox' name='checkBoxName' style='box-sizing:content-box;' value='"+list[i].id+"'/>";
+				table += "</td>";
+				table += "<td>";
+				table += list[i].platFormName;
+				table += "</td>";
+				table += "<td>";
+				table += list[i].storeName;
+				table += "</td>";
+				table += "<td>";
+				table += list[i].organization.name;
+				table += "</td>";
+				table += "<td>";
+				table += list[i].storeAddres;
+				table += "</td>";
+				table += "<td>";
+				table += list[i].storeEmail;
+				table += "</td>";
+				table += "<td>";
+				if(list[i].isSendMail == true){
+					table += '已发送';
+				}else if(list[i].isSendMail == false){
+					table += '未发送';
+				}
+				table += "</td>";
+				
+				table += "<td>";
+				var audi = list[i].storeAuditing;
+				if(audi == 0){
+					table += '待审核';
+				}else if(audi == 1){
+					table += '审核通过';
+				}else if(audi == 2){
+					table += '审核不通过';
+				}
+				table += "</td>";
+				table += "<td>";
+				table += formatData(list[i].createTime);
+				table += "</td>";
+				table += "<td>";
+				table += '<a href="javascript:goUpdate('+list[i].id+')" alt="编辑 " title="编辑 " style="width: 80px;"> <img alt="编辑 " class="image"src="/ump/resources/images/update.png" title="编辑 "/> </a> '
+				table += '<a href="javascript:deleteForm('+list[i].id+')" alt="删除 " title="删除 "style="width: 80px;" > <img alt="删除 " class="image" src="/ump/resources/images/delete.png" title="删除 "/></a> '
+				table += '<a href="javascript:seaPrcode('+list[i].id+','+list[i].isStoreCode+')" alt="查看二维码" title="查看二维码 " style="width: 80px;"><img alt="查看二维码 " class="image" src="/ump/resources/images/show.png"title="查看二维码 "/></a> '
+				if('${audMenu}' == 'true'){
+					table += '<a href="javascript:checkStatus('+list[i].id+','+model.pageNo+','+10+','+list[i].storeAuditing+')" alt="审核" title="审核 " style="width: 80px;"> <img alt="审核 " class="image" src="/ump/resources/images/swatch.png" title="审核 " /></a>'
+				}
+				table += "</td>";
+				table += "</tr>";
+			}
+			var foot = Page_sku(model);
+			$("#dataBody").html(table);
+			if (model.totalCount > 0) {
+				$("#dataFoot").html(foot);
+			} else {
+				$("#dataBody").html("<tr><td colspan='10'>暂无数据</td></tr>");
+			}
+		}
+	    
+	    function Page_sku(model) {
+			var turnPage = '';
+			if (model.totalCount > 0) {
+				turnPage += '	<tr>';
+				turnPage += '	<td colspan="5" style="float:right">';
+				if (model.pageNo > 1) {
+					turnPage += ' <a class="default" href="javascript:void(0);" onclick="ToListByAjax('+ 1 +')" style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px"><img alt="首页" src="/ump/resources/images/resultset_first.png" title="首页" style="float:left"/></a>';
+					turnPage += ' <a style="float:left;padding-top: 4px;padding-left: 6px" class="default" href="javascript:void(0);" onclick="ToListByAjax('
+							+ (model.pageNo - 1) + ')"><img alt="上一页" src="/ump/resources/images/resultset_previous.png" title="上一页" style="float:left"/></a>';
+				}
+				turnPage += '<span style="color: #069dd5;height: 22px;line-height: 22px;float:left;padding-left: 6px">'+ model.pageNo+'</span><span style="float:left;padding-top: 4px;padding-left: 6px"> /</span> <span style="color: #069dd5;float:left;padding-top: 4px;padding-left:6px">'+model.totalPage+'</span>';
+				turnPage +='<input type="text" value="" style="width: 30px;height:22px;float:left;margin-left:6px" id="pageStr2"/><a  style="width: 28px;height:22px;background-color:#069dd5;color: white;display:inline-block;font-family:Arial;font-size: 10px;line-height: 22px;text-align:center;cursor: pointer;float:left" onclick="goPage2('+model.totalPage+');">GO</a>'
+
+				if (model.pageNo != model.totalPage) {
+					turnPage += '<a class="default" href="javascript:void(0);" onclick="ToListByAjax('
+							+ (model.pageNo + 1)
+							+ ')" style="cursor: hand; cursor: pointer;float:left;padding-top: 2px;padding-left:6px"><img alt="下一页" src="/ump/resources/images/resultset_next.png" title="下一页"/></a>';
+					turnPage += ' <a style="float:left;padding-top: 4px;padding-left: 6px" class="default" href="javascript:void(0);" onclick="ToListByAjax('+ model.totalPage +')" style="cursor: hand; cursor: pointer;"><img alt="首页" src="/ump/resources/images/resultset_last.png" title="首页" style="float:left"/></a>';
+				}
+				turnPage += '<span style="float:left;padding-top: 3px;padding-left: 6px">每页<span  style="color:#069dd5;">10</span>条</span></td>';
+				turnPage += '</tr>';
+				return turnPage;
+			}
+		}
+	    
+	    //下载模板
+	    function downLoadTemplate(){
+			window.location.href = "/ump/wccstores/downLoadTemplate";
+	    }
+	    
+	    //下载excel
+	    function downLoadExcel(fileName){
+			window.location.href = " /ump/wccstores/downloadExcel?fileName="+fileName;
+	    }
+	    
+		//批量生成二维码
+		function batchCode(){
+			var values = [];
+			 var arr = document.getElementsByName("checkBoxName");
+				for(var j=0;j<arr.length;j++){
+					if(arr[j].checked){
+						values.push(arr[j].value);
+					}
+				}
+			var len = values.length;
+			if(len<=0){
+				alertCon("您未选中批量生成二维码的门店 ");
+				return false;
+			}
+		  if(confirm("确定批量生成二维码吗？")){
+				
+				var pks = values.join(",");
+				var url = "/ump/wccstores/batchCode";
+				$.ajax({
+					url : url,
+					dataType : "text",
+					type : "POST",
+					data :{"pks":pks},
+					error : function(msg) {
+						
+					},
+					success : function(data) {
+						if(data == "error"){
+							alertCon("操作失败！ ");
+						}else{
+							location.href = "/ump/wccstores?page="+1+"&size="+10;
+						}
+					}
+				});
+    		}
+		}
+	    
+		//批量发送邮件1
+		function setEmail(){
+			$.ajax({
+				url : "/ump/wccstores/checkSendEmail",
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data :{},
+				error : function(msg) {
+					if(msg == "error"){
+						alertCon("您未在“系统设置”中配置回复邮箱，无法发送");
+						return false;
+					}
+				},
+				success : function(data) {
+					if(data == "error"){
+						alertCon("您未在“系统设置”中配置回复邮箱，无法发送");
+						return;
+					}else{
+						 var values = [];
+						  var arr = document.getElementsByName("checkBoxName");
+						    for(var j=0;j<arr.length;j++){
+								if(arr[j].checked){
+									values.push(arr[j].value);
+								}
+						    }
+						  var len = values.length;
+						  if(len<=0){
+							alertCon("您未选中进行批量发送邮件的门店 ");
+							return false;
+						  }
+						 if(confirm("确定批量发送邮件吗？")){
+							/*  checkEmailItem(sendEmail,$("#dialogSendEmail").html()); */
+							 $.Dialog({
+									overlay : true,
+									shadow : true,
+									flat : true,
+									icon : '<img src="/ump/images/swatch.png">',
+									title : '发送二维码',
+									content : '',
+									padding : 10,
+									onShow : function(_dialog) {
+										var html = $('#dialogSendEmail').html();
+										$.Dialog.content(html);
+										$.Metro.initInputs();
+									}
+								});
+				    	 }
+					}
+				}
+			});
+		}
+		
+		//批量发送邮件2
+		function sendEmailToCompany(){
+			var contents = $("#contentId").val();
+			var title = $("#titleId").val();
+			var company = $("#companyId").val();
+			var values = [];
+			 var arr = document.getElementsByName("checkBoxName");
+				for(var j=0;j<arr.length;j++){
+					if(arr[j].checked){
+						values.push(arr[j].value);
+					}
+				}
+			var pks = values.join(",");
+			var url = "/ump/wccstores/batchSendEmail";
+			$.ajax({
+				url : url,
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data :{"pks":pks,"content":contents,"title":title,"company":company},
+				error : function(msg) {
+					if(msg == "error"){
+						alertCon("操作失败");
+						return false;
+					}
+				},
+				success : function(data) {
+					$.Dialog.close();
+					if(data == "error"){
+						alertCon("操作失败！");
+					}else if(data == "off"){
+						alertCon("选中的门店含有未生成二维码的门店");
+					}else{
+						alertCon("操作成功");
+						window.location.reload();
+					}
+				}
+			});
+		}
+		
+		//批量导出
+		function batchExport(){
+	    	var param={};
+	    	var platId = $("#platId").val();
+	    	var starTime = $("#starTime").val();
+	    	var endTime = $("#endTime").val();
+	    	var storeName = $("#storeName").val();
+	    	var isSendMail = $("#isSendMail").val();
+	    	var organSel =  $("#organSel").val();
+			
+			if(starTime!=undefined&&starTime!=null&&$.trim(starTime)!=""){
+				param.starTime=starTime;
+			}
+			if(endTime!=undefined&&endTime!=null&&$.trim(endTime)!=""){
+				param.endTime=endTime;
+			}
+			if(storeName!=undefined&&storeName!=null&&$.trim(storeName)!=""){
+				param.storeName=storeName;
+			}
+			if(isSendMail!=99){ 
+				param.isSendMail=isSendMail;
+			}
+			if(organSel!=undefined&&organSel!=null&&$.trim(organSel)!=""){
+				param.organName=organSel;
+			}
+			
+			var values = [];
+			var arr = document.getElementsByName("checkBoxName");
+				for(var j=0;j<arr.length;j++){
+					if(arr[j].checked){
+						values.push(arr[j].value);
+					}
+				}
+			var pkse = values.join(",");
+			var len = values.length;
+			if(len<=0){
+				if(!confirm("默认导出现所有数据?")){
+					return;
+				}
+			}else{
+				param.pks=pkse;
+			}
+			var url = "/ump/wccstores/batchExport";
+	    	$.ajax({
+				url : url,
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data :param,
+				error : function(msg) {
+					if(msg == "error"){
+						alertCon("操作失败");
+						return false;
+					}
+				},
+				success : function(data) {
+					if(data == "error"){
+						alertCon("操作失败");
+						return false;
+					}else{
+						 window.location.href = data;
+						 
+					}
+				}
+			});
+	    }
+	    
+		function batchImport(){
+			$.Dialog({
+				overlay : true,
+				shadow : true,
+				flat : true,
+				draggable : true,
+				icon : '<img src="/ump/images/excel2013icon.png"/>',
+				title : '请选择导入信息',
+				content : '',
+				width : 300,
+				height : 100,
+				padding : 10,
+				onShow : function(_dialog) {
+					var content = '<form id="importForm" action="/ump/wccstores/importExcel" method="POST"  enctype="multipart/form-data">'
+						+ '<div class="grid">'
+						+ '<div class="row"><input type="file" name="importFile" id="importFile" />'
+						+ '</div>'
+						+ '<div class="form-actions row">'
+						+ '<button class="info" onclick="importToDb();">确定</button> '
+						+ '<button class="warning" type="button" onclick="$.Dialog.close()">取消</button> '
+						+ '</div>'
+						+ '</div>'
+						+ '</form>';
+					$.Dialog.content(content);
+					showPlatform("platformId");
+				}
+			});
+		}
+		
+		function importToDb(){
+			var imports = $("#importForm").val();
+			if(imports==""){
+				alertCon("请选择添加导入的文件");
+			}else{
+				$.ajax({
+					url : "/ump/wccstores/importExcel",
+					type : "POST",
+					data : $('#importForm').serialize(),
+					error : function(msg) {
+					},
+					success : function(data) {
+						$.Notify({
+							caption : "",
+							content : data,
+							timeout : 5000
+						});
+					}
+				});
+			}
+		}
+		
+		
+	    function clearAll(){
+	    	$('#starTime').val('');
+			$('#endTime').val('');
+			$('#storeName').val('');
+			$('#organSel').val('');
+			$("#SelVals").attr("value", "");
+			$("#SelIds").attr("value", "");
+			$("#isSendStr").val(99);
+			$("#storeAudo").val(99);
+	    }
+	    
+	function startTimeFocus(){
+	    	$('#starTime').focus();
+	    }
+    function endTimeFocus(){
+    	    $('#endTime').focus();
+	    } 
+    
+    function goPage2(page){
+    	var pageStr = $("#pageStr2").val();
+    	if($.trim(pageStr) == ""){
+    		alert("请输入需要跳转的页数");
+    		return false;
+    	}
+    	if(isNaN(pageStr)){
+    		alert("格式错误，请输入数字");
+    		return false;
+    	}
+    	if(pageStr > page){
+    		alert("你输入的页数大于最大页数");
+    		return false;
+    	}
+    	if(pageStr <= 0){
+    		alert("你输入的页数不符合要求");
+    		return false;
+    	}
+    	ToListByAjax(pageStr);
+    }
+	]]>
+    </script>
+		<TEXTAREA style="display:none;"  id="msg_id">${importmsg}</TEXTAREA>
+    <div class="grid">
+    	<form action="/ump/wccstores/getStoreListByFiled" method="post">
+    		<div class="row">
+    			<div class="span3">
+    				<label>公众平台：</label>
+    				<div class="input-control text" style="width: 135px">
+							<input id="SelVals" type="text" readonly="readonly"
+								value="" style="width: 135px;" onclick="selectShowMenu();" /> 
+							<input id="SelIds" name="relatedIssues" type="hidden" value="" />
+							<div id="selectMenuContent" class="menuContent"
+								style="display: none; position: absolute; z-index: 99;">
+								<ul id="selectTreeDemo" class="ztree"
+									style="margin-left: 0px; margin-top: 0;border: 1px solid #e5e5e5;"></ul>
+							</div>
+					</div>
+    			</div>
+    			<div class="span3">
+    				<label>门店名称：</label><input type="text" id="storeName" name="storeName" value="" />
+    			</div>
+    			<div class="span3">
+    				<label>创建时间：</label><input type="text" id="starTime" name="starTime" value="" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})"/>
+    			<IMG onclick="startTimeFocus();" style="margin-left: -22px;" src="././js/date/skin/datePicker.gif" width="20" height="20" />
+    			</div>
+    			<div class="span3">
+    				<label>至：</label><input type="text" id="endTime" name="endTime" value="" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})"/>
+    			<IMG onclick="endTimeFocus();" style="margin-left: -22px;" src="././js/date/skin/datePicker.gif" width="20" height="20" />
+    			</div>
+    		</div>
+    		<div class="row">
+    			<div class="span3">
+    				<label>邮件状态：</label>
+    				<span>
+    					<select name="isSendMail" style="width: 135px;" id="isSendStr">
+    						<OPTION value="99">全部</OPTION>
+    						<OPTION value="false">未发送</OPTION>
+    						<OPTION value="true">已发送</OPTION>
+    					</select>
+    				</span>
+    			</div>
+    			<div class="span3">
+    				<label>所属组织：</label> 
+    				<input name="organName" id="organSel" value=""
+						type="text" readonly="readonly" placeholder="请选择" onclick="showMenu(); return false;" /> 
+					 	<input id="organId" name="organizationId" type="hidden" value="" />
+    			</div>
+    			<div class="span3">
+    				<label>审核状态：</label>
+    					<select name="storeAuditing" style="width: 135px;" id="storeAudo">
+    						<OPTION value="99">全部</OPTION>
+    						<OPTION value="0">待审核</OPTION>
+    						<OPTION value="1">审核通过</OPTION>
+    						<OPTION value="2">审核未通过</OPTION>
+    					</select>
+    			</div>
+    		</div>
+    		<div class="row">
+    			<div class="span6" style="margin-left: 20px;"> 
+					<input type="button" value="查 询" class="info" onclick="ToListByAjax();" style="font-family:'微软雅黑';background-color: #069dd5"/>
+					<input class="warning" type="button" value="重 置" onclick="clearAll();" style="font-family:'微软雅黑'"></input>
+			    </div>
+	   		</div>  
+    	</form>
+    </div>
+    
+    <div class="buttondiv"
+			style="height: 46px; background: #edf1f9; border: 1px solid #e4e4e4; border-bottom: none;">
+		<a href="/ump/wccstores?form">
+			<img alt="添加门店" src="/ump/resources/images/add.png" title="添加门店"></img>添加门店
+		</a>&#160;&#160;
+		<c:if test="${audMenu == true}"><!-- 是否有审核权限 -->
+			 <a href="#" onclick="checkStatus(0,1,10,99);" >
+			 <img src="/ump/resources/images/swatch.png" width="14" height="14" /> 批量审核</a>
+			&#160;&#160;
+		</c:if>
+		 <a href="#" onclick="batchImport();">
+		  <img id="activeOn"  src="/ump/images/wccImg/pl_dr.png" />
+		 批量导入</a>
+		&#160;&#160;
+		 <a href="javascript:void(0);" onclick="batchExport();">
+		  <img id="activeOn"  src="/ump/images/wccImg/pl_dc.png" />
+		 批量导出</a>
+		&#160;&#160;
+		 <a href="javascript:void(0);"  onclick="downLoadTemplate()" >
+		 <img id="activeOn"  src="/ump/images/wccImg/download.png" />
+		 下载模板</a>
+		&#160;&#160;
+		 <a href="javascript:void(0);" onclick="setEmail();">
+		 <img id="activeOn"  src="/ump/resources/images/letter.png" />
+		 批量发送邮件</a>
+		&#160;&#160;
+		 <a href="javascript:void(0);" onclick="batchCode();">
+		 <img id="activeOn"  src="/ump/resources/images/erweima.png" />
+		 批量生成二维码</a>
+	</div>		
+	
+	<div id="menuContent" class="menuContent"
+		style="display: none; position: absolute;background: #fff;padding: 20px;border: 1px solid #e4e4e4;box-shadow: -0px 6px 10px #888888;">
+		<ul id="treeDemo" class="ztree" style="margin-top: 0;"></ul>
+	</div>
+	<!-- 查询分页tabel开始 -->
+	 <div>
+		<table class="table striped hovered k_width">
+		<THEAD>
+			<tr>
+				<th><input id="checkedAll" type="checkbox" style="box-sizing:content-box;" onclick="checkedAll(this);"/></th>
+				<th>公众平台</th>
+				<th>门店名称</th>
+				<th>门店所属</th>
+				<th>门店地址</th>
+				<th>门店邮箱</th>
+				<th>邮件发送状态</th>
+				<th>状态</th>
+				<th>创建时间</th>
+				<th>操作</th>
+			</tr>
+			</THEAD>
+			<TBODY id="dataBody">
+			
+			</TBODY>
+		</table>
+		 <div style="float: right;">
+		 	<div id="dataFoot"></div>
+		</div>
+	</div>
+	<!-- 查询分页结束 -->
+	
+	<!-- 审核 -->
+    <div id="dialog" style="display: none;">
+			<div class="grid" style="width: 180px;height:50px; margin-left: 5px;"
+				align="center">
+				<div class="row">
+					<div class="span6">
+						<input type="hidden" id="id" />
+						<input type="hidden" id="page" /> 
+						<input type="hidden" id="size" /> 
+						<span>审核通过：<input id="isCheck" name="isCheck" type="radio" value="1" checked="checked" />
+						</span> 
+						<span> 审核未通过：<input id="isCheck" name="isCheck" type="radio" value="2" />
+						</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span6" > 
+						<input type="button" value="提 交" class="info" onclick="reviews();"/>
+						<input class="warning" type="button" value="取 消"  onclick="$.Dialog.close()" style="font-family:'微软雅黑'"></input>
+			   		 </div>
+				</div>
+			</div>
+ 	</div>
+ 	
+ 	<!-- 邮件发送模板 -->
+ 	 <div id="dialogSendEmail" style="display: none;">
+			<div class="grid" style="width: 400px;height:450px; margin-left: 5px;"
+				align="center">
+				<div class="row"><div class="span6">邮件地址：(门店邮箱)</div></div>
+				<div class="row"><div class="span6">邮件标题：<input type="text" id="titleId" name="titleId" value="您的微信公众号专属二维码" /></div></div>
+				<div class="row"><div class="span6">邮件正文：亲爱的(门店名称)</div></div>
+				<div class="row"><div class="span6"><textarea style="width: 350px;height:150px;border: 1px soild #e5e5e5;background:#fff" id="contentId">以下为您门店的专属二维码，只要顾客通过该专属二维码关注微信公众账号，该顾客就能成为您门店的粉丝了。请保管好该专属二维码。谢谢！</textarea></div></div>
+				<div class="row"><div class="span6">专属二维码：<img src="/ump/images/topic.png" width="25" height="25" /></div></div>
+				<div class="row"><div class="span6">公司署名：<input type="text" id="companyId" name="companyId"  value="总公司"/></div></div>
+				<div class="row">
+					<div class="span3"  style="margin-left:100px"> 
+						<input type="button" value="确 定" class="info" onclick="sendEmailToCompany()"/>
+						<input class="warning" type="button" value="取 消"  onclick="$.Dialog.close()" style="font-family:'微软雅黑'"></input>
+			   		 </div>
+				</div>
+			</div>
+ 	</div>
+    
+</div>
+

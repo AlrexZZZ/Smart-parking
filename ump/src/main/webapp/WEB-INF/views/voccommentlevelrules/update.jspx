@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_nineclient_model_VocCommentLevelRule" modelAttribute="vocCommentLevelRule" path="/voccommentlevelrules" versionField="Version" z="2+QH/atoOlOLVdhJKZGVDKwV9W4=">
+        <field:textarea field="name" id="c_com_nineclient_model_VocCommentLevelRule_name" z="cIVkGBdSbbHC93XYlTqvAm9eVTM="/>
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_VocCommentLevelRule_isDeleted" z="7Zg+gRseX8AMrf7hLwniARK0nrA="/>
+        <field:datetime dateTimePattern="${vocCommentLevelRule_createtime_date_format}" field="createTime" id="c_com_nineclient_model_VocCommentLevelRule_createTime" z="XfwrPlWIPC8m1Si/Nfyp/H/QJGs="/>
+    </form:update>
+</div>

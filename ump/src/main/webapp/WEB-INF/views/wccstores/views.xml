@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default_pub" name="wccstores/list">
+        <put-attribute name="body" value="/WEB-INF/views/wccstores/list.jspx"/>
+    </definition>
+<definition extends="default_pub" name="wccstores/show">
+        <put-attribute name="body" value="/WEB-INF/views/wccstores/show.jspx"/>
+    </definition>
+<definition extends="default_pub" name="wccstores/create">
+        <put-attribute name="body" value="/WEB-INF/views/wccstores/create.jspx"/>
+    </definition>
+<definition extends="default_pub" name="wccstores/update">
+        <put-attribute name="body" value="/WEB-INF/views/wccstores/update.jspx"/>
+    </definition>
+    <definition extends="default_pub" name="wccstores/showPrcode">
+    	<put-attribute name="body" value="/WEB-INF/views/wccstores/showPrcode.jspx"/>
+    </definition>
+    <definition extends="pub" name="wccstores/showStore">
+    	<put-attribute name="body" value="/WEB-INF/views/wccstores/Map.jsp"/>
+    </definition>
+</tiles-definitions>

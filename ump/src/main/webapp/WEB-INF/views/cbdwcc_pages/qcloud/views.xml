@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+
+<definition extends="cbdwcc_culture" name="page/showBding">
+   <put-attribute name="body"  value="/WEB-INF/views/cbdwcc_pages/qcloud/showBangding.jsp"/>
+</definition>
+<definition extends="cbdwcc_culture" name="page/showEnlist">
+   <put-attribute name="body"  value="/WEB-INF/views/cbdwcc_pages/qcloud/enlistPage.jsp"/>
+</definition>
+<definition extends="cbdwcc_culture" name="page/showRepairReg">
+   <put-attribute name="body"  value="/WEB-INF/views/cbdwcc_pages/qcloud/repairReg.jsp"/>
+</definition>
+
+<definition extends="cbdwcc_culture" name="page/showMap">
+   <put-attribute name="body"  value="/WEB-INF/views/cbdwcc_pages/qcloud/map.jsp"/>
+</definition>
+</tiles-definitions>

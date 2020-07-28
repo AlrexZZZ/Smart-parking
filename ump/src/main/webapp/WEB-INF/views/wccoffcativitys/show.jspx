@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccOffcAtivity" object="${wccoffcativity}" path="/wccoffcativitys" z="+Lt3fyf6p9afPXw8cqFvnlNqc7Y=">
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccOffcAtivity_isDeleted" object="${wccoffcativity}" z="5xlCn4HoflyzQYi0yVxEfB+B/LA="/>
+        <field:display field="name" id="s_com_nineclient_model_WccOffcAtivity_name" object="${wccoffcativity}" z="w8H5+kRmN7SMAnrXuDWqgFXyET8="/>
+        <field:display date="true" dateTimePattern="${wccOffcAtivity_createtime_date_format}" field="createTime" id="s_com_nineclient_model_WccOffcAtivity_createTime" object="${wccoffcativity}" z="tE6SMQijSzjQPsWdjDVHlnIOE3g="/>
+        <field:display date="true" dateTimePattern="${wccOffcAtivity_starttime_date_format}" field="startTime" id="s_com_nineclient_model_WccOffcAtivity_startTime" object="${wccoffcativity}" z="ujwXg0W9tgdr/+ZtNU5iCFug0ew="/>
+        <field:display date="true" dateTimePattern="${wccOffcAtivity_endtime_date_format}" field="endTime" id="s_com_nineclient_model_WccOffcAtivity_endTime" object="${wccoffcativity}" z="uUMGUjvGMMRmUVMeoCIP5lKPWn4="/>
+    </page:show>
+</div>

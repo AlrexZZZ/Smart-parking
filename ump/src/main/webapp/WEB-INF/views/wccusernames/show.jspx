@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccUserName" object="${wccusername}" path="/wccusernames" z="CCO0Mma52ww3zYG3Q8DFo8KocR4=">
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccUserName_isDeleted" object="${wccusername}" z="nNzzx73Xfw8ubqJDIs/UPZTt+/4="/>
+        <field:display date="true" dateTimePattern="${wccUserName_createtime_date_format}" field="createTime" id="s_com_nineclient_model_WccUserName_createTime" object="${wccusername}" z="yvanmZeRIdudAMVglBSV6OLt2sM="/>
+        <field:display field="tabName" id="s_com_nineclient_model_WccUserName_tabName" object="${wccusername}" z="SFTw+DhsB2+9bu1B/yk6xxWfGfE="/>
+        <field:display field="remark" id="s_com_nineclient_model_WccUserName_remark" object="${wccusername}" z="2IZia1rL9UWTYL+VRYp7ch+Y68M="/>
+    </page:show>
+</div>

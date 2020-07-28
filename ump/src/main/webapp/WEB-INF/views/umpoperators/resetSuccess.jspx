@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<SCRIPT type="text/javascript">
+		function goUrl() {
+			location.href = "/ump";
+		}
+	</SCRIPT>
+	<div style="width: 800px; margin: 0px auto;" class="stepper">
+		<ul>
+			<li style="left: 0px;"></li>
+			<li style="left: 100%;" class="current"></li>
+		</ul>
+	</div>
+	<div style="width: 1000px; margin: 0px auto; clear: both; overflow: hidden; margin-top: -10px">
+			<div style="width: 226px;float: left ;text-align: center">重置密码</div>
+			<div style="width: 710px; float: left;text-align:right; ">重置成功</div>
+	</div>
+	<div
+		style="width: 600px; margin: 0px auto; clear: both; overflow: hidden; display: block; margin-bottom: 20px">
+		<div style="width: 100px; height: 100px; float: left">
+			<img src="/ump/images/success.png" alt="" />
+		</div>
+		<DIV
+			style="width: 490px; height: auto; float: right; margin-top: 20px;">
+			<div class="text">
+				<p>
+					<span>重置密码</span>
+				</p>
+			</div>
+			<div class="text">
+				<p>
+					<span>重置</span><span>成功</span><span>！</span><span>新</span><span>密码</span><span>邮件已发送至你的邮箱
+						: </span><SPAN style="color:blue;">${email}</SPAN>
+				</p>
+				<p>
+					<span>请进入邮箱查看邮件，</span><span>并重新登录</span><span>。</span>
+				</p>
+			</div>
+			<div id="u2" style="cursor: pointer;margin-top: 30px;">
+				<!-- Unnamed () -->
+				<div id="u3" class="text">
+					<p>
+						<BUTTON class="button info" onclick="goUrl();">确定</BUTTON>
+					</p>
+				</div>
+			</div>
+		</DIV>
+	</div>
+</div>

@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes"/>
+		<script type="text/javascript"
+		src="/ump/js/nineclient/vocreport/nineclient.js">
+		//---
+	</script>
+<style>
+@IMPORT url("/ump/ui/dtGrid/dependents/bootstrap/css/bootstrap.min.css");
+@IMPORT url("/ump/ui/dtGrid/dependents/fontAwesome/css/font-awesome.min.css");
+@IMPORT url("/ump/ui/dtGrid/jquery.dtGrid.css");
+@IMPORT url("/ump/ui/dtGrid/dependents/datePicker/skin/WdatePicker.css");
+@IMPORT url("/ump/ui/dtGrid/dependents/datePicker/skin/default/datepicker.css");
+</style>
+	<SCRIPT type="text/javascript">
+	var dtGridOption_2_1_4 ;
+	<![CDATA[
+	var optio = {
+	        chart: {                                                           
+	            type: 'bar',
+	            renderTo:'container'
+	        }, 
+	        exporting: { enabled:false },
+	        title: {                                                           
+	            text: ' ',
+	            style:{
+	            	
+	            	fontSize: "16px",
+	            	fontFamily:'微软雅黑'
+	            }
+	        },                                                                 
+	        subtitle: {                                                        
+	            text: ''                                  
+	        },                                                                 
+	        xAxis: {                                                           
+	            categories: [],
+	            title: {                                                       
+	                text: null                                                 
+	            }                                                              
+	        },                                                                 
+	        yAxis: {                                                           
+	            min: 0,                                                        
+	            title: {                                                       
+	                text: '',                             
+	                align: 'high'                                              
+	            },                                                             
+	            labels: {                                                      
+	                overflow: 'justify'                                        
+	            }                                                              
+	        },                                                                 
+	        tooltip: {                                                         
+	            valueSuffix: ''                                       
+	        },                                                                 
+	        plotOptions: {                                                     
+	            bar: {                                                         
+	                dataLabels: {                                              
+	                    enabled: true                                          
+	                }                                                          
+	            }                                                              
+	        },                                                                 
+	        legend: {                                                          
+	            layout: 'vertical',                                            
+	            align: 'right',                                                
+	            verticalAlign: 'top',                                          
+	            x: -40,                                                        
+	            y: 100,                                                        
+	            floating: true,                                                
+	            borderWidth: 1,                                                
+	            backgroundColor: '#FFFFFF',                                    
+	            shadow: true                                                   
+	        },                                                                 
+	        credits: {                                                         
+	            enabled: false                                                 
+	        },                                                                 
+	        series: [{                                                               
+	            name: "评论类型",                                             
+	            data: []                                
+	        }] 
+	};
+	var  exeFlag = 0;
+	function queryDataBar(){
+		exeFlag ++;
+	
+		var channelName = $("#channelName").val();
+		if (channelName != -1 && channelName) {
+			channelName = $("#channelName").find("option:selected").text();
+		}else{
+			channelName = "";
+		}
+		var shopName = $("#shopName").val();
+		if (shopName != -1 && shopName) {
+			shopName = $("#shopName").find("option:selected").text();
+		}else{
+			shopName = "";
+		}
+	 	//var commentType = $("#commenType").val();
+	 	var commentType = $("#commenType").find("option:selected").text();
+		var commentTime = $("#startTimeStr").val();
+		
+		if	(exeFlag >= 2){
+			
+			if(channelName == ''){
+				Notify("请选择平台");
+				return;
+			}
+			if(shopName == ''){
+				Notify("请选择店铺");
+				return;
+			}
+			if(commentType == '请选择'){
+				Notify("请选择评论类型");
+				return;
+			}
+			if(commentTime == ''){
+				Notify("请选择时间");
+				return;
+			}
+		}
+		var objs;
+		optio.xAxis.categories=[];
+		optio.series[0].data=[];
+  		$.ajax({
+			url:"/ump/skuRangeReports/queryDataBar",
+			type:"Post",
+			data:{
+				        'commentType':commentType,
+						'channelName':channelName,
+						'shopName' :shopName,
+						'commentTime': commentTime
+				},
+			error:function(msg){
+			},
+			success:function(data){
+				//转为数组
+				 objs = eval('('+data+')');
+					if(objs.length > 0){
+						for(var i = 0;i < objs.length;i++){
+							//alert(objs[i].skuName);
+							//console.log(objs[i]);
+							optio.xAxis.categories.push(objs[i].skuName);
+							optio.series[0].data.push(objs[i].incrementComment);
+						}
+						optio.title.text="SKU排行榜TOP10("+objs[0].commentType+")";
+						optio.series[0].name= objs[0].commentType+"数";
+					}
+					
+					
+					var chartBar = new Highcharts.Chart(optio);
+			}
+		});
+  		/*
+  		if(commentType==0){
+  			dtGridOption_2_1_4.params.commentType = '好评';
+  		}else{
+  			dtGridOption_2_1_4.params.commentType = '差评';
+  		}
+  		dtGridOption_2_1_4.params.channelName = channelName;
+  		dtGridOption_2_1_4.params.shopName = shopName;
+  		
+  		dtGridOption_2_1_4.params.commentTime = commentTime;
+  		grid_2_1_4.load(); */
+  		dtGridOption_2_1_4.params.commentType = commentType;
+		dtGridOption_2_1_4.params.channelName = channelName;
+  		dtGridOption_2_1_4.params.shopName = shopName;
+  		
+  		dtGridOption_2_1_4.params.commentTime = commentTime;
+  		grid_2_1_4.load();
+	}
+	function selectChannel(id, elementId) {
+		var url = "/ump/vocshops/queryVocShops";
+		var param = {};
+		param.umpChannelId = id;
+		dataAjax(url, param, null, null, createSelect, elementId);
+	}
+	function exportExcel(){
+		
+		var channelName = $("#channelName").val();
+		
+		if (channelName != -1 && channelName) {
+			channelName = $("#channelName").find("option:selected")
+					.text();
+		}else{
+			channelName = "";
+		}
+		var shopName = $("#shopName").val();
+		if (shopName != -1 && shopName) {
+			shopName = $("#shopName").find("option:selected").text();
+		}else{
+			shopName = "";
+		}
+	 	//var commenType = $("#commenType").val()==0?'好评':'差评';
+	 	var commenType = $("#commenType").find("option:selected").text();
+		var commentTime = $("#startTimeStr").val();
+var contition = "?channelName="+channelName+"&shopName="+shopName+"&commentType="+commenType+"&commentTime="+commentTime;
+var url = "/ump/skuRangeReports/exportExcel"+contition;
+  if(commenType != '请选择'){
+	  window.location.href = url;
+  }
+		
+	}
+	
+	
+	window.onload = queryDataBar;
+	]]>
+	</SCRIPT>
+	<SCRIPT type="text/javascript">
+	//定义表格
+	var dtGridColumns_2_1_4 = [{
+		id : 'channelName',
+		title : '平台名称',
+		type : 'string',
+		columnClass : 'text-center',
+		fastQuery : true,
+		fastQueryType : 'eq',
+		headerStyle : 'background:white;text-align:center;'
+	
+	}, {
+		id : 'shopName',
+		title : '店铺名称',
+		type : 'string',
+		columnClass : 'text-center',
+		fastQuery : true,
+		fastQueryType : 'eq',
+		headerStyle : 'background:white;text-align:center;',
+	}, {
+		id : 'skuName',
+		title : 'SKU名称',
+		type : 'string',
+		fastQuery : true,
+		fastQueryType : 'eq',
+		columnClass : 'text-center',
+		headerStyle : 'background:white;text-align:center;'
+	}, {
+		id : 'commentType',
+		title : '评论类型',
+		type : 'string',
+		fastQuery : true,
+		fastQueryType : 'eq',
+		columnClass : 'text-center',
+		headerStyle : 'background:white;text-align:center;'
+	}, {
+		id : 'incrementComment',
+		title : '评论数',
+		type : 'string',
+		fastQuery : true,
+		fastQueryType : 'eq',
+		columnClass : 'text-center',
+		headerStyle : 'background:white;text-align:center;'
+	},
+	{
+		id:'commentTime',
+		title:'日  期', 
+		type:'date', 
+		format:'yyyy-MM-dd hh:mm:ss', 
+		otype:'commentTime', 
+		oformat:'yyyy-MM-dd hh:mm:ss', 
+		columnClass:'text-center', 
+		headerStyle : 'background:white;text-align:center;',
+		fastQuery:true, 
+		fastQueryType:'range',
+		resolution : function(record, value) {
+			var z = new Date(value.time);
+			return z.getFullYear()+"-"+(z.getMonth()+1)+"-"+z.getDate();
+		} 
+		}];
+	 dtGridOption_2_1_4 = {
+			ajaxLoad : true,
+			params:{
+				commentType :'0'	
+			},
+			loadURL : '/ump/skuRangeReports/queryDataGrid',
+			columns : dtGridColumns_2_1_4,
+			gridContainer : 'dtGridContainer_2_1_1',
+			tools : '',
+			pageSize : 10
+		};
+	
+		var grid_2_1_4 = $.fn.DtGrid.init(dtGridOption_2_1_4);
+		$(function() {
+			grid_2_1_4.load();
+			
+		});
+
+	</SCRIPT>
+	<div class="grid" style="margin-left: 10px;">
+		<FORM id="queryForm">
+			<DIV class="row">
+				<div class="span3" style="margin-left: -5px;">
+							<label>平台名称：</label>
+					<SELECT id="channelName" name="channelName" class="publicSize"
+						onchange="selectChannel(this.value,'shopName')">
+						<OPTION value="-1" selected="selected">请选择</OPTION>
+						<c:forEach items="${channels}" var="item">
+							<OPTION value="${item.id}">${item.channelName}</OPTION>
+						</c:forEach>
+					</SELECT>
+				</div>
+				
+				<div class="span3" style="margin-left: -5px;">
+				   <label>店铺名称：</label>
+					<SELECT id="shopName" name="shopName" class="publicSize">
+						<OPTION value="-1" selected="selected">请选择</OPTION>
+					</SELECT>
+				</div>
+				
+				<div class="span3" style="margin-left: -5px;">
+				<label>评论类型：</label>
+					<SELECT id="commenType" name="commenType" class="publicSize">
+					        <OPTION value="0">请选择</OPTION>
+							<OPTION value="1">好评</OPTION>
+							<OPTION value="2">差评</OPTION>
+					</SELECT>
+				</div>
+		
+			</DIV>
+	        <DIV class="row">
+	        		<div class="span3" style="margin-left: -5px;">
+                     <label>时  间：</label>
+					<input type="text" name="startTimeStr" class="Wdate publicSize"
+						 value="" id="startTimeStr"
+						onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+				</div>
+	        </DIV>
+			<DIV class="row">
+			<div style="margin-left: 20px;" class="span6">
+					<input type="button" class="info" value="查询" onclick="queryDataBar();" />
+					<input type="button" class="warning" value="导出" onclick="exportExcel();" />
+					</div>
+			</DIV>
+		</FORM>
+	</div>
+	<div id="content">
+	<div id="container"
+		style="min-width: 310px; height: 400px; margin: 0 auto">Loading...</div>
+	</div>
+	
+	<div id="dtGridContainer_2_1_1" class="dt-grid-container">
+		<DIV>
+			<SPAN></SPAN>
+		</DIV>
+	</div>
+
+	<style>
+	
+	.metro .table th {
+height: 30px;
+line-height: 20px;
+padding-left: 10px;
+padding-right: 10px;
+font-size: 12px;
+background-color:#f8f8f8;
+border-bottom: 1px #e5e5e5 solid;
+}
+ .metro .table td{
+ background-color:white;
+ height: 30px;
+line-height: 20px;
+padding-left: 10px;
+padding-right: 10px;
+font-size: 12px;
+text-align:left;
+border-bottom: 1px #e5e5e5 solid;
+}
+
+.publicSize{
+	width: 135px;
+	height: 28px;
+	border:1px solid;
+	border-color:#e4e4e4;
+}
+	
+input {
+	width: 100%;
+}
+
+select {
+	width: 100%;
+}
+
+.metro label {
+display: block;
+margin: 5px 0;
+font-weight:normal;
+font-size:12px;
+text-align: right;
+}
+
+</style>
+
+</div>

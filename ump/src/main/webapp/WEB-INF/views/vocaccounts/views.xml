@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default_pub" name="vocaccounts/list">
+        <put-attribute name="body" value="/WEB-INF/views/vocaccounts/list.jspx"/>
+    </definition>
+<definition extends="default_pub" name="vocaccounts/show">
+        <put-attribute name="body" value="/WEB-INF/views/vocaccounts/show.jspx"/>
+    </definition>
+<definition extends="default_pub" name="vocaccounts/create">
+        <put-attribute name="body" value="/WEB-INF/views/vocaccounts/create.jspx"/>
+    </definition>
+<definition extends="default_pub" name="vocaccounts/update">
+        <put-attribute name="body" value="/WEB-INF/views/vocaccounts/update.jspx"/>
+    </definition>
+    <definition extends="default_pub" name="vocaccounts/accountManage">
+        <put-attribute name="body" value="/WEB-INF/views/vocaccounts/accountManage.jspx"/>
+    </definition>
+    <definition extends="default_pub" name="vocaccounts/TaoBaoCallBack">
+        <put-attribute name="body" value="/WEB-INF/views/vocaccounts/TaoBaoCallBack.jsp"/>
+    </definition>
+      <definition extends="default_pub" name="vocaccounts/approveFail">
+        <put-attribute name="body" value="/WEB-INF/views/vocaccounts/approveFail.jsp"/>
+    </definition>
+    <definition extends="register" name="umpcompany/tmallRegister">
+        <put-attribute name="body" value="/WEB-INF/views/umpcompany/tmallRegister.jspx"/>
+    </definition>
+</tiles-definitions>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	 xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+<div style="overflow:auto;margin-bottom: 30px;">
+<table id="ss" class ="table striped hovered">
+		<thead>
+			<tr>
+				<!-- <th style="width:10px;">
+					<input type="checkbox" class="acheck" style="width:15px;box-sizing:content-box;" name="allCheck" onclick="checkall()"/>
+				</th> -->
+				<th>公众平台</th>
+				<th>活动名称</th>
+				<th>粉丝名</th>
+				<th>粉丝来源</th>
+				<!-- <th>所属</th> -->
+				<th>分组</th>
+				<th>性别</th>
+				<th>地区</th>
+				<th>最近对话结束时间</th>
+				<th>关注时间</th>
+				<!-- <th>操作</th> -->
+			</tr>
+		</thead>
+
+
+		<tbody>
+			<c:if test="${empty wccfriends}">
+				<tr>
+					<td colspan="10" align="center">没有粉丝信息</td>
+				</tr>
+			</c:if>
+			<c:forEach var="friend" items="${wccfriends}">
+				<tr>
+					<!-- <td>
+						<input type="checkbox" style="width:15px;box-sizing:content-box;" class="fcheck" name="friendCheck" value="${friend.id },${friend.nickName},${friend.platformUser.id }"/> 
+					</td> -->
+					<td>
+						${friend.platformUser.account }
+					</td>
+					<td>
+						${friend.wccqrcode.activityName }
+					</td>
+					<td>
+						${friend.nickName }
+					</td>
+					<td>
+						${friend.fromType }
+					</td>
+					<!-- <td>
+						${friend.organization.name }
+					</td> -->
+					<td>
+						${friend.wgroup.name }
+					</td>
+					<td>
+						${friend.sex }
+					</td>
+					<td>
+						${friend.area }
+					</td>
+					<td>
+						<fmt:formatDate value="${friend.messageEndTime }" pattern="yyyy-MM-dd HH:mm:ss" />
+					</td>
+					<td>
+						<fmt:formatDate value="${friend.subscribeTime }" pattern="yyyy-MM-dd HH:mm:ss" />
+					</td>
+					<!-- <td>
+						 <![CDATA[<a href="#showTab" onclick="showTag(${friend.id},'${friend.messageEndTime }',${friend.platformUser.id})"><img src="/ump/images/talk.png" alt="查看对话"/></a>]]>
+					</td> -->
+				</tr>
+				</c:forEach>
+		</tbody>
+	</table>
+		<div style="float:right;">
+			<input id="pageNum" type="hidden" value="${page}" />
+			<c:if test="${page>1 }">
+				<a class="default" href="#" onclick="queryFriend(1)"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px">
+					<img alt="首页" src="/ump/resources/images/resultset_first.png" title="首页" style="float:left"/>
+				</a>
+				<a class="default"
+					href="javascript:void(0);" onclick="queryFriend(${page-1})"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px">
+					<img alt="前一页" src="/ump/resources/images/resultset_previous.png" title="前一页" style="float:left"/>
+				</a>
+			</c:if>
+			<c:if test="${wccfriends!= null and fn:length(wccfriends) > 0}">
+				<TFOOT>
+					<span style="color: #069dd5; height: 22px; line-height: 22px;float:left;padding-left: 6px">${page}</span>
+					<span style="float:left;padding-top: 4px;padding-left: 6px"> /</span>
+					<span style="color: #069dd5;float:left;padding-top: 4px;padding-left:6px">${maxPages}</span>
+					<input type="text" value="" style="width: 30px; height: 22px;float:left;margin-left:6px" id="pageStr" />
+					<a href="javascript:void(0);"
+						style="width: 28px; height: 22px; background-color: #069dd5; color: white; display: inline-block; font-family: Arial; font-size: 10px; line-height: 22px; text-align: center; cursor: pointer;float:left"
+						onclick="goPage(${maxPages});">GO</a>
+
+				</TFOOT>
+			</c:if>
+			<c:if test="${page!=maxPages}">
+				<a class="default"
+					href="javascript:void(0);" onclick="queryFriend(${page+1})"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left:6px"> 
+					<img alt="下一页" src="/ump/resources/images/resultset_next.png" title="下一页" style="float:left"/>
+				</a>
+				<a class="default"
+					href="javascript:void(0);" onclick="queryFriend(${maxPages})"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px">
+					<img alt="末页" src="/ump/resources/images/resultset_last.png" title="末页" style="float:left"/>
+				</a>
+			</c:if>
+			<span style="float:left;padding-top: 3px;padding-left: 6px">每页<span  style="color:#069dd5;">${limit}</span>条</span>
+		</div>
+	</div>
+	<style>
+		.metro .button .ztree{
+ 			padding: 0px;
+ 		}
+ 		box-sizing:content-box;
+ 		 input[type="checkbox"]{
+ 	width:20px;
+ }
+	</style>
+</div>

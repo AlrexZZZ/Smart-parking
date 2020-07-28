@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<style>
+		.publicSize{width: 135px;height: 28px;border:1px solid;border-color:#e4e4e4;margin-left:10px;}
+		.publicSizeLong{height: 28px;border:1px solid;border-color:#e4e4e4;margin-left:10px;}
+	</style>
+	<SCRIPT type="text/javascript" src="/ump/js/nineclient/vocreport/nineclient.js"><!----></SCRIPT>
+	<div class="search" id="searchDivId" style="display: none;width: 520px;">
+		<div class="close">
+			<img src="/ump/images/close.png" onclick="javascript:closeAll();" style="cursor: pointer;width: 24px;height: 24px;" />
+		</div>
+		<div style="border-bottom: 1px solid #e5e5e5;height:40px;line-height: 40px;font-size:16px;font-family: '微软雅黑'">
+			<i class="on-left">
+				<img style="margin-left:10px;height: 14px;width: 14px;" src="/ump/images/search.png"/>
+			</i>查询
+		</div>
+		<form id="rule_form_search">
+		<div class="grid">
+			<div class="row">
+				<label>子行业：</label>
+				<div class="span3">
+					<select id="queryBussinessTypeId" class="publicSize">
+						<option value="">请选择</option>
+						<c:forEach var="bussinessType" items="${bussinessTypes}">
+							<option value="${bussinessType.id}">${bussinessType.businessName}</option>
+						</c:forEach>
+					</select>
+				</div>
+				<label>评论类型：</label>
+				<div class="span3">
+					<select id="queryCommentLevelId" class="publicSize">
+						<option value="">请选择</option>
+						<c:forEach var="commentLevel" items="${vocCommentLevels}">
+							<option value="${commentLevel.id}">${commentLevel.name}</option>
+						</c:forEach>
+					</select>
+				</div>
+			</div>
+			</div>
+		</form>
+			<div style="text-align: center;">
+				<input type="button" value="查 询" class="info"  onclick="javascript:queryCommentLevelRule();" /> 
+				<input type="button" value="重置" class="warning" onclick="javascript:$('#rule_form_search')[0].reset();" />
+		    </div>
+	</div>
+	
+	<SCRIPT type="text/javascript">
+	<![CDATA[
+		$(document).ready(function() {
+			queryCommentLevelRule();
+		});
+		
+		function reset(){
+			$("#queryBussinessTypeId").val('');
+			$("#queryCommentLevelId").val('');
+		}
+
+		/**
+		 *查询规则
+		 */
+		function queryCommentLevelRule(pageNo) {
+			var start = 0;
+			var limit = 10;
+			if (pageNo > 0) {
+				start = (pageNo - 1) * limit;
+			}
+			 var bussinessTypeId = $("#queryBussinessTypeId").val();
+			 var commentLevel = $("#queryCommentLevelId").val();
+			
+			var parmam = {
+				start : start,
+				limit : limit,
+				bussinessTypeId:bussinessTypeId,
+				commentLevel:commentLevel
+			};
+
+			$.ajax({
+				url : "/ump/voccommentlevelrules/queryCommentLevelRule",
+				type : "POST",
+				data : parmam,
+				async:true,
+				error : function(msg) {
+					alert("error " + msg);
+				},
+				success : function(text) {
+					$("#showResult").html(text);
+				}
+			});
+		}
+
+		function getBussinessTypeByCompany() {
+			var param = {};
+			$.ajax({
+				url : "/ump/voccommentlevelrules/getBussinessTypeByCompany",
+				type : "POST",
+				data : param,
+				error : function(msg) {
+					alert("请求错误! ");
+				},
+				success : function(text) {
+					var jsonStr = eval("(" + text + ")");
+
+					if (jsonStr.length > 0) {
+						$("#addBussinessTypeId").empty();
+						var defaultId = "";
+						$("#addBussinessTypeId").append(
+								"<option value="+defaultId+" >请选择</option>");
+						$.each(jsonStr,
+								function(id, bussinessType) {
+									$("#addBussinessTypeId").append(
+											"<option value="+bussinessType.id+">"
+													+ bussinessType.name
+													+ "</option>");
+								});
+					}
+
+				}
+			});
+		}
+		
+	     var html = "";
+	 	 function showAddDialog() {
+	 		divCenter('addDialogId');
+	 		$("#addDialogId").toggle();
+	 		queryWordList();
+	 		$("#fade").toggle();
+	 		
+	 	}
+		 	 
+	 	/**
+	 	 * 重置添加规则里里的参数
+	 	 */
+	   function reSetAddRule(){
+		 $("#addBussinessTypeId").val('');
+		 $("#addCommentLevelId").val('');
+		 $("#queryWordId").val('');
+		 $("#addDialogId").toggle();
+	 	 $("#fade").toggle();
+	 	 queryWordList();
+	   }	 
+		   
+		 /**
+		  * 查询关键词
+		  */ 	
+	   function queryWordList(pageNo){
+		 		var start = 0;
+				var limit = 10;
+				if (pageNo > 0) {
+					start = (pageNo - 1) * limit;
+				}
+				var queryWord = $("#queryWordId").val();
+				var parmam = {start:start,limit:limit,name:queryWord};
+				var commentSubLevelId = $("#commentSubLevel").val();
+				parmam.commentSubLevelId=commentSubLevelId;
+				$.ajax({
+					url : "/ump/voccommentlevelrules/getQueryWordExpressions",
+					type : "POST",
+					data : parmam,
+					async:true,
+					error : function(msg) {
+						alert("error " + msg);
+					},
+					success : function(text) {
+						 var jsonStr = eval("("+text+")");	
+						 var datas = jsonStr.data;
+						 
+						 var turnPage = '';
+						 if(datas.length > 0){
+							 turnPage += ' <TFOOT>';
+							 turnPage += '	<tr>';
+							 turnPage += '	<td colspan="5" style="float:right">';
+							 if(jsonStr.page > 1){
+								 turnPage += ' <a class="default" href="javascript:void(0);" onclick="queryWordList('+ 1 +')" style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px"><img alt="首页" src="/ump/resources/images/resultset_first.png" title="首页" style="float:left"/></a>';
+								 turnPage += ' <a style="float:left;padding-top: 4px;padding-left: 6px" class="default" href="javascript:void(0);" onclick="queryWordList('
+											+ (jsonStr.page - 1) + ')"><img alt="上一页" src="/ump/resources/images/resultset_previous.png" title="上一页" style="float:left"/></a>';
+							 }
+							
+							 turnPage += '<span style="color: #069dd5;height: 22px;line-height: 22px;float:left;padding-left: 6px">'+ jsonStr.page +'</span><span style="float:left;padding-top: 4px;padding-left: 6px"> /</span> <span style="color: #069dd5;float:left;padding-top: 4px;padding-left:6px">'+jsonStr.maxPages+'</span>';
+							 turnPage +='<input type="text" value="" style="width: 30px;height:22px;float:left;margin-left:6px" id="pageStr2"/><a  style="width: 28px;height:22px;background-color:#069dd5;color: white;display:inline-block;font-family:Arial;font-size: 10px;line-height: 22px;text-align:center;cursor: pointer;float:left" onclick="goPage2('+jsonStr.maxPages+');">GO</a>'
+							 
+							 if(jsonStr.page != jsonStr.maxPages){
+								turnPage += '<a class="default" href="javascript:void(0);" onclick="queryWordList('
+										+ (jsonStr.page + 1)
+										+ ')" style="cursor: hand; cursor: pointer;float:left;padding-top: 2px;padding-left:6px"><img alt="下一页" src="/ump/resources/images/resultset_next.png" title="下一页"/></a>';
+								turnPage += ' <a style="float:left;padding-top: 4px;padding-left: 6px" class="default" href="javascript:void(0);" onclick="queryWordList('+ jsonStr.maxPages +')" style="cursor: hand; cursor: pointer;"><img alt="首页" src="/ump/resources/images/resultset_last.png" title="首页" style="float:left"/></a>';
+							  }
+							 
+							 turnPage += '<span style="float:left;padding-top: 3px;padding-left: 6px">每页<span  style="color:#069dd5;">'+ jsonStr.pageSize +'</span>条</span></td>';
+							 turnPage += '</tr>';
+							 turnPage += '</TFOOT>';
+						 }
+						 var tableStr = '';
+						 $.each(datas,function(id,data) {
+						   var setId = ""+data.id+"";
+						   tableStr+='<tr><td><input type="checkbox" name="checkbox" value="'+setId+'"/></td> <td>'+data.name+'</td></tr>';
+					     }); 
+					      $("#tBodyId").html(tableStr);
+						  $("#tfoot").html(turnPage);
+					}
+				});
+	 } 
+	    
+	   function goPage2(page){
+	    	var pageStr = $("#pageStr2").val();
+	    	if($.trim(pageStr) == ""){
+	    		alert("请输入需要跳转的页数");
+	    		return false;
+	    	}
+	    	if(isNaN(pageStr)){
+	    		alert("格式错误，请输入数字");
+	    		return false;
+	    	}
+	    	if(pageStr > page){
+	    		alert("你输入的页数大于最大页数");
+	    		return false;
+	    	}
+	    	if(pageStr <= 0){
+	    		alert("你输入的页数不符合要求");
+	    		return false;
+	    	}
+	    	queryWordList(pageStr);
+	    }
+		 
+		 function checkBoxAll() {
+			  if ($('#checkboxAll').prop('checked')) {
+				$("[name = checkbox]:checkbox").prop("checked", true);
+			  } else {
+				 $("[name = checkbox]:checkbox").prop("checked", false);
+			  }
+		  }
+			
+		 
+		 function addWordExpressions(){
+			 var bussinessTypeId = $("#addBussinessTypeId").val();
+			 var commentLevel = $("#addCommentLevelId").val();
+			 var wordExpressions = new Array();    
+			 
+			 if(bussinessTypeId == ""){
+				 alert("请选择子行业");
+				 return;
+			 }
+			 
+			 if(commentLevel == ""){
+				 alert("请选择评论类别");
+				 return;
+			 }
+			 
+			 $('input[name="checkbox"]:checked').each(function(i){    
+				wordExpressions[i] = $(this).val();
+			 });
+           
+			 if(wordExpressions.length == 0){
+				 alert("请选择关键词");
+				 return;
+			 }
+			 
+			 var parmam = {bussinessTypeId:bussinessTypeId,commentLevel:commentLevel,wordExpressions:wordExpressions.join()};
+			 $.ajax({
+					url : "/ump/voccommentlevelrules/addCommentLevelRules",
+					type : "POST",
+					data : parmam,
+					async:true,
+					error : function(msg) {
+						alert("error...");
+					},
+					success : function(text) {
+						var result = eval("("+text+")");
+						if(result.success){
+							reSetAddRule();
+							$("[name = checkbox]:checkbox").prop("checked", false);
+							alert("添加成功!");
+							window.location.reload();
+						}else{
+							alert("添加失败!");
+						}
+						
+						
+					}
+				});
+		 }
+		 
+		 function deleteCommentLevelRule(id){
+			  if(confirm('您确定要删除此项?')){
+				  var parmam = {id:id};
+					$.ajax({
+						url : "/ump/voccommentlevelrules/deleteCommentLevelRule",
+						type : "POST",
+						data : parmam,
+						error : function(msg) {
+							alert("error " + msg);
+						},
+						success : function(text) {
+							var jsonStr = eval("("+text+")");
+							if(!jsonStr.success){
+								alert("添加失败。。。");
+							}
+							queryCommentLevelRule();
+							$.Dialog.close();
+						}
+					}); 
+				  
+			  }
+			}
+		 
+		 /**
+		  * 查询条件显示
+		  */
+		 function searchPage() {
+			 $("#fade").toggle();
+			 divCenter('searchDivId');
+			 $("#searchDivId").toggle();
+		 }
+		 function divCenter(id){
+			  $("html").scrollTop("0");
+			    var winw=$(window).width();
+			    var winh=$(window).height();
+			    var winw2=(parseInt(winw)-parseInt($("#"+id).width()))/2;
+			    var hit=(parseInt(winh)-parseInt($("#"+id).height()))/2;
+			    $("#"+id).css("left",winw2+"px");
+			    $("#"+id).css("top",hit+"px");
+			    $(window).resize(function() {
+			  	  var winw=$(window).width();
+			      var winh=$(window).height();
+			      var winw2=(parseInt(winw)-parseInt($("#"+id).width()))/2;
+			      var hit=(parseInt(winh)-parseInt($("#"+id).height()))/2;
+			      $("#"+id).css("left",winw2+"px");
+			      $("#"+id).css("top",hit+"px");
+				 });
+		 }
+		 /**
+		  * 关闭所有
+		  */
+		 function closeAll() {
+			$("#fade").toggle();
+		 	$("#searchDivId").toggle();
+		 }
+		 
+		 /**
+		  *重置
+		  */
+		 function reset(){
+			 $("#queryBussinessTypeId").val('');
+			 $("#queryCommentLevelId").val('');
+		 }
+		 function selectCommentLevel(pId){
+			 var url = "/ump/vocwordcategorys/selectCategory";
+			 var param={pId:pId};
+			 dataAjax(url, param, null, null, createSelect, "commentSubLevel", null);
+		 }	
+		 ]]>
+	</SCRIPT>
+	<div>
+		<div style="font-family:'Microsoft Yahei';font-size: 14px; background: #edf1f9;margin-bottom: 10px;height: 30px;text-align: left;width: auto;line-height: inherit;">好中差规则管理</div>
+		<div class="buttondiv" style="height: 46px;margin-top:0px; background: #edf1f9; border: 1px solid #e4e4e4; border-bottom: none;">
+			<a style="cursor: pointer;" onclick="javascript:searchPage()" >
+					<img src="/ump/images/search.png" width="14" height="14" />查询
+			</a>&#160;&#160;
+			<a style="cursor: pointer;" onclick="javascript:showAddDialog()"  >
+					<img src="/ump/images/add.png" width="14" height="14" />添加规则
+			</a>&#160;&#160;
+		</div>
+	</div>
+	
+	<div id="addDialogId" class="search" style="display: none;width: 500px;padding:10px;">
+			<div class="close">
+				<img src="/ump/images/close.png"  onclick="javascript:reSetAddRule();" style="cursor: pointer;width: 24px;height: 24px;" />
+			</div>
+			<div style="border-bottom: 1px solid #e5e5e5;height:40px;line-height: 40px;font-size:16px;font-family: '微软雅黑'">
+				<i class="on-left">
+					<img style="margin-left:10px;" height="14" width="14" src="/ump/images/add.png"/>
+				</i>添加规则
+			</div>
+			
+			 <div class="grid">
+				  <div class="row">
+				  	<label>子行业：</label>
+				    <div class="span3">
+				      	<select id="addBussinessTypeId" class="publicSize">
+						   	<option value="">请选择</option>
+						  	 <c:forEach var="bussinessType" items="${bussinessTypes}">
+								<option value="${bussinessType.id}">${bussinessType.businessName}</option>
+							 </c:forEach>
+					 	 </select>
+				    </div>
+				  </div> 
+				  
+				  <div class="row">
+					   <label>评论类型：</label>
+					   <div class="span3">
+					     	<select id="addCommentLevelId" class="publicSize" onchange="selectCommentLevel(this.value);">
+							 	<option value="">请选择</option>
+							 	<c:forEach var="commentLevel" items="${commentLevels}">
+							 		<option value="${commentLevel.id}">${commentLevel.name}</option>
+								</c:forEach>					
+					     	</select>
+					   </div>
+				  </div>
+				  <div class="row">
+					   <label>评论子类：</label>
+					   <div class="span3">
+					   	  <select id="commentSubLevel" class="publicSize" onchange="queryWordList();">
+							 <option value="">请选择</option>
+					       </select>
+					   </div>
+				  </div>
+				<div class="row">
+					<div class="span10"><input type="text" id="queryWordId" class="publicSizeLong" style="width: 100%;"/></div>
+					<div class="span"><input type="button" class="info" value="搜索" onclick="queryWordList()" />
+					<!-- <input type="button" class="warning" value="清除" onclick="javascript:$('#queryWordId').val('')"/> -->
+					</div>
+				</div>
+			 </div>
+			 <TABLE class="table striped hovered">
+			 	<THEAD>
+			 		<TR>
+			 			<TH><input type="checkbox" id="checkboxAll" onclick="checkBoxAll()"/></TH>
+			 			<TH>关键词</TH>
+			 		</TR>
+			 	</THEAD>
+			 	<TBODY id="tBodyId"></TBODY>
+			 </TABLE>
+			 <div align="right" style="text-align: right;float: right;" id="tfoot">
+					<!--  -->
+			 </div>
+			 <style>
+			 	.divcss5{margin:0 auto;text-align: center;padding-top: 30px;} 
+			 </style>
+			 <div class="divcss5">
+				<input type="button" class="info" value="确定" onclick="addWordExpressions();" />
+				<input type="button" class="warning" value="取消" onclick="javascript:reSetAddRule();" />
+			</div>
+	</div>
+
+<DIV id="showResult"><!--  --></DIV>
+<DIV id="fade" class="black_overlay"><!--  --></DIV>
+</div>

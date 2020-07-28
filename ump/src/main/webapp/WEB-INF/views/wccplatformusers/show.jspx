@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccPlatformUser" object="${wccplatformuser}" path="/wccplatformusers" z="+CSlTgNtrP/woj/uOiC2ttIpoPo=">
+        <field:display field="platformId" id="s_com_nineclient_model_WccPlatformUser_platformId" object="${wccplatformuser}" z="hh9n/WGen9faW9wgjF/Da0noreA="/>
+        <field:display field="account" id="s_com_nineclient_model_WccPlatformUser_account" object="${wccplatformuser}" z="R3ZHf6Vx9G7dLwFiW3sx97fkYCM="/>
+        <field:display field="remark" id="s_com_nineclient_model_WccPlatformUser_remark" object="${wccplatformuser}" z="n4J4H/vGWaT78tN9+/5KMGMKhgc="/>
+        <field:display field="appId" id="s_com_nineclient_model_WccPlatformUser_appId" object="${wccplatformuser}" z="g6nk7UQMOYtV4uJcZ2NZnON04bQ="/>
+        <field:display field="appSecret" id="s_com_nineclient_model_WccPlatformUser_appSecret" object="${wccplatformuser}" z="fYDZNzlM6bNDWdxoI5f47uwbxb0="/>
+        <field:display field="password" id="s_com_nineclient_model_WccPlatformUser_password" object="${wccplatformuser}" z="QgGxDESQAZKxOd/4RnfqT1ADwFw="/>
+        <field:display field="nickname" id="s_com_nineclient_model_WccPlatformUser_nickname" object="${wccplatformuser}" z="Bd/W3nFKAQFtE9xF5ywZcGh3MAQ="/>
+        <field:display field="headImage" id="s_com_nineclient_model_WccPlatformUser_headImage" object="${wccplatformuser}" z="pE/AKnMhIAA5a7gfaYbNQe24Ktg="/>
+    </page:show>
+</div>

@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <style>@IMPORT url("/ump/styles/selectTree.css");</style>
+	<SCRIPT type="text/javascript" src="/ump/js/selectTree.js">/*selectTree*/</SCRIPT>
+   	<style>
+	th {white-space: nowrap;}
+	td {white-space: nowrap;} 
+	input,select{width: 135px;height: 28px;background-color: #fff;border: 1px solid #e4e4e4;}
+	input[type="checkbox"]{width: 14px;height: 14px;}
+	input[type="radio"]{width: 14px;height: 14px;}
+	.k_width tr th:first-child, .k_width tr td:first-child {width: 50px;text-align: center;}
+	</style>
+   <script type="text/javascript">
+	<![CDATA[
+	$(document).ready(function() {
+	    loadTree('/ump/wccplatformusers/tree');
+	});		
+    function checkedAll(){
+		if(document.getElementById("checkedAll").checked){
+			var arr = document.getElementsByName("checkBoxName");
+			for(var j=0;j<arr.length;j++){
+				arr[j].checked=true;
+			}
+		}else{
+			var arr = document.getElementsByName("checkBoxName");
+			for(var j=0;j<arr.length;j++){
+				arr[j].checked=false;
+			}
+		}
+	}
+    
+    //删除
+    function deleteForm(commentId){
+    	var values = new Array();
+   	    var valuestr="";
+    	var arr = document.getElementsByName("checkBoxName");
+ 		for(var j = 0;j<arr.length;j++){
+ 			if(arr[j].checked){
+ 				values.push(arr[j].value);
+ 			}
+ 		}
+ 		valuestr=values.join(",");
+		if(commentId == 0){
+			if(valuestr==""||valuestr.length<1){
+	 			alert("请选择需要删除的内容！");
+	 			return false;
+	 		}
+			window.location.href="/ump/wcccontents/deleteCommentByIds?valuestr="+valuestr+"&page="+1+"&size="+10;
+		}else{
+			if(confirm("确定要删除吗？")){
+				window.location.href="/ump/wcccontents/deleteCommentById?commentId="+commentId+"&page="+1+"&size="+10;
+			}
+		}
+		
+    }
+    
+    Date.prototype.Format = function(fmt) { //author: meizz   
+		var o = {
+			"M+" : this.getMonth() + 1, //月份   
+			"d+" : this.getDate(), //日   
+			"h+" : this.getHours(), //小时   
+			"m+" : this.getMinutes(), //分   
+			"s+" : this.getSeconds(), //秒   
+			"q+" : Math.floor((this.getMonth() + 3) / 3), //季度   
+			"S" : this.getMilliseconds()
+		//毫秒   
+		};
+		if (/(y+)/.test(fmt))
+			fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "")
+					.substr(4 - RegExp.$1.length));
+		for ( var k in o)
+			if (new RegExp("(" + k + ")").test(fmt))
+				fmt = fmt.replace(RegExp.$1,
+						(RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k])
+								.substr(("" + o[k]).length)));
+		return fmt;
+	}
+	function formatData(time) {
+		var date = new Date(time);
+		var str = date.Format("yyyy-MM-dd hh:mm:ss");
+		return str;
+	}
+    
+    
+    //查询分页
+    function ToListByAjax(page){
+    	var param={};
+    	if(page==undefined){
+			page=1;
+		}
+    	param.page=page;
+		param.size=10;
+		
+		var SelIds = $("#SelIds").val();
+    	var title = $("#titleStr").val();
+    	
+    	if(SelIds != ""){
+			param.platId=SelIds;
+		}
+    	if(title!=undefined&&title!=null&&$.trim(title)!=""){
+			param.title=title;
+		}
+    	
+    	var url = "/ump/wcccomments/findListByFiled";
+    	$.ajax({
+			url : url,
+			async : false,
+			dataType : "text",
+			type : "POST",
+			data :param,
+			error : function(msg) {
+			},
+			success : function(data) {
+				$("#table1").hide();
+				$("#table11").hide();
+				$("#table2").show();
+				$("#table22").show();
+				createData_Gride(data, "");
+			}
+		});
+    }
+    
+    function createData_Gride(data) {
+		var model = eval("(" + data + ")");
+		var list = eval(model.dataJson);
+		var table = "";
+		for (var i = 0; i < list.length; i++) {
+			table += "<tr>";
+			table += "<td>";
+				table += "<input type='checkBox' name='checkBoxName' value='"+list[i].id+"'/>";
+			table += "</td>";
+			table += "<td>";
+			table += list[i].platFormName;
+			table += "</td>";
+			table += "<td>";
+			table += "<img src='"+list[i].wccFriend.headImg+"'width='18px' height='18px'/>";
+			table += "</td>";
+			table += "<td>";
+			table += list[i].wccFriend.nickName;
+			table += "</td>";
+			table += "<td>";
+			table += formatData(list[i].createTime);
+			table += "</td>";
+			table += "<td>";
+			table += list[i].contentTitle;
+			table += "</td>";
+			table += "<td>";
+			table += list[i].content;
+			table += "<td>";
+			table += '<a href="javascript:deleteForm('+list[i].id+')" alt="删除 " title="删除 "style="width: 80px;" > <img alt="删除 " class="image" src="/ump/resources/images/delete.png" title="删除 "/></a> '
+			table += "</td>";
+			table += "</tr>";
+		}
+		var foot = Page_sku(model);
+		$("#dataBoday").html(table);
+		if (model.totalCount > 0) {
+			$("#dataFoot").html(foot);
+		} else {
+			$("#dataFoot").html("<tr><td colspan='5'>无数据</td></tr>");
+		}
+
+	}
+    
+    function Page_sku(model) {
+		var turnPage = '';
+		if (model.totalCount > 0) {
+			turnPage += '	<tr>';
+			turnPage += '	<td colspan="5">';
+
+			if (model.pageNo > 1) {
+				turnPage += ' <a class="default" href="#" onclick="ToListByAjax('+ 1 +')" style="cursor: hand; cursor: pointer;"><img alt="首页" src="/ump/resources/images/resultset_first.png" title="首页"/></a>';
+				turnPage += ' <a class="default" href="#" onclick="ToListByAjax('
+						+ (model.pageNo - 1) + ')"><img alt="上一页" src="/ump/resources/images/resultset_previous.png" title="上一页"/></a>&nbsp;';
+			}
+
+			turnPage += '<span style="color: blue;height: 22px;line-height: 22px;">'+ model.pageNo+'</span> / <span style="color: blue;">'+model.totalPage+'</span>&nbsp;&nbsp;';
+			turnPage +='<input type="text" value="" style="width: 30px;height:22px" id="pageStr2"/><a  style="width: 28px;height:22px;background-color:#069dd5;color: white;display:inline-block;font-family:Arial;font-size: 10px;line-height: 22px;text-align:center;cursor: pointer;" onclick="goPage2('+model.totalPage+');">GO</a>&nbsp;&nbsp;'
+			if (model.pageNo != model.totalPage) {
+				turnPage += '<a class="default" href="#" onclick="ToListByAjax('
+						+ (model.pageNo + 1)
+						+ ')" style="cursor: hand; cursor: pointer;"><img alt="下一页" src="/ump/resources/images/resultset_next.png" title="下一页"/></a>';
+				turnPage += ' <a class="default" href="#" onclick="ToListByAjax('+ model.totalPage +')" style="cursor: hand; cursor: pointer;"><img alt="末页" src="/ump/resources/images/resultset_last.png" title="末页"/></a>&nbsp;';
+			}
+
+			turnPage += '&nbsp;每页<span style="color:blue">10</span>条</td>';
+			turnPage += '</tr>';
+			return turnPage;
+		}
+	}
+    
+    function goUpdate(id){
+    	window.location.href = '/ump/wcccontents/'+id+'?form';
+    }
+    
+    function goPage(page,contentId){
+    	var pageStr = $("#pageStr").val();
+    	if($.trim(pageStr) == ""){
+    		alert("请输入需要跳转的页数！");
+    		return false;
+    	}
+    	if(isNaN(pageStr)){
+    		alert("格式错误，请输入数字！");
+    		return false;
+    	}
+    	if(pageStr > page){
+    		alert("你输入的页数大于最大页数");
+    		return false;
+    	}
+    	if(pageStr <= 0){
+    		alert("你输入的页数不符合要求");
+    		return false;
+    	}
+		window.location.href="/ump/wcccontents/showContentByContentId?contentId="+contentId+"&page="+pageStr+"&size="+10;
+    }
+    
+    function goPage2(page){
+    	var pageStr = $("#pageStr2").val();
+    	if($.trim(pageStr) == ""){
+    		alert("请输入需要跳转的页数！");
+    		return false;
+    	}
+    	if(isNaN(pageStr)){
+    		alert("格式错误，请输入数字！");
+    		return false;
+    	}
+    	if(pageStr > page){
+    		alert("你输入的页数大于最大页数");
+    		return false;
+    	}
+    	if(pageStr <= 0){
+    		alert("你输入的页数不符合要求");
+    		return false;
+    	}
+    	ToListByAjax(pageStr);
+    }
+    
+    function clearAll(){
+		$('#titleStr').val('');
+		$("#SelVals").attr("value", "");
+		$("#SelIds").attr("value", "");
+    }
+	]]>
+    </script>
+    
+    <div class="grid">
+    	<FORM action="/ump/wcccontents/findListByFiled" method="post">
+    	<div class="row">
+    		<div class="span4">
+    			 <label>公众平台: </label>
+	              <div class="input-control text" style="width: 20%">
+							<input id="SelVals" type="text" readonly="readonly"
+								value="" style="width: 135px;" onclick="selectShowMenu();" /> 
+								
+							<input id="SelIds" name="relatedIssues" type="hidden" value="" />
+							
+							<div id="selectMenuContent" class="menuContent"
+								style="display: none; position: absolute; z-index: 99;">
+								<ul id="selectTreeDemo" class="ztree"
+									style="margin-left: 0px; margin-top: 0; width: 270px; height: 300px;"></ul>
+							</div>
+				</div>
+    		</div>
+    		<div class="span4">
+    			<label>标题: </label>
+	            <input type="text" name="title" value="" id="titleStr"/>
+    		</div>
+    	</div>
+        <div class="row">
+	    	<div class="span6" style="margin-left: 20px;"> 
+					<input type="button" value="查 询" class="info" onclick="ToListByAjax();" style="font-family:'微软雅黑'"/>
+					<input class="warning" type="button" value="重 置" onclick="clearAll();" style="font-family:'微软雅黑'"></input>
+			</div>
+	    </div>       
+      </FORM>
+  </div>
+  <div class="buttondiv" style="height: 46px; background: #edf1f9; border: 1px solid #e4e4e4; border-bottom: none;font-size: 15px;">
+	<a href="javascript:void(0);" onclick="deleteForm(0)"><img
+	 src="/ump/resources/images/delete.png" width="14" height="14" /> 批量删除</a>
+  </div>
+  <div class="grid" id="table1" style="overflow:auto;border-right: 1px solid #e5e5e5;">
+  	<table class="table striped hovered k_width" style="overflow: scroll;width: 100%;">
+  			<THEAD>
+	  			<tr>
+		  			<th><input id="checkedAll" type="checkbox" style="box-sizing:content-box;" onclick="checkedAll(this);"/></th>
+		  			<th>公众平台</th>
+		  			<th>粉丝头像</th>
+		  			<th>粉丝名称</th>
+		  			<th>评论时间</th>
+		  			<th>标题</th>
+		  			<th>评论内容</th>
+		  			<th>操作</th>
+		  		</tr>
+	  		</THEAD>
+	  		<c:if test="${empty wccCommentList}">
+	  			<tr>
+	  				<td colspan="10">
+	  					暂无数据
+	  				</td>
+	  			</tr>
+	  		</c:if>
+  			<c:forEach items="${wccCommentList}" var="data">
+	  			<tr>
+	  				<td><input type="checkBox" name="checkBoxName" value="${data.id}"/></td>
+	  				<td>${data.platFormName}</td>
+	  				<td><img src="${data.wccFriend.headImg}" width="18px" height="18px"/></td>
+	  				<td>${data.wccFriend.nickName}</td>
+	  				<td><fmt:formatDate value="${data.createTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
+	  				<td>${data.contentTitle}</td>
+	  				<td>${data.content}</td>
+	  				<td>
+	  					<a href="javascript:void(0);" alt="删除 " title="删除 "
+									style="width: 80px;" onclick="deleteForm(${data.id});"> <img
+									alt="删除 " class="image" src="/ump/resources/images/delete.png"
+									title="删除 " /></a>
+	  				</td>
+	  			</tr>
+	  		</c:forEach>
+  	</table>
+  </div>
+  <div style="float: right;" id="table11">
+			<c:if test="${wccCommentList!= null and fn:length(wccCommentList) > 0}">
+				<tr>
+					<td colspan="4">
+					    <c:if test="${page>1 }">
+					    	<a class="default" href="/ump/wcccontents/showContentByContentId?contentId=${contentId}&amp;page=1&amp;size=10"
+								style="cursor: hand; cursor: pointer;">
+									<img alt="首页" src="/ump/resources/images/resultset_first.png" title="首页	"/>
+							</a>&#160;&#160;
+							<a class="default" href="/ump/wcccontents/showContentByContentId?contentId=${contentId}&amp;page=${page-1}&amp;size=10"
+								style="cursor: hand; cursor: pointer;">
+									<img alt="前一页" src="/ump/resources/images/resultset_previous.png" title="前一页"/>
+							</a>
+						</c:if>
+						&#160;&#160;<span style="color: blue;height: 22px;line-height: 22px;"> ${page} </span> / <span style="color: blue;">${maxPages}</span>&#160;&#160;
+						<input type="text" value="" style="width: 30px;height:22px" id="pageStr"/><a  style="width: 28px;height:22px;background-color:#069dd5;color: white;display:inline-block;font-family:Arial;font-size: 10px;line-height: 22px;text-align:center;cursor: pointer;" onclick="goPage(${maxPages},${contentId});">GO</a>&#160;&#160;
+						<c:if test="${page!=maxPages}">
+							<a class="default" href="/ump/wcccontents/showContentByContentId?contentId=${contentId}&amp;page=${page + 1}&amp;size=10" style="cursor: hand; cursor: pointer;">
+								<img alt="下一页" src="/ump/resources/images/resultset_next.png" title="下一页"/>
+							</a>&#160;&#160;
+							<a class="default" href="/ump/wcccontents/showContentByContentId?contentId=${contentId}&amp;page=${maxPages}&amp;size=10" style="cursor: hand; cursor: pointer;">
+								<img alt="末页" src="/ump/resources/images/resultset_last.png" title="末页"/>
+							</a>
+						</c:if>
+						&#160;&#160;
+						<span>每页 <span style="color: blue;">${size}</span> 条</span>
+					</td>
+				</tr>
+			</c:if>
+		</div>
+  
+   <div class="grid" id="table2" style="display: none;overflow:auto;border-right: 1px solid #e5e5e5;">
+  	<table class="table striped hovered k_width" style="width: 100%;overflow: scroll;">
+  			<THEAD>
+	  			<tr>
+		  			<th><input id="checkedAll" type="checkbox" style="box-sizing:content-box;" onclick="checkedAll(this);"/></th>
+		  			<th>公众平台</th>
+		  			<th>粉丝头像</th>
+		  			<th>粉丝名称</th>
+		  			<th>评论时间</th>
+		  			<th>内容标题</th>
+		  			<th>评论内容</th>
+		  			<th>操作</th>
+		  		</tr>
+	  		</THEAD>
+  		<TBODY id="dataBoday">
+			
+		</TBODY>
+  	</table>
+  </div>
+  <div style="float: right;display: none;" id="table22">
+		 	<div id="dataFoot"></div>
+ </div>
+</div>

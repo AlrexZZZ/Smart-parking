@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_VocGoods" object="${vocgoods}" path="/vocgoodses" z="kwxzWYT+X6LSWVXLe1SxYs/XhvM=">
+        <field:display field="name" id="s_com_nineclient_model_VocGoods_name" object="${vocgoods}" z="p6RmjcJsO8XTuNwQJAuWcgfugdI="/>
+        <field:display field="goodsId" id="s_com_nineclient_model_VocGoods_goodsId" object="${vocgoods}" z="tmZwSacFzF2OfWwkC/PIwVbZw5o="/>
+        <field:display field="url" id="s_com_nineclient_model_VocGoods_url" object="${vocgoods}" z="bhDidVa4J+7QfPfZZKmOLzDYSaE="/>
+        <field:display date="true" dateTimePattern="${vocGoods_createtime_date_format}" field="createTime" id="s_com_nineclient_model_VocGoods_createTime" object="${vocgoods}" z="cTCT7CYAZB6tz8Nnt7+zGUNpHUg="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_VocGoods_isDeleted" object="${vocgoods}" z="+4OaYc3pljMgZFa9QHUj6/1UiR0="/>
+        <field:display field="goodsNumber" id="s_com_nineclient_model_VocGoods_goodsNumber" object="${vocgoods}" z="yiXDJG/5nySHoyVeeEk5MGUFgQM="/>
+    </page:show>
+</div>

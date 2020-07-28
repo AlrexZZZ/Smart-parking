@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_VocBrand" object="${vocbrand}" path="/vocbrands" z="78fCKlFxMH92B27TbgsPzmKLX2s=">
+        <field:display field="brandName" id="s_com_nineclient_model_VocBrand_brandName" object="${vocbrand}" z="5cBWt0Wl4uUI0TAPX9Tl9Pwiceg="/>
+        <field:display field="remark" id="s_com_nineclient_model_VocBrand_remark" object="${vocbrand}" z="Vy/RqGwlE3jEoWFVPcv83O+vpS8="/>
+        <field:display field="isVisable" id="s_com_nineclient_model_VocBrand_isVisable" object="${vocbrand}" z="McA50lxAhlf8kMdfaMIAKbFlNE0="/>
+        <field:display date="true" dateTimePattern="${vocBrand_createtime_date_format}" field="createTime" id="s_com_nineclient_model_VocBrand_createTime" object="${vocbrand}" z="wKowgU/z85IKVL3DO0wZG0IPU0U="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_VocBrand_isDeleted" object="${vocbrand}" z="zh6J+qB6PdH2Ne5JdbALIb2NmkM="/>
+        <field:display field="sort" id="s_com_nineclient_model_VocBrand_sort" object="${vocbrand}" z="nZNrJ8ZM8LzqMdaHBWxM2Rze6ZY="/>
+        <field:display field="keyName" id="s_com_nineclient_model_VocBrand_keyName" object="${vocbrand}" z="REanYZYyqLhbCbGfbdwait6UhTI="/>
+        <field:display field="status" id="s_com_nineclient_model_VocBrand_status" object="${vocbrand}" z="H2tvNxfYhZ3/c1Rl6+71dFjBdKE="/>
+    </page:show>
+</div>

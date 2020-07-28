@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_UmpCompanyService" items="${umpcompanyservices}" z="H+ecMZ3mxXHRkTx0RxtHyPrG3CI=">
+        <table:table data="${umpcompanyservices}" id="l_com_nineclient_model_UmpCompanyService" path="/umpcompanyservices" z="rXGX+rPanftNfwx+APNvi+8wzYo=">
+            <table:column id="c_com_nineclient_model_UmpCompanyService_companyId" property="companyId" z="LDQeBB3LyochgXOG6EOuFj7JHR8="/>
+            <table:column id="c_com_nineclient_model_UmpCompanyService_productId" property="productId" z="EcHhif35GHKNj/YoxCEuBThTSMQ="/>
+            <table:column id="c_com_nineclient_model_UmpCompanyService_versionId" property="versionId" z="Dqpnq6rhp6RSgd6U/ZKDEgA18yw="/>
+            <table:column id="c_com_nineclient_model_UmpCompanyService_maxAccount" property="maxAccount" z="ItZYkJkj1BI55ArKzQ8G+s2vPmM="/>
+            <table:column date="true" dateTimePattern="${umpCompanyService_servicestarttime_date_format}" id="c_com_nineclient_model_UmpCompanyService_serviceStartTime" property="serviceStartTime" z="GiB3gIpbRoqlLkelGbP04kPvA6o="/>
+            <table:column date="true" dateTimePattern="${umpCompanyService_serviceendtime_date_format}" id="c_com_nineclient_model_UmpCompanyService_serviceEndTime" property="serviceEndTime" z="B9btA1sPo69OHILK9rMNLF+zFoQ="/>
+        </table:table>
+    </page:list>
+</div>

@@ -1,0 +1,702 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<SCRIPT type="text/javascript"
+		src="/ump/ui/jquery-validation/jquery.validate.js">
+		//--
+	</SCRIPT>
+	<SCRIPT type="text/javascript" src="/ump/js/nineclient/vocreport/nineclient.js"><!--ss--></SCRIPT>
+	<style>
+		@IMPORT url("/ump/styles/url.css");
+		@IMPORT url("/ump/styles/validation.css");
+	</style>
+	
+	<SCRIPT type="text/javascript">
+		<![CDATA[
+		$(document).ready(function() {
+			$("#addvocAccountForm").validate({
+				rules : {
+					account:{required:true,remote:{
+						 url:"/ump/commentvalidata/validataUniqueId",
+						 type: "post", 
+						 data: {
+							field:'account',
+							value:function(){
+								return $("#add_account").val();
+							},
+							table:"VocAccount",
+							isCompany:true,
+							companyField:"companyId"
+						 }
+						}},
+					password:{required:true},
+					umpChannelId:{required:true}
+					//secpassword:{required:true,equalTo:"#add_password"}
+				},
+				messages : {
+					account :{
+						required:"账号名称不能为空",
+						remote:"账号不能重复"
+					},
+					umpChannelId:{required:"平台名称不能为空"},
+					password:{required:"密码不能为空"},
+					//secpassword:{required:"密码不能为空",equalTo: "两次输入密码不一致不一致"},
+					clientSecret:"clientSecret不能为空"
+				},
+				errorElement:"em",
+				focusCleanup:true,
+				errorClass:"invalid"
+			});
+			query(1);
+		});
+		function queryBtn(){
+			query();
+			closePage('search_query');
+		}
+		function approveAccountWindow(accountId,channelId) {
+			$("#fade").toggle();
+			$("#approveId").val(accountId);
+			if(channelId==1){
+				var url = "/ump/vocappkeys/selectData";
+				var param = {};
+				dataAjax(url, param, null, null, createSelect, 'appKey');
+				dilogCenter("approve_add");
+				$("#approve_add").toggle();
+			}
+			if(channelId==2){
+				dilogCenter("jd_approve_add");
+				$("#jd_approve_add").toggle();
+			}
+		}
+		function approveJdAccount(){
+			var  url = "/ump/vocaccounts/approveJdAccount";
+			var cookie = $("#approveCookie").val();
+			var accountId = $("#approveId").val();
+			dataAjax(url, {cookie:cookie,accountId:accountId}, Notify, null, null, null, null);
+			query();
+			$("#fade").toggle();
+			$("#jd_approve_add").toggle();
+			
+		}
+		function approveAccount() {
+			var url = "/ump/vocaccounts/approveAccount";
+			var appkeyId=$("#appKey").val();
+			if(appkeyId==-1||appkeyId==''){
+				Notify("请选择应用");
+				return;
+			}
+			//dataAjax(url, param, Notify, null, null, null);
+			url += "?accountId=" + $("#approveId").val() + "&appKeyId="
+					+ appkeyId;
+			window.open(url)
+		}
+		function createDataGride(data) {
+			var model = eval("(" + data + ")");
+			var list = eval(model.dataJson);
+			//添加表头
+			var th = "";
+			var table = "";
+			for (var i = 0; i < list.length; i++) {
+				table += "<tr>";
+				table += "<td>";
+				table += list[i].umpChannel.channelName;
+				table += "</td>";
+				table += "<td>";
+				var shopName=list[i].vocShop == null ? "" : list[i].vocShop.name;
+				table += shopName;
+				table += "</td>";
+				table += "<td>";
+				table += list[i].account;
+				table += "</td>";
+				table += "<td>";
+				//京东商城
+				if( list[i].umpChannel.id==2){
+					table += "账号认证<a onclick='approveAccountWindow(" + list[i].id+","+list[i].umpChannel.id
+					+ ");' style='color:#60A917;cursor: pointer;'>"
+					+ (list[i].isApprove == true ? "(已认证)" : "(未认证)")
+					+ "</a>";
+					table += "</td>";
+				}
+				if( list[i].umpChannel.id==1){
+					table += "账号认证<a onclick='approveAccountWindow(" + list[i].id+","+list[i].umpChannel.id
+					+ ");' style='color:#60A917;cursor: pointer;'>"
+					+ (list[i].isApprove == true ? "(已认证)" : "(未认证)")
+					+ "</a>";
+					table += "</td>";
+				}
+				
+				
+				/* table += "<td>";
+				table += formatData(list[i].createTime);
+				table += "</td>"; */
+				table += "<td>";
+				if (list[i].isVisable) {
+					table += "<img class='switchClass_" + list[i].id
+							+ "' onclick='switchImg(this,false," + list[i].id
+							+ ")' src='/ump/images/ON.png' />";
+					table += "<img class='switchClass_"
+							+ list[i].id
+							+ "' onclick='switchImg(this,true,"
+							+ list[i].id
+							+ ")' src='/ump/images/OFF.png' style='display:none;'/>";
+				} else {
+					table += "<img class='switchClass_"
+							+ list[i].id
+							+ "' onclick='switchImg(this,false,"
+							+ list[i].id
+							+ ")' src='/ump/images/ON.png' style='display:none;'/>";
+					table += "<img class='switchClass_" + list[i].id
+							+ "' onclick='switchImg(this,true," + list[i].id
+							+ ")' src='/ump/images/OFF.png' />";
+				}
+				table += "</td>";
+				table += "<td>";
+				table += '<a style="cursor: pointer;" onclick="javascript:editAccountDilog('
+						+ list[i].id+",'"+list[i].account+"','"+list[i].password+"','"+list[i].umpChannel.channelName+"','"+shopName+"'"
+						+ ')" alt="编辑" title="编辑 "><img alt="编辑" class="image" src="/ump/images/update.png" title="编辑"></a>';
+				table += '<a style="cursor: pointer;" onclick="javascript:deleteAccount('
+						+ list[i].id
+						+ ')" alt="删除" title="删除 "><img alt="删除" class="image" src="/ump/images/delete.png" title="删除"></a>';
+			    //table += '<a href="javascript:updateCookieWindow('
+				//			+ list[i].id
+				//			+ ')" alt="更新cookie" title="更新cookie"><img alt="更新cookie" class="image" src="/ump/images/update.png" title="更新cookie"></a>';
+				table += "</td>";
+				table += "</tr>";
+			}
+			$("#account_tbody").html(table);
+			//if (model.totalCount > 0) {
+				var foot = Page(model, 'query',7);
+				$("#acount_tfoot").html(foot);
+			//} else {
+			//	$("#acount_tfoot").html("<tr><td  colspan='7'>无匹配数据</td></tr>");
+			//}
+
+		}
+		//编辑弹出
+		function editAccountDilog(id,accountName,password,channelName,shopName){
+				$("#edit_id").val(id);
+				var url="/ump/vocaccounts/queryVocAccountById";
+				var param={id:id};
+				var vocAccount=ajaxJsonReturn(url, param);
+				var account=eval("("+vocAccount+")");
+				$("#edit_account").val(accountName);
+				$("#edit_password").val(password);
+				$("#edit_umpchannel").val(account.umpChannel.id);
+				selectChannel(account.umpChannel.id,'edit_vocshop');
+				var shop=account.vocShop==null?"":account.vocShop;
+				if(shop!=null){
+					$("#edit_vocshop").val(shop.id);
+				}
+				else{
+					//$("#edit_vocshop").val();
+				}
+				closePage('search_edit');
+				$("#editVocAccountForm").validate({
+					rules : {
+						account:{required:true,remote:{
+							 url:"/ump/commentvalidata/validataUniqueId",
+							 type: "post", 
+							 data: {
+								field:'account',
+								value:function(){
+									return $("#edit_account").val();
+								},
+								table:"VocAccount",
+								id:function(){
+									return $("#edit_id").val();
+								},
+								isCompany:true,
+								companyField:"companyId"
+							 }
+							}},
+						password:{required:true},
+						umpChannelId:{required:true}
+					},
+					messages : {
+						account :{
+							required:"账号名称不能为空",
+							remote:"账号名称重复"
+						},
+						password:{required:"密码不能为空"},
+						umpChannelId:{required:"渠道不能为空"}
+					},
+					errorElement:"em",
+					focusCleanup:true,
+					errorClass:"invalid"
+				});
+			
+		}
+		function updateAccount(){
+			if(!$("#editVocAccountForm").valid()){
+				return;
+			}
+			var url = "/ump/vocaccounts/update";
+			var param;
+			param=$("#editVocAccountForm").serialize();
+			dataAjax(url, param, Notify, null, query);
+			closePage('search_edit');
+			
+		}
+		function deleteAccount(id) {
+			if (!confirm("确定删除?")) {
+				return;
+			}
+			var url = "/ump/vocaccounts/delete";
+			var param = {};
+			param.id = id;
+			dataAjax(url, param, Notify, query, null);
+		}
+		function switchImg(obj, vl, id) {
+			$.ajax({
+				url : "/ump/vocaccounts/updateVisable",
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data : {
+					id : id,
+					isVisable : vl
+				},
+				error : function(msg) {
+				},
+				success : function(data) {
+					$(".switchClass_" + id).toggle();
+				}
+			});
+
+		}
+		
+		function query(pageNo) {
+			var page;
+			if (pageNo == undefined) {
+				page = 1;
+			} else {
+				page = pageNo;
+			}
+			var url = "/ump/vocaccounts/list";
+			var param = {};
+			param.page = page;
+			param.size = 10;
+			var channelId = $("#query_umpchannel").val();
+			if (channelId && channelId != -1) {
+				param.channelId = channelId;
+			}
+			var vocShopId = $("#query_vocshop").val();
+			if (vocShopId && vocShopId != -1) {
+				param.vocShopId = vocShopId;
+			}
+			var isVisable = $("#query_isVisable").val();
+			if (isVisable && isVisable != -1) {
+				param.isVisable = isVisable == 0 ? false : true;
+			}
+			dataAjax(url, param, null, null, createDataGride);
+		}
+		function selectChannel(channelId, effectId) {
+			if(channelId==''||channelId==-1){
+				$("#"+effectId).html("<option value=''>请选择</option>");
+				return;
+			}
+			var url = "/ump/vocshops/queryVocShops";
+			var param = {};
+			param.umpChannelId = channelId;
+			dataAjax(url, param, null, null, createSelect, effectId);
+
+		}
+		
+		function closePage(id) {
+			dilogCenter(id);
+			$("#" + id).toggle();
+			$("#fade").toggle();
+		}
+		function switchOpen(obj, vl) {
+			if (vl == 1) {
+				$("#add_isVisable").val(false);
+			} else {
+				$("#add_isVisable").val(true);
+			}
+			$(".switchClass").toggle();
+		}
+		function addAccount() {
+			if(!$("#addvocAccountForm").valid()){
+				return;
+			}
+			var url = "/ump/vocaccounts/create";
+			var flag = true;
+			var param = {};
+			param = $("#addvocAccountForm").serialize();
+			dataAjax(url, param, Notify, query, null);
+			closePage('search_add');
+		}
+		function updateCookieWindow(id){
+			$("#update_cookie").toggle();
+			$("#fade").toggle();
+			var obj;
+			$.ajax({
+				url : "/ump/vocaccounts/queryVocAccountById",
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data : {id:id},
+				error : function(msg) {
+				},
+				success : function(data) {
+					obj=eval("("+data+")");
+				}
+			});
+			if(obj.isValid==true){
+				$("#cookieStatu").val(1);
+			}else if(obj.isValid==false){
+				$("#cookieStatu").val(0);
+			}
+			$("#cookie_accountId").val(id);
+			$("#cookie_account").val(obj.account);
+			$("#cookie").val(obj.cookie);
+		}
+		function updateCookie(){
+			var url ="/ump/vocaccounts/updateCookie";
+			var id = $("#cookie_accountId").val();
+			var cookie= $("#cookie").val();
+			var isValid= $("#cookieStatu").val();
+			var param={};
+			param.id=id;
+			param.cookie=cookie;
+			param.isValid=isValid==1?true:false;
+			dataAjax(url, param, Notify, null, null);
+			closePage('update_cookie');
+		}
+		]]>
+	</SCRIPT>
+	<!-- 更新session -->
+	<DIV style="display: none; width: 400px;" class="search"
+		id="update_cookie">
+		<div class="close">
+			<img src="/ump/images/close.png" width="24" height="24"
+				onclick="javascript:closePage('update_cookie');"
+				style="cursor: pointer;" />
+		</div>
+		<DIV class="mtitle">更新COOKIE</DIV>
+		<DIV class="grid">
+			<INPUT type="hidden" value="" id="cookie_accountId" />
+			<DIV class="row">
+				<DIV class="span2">状态:</DIV>
+				<DIV class="span10">
+					<SELECT id="cookieStatu" class="publicSize">
+						<OPTION value="0">失效</OPTION>
+						<OPTION value="1">有效</OPTION>
+					</SELECT>
+				</DIV>
+			</DIV>
+			<DIV class="row">
+				<DIV class="span2">账号:</DIV>
+				<DIV class="span10">
+					<INPUT id="cookie_account" class="publicSize" type="text" disabled="disabled" value=""/>
+				</DIV>
+			</DIV>
+			<DIV class="row">
+				<DIV class="span gridTitle">COOKIE：</DIV>
+				<DIV class="span gridInputWAuto">
+   							 <![CDATA[<textarea id="cookie" class="gridTextArea"></textarea>]]>
+				</DIV>
+			</DIV>
+			<div class="btnCenter">
+					<input type="button" class="info" value="保存"
+						onclick="updateCookie();"></input>
+					<button class="warning" type="button" style="margin-left: 30px;"
+						onclick="closePage('update_cookie');">取消</button>
+			</div>
+		</DIV>
+	</DIV>
+	
+	<!--tmall 认证弹出 -->
+	<DIV style="display: none; width: 400px;" class="search"
+		id="approve_add">
+		<div class="close">
+			<img src="/ump/images/close.png" width="24" height="24"
+				onclick="javascript:closePage('approve_add');query();"
+				style="cursor: pointer;" />
+		</div>
+		<DIV class="mtitle">认证</DIV>
+		<DIV class="grid">
+			<INPUT type="hidden" value="" id="approveId" />
+			<DIV class="row">
+				<DIV class="span gridTitle">选择应用：</DIV>
+				<DIV class="span gridInputWAuto">
+					<SELECT id="appKey" class="publicSize">
+						<OPTION value="-1">请选择</OPTION>
+					</SELECT>
+				</DIV>
+			</DIV>
+		</DIV>
+		<div class="btnCenter">
+					<input type="button" class="info" value="认证"
+						onclick="approveAccount();"></input>
+					<button class="warning" type="button"
+						onclick="closePage('approve_add');query();">取消</button>
+			</div>
+	</DIV>
+<!--jd 认证弹出 -->
+	<DIV style="display: none; width: 400px;" class="search"
+		id="jd_approve_add">
+		<div class="close">
+			<img src="/ump/images/close.png" width="24" height="24"
+				onclick="javascript:closePage('jd_approve_add');"
+				style="cursor: pointer;" />
+		</div>
+		<DIV class="mtitle">认证</DIV>
+		<DIV class="grid">
+			<INPUT type="hidden" value="" id="approveId" />
+			<DIV class="row">
+				<label>请输入COOKIE：</label>
+				<DIV class="span">
+					<TEXTAREA id="approveCookie" name="cookie" class="gridTextAreaSmall"><!--  --></TEXTAREA>
+				</DIV>
+			</DIV>
+		</DIV>
+		<div class="btnCenter">
+					<input type="button" class="info" value="认证"
+						onclick="approveJdAccount();"></input>
+					<button class="warning" type="button"
+						onclick="closePage('jd_approve_add');">取消</button>
+			</div>
+	</DIV>
+
+	<!-- 添加弹出 -->
+	<DIV style="display: none; width: 400px;" class="search"
+		id="search_add">
+		<div class="close">
+			<img src="/ump/images/close.png" width="24" height="24"
+				onclick="javascript:closePage('search_add');"
+				style="cursor: pointer;" />
+		</div>
+		<DIV class="mtitle">
+			<img src="/ump/images/add.png" width="14" height="14"
+				style="cursor: pointer;" />添加
+		</DIV>
+		<form id="addvocAccountForm" action="">
+			<div class="grid">
+				<div class="row">
+					<!-- <div class="span1">
+									平台名称:</div>
+								<div class="span2">
+									<SELECT class="addClass" name="umpChannelId"
+										id="add_umpChannelId">
+										<OPTION selected="selected" value="-1">请选择</OPTION>
+										<c:forEach items="${umpchannels}" var="item">
+										<OPTION selected="selected" value="${item.id}">${item.channelName}</OPTION>
+										</c:forEach>
+									</SELECT><SPAN style="color: red;display: none;">此项必填</SPAN>
+								</div> -->
+					<div class="span gridTitle">账号名称：</div>
+					<div class="span gridInputWAuto">
+						<INPUT class="addClass publicSize" name="account" id="add_account" /><span style="color: red;">*</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span gridTitle">密码：</div>
+					<div class="span gridInputWAuto">
+						<input class="addClass publicSize" id="add_password" type="password"
+							name="password" /><span style="color: red;">*</span>
+					</div>
+				</div>
+				<!--  <div class="row">
+					<div class="span2">再次输入密码:</div>
+					<div class="span10">
+						<input id="add_second_password" name="secpassword" class="publicSize"
+							type="password" />
+					</div>
+				</div>-->
+				<div class="row">
+					<div class="span gridTitle">平台名称：</div>
+					<div class="span gridInputWAuto">
+						<SELECT class="addClass publicSize" id="add_umpchannel" name="umpChannelId"
+							onchange="selectChannel(this.value,'add_vocshop');">
+							<OPTION value="">请选择</OPTION>
+							<c:forEach items="${umpchannels}" var="item">
+								<OPTION value="${item.id}">${item.channelName}</OPTION>
+							</c:forEach>
+						</SELECT><span style="color: red;">*</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span gridTitle">店铺名称：</div>
+					<div class="span gridInputWAuto">
+						<SELECT id="add_vocshop" class="publicSize" name="vocShopId">
+							<OPTION value="">请选择</OPTION>
+						</SELECT>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span gridTitle">启用状态：</div>
+					<div class="span gridInputWAuto">
+						<INPUT name="isVisable" id="add_isVisable" type="hidden"
+							value="true" /> <img class="switchClass"
+							onclick="switchOpen(this,1)" src="/ump/images/ON.png" /> <img
+							class="switchClass" onclick="switchOpen(this,0)"
+							style="display: none;" src="/ump/images/OFF.png" />
+					</div>
+				</div>
+				<div class="btnCenter">
+						<input type="button" class="info" value="确定"
+							onclick="addAccount();"></input>
+						<button class="warning" type="button" style="margin-left: 30px;"
+							onclick="closePage('search_add');">取消</button>
+				</div>
+			</div>
+		</form>
+	</DIV>
+	
+	<!-- 编辑弹出 -->
+	<DIV style="display: none; width: 400px;" class="search"
+		id="search_edit">
+		<div class="close">
+			<img src="/ump/images/close.png" width="24" height="24"
+				onclick="javascript:closePage('search_edit');"
+				style="cursor: pointer;" />
+		</div>
+		<DIV class="mtitle">
+			<img src="/ump/images/editor.png" width="14" height="14"
+				style="cursor: pointer;" />编辑
+		</DIV>
+		<form id="editVocAccountForm" action="">
+		<INPUT type="hidden" id="edit_id" name="id" value=""/>
+			<div class="grid">
+				<div class="row">
+					<!-- <div class="span1">
+									平台名称:</div>
+								<div class="span2">
+									<SELECT class="addClass" name="umpChannelId"
+										id="add_umpChannelId">
+										<OPTION selected="selected" value="-1">请选择</OPTION>
+										<c:forEach items="${umpchannels}" var="item">
+										<OPTION selected="selected" value="${item.id}">${item.channelName}</OPTION>
+										</c:forEach>
+									</SELECT><SPAN style="color: red;display: none;">此项必填</SPAN>
+								</div> -->
+					<div class="span gridTitle">账号名称：</div>
+					<div class="span gridInputWAuto">
+						<INPUT class="addClass publicSize" name="account" id="edit_account" /><span style="color: red;">*</span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span gridTitle">密码：</div>
+					<div class="span gridInputWAuto">
+						<input class="addClass publicSize" id="edit_password" type="password"
+							name="password" /><span style="color: red;">*</span>
+					</div>
+				</div>
+				<!-- <div class="row">
+					<div class="span2">再次输入密码:</div>
+					<div class="span10">
+						<input id="edit_second_password" name="secpassword" class="publicSize"
+							type="password" />
+					</div>
+				</div> -->
+				<div class="row">
+					<div class="span gridTitle">平台名称：</div>
+					<div class="span gridInputWAuto">
+						<SELECT class="addClass publicSize" id="edit_umpchannel" name="umpChannelId"
+							onchange="selectChannel(this.value,'edit_vocshop');">
+							<OPTION value="">请选择</OPTION>
+							<c:forEach items="${umpchannels}" var="item">
+								<OPTION value="${item.id}">${item.channelName}</OPTION>
+							</c:forEach>
+						</SELECT><span style="color: red;">*</span>
+					</div>
+				</div>
+				<div class="btnCenter">
+					<div class="span gridTitle">店铺名称：</div>
+					<div class="span gridInputWAuto">
+						<SELECT id="edit_vocshop" class="publicSize" name="vocShopId">
+							<OPTION value="">请选择</OPTION>
+						</SELECT>
+					</div>
+				</div>
+			</div>
+		</form>
+		<div class="btnCenter">
+						<input type="button" class="info" value="确定"
+							onclick="updateAccount();"></input>
+						<button class="warning" type="button"
+							onclick="closePage('search_eidt');">取消</button>
+				</div>
+	</DIV>
+	<!-- 查询条件 -->
+	<DIV style="display: none; width: 600px;" class="search"
+		id="search_query">
+		<div class="close">
+			<img src="/ump/images/close.png" width="24" height="24"
+				onclick="javascript:closePage('search_query');"
+				style="cursor: pointer;" />
+		</div>
+		<DIV class="mtitle">
+			<img src="/ump/images/search.png" width="14" height="14"
+				style="cursor: pointer;" />查询
+		</DIV>
+		<FORM id="query_account_form">
+		<DIV class="grid">
+			<div class="row">
+				<div class="span gridTitle">平台名称：</div>
+				<div class="span gridInputWAuto">
+					<SELECT id="query_umpchannel" name="umpChannelId"
+						class="publicSize"  onchange="selectChannel(this.value,'query_vocshop');">
+						<OPTION value="-1">请选择</OPTION>
+						<c:forEach items="${umpchannels}" var="item">
+							<OPTION value="${item.id}">${item.channelName}</OPTION>
+						</c:forEach>
+					</SELECT>
+				</div>
+				<div class="span gridTitle">店铺名称：</div>
+				<div class="span gridInputWAuto">
+					<SELECT id="query_vocshop" class="publicSize" name="vocShopId">
+						<OPTION value="-1">请选择</OPTION>
+					</SELECT>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span gridTitle">启用状态：</div>
+				<div class="span gridInputWAuto">
+					<SELECT id="query_isVisable" class="publicSize" name="isVisable">
+						<OPTION value="-1" selected="selected">请选择</OPTION>
+						<OPTION value="1">启用</OPTION>
+						<OPTION value="0">禁用</OPTION>
+					</SELECT>
+				</div>
+			</div>
+		</DIV>
+		</FORM>
+		<div class="btnCenter">
+					<button class="info" onclick="queryBtn();">查询</button>
+					<button class="warning" onclick="$('#query_account_form')[0].reset();">重置</button>
+			</div>
+	</DIV>
+	<div>
+		<div class="buttondiv" style="height: 46px; background: #edf1f9; border: 1px solid #e4e4e4; border-bottom: none;">
+						<a style="cursor: pointer;" onclick="closePage('search_add');">
+						<i class="on-left"><img src="/ump/images/add.png" width="14" height="14" /></i>
+						添加</a>&#160;&#160;
+						<a style="cursor: pointer;" onclick="closePage('search_query');">
+							<i class="on-left"><IMG src="/ump/images/search.png"  width="14" height="14" /></i>查询
+						</a>&#160;&#160;
+					</div>
+		<TABLE class="table striped hovered">
+			<THEAD>
+				<tr>
+					<th>平台名称</th>
+					<th>店铺名称</th>
+					<th>账号名称</th>
+					<th>认证信息</th>
+					<th>启用状态</th>
+					<th>操作</th>
+				</tr>
+			</THEAD>
+			<TBODY id="account_tbody">
+
+			</TBODY>
+		</TABLE>
+		<div align="right" style="text-align: right;" id="acount_tfoot"><!--  --></div>
+	</div>
+	<div id="fade" class="black_overlay" />
+</div>

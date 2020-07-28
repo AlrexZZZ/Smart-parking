@@ -1,0 +1,142 @@
+entity jpa --class ~.model.UmpDictionary
+field boolean --fieldName isDeleted
+field string --fieldName typeCode --sizeMax 200
+field string --fieldName typeName --sizeMax 200
+field string --fieldName typeTitle --sizeMax 200
+field string --fieldName typeTitleCh --sizeMax 200
+field date --fieldName insertTime --type java.util.Date --dateFormat MEDIUM 
+
+entity jpa --class ~.model.WccTemplate
+enum type --class ~.constant.WccTemplateType
+enum constant --name CLASSIFY
+enum constant --name TEMPLATE
+field enum --fieldName type --type ~.constant.WccTemplateType --class ~.model.WccTemplate
+field string --fieldName name --sizeMax 300
+field string --fieldName parentId --sizeMax 32
+field string --fieldName title --sizeMax 300
+field string --fieldName content --sizeMax 4000
+field number --fieldName useCount --type int
+field string --fieldName sort --sizeMax 40
+field boolean --fieldName isDeleted 
+field boolean --fieldName isVisable
+field date --fieldName insertTime --type java.util.Date --dateFormat MEDIUM 
+
+entity jpa --class ~.model.WccMaterials
+enum type --class ~.constant.WccMaterialsType
+enum constant --name THUMBNAIL
+enum constant --name PICTURE
+enum constant --name SOUNDS
+enum constant --name VIDEO
+enum constant --name IMAGETEXT
+enum constant --name MUSIC
+field enum --fieldName type --type ~.constant.WccMaterialsType --class ~.model.WccMaterials
+field string --fieldName title --sizeMax 400
+field string --fieldName content --sizeMax 4000
+field string --fieldName resourceUrl --sizeMax 4000
+field string --fieldName thumbnailUrl --sizeMax 4000
+field boolean --fieldName isDeleted
+field date --fieldName insertTime --type java.util.Date --dateFormat MEDIUM 
+field string --fieldName remakeUrl --sizeMax 4000
+field boolean --fieldName urlBoolean
+field string --fieldName token --sizeMax 200
+field string --fieldName sort --sizeMax 100
+
+entity jpa --class ~.model.WccAutokbs
+field string --fieldName title --sizeMax 300
+field string --fieldName keyWord --sizeMax 4000
+field string --fieldName content --sizeMax 4000
+enum type --class ~.constant.WccAutokbsShowWay
+enum constant --name DEFAULTS
+enum constant --name RELEVANT
+field enum --fieldName showWay --type ~.constant.WccAutokbsShowWay --class ~.model.WccAutokbs
+field boolean --fieldName active
+field boolean --fieldName isDeleted
+field date --fieldName insertTime --type java.util.Date --dateFormat MEDIUM 
+enum type --class ~.constant.WccAutokbsMatchWay
+enum constant --name LIKES
+enum constant --name ALLS
+field enum --fieldName matchWay --type ~.constant.WccAutokbsMatchWay --class ~.model.WccAutokbs
+enum type --class ~.constant.WccAutokbsReplyType
+enum constant --name TEXTS
+enum constant --name PICTURE
+enum constant --name MATERIAL
+field enum --fieldName replyType --type ~.constant.WccAutokbsReplyType --class ~.model.WccAutokbs
+field string --fieldName relatedIssues --sizeMax 4000
+
+entity jpa --class ~.model.WccWelcomkbs
+field string --fieldName title --sizeMax 300
+field string --fieldName content --sizeMax 4000
+enum type --class ~.constant.WccWelcomkbsType
+enum constant --name ROBOT
+enum constant --name WELCOME
+field enum --fieldName type --type ~.constant.WccWelcomkbsType --class ~.model.WccWelcomkbs
+field boolean active
+field boolean isDeleted
+field date --fieldName insertTime --type java.util.Date --dateFormat MEDIUM 
+enum type --class ~.constant.WccWelcomkbsReplyType
+enum constant --name UNKNOW1
+enum constant --name UNKNOW2
+field enum --fieldName replyType --type ~.constant.WccWelcomkbsReplyType --class ~.model.WccWelcomkbs
+
+entity jpa --class ~.model.WccChatRecourds
+field boolean --fieldName isDeleted
+field date --fieldName insertTime --type java.util.Date --dateFormat MEDIUM 
+field date --fieldName startTime --type java.util.Date --dateFormat MEDIUM 
+field date --fieldName endTime --type java.util.Date --dateFormat MEDIUM 
+
+entity jpa --class ~.model.WccMessage
+enum type --class ~.constant.WccMessageMsgType
+enum constant --name COMMON
+enum constant --name ARTIFICIA
+enum constant --name ROBOT
+enum constant --name ACTIVITY
+enum constant --name MASS
+field enum --fieldName MsgType --type ~.constant.WccMessageMsgType --class ~.model.WccMessage
+enum type --class ~.constant.WccMessageContentType
+enum constant --name WORD
+enum constant --name PICTURE
+enum constant --name VIDEO
+enum constant --name MUSIC
+enum constant --name IMAGETEXT
+field enum --fieldName contentType --type ~.constant.WccMessageContentType --class ~.model.WccMessage
+field string --fieldName content --sizeMax 4000
+enum type --class ~.constant.WccMessageStatus
+enum constant --name SUCCESS
+enum constant --name FAIL
+field enum --fieldName status --type ~.constant.WccMessageStatus --class ~.model.WccMessage
+field number --fieldName dateTime --type int
+field string --fieldName Msg --sizeMax 4000
+field string --fieldName resourceUrl --sizeMax 4000
+field string --fieldName thumbnailUrl --sizeMax 4000
+field boolean --fieldName isDeleted
+field date --fieldName insertTime --type java.util.Date --dateFormat MEDIUM 
+field string --fieldName servicePlatform --sizeMax 200
+field string --fieldName fileSize --sizeMax 100
+
+entity jpa --class WccFriend
+field string --fieldName nickName --sizeMax 500
+field string --fieldName headImg --sizeMax 4000
+enum type --class ~.constant.WccFriendSex 
+enum constant --name MAN
+enum constant --name WOMAN
+field enum --fieldName sex --type ~.constant.WccFriendSex --class ~.model.WccFriend
+field string --fieldName area --sizeMax 400
+field string --fieldName signature --sizeMax 4000
+field string --fieldName remarkName --sizeMax 4000
+field string --fieldName userInfo --sizeMax 4000
+field boolean --fieldName isValidated
+field boolean --fieldName isDeleted
+field date --fieldName insertTime --type java.util.Date --dateFormat MEDIUM 
+enum type --class ~.constant.WccFriendFormType
+enum constant --name FROM1
+enum constant --name FROM2
+enum constant --name FROM3
+field enum --fieldName fromType --type ~.constant.WccFriendFormType --class ~.model.WccFriend
+field date --fieldName subscribeTime --type java.util.Date --dateFormat MEDIUM 
+field date --fieldName messageEndTime --type java.util.Date --dateFormat MEDIUM 
+field date --fieldName sendEmailTime --type java.util.Date --dateFormat MEDIUM 
+
+entity jpa --class ~.model.WccGroup
+field string --fieldName name --sizeMax 300
+field boolean --fieldName isDeleted
+field date --fieldName insertTime --type java.util.Date --dateFormat MEDIUM

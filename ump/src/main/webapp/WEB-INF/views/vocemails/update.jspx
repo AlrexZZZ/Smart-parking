@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_nineclient_model_VocEmail" modelAttribute="vocEmail" path="/vocemails" versionField="Version" z="QBX2Un+/FASuMHBhtmbnxyvBRLs=">
+        <field:textarea field="name" id="c_com_nineclient_model_VocEmail_name" z="zZ32RXu+XP1NW2f1M3ciwikve5Y="/>
+        <field:textarea field="email" id="c_com_nineclient_model_VocEmail_email" validationMessageCode="field_invalid_email" validationRegex="(^[\\w-]+(\\.[\\w-]+)*@[\\w-]+(\\.[\\w-]+)+$)" z="bMj8/kNOv0sWPhhrOesthQOOleo="/>
+        <field:textarea field="remark" id="c_com_nineclient_model_VocEmail_remark" z="xotgu/VKx/0F0PRkk0Oq1tFh5a0="/>
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_VocEmail_isDeleted" z="gURhU4yL6s+upbseg5jPAUJBh4k="/>
+        <field:checkbox field="isVisable" id="c_com_nineclient_model_VocEmail_isVisable" z="pxJ+gIIS+oMobtT3Ob5pZObYGs4="/>
+        <field:datetime dateTimePattern="${vocEmail_createtime_date_format}" field="createTime" id="c_com_nineclient_model_VocEmail_createTime" z="sGUIYbrHnLWBS/dXiyVE570gudo="/>
+        <field:input field="parentId" id="c_com_nineclient_model_VocEmail_parentId" z="Lf2u8IOHbRGYbNixXyPu6WYmLx0="/>
+    </form:update>
+</div>

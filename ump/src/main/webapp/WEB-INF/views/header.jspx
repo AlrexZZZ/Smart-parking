@@ -1,0 +1,256 @@
+<div id="header" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:spring="http://www.springframework.org/tags" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+
+	<spring:url var="logo" value="/resources/images/head_logo.png" />
+	<spring:url var="home" value="/" />
+	<spring:message code="button_home" var="home_label" htmlEscape="false" />
+	<a href="${home}" name="${fn:escapeXml(home_label)}"
+		title="${fn:escapeXml(home_label)}"> <img alt="logo" src="${logo}"
+		id="logo" />
+	</a>
+	<SCRIPT type="text/javascript">
+		function updatePassword() {
+			var id = $('#useId').val();
+			var operatorName = $('#operatorName').val();
+			var password = $('#password').val();
+			var repass = $('#repass').val();
+			var flagOperator = $('#flagOperator').val();
+			if (operatorName.length == 0) {
+				alert("用户名不可为空！");
+				return false;
+			}
+			var reg = /^[\@A-Za-z0-9\!\#\$\%\^\*\.\~]{6,}$/;
+			if (!reg.test(password)) {
+				alert('字母、数字或者英文符号，最短6位，区分大小写');
+				return false;
+			}
+			if (password != repass) {
+				alert("密码不一致");
+				return false;
+			}
+			if (flagOperator == 1) {
+				$.post("/ump/puboperators/updatePassword", {
+					"id" : id,
+					"operatorName" : operatorName,
+					"password" : password,
+				}, function(data) {
+					if (data == 0) {
+						alert("修改成功！");
+						$.Dialog.close();
+						location.href = "/ump/loginOut";
+					} else {
+						alert("修改失败！");
+					}
+				});
+			} else {
+				$.post("/ump/umpoperators/updatePassword", {
+					"id" : id,
+					"operatorName" : operatorName,
+					"password" : password,
+				}, function(data) {
+					if (data == 0) {
+						alert("修改成功！");
+						$.Dialog.close();
+						location.href = "/ump/loginOut";
+					} else {
+						alert("修改失败！");
+					}
+				});
+
+			}
+		}
+		var htmlVar = "";
+		function openDialog() {
+			if ($('#center').html()) {
+				htmlVar = $('#center').html();
+			} else {
+				$('#center').html(htmlVar);
+			}
+			$.Dialog({
+				overlay : true,
+				shadow : true,
+				flat : true,
+				icon : '<img src="/ump/resources/images/people.png"/>',
+				title : '个人中心',
+				content : '',
+				padding : 20,
+				height : 100,
+				width : 100,
+				onShow : function(_dialog) {
+					$('#center').html("");
+					$.Dialog.content(htmlVar);
+					$.Metro.initInputs();
+				}
+			});
+
+		}
+		function exit() {
+			$.Dialog.close();
+		}
+		var exitVar = "";
+		function loginOut() {
+			if ($('#exitDialog').html()) {
+				exitVar = $('#exitDialog').html();
+			} else {
+				$('#exitDialog').html(exitVar);
+			}
+			$.Dialog({
+				overlay : true,
+				shadow : true,
+				flat : true,
+				icon : '<img src="/ump/resources/images/tuichu.png"/>',
+				title : '提醒',
+				content : '',
+				padding : 20,
+				height : 100,
+				width : 100,
+				onShow : function(_dialog) {
+					$('#exitDialog').html("");
+					$.Dialog.content(exitVar);
+					$.Metro.initInputs();
+				}
+			});
+		}
+	</SCRIPT>
+	<div
+		style="float: right; padding-top: 30px; height: 20px; line-height: 20PX; margin-right: 10px; color: white; font-size: 12px; font-family: Microsoft Yahei, Arial">
+		<span
+			style="color: white; font-size: 12px; font-family: Microsoft Yahei, Arial">登陆账号：</span><span><c:if
+				test="${flagOperator == 0}">${umpOperator.operatorName}</c:if>
+			<c:if test="${flagOperator == 1}">${pubOperator.operatorName}</c:if></span>&#160;&#160;&#160;&#160;
+		<a href="#" style="color: white;" onclick="openDialog();"><img
+			src="/ump/resources/images/user.png" /> 用户设置</a>&#160;&#160;&#160;&#160;
+		<a href="#" onclick="loginOut();"
+			style="font-size: 12px; color: #fff; font-family: Microsoft Yahei, Arial;">退出</a>&#160;&#160;
+	</div>
+	<div id="center" class="frames" style="display: none;">
+		<c:if test="${flagOperator == 0}">
+			<div class="grid" style="width: 350px;">
+				<input type="hidden" id="useId" value="${umpOperator.id}" /> <input
+					type="hidden" id="flagOperator" value="${flagOperator}" />
+				<div class="row">
+					<div class="span12">
+						<label style="text-align: right;">用户账号：</label>
+						<div class="input-control text"
+							style="width: 20%; margin-left: 10px;">
+							<input type="text" id="account" name="account"
+								disabled="disabled" value="${umpOperator.account}" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span12">
+						<label style="text-align: right;">用户名称：</label>
+						<div class="input-control text"
+							style="width: 20%; margin-left: 10px;">
+							<input type="text" id="operatorName" name="operatorName"
+								value="${umpOperator.operatorName}" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span12">
+						<label style="text-align: right;">密码：</label>
+						<div class="input-control text"
+							style="width: 20%; margin-left: 10px;">
+							<input type="password" id="password" name="password"
+								value="${umpOperator.password}" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span12">
+						<label style="text-align: right;">重复密码：</label>
+						<div class="input-control text"
+							style="width: 20%; margin-left: 10px;">
+							<input type="password" id="repass" name="repass"
+								value="${umpOperator.password}" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span12">
+						<button style="margin-left: 80px;" class="info"
+							onclick="updatePassword();">确定</button>
+						<button class="warning" style="margin-left: 40px;"
+							onclick="javascript:exit();">取消</button>
+					</div>
+				</div>
+			</div>
+		</c:if>
+		<c:if test="${flagOperator == 1}">
+			<div class="grid" style="width: 350px;">
+				<input type="hidden" id="useId" value="${pubOperator.id}" /> <input
+					type="hidden" id="flagOperator" value="${flagOperator}" />
+				<div class="row">
+					<div class="span12">
+						<label style="text-align: right;">用户账号：</label>
+						<div class="input-control text"
+							style="width: 20%; margin-left: 10px;">
+							<input type="text" id="account" name="account"
+								disabled="disabled" value="${pubOperator.account}" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span12">
+						<label style="text-align: right;">用户名称：</label>
+						<div class="input-control text"
+							style="width: 20%; margin-left: 10px;">
+							<input type="text" id="operatorName" name="operatorName"
+								value="${pubOperator.operatorName}" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span12">
+						<label style="text-align: right;">密码：</label>
+						<div class="input-control text"
+							style="width: 20%; margin-left: 10px;">
+							<input type="password" id="password" name="password"
+								value="${pubOperator.password}" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span12">
+						<label style="text-align: right;">重复密码：</label>
+						<div class="input-control text"
+							style="width: 20%; margin-left: 10px;">
+							<input type="password" id="repass" name="repass"
+								value="${pubOperator.password}" />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span12">
+						<button style="margin-left: 80px;" class="info"
+							onclick="updatePassword();">确定</button>
+						<button class="warning" style="margin-left: 40px;"
+							onclick="javascript:exit();">取消</button>
+					</div>
+				</div>
+			</div>
+		</c:if>
+	</div>
+	<div id="exitDialog" style="display: none;">
+		<div class="grid" style="width: 350px;">
+			<div class="row">
+				<div class="span4" style="margin-left: 100px;">你确定退出系统吗？</div>
+			</div>
+			<div class="row">
+				<div class="span12">
+					<a style="margin-left: 80px;" class="button info"
+						href="/ump/loginOut" onclick="removeAllObj();">确定</a>
+					<button class="warning" style="margin-left: 40px;"
+						onclick="javascript:exit();">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>

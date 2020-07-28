@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_nineclient_model_VocTemplateCategory" modelAttribute="vocTemplateCategory" path="/voctemplatecategorys" versionField="Version" z="3uu1mMdE6ReR4QBSx4A9P4MJyyA=">
+        <field:input field="name" id="c_com_nineclient_model_VocTemplateCategory_name" required="true" z="eEx/flhDIEA9cDyWPANxaZDofMY="/>
+        <field:input field="sort" id="c_com_nineclient_model_VocTemplateCategory_sort" z="etsesvuY+8oeMVOaophxr/Ad23c="/>
+        <field:checkbox field="isVisable" id="c_com_nineclient_model_VocTemplateCategory_isVisable" z="y8HF2kBDEurjOPJEYyvMmUpLahc="/>
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_VocTemplateCategory_isDeleted" z="KdNhr0n7gGpXSnrYOPiyx1PavD4="/>
+        <field:datetime dateTimePattern="${vocTemplateCategory_createtime_date_format}" field="createTime" id="c_com_nineclient_model_VocTemplateCategory_createTime" z="+Uf6AMoCEajxCsdS71gXW46XGZo="/>
+    </form:update>
+</div>

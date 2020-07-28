@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_VocSkuProperty" object="${vocskuproperty}" path="/vocskupropertys" z="4ffGQ9Nw5wAkkaFNgJHtFvoWho8=">
+        <field:display field="name" id="s_com_nineclient_model_VocSkuProperty_name" object="${vocskuproperty}" z="9mzeEidsOfhFBKFfG++v9Njt/IU="/>
+        <field:display field="propertyDetail" id="s_com_nineclient_model_VocSkuProperty_propertyDetail" object="${vocskuproperty}" z="47luBy8a4Ef/kMhw/Oh9uiBZNG4="/>
+        <field:display date="true" dateTimePattern="${vocSkuProperty_createtime_date_format}" field="createTime" id="s_com_nineclient_model_VocSkuProperty_createTime" object="${vocskuproperty}" z="NcfG2kS1kpzJB3S5ba0Hnq1PEaM="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_VocSkuProperty_isDeleted" object="${vocskuproperty}" z="MI0s7lvuVeBOKRLhVVvM13EjN/A="/>
+        <field:display field="isVisable" id="s_com_nineclient_model_VocSkuProperty_isVisable" object="${vocskuproperty}" z="hivup7cdjVU89dlWlVDCSPQYQIg="/>
+    </page:show>
+</div>

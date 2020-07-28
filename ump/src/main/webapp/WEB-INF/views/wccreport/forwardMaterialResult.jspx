@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	 xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+
+<div style="overflow:auto;margin-bottom: 30px;">
+<table id="ss" class ="table striped hovered">
+		<thead>
+			<tr>
+			<tr>
+				<th>公众号名称</th>
+				<th>经销商名称</th>
+				<th>转发时间</th>
+				<th>转发素材名称</th>
+				<th>总部素材入库时间</th>
+			</tr>
+			</tr>
+		</thead>
+		<tbody>
+	       <c:if test="${empty forwards}">
+				<tr>
+            		<td colspan='5'>查无匹配数据</td>
+            	</tr>
+			</c:if>
+			<c:forEach items="${forwards}" var="lu" varStatus="index">
+				<tr>
+					<td>${lu.platformName}</td>
+					<td>${lu.pubOperatorName}</td>
+					<td><fmt:formatDate value="${lu.forwardTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
+					<td>${lu.forwardMaterTitle}</td>
+					<td><fmt:formatDate value="${lu.offMateriInsertTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
+				</tr>
+			</c:forEach>
+			<tr>
+			<td colspan="2">合计：</td>
+			 <td>平台总入住经销商数:${platcount }</td>
+			 <td>转发素材经销商:${forwardcount}</td>
+			 <td>转发率:${forwardpercent }%</td>
+			</tr>
+		</tbody>
+	</table>
+	</div>
+	<style>
+		.metro .button .ztree{
+ 			padding: 0px;
+ 		}
+ 		box-sizing:content-box;
+ 		 input[type="checkbox"]{
+ 	width:20px;
+ }
+	</style>
+</div>

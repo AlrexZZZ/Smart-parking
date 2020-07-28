@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_com_nineclient_model_VocSkuProperty" modelAttribute="vocSkuProperty" path="/vocskupropertys" render="${empty dependencies}" z="WIYUGscv+r3ZDa3m/TUt+kP7TwM=">
+        <field:input field="name" id="c_com_nineclient_model_VocSkuProperty_name" max="20" min="1" required="true" z="Ixc826IJtH+96Jnir+TSY6CFOQ4="/>
+        <field:textarea field="propertyDetail" id="c_com_nineclient_model_VocSkuProperty_propertyDetail" z="pM1NPxNgTG3pI2uxV2/EjTlxTBM="/>
+        <field:checkbox field="isVisable" id="c_com_nineclient_model_VocSkuProperty_isVisable" z="CNi4bTn2j5RdneMjmo1D+h08jbU="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_nineclient_model_VocSkuProperty" render="${not empty dependencies}" z="3yImVsmPXJAb+MCkubDG8rhbgP0="/>
+</div>

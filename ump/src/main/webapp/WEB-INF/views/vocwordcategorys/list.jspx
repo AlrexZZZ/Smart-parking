@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_VocWordCategory" items="${vocwordcategorys}" z="bRNUgi5GgIov9UU83RTJ2c13fUk=">
+        <table:table data="${vocwordcategorys}" id="l_com_nineclient_model_VocWordCategory" path="/vocwordcategorys" z="1iga0nVN5I32FEX/EtYxOu2ig18=">
+            <table:column id="c_com_nineclient_model_VocWordCategory_name" property="name" z="pqyOUUOvex55z8jHR4+3+D2dSWI="/>
+            <table:column id="c_com_nineclient_model_VocWordCategory_parentId" property="parentId" z="yY4j4Uku6Q84vIVL9tTl1sWdObI="/>
+            <table:column id="c_com_nineclient_model_VocWordCategory_isDeleted" property="isDeleted" z="Zv9VqAFNC6N+DZIW+BZlZlsAHWU="/>
+            <table:column date="true" dateTimePattern="${vocWordCategory_createtime_date_format}" id="c_com_nineclient_model_VocWordCategory_createTime" property="createTime" z="1956Oas6ebhG850UIapmFvtqZpg="/>
+        </table:table>
+    </page:list>
+</div>

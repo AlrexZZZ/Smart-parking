@@ -1,0 +1,30 @@
+@charset "utf-8";
+/* CSS Document */
+.topmenu{width:100%; margin:0 auto; overflow:hidden; clear:both;background:#069dd5; height:72px;min-width:1200px;}
+.topmenu2{width:100%;margin:0 auto; overflow:hidden; clear:both;background:#eeeeee; height:45px; border-bottom:1px solid #e5e5e5;padding-left:1%; padding-right:1%;min-width:1200px;}
+.k_contain{width:98%; height:auto; margin:0 auto; overflow:hidden; clear:both; min-width:1200px;margin-bottom:35px;}
+.k_tab{width:100%; height:45px; margin:0 auto; overflow:hidden; clear:both;border-right:1px solid #e5e5e5;}
+.k_foot{width:100%; margin:0 auto; overflow:hidden;background:#069dd5; position:fixed;z-index:999; bottom:0px; left:0px; height:35px;font-family:"微软雅黑"; font-size:14px; color:#FFF; text-align:center; line-height:35px;}
+.cp_logo1{width:20%; height:45px; float:left; overflow:hidden; text-align:center;}
+.cp_logo1 img{width:98%; height:auto; max-width:25px;margin-top:10px;}
+.cp_logo_con{width:80%; height:45px; float:left; overflow:hidden;}
+.cp_logo{width:25%; height:35px; float:left; overflow:hidden; text-align:center;}
+.cp_logo_line1{width:100%; height:10px; margin:0 auto;clear:both; text-align:right;overflow:hidden;}
+.cp_logo_line1 img{width:13px; height:7px; vertical-align:top; margin-top:2px;}
+.cp_logo_line2{width:100%; height:35px; margin:0 auto; overflow:hidden; clear:both;}
+.cp_logo img{width:98%; height:auto; max-width:25px;}
+.topmenu_L,.topmenu_R{width:50%; height:72px; float:left; overflow:hidden;}
+.topmenu_L img{width:40%; height:auto; max-width:357px;margin-top:10px;margin-left:20px;position:relative;top:16px;}
+.qixian,.yonghuming,.shezhi{height:auto; float:left; overflow:hidden;font-family:"微软雅黑"; font-size:14px; color:#FFF;margin-top:38px;}
+.qixian{width:26%;}
+.qixian img{width:14px; height:14px; margin-right:5px; vertical-align:top; margin-top:3px;}
+.yonghuming{width:44%;}
+.shezhi{width:30%;}
+.k_touxiang{width:14px; height:14px; margin-right:5px; vertical-align:top; margin-top:3px;}
+.jiantou{ margin-left:2px;}
+.time_day{height:20px;line-height:20px;vertical-align:top;color:#0F0;font-family:"微软雅黑"; font-size:14px;vertical-align:top;}
+.time_day_warning{color:#F00;}
+.alllacation{margin: 0px auto;height:26px; margin-top: -2px;}
+.alllacation ul li{float: left;list-style: none;margin-right: 10px; }
+.alllacation ul li img{}
+.alllacation ul li span{border: none; background: #069dd5;border-radius:25px;-webkit-border-radius:25px;padding:5px 12px 5px 12px;color:#fff }

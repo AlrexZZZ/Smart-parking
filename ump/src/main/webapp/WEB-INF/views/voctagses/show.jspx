@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_VocTags" object="${voctags}" path="/voctagses" z="DwLJjKenDvDAE1NyNHK2Ek/Qv/U=">
+        <field:display field="name" id="s_com_nineclient_model_VocTags_name" object="${voctags}" z="vs3WQmkPDKfZwbV1wnjNSgbGtSY="/>
+        <field:display date="true" dateTimePattern="${vocTags_createtime_date_format}" field="createTime" id="s_com_nineclient_model_VocTags_createTime" object="${voctags}" z="srT5cqxGXsjWxXCLcV1qKMF6r9I="/>
+    </page:show>
+</div>

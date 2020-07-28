@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+
+	<script type="text/javascript"
+		src="/ump/js/nineclient/vocreport/nineclient.js">
+		//---
+	</script>
+	<div class="grid">
+		<FORM id="queryForm">
+			<DIV class="row">
+				<div class="span1">平台名称：</div>
+				<div class="span2">
+					<SELECT id="channelName" name="channelName"
+						onchange="selectChannel(this.value,'shopName')">
+						<OPTION value="-1" selected="selected">请选择</OPTION>
+						<c:forEach items="${channels}" var="item">
+							<OPTION value="${item.id}">${item.channelName}</OPTION>
+						</c:forEach>
+					</SELECT>
+				</div>
+				<div class="span1">店铺名称：</div>
+				<div class="span2">
+					<SELECT id="shopName" name="shopName">
+						<OPTION value="-1" selected="selected">请选择</OPTION>
+					</SELECT>
+				</div>
+			</DIV>
+			<DIV class="row">
+				<div class="span1">时间：</div>
+				<div class="span2">
+					<input type="text" name="startTimeStr"
+						style="float: left; width: 100%;" value="" id="startTimeStr"
+						onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+				</div>
+				<div class="span1">至</div>
+				<div class="span2">
+					<input type="text" name="endTimeStr"
+						style="float: left; width: 100%;" value="" id="endTimeStr"
+						onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+				</div>
+			</DIV>
+			<DIV class="row">
+				<div class="span1">
+					<a class="button info" onclick="queryList();">查询</a>
+				</div>
+				<div class="span1">
+					<a class="button warning" onclick="exportExcel();">导出</a>
+				</div>
+			</DIV>
+		</FORM>
+	</div>
+	<div id="container"
+		style="min-width: 310px; height: 400px; margin: 0 auto">Loading...</div>
+	<DIV>
+		<div class="grid">
+			<div class="row">
+				<div class="span12">数据详情</div>
+			</div>
+		</div>
+		<TABLE class="table">
+			<THEAD>
+				<tr>
+					<td>排行</td>
+					<td>SKU名称</td>
+					<td>好评数量</td>
+				</tr>
+			</THEAD>
+			<TBODY id="tbody">
+
+			</TBODY>
+			<TFOOT id="tfoot"></TFOOT>
+		</TABLE>
+	</DIV>
+	<style>
+input {
+	width: 100%;
+}
+
+select {
+	width: 100%;
+}
+</style>
+	<SCRIPT type="text/javascript">
+		<![CDATA[
+		$(document).ready(
+				function(){
+					initTime();
+					queryDataBarChart();//生成饼形图
+					//queryList();
+				}
+	     );
+
+		function createBarChart(ajaxdata) {
+			var data = eval("(" + ajaxdata + ")");
+			debugger;
+			var chars =inithBarChar("SKU排行榜Top10(好评)",data);
+			$('#container').highcharts(chars);
+		}
+		function initTime(){
+			var yesterday_milliseconds=new Date().getTime()-1000*60*60*48;
+			var startTime=formatData(yesterday_milliseconds,'yyyy-MM-dd');
+			var endTime=formatData(new Date().getTime()-1000*60*60*24,'yyyy-MM-dd');
+			$("#endTimeStr").val(endTime);
+			$("#startTimeStr").val(startTime);
+		}
+		function queryDataBarChart() {
+			
+			var url = "/ump/skurankreports/queryDataBarChart";
+			var param = {};
+			var channelName = $("#channelName").val();
+			if (channelName != -1 && channelName) {
+				param.channelName = $("#channelName").find("option:selected")
+						.text();
+			}
+			var shopName = $("#shopName").val();
+			if (shopName != -1 && shopName) {
+				param.shopName = $("#shopName").find("option:selected").text();
+			}
+			var startTimeStr = $("#startTimeStr").val();
+			if (startTimeStr != -1 && startTimeStr) {
+				param.startTimeStr=startTimeStr+" 00:00:00";
+			}
+			var endTimeStr = $("#endTimeStr").val();
+			if (endTimeStr != -1 && endTimeStr) {
+				param.endTimeStr=endTimeStr+" 00:00:00";
+			}
+			dataAjax(url, param, null, null, createBarChart, null);
+			queryList();
+		}
+		function selectChannel(id, elementId) {
+			var url = "/ump/vocshops/queryVocShops";
+			var param = {};
+			param.umpChannelId = id;
+			dataAjax(url, param, null, null, createSelect, elementId);
+		}
+		function queryList(page) {
+			var pageNo;
+			if (page) {
+				pageNo = page;
+			} else {
+				pageNo = 1;
+			}
+			var url = "/ump/skurankreports/queryData";
+			var param = {};
+			param.page = pageNo;
+			param.size = 10;
+			var channelName = $("#channelName").val();
+			if (channelName != -1 && channelName) {
+				param.channelName = $("#channelName").find("option:selected")
+						.text();
+			}
+			var shopName = $("#shopName").val();
+			if (shopName != -1 && shopName) {
+				param.shopName = $("#shopName").find("option:selected").text();
+			}
+			var startTimeStr = $("#startTimeStr").val();
+			if (startTimeStr != -1 && startTimeStr) {
+				param.startTimeStr=startTimeStr+" 00:00:00";
+			}
+			var endTimeStr = $("#endTimeStr").val();
+			if (endTimeStr != -1 && endTimeStr) {
+				param.endTimeStr=endTimeStr+" 00:00:00";
+			}
+			dataAjax(url, param, null, null, createGride, null);
+		}
+		function exportExcel() {
+			var url = "/ump/skurankreports/exportExecl";
+			var param =[];
+			var channelName = $("#channelName").val();
+			if (channelName != -1 && channelName) {
+				channelName = $("#channelName").find("option:selected").text();
+				param.push(channelName);
+			}
+			var shopName = $("#shopName").val();
+			if (shopName != -1 && shopName) {
+				param.shopName = $("#shopName").find("option:selected").text();
+				param.push(shopName);
+			}
+			var startTimeStr = $("#startTimeStr").val();
+			if (startTimeStr != -1 && startTimeStr) {
+				param.push(startTimeStr);
+			}
+			var endTimeStr = $("#endTimeStr").val();
+			if (endTimeStr != -1 && endTimeStr) {
+				param.push(endTimeStr);
+			}
+			window.location.href = url+"?";
+		}
+		function createGride(data) {
+			var model = eval("(" + data + ")");
+			var list = eval(model.dataJson);
+			var table = "";
+			for (var i = 0; i < list.length; i++) {
+				table += "<tr>";
+				table += "<td>";
+				table += i+1;
+				table += "</td>";
+				table += "<td>";
+				table += list[i].skuName;
+				table += "</td>";
+				table += "<td>";
+				table += list[i].commentCount;
+				table += "</td>";
+				table += "</tr>";
+			}
+			var foot = Page(model, 'queryList',4);
+			$("#tbody").html(table);
+			if (model.totalCount > 0) {
+				$("#tfoot").html(foot);
+			} else {
+				$("#tfoot").html("<tr><td colspan='4'>无数据</td></tr>");
+			}
+		}
+		]]>
+	</SCRIPT>
+</div>

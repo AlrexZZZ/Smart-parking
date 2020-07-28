@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccUserPagetemp" object="${wccuserpagetemp}" path="/wccuserpagetemps" z="cj7Srrf5CLTkA+a2qc5kloboSGw=">
+        <field:display field="pageTitle" id="s_com_nineclient_model_WccUserPagetemp_pageTitle" object="${wccuserpagetemp}" z="nl9HFgkPgwkI5RuxgDaOoPaZ0Ac="/>
+        <field:display field="proName" id="s_com_nineclient_model_WccUserPagetemp_proName" object="${wccuserpagetemp}" z="Cyh6DPwZC0JPanHXWW5nQrASduY="/>
+        <field:display field="temImage" id="s_com_nineclient_model_WccUserPagetemp_temImage" object="${wccuserpagetemp}" z="ri9Adpbi5ZdD1JQ7fuAREsKSA+4="/>
+        <field:display field="remark" id="s_com_nineclient_model_WccUserPagetemp_remark" object="${wccuserpagetemp}" z="K3ao2cAaEXnJQfZLjT4lfNOP9UU="/>
+        <field:display date="true" dateTimePattern="${wccUserPagetemp_createtime_date_format}" field="createTime" id="s_com_nineclient_model_WccUserPagetemp_createTime" object="${wccuserpagetemp}" z="F3d48ABy3EWOh9rHpdU7zVscMvE="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccUserPagetemp_isDeleted" object="${wccuserpagetemp}" z="56Q3WOhNhC89l49ebXar6WFEIP0="/>
+        <field:display field="isVisable" id="s_com_nineclient_model_WccUserPagetemp_isVisable" object="${wccuserpagetemp}" z="pI0AD6+xOvaiXcr94Sx+qnDHzXw="/>
+    </page:show>
+</div>

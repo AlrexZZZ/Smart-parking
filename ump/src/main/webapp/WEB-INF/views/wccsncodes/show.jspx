@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccSncode" object="${wccsncode}" path="/wccsncodes" z="yPl6z5g/D2QvM/46mN/hD9KZNYU=">
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccSncode_isDeleted" object="${wccsncode}" z="su++ttKY3rmmQz+/USqMq7s5OZo="/>
+        <field:display field="snCode" id="s_com_nineclient_model_WccSncode_snCode" object="${wccsncode}" z="T4jfD8ZdghIia9htqqD8defiO2E="/>
+        <field:display field="snStatus" id="s_com_nineclient_model_WccSncode_snStatus" object="${wccsncode}" z="TRjJ7IGx9t4qr9HU7DYhCsl90sE="/>
+        <field:display date="true" dateTimePattern="${wccSncode_awardtime_date_format}" field="awardTime" id="s_com_nineclient_model_WccSncode_awardTime" object="${wccsncode}" z="1L2qgkBphFIYwqVVrxmkA72KcMU="/>
+        <field:display field="snRemark" id="s_com_nineclient_model_WccSncode_snRemark" object="${wccsncode}" z="eobbY17/1OIAksD/5ZrAIgQ+kPg="/>
+    </page:show>
+</div>

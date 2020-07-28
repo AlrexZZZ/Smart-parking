@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccFriend" object="${wccfriend}" path="/wccfriends" z="ag94cH1yJtGCF+uvsgFHI/rJQcc=">
+        <field:display field="nickName" id="s_com_nineclient_model_WccFriend_nickName" object="${wccfriend}" z="wPehAKXym+jlXSqpQ72tThB+8GA="/>
+        <field:display field="headImg" id="s_com_nineclient_model_WccFriend_headImg" object="${wccfriend}" z="99K/pv0oTnWKMwznBQbXUCD//qk="/>
+        <field:display field="sex" id="s_com_nineclient_model_WccFriend_sex" object="${wccfriend}" z="lXFCYKCHkIR9H1r6Z4PyHu8bpd8="/>
+        <field:display field="area" id="s_com_nineclient_model_WccFriend_area" object="${wccfriend}" z="WKM3B9aCxD6jBARm3MEXyirRYuk="/>
+        <field:display field="signature" id="s_com_nineclient_model_WccFriend_signature" object="${wccfriend}" z="/jw4veCBMBjz0c7CPpvOIO5+9Kw="/>
+        <field:display field="remarkName" id="s_com_nineclient_model_WccFriend_remarkName" object="${wccfriend}" z="1YnA5igvwTSNhTXTTSe7dhb43gs="/>
+        <field:display field="userInfo" id="s_com_nineclient_model_WccFriend_userInfo" object="${wccfriend}" z="dBls7QBWljWF6HBbwgEUjc1nygo="/>
+        <field:display field="isValidated" id="s_com_nineclient_model_WccFriend_isValidated" object="${wccfriend}" z="5x70PYWXuiEq+Hn+ykvFxPHTN2w="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccFriend_isDeleted" object="${wccfriend}" z="nRmhDdNmKSR5oGBejrwikZ8C+Yo="/>
+        <field:display date="true" dateTimePattern="${wccFriend_inserttime_date_format}" field="insertTime" id="s_com_nineclient_model_WccFriend_insertTime" object="${wccfriend}" z="npgBObFXVhlHsFft80KWhyfa1h4="/>
+        <field:display field="fromType" id="s_com_nineclient_model_WccFriend_fromType" object="${wccfriend}" z="O+b31V+FyZjbKZ1ZuhgB2/GUvBI="/>
+        <field:display date="true" dateTimePattern="${wccFriend_subscribetime_date_format}" field="subscribeTime" id="s_com_nineclient_model_WccFriend_subscribeTime" object="${wccfriend}" z="/7nrvOUTLpr8AsGFDJWSPlFv+TM="/>
+        <field:display date="true" dateTimePattern="${wccFriend_messageendtime_date_format}" field="messageEndTime" id="s_com_nineclient_model_WccFriend_messageEndTime" object="${wccfriend}" z="KUBLEJUpluGJBKD4jdfmoNc2VeQ="/>
+        <field:display date="true" dateTimePattern="${wccFriend_sendemailtime_date_format}" field="sendEmailTime" id="s_com_nineclient_model_WccFriend_sendEmailTime" object="${wccfriend}" z="HeG4CcSisyTBd2qGH9Zf99QyYZE="/>
+        <field:display field="province" id="s_com_nineclient_model_WccFriend_province" object="${wccfriend}" z="M/etbll80maRLaKapL+l70BP0Is="/>
+        <field:display field="country" id="s_com_nineclient_model_WccFriend_country" object="${wccfriend}" z="0yUId5971WKrik/8NgjeUs2P0W8="/>
+        <field:display field="city" id="s_com_nineclient_model_WccFriend_city" object="${wccfriend}" z="AvQ4uXtMH9+4PHIzK0xZoSD6JA0="/>
+    </page:show>
+</div>

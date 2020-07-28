@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_UmpParentBusinessType" items="${umpparentbusinesstypes}" z="D+AaGBBhQWUlkP2Ty/czLHhFQyo=">
+        <table:table data="${umpparentbusinesstypes}" id="l_com_nineclient_model_UmpParentBusinessType" path="/umpparentbusinesstypes" z="uZ/Pg/dQlqDuBZUgUMJ46uK64N8=">
+            <table:column id="c_com_nineclient_model_UmpParentBusinessType_businessName" property="businessName" z="Vntg3beilozHvpuGng8KDb0yRPA="/>
+            <table:column id="c_com_nineclient_model_UmpParentBusinessType_sort" property="sort" z="8jRNzyKdNmJBGeLu0soeamdYiq4="/>
+            <table:column id="c_com_nineclient_model_UmpParentBusinessType_remark" property="remark" z="2CaSJfOMKFKWfMy+ElZCgHDz3lU="/>
+            <table:column id="c_com_nineclient_model_UmpParentBusinessType_isVisable" property="isVisable" z="Ks86pJEDHc0WpGmZc7HZlQoXan4="/>
+            <table:column id="c_com_nineclient_model_UmpParentBusinessType_isDeleted" property="isDeleted" z="CjE5E8pOXjkH0TdlWWVSqcCkTmg="/>
+            <table:column date="true" dateTimePattern="${umpParentBusinessType_createtime_date_format}" id="c_com_nineclient_model_UmpParentBusinessType_createTime" property="createTime" z="lVXcV5Fj9oNgejtS+DZU2VrBvto="/>
+        </table:table>
+    </page:list>
+</div>

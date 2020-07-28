@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default_pub" name="umpbrands/list">
+        <put-attribute name="body" value="/WEB-INF/views/umpbrands/list.jspx"/>
+    </definition>
+<definition extends="default_pub" name="umpbrands/show">
+        <put-attribute name="body" value="/WEB-INF/views/umpbrands/show.jspx"/>
+    </definition>
+<definition extends="default_pub" name="umpbrands/create">
+        <put-attribute name="body" value="/WEB-INF/views/umpbrands/create.jspx"/>
+    </definition>
+<definition extends="default_pub" name="umpbrands/update">
+        <put-attribute name="body" value="/WEB-INF/views/umpbrands/update.jspx"/>
+    </definition>
+<definition extends="default_pub" name="umpbrands/checkStatusForm">
+        <put-attribute name="body" value="/WEB-INF/views/umpbrands/checkStatusForm.jspx"/>
+    </definition>
+    <definition extends="default_pub" name="umpbrands/checkBrandList">
+        <put-attribute name="body" value="/WEB-INF/views/umpbrands/checkBrandList.jspx"/>
+    </definition>
+</tiles-definitions>

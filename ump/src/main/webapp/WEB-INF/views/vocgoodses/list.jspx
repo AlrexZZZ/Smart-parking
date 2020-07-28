@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_VocGoods" items="${vocgoodses}" z="tpQmdKvPsNU3wsFNly2QfMt4avU=">
+        <table:table data="${vocgoodses}" id="l_com_nineclient_model_VocGoods" path="/vocgoodses" z="QbQeK8XitYg49ku9FmAXQLFdaYM=">
+            <table:column id="c_com_nineclient_model_VocGoods_channel" property="channel"/>
+            <table:column id="c_com_nineclient_model_VocGoods_shop" property="shop"/>
+            <table:column id="c_com_nineclient_model_VocGoods_name" property="name" z="3mWltuYhBl9GUdYd+7hKPWT6vYI="/>
+            <table:column id="c_com_nineclient_model_VocGoods_goodsId" property="goodsId" z="AkNS+snFGtMkg4ZWUF2rEdj0W0k="/>
+            <table:column id="c_com_nineclient_model_VocGoods_url" property="url" z="o/jGilFH6Lhm79excvgC0hhHqdM="/>
+            <table:column date="true" dateTimePattern="${vocGoods_createtime_date_format}" id="c_com_nineclient_model_VocGoods_createTime" property="createTime" z="4cHUKDxtwDoTBwTSD3DpehZuevs="/>
+            <table:column id="c_com_nineclient_model_VocGoods_isDeleted" property="isDeleted" z="28SqHeAHLVINu4vU1cKrNpgg2nQ="/>
+            <table:column id="c_com_nineclient_model_VocGoods_goodsNumber" property="goodsNumber" z="4uNa4Rh/ILLMMf+0/sHFuUqZoGE="/>
+        </table:table>
+    </page:list>
+</div>

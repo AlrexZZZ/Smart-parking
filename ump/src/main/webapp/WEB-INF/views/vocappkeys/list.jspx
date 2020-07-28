@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_VocAppkey" items="${vocappkeys}" z="FdCC3kwH4TeIAsIlLqTrlpSXbSw=">
+        <table:table data="${vocappkeys}" id="l_com_nineclient_model_VocAppkey" path="/vocappkeys" z="SrNJsLhIGwdmfFBPlh2Uil2mjgQ=">
+            <table:column id="c_com_nineclient_model_VocAppkey_appkey" property="appkey" z="sgWem3srzBh3I1XeHoPEi9w8Pas="/>
+            <table:column id="c_com_nineclient_model_VocAppkey_clientSecret" property="clientSecret" z="Jo6qiwOtvQWICELEtoeKNk/ZR08="/>
+            <table:column id="c_com_nineclient_model_VocAppkey_name" property="name" z="l/F+hg0W8SBKLsuvIfIOs0UpqCM="/>
+            <table:column date="true" dateTimePattern="${vocAppkey_createtime_date_format}" id="c_com_nineclient_model_VocAppkey_createTime" property="createTime" z="bdMzL+DXGAKpKbU/lvD3O6LaLV0="/>
+            <table:column id="c_com_nineclient_model_VocAppkey_redirectUrl" property="redirectUrl" z="ZX4xr0WV9bnNqRliKoixywQUTrs="/>
+            <table:column id="c_com_nineclient_model_VocAppkey_sort" property="sort" z="YeYDH+sI7NtfCB+JO90dgMbBEQw="/>
+        </table:table>
+    </page:list>
+</div>

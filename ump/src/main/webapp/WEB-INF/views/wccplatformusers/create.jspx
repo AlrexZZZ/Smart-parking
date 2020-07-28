@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <style>
+    	input{
+    		border: 1px solid #e5e5e5;
+    		width:270px;
+    		height:28px;
+    		margin-left: 5px;
+    	}
+    span{width: 110px; text-align: right; display:inline-block;}
+    .sp{
+    	text-align: left;
+    	padding-left: 5px;
+    	width : 10px;
+    }
+    </style>
+    
+    <script type="text/javascript">
+    <![CDATA[
+         var flag1 = true;
+         var flag2 = true;
+     		function changeType(){
+    			$("#password_").attr("Type","password");
+    		}
+             
+    	function showNotic(o){
+    		var top = o.offsetTop;
+    		var left = o.offsetLeft+150;
+    		if(o.id=='platformId_'){
+    			$('#app')[0].style.display='none';
+    			$('#platid')[0].style.display='block';
+    			$('#platid').css("top",top+"px");
+    			$('#platid').css("left",left+"px");
+    		}else{
+    			$('#platid')[0].style.display='none';
+    			$('#app')[0].style.display='block';
+    			$('#app').css("top",top+"px");
+    			$('#app').css("left",left+"px");
+    		}
+    	}
+    	
+    	function checkPlat(o){
+    		var name = $(o).val();
+    		if(!name){
+    			flag1 = false;
+    			$('#aerrMsg').html('账号名称不能为空');
+    			return;
+    		}
+    		$.ajax({
+    			url : "/ump/wccplatformusers/checkPlat",
+    			type : "POST",
+    			data : {'name':name},
+    			error : function(msg) {
+    				alert("error " + msg);
+    			},
+    			success : function(text) {
+    				if(text=='false'){
+    					flag1 = false;
+	    				$('#aerrMsg').html('账号名重复');
+	    				return;
+    				}
+    				flag1 = true;
+    				$('#aerrMsg').html('');
+    			}
+    		});
+    	}
+    	
+    	function checkPlatid(o){
+    		var platId = $(o).val();
+    		if(!platId){
+    			flag2 = false;
+    			$('#perrMsg').html('原始ID不能为空');
+    			return;
+    		}
+    		$.ajax({
+    			url : "/ump/wccplatformusers/checkPlatId",
+    			type : "POST",
+    			data : {'platId':platId},
+    			error : function(msg) {
+    				alert("error " + msg);
+    			},
+    			success : function(text) {
+    				if(text=='false'){
+    					flag2 = false;
+	    				$('#perrMsg').html('原始ID重复');
+	    				return;
+    				}
+    				flag2 = true;
+    				$('#perrMsg').html('');
+    			}
+    		});
+    	}
+    	
+    	function hiddenNotic(o){
+    		var name = $(o).attr('name');
+    		if(name=='platformId'){
+    			checkPlatid(o);
+    		}
+    		$('#errMsg').html('');
+    		if(o.id=='platformId_'){
+    			$('#platid')[0].style.display='none';
+    		}else{
+    			$('#app')[0].style.display='none';
+    		}
+    	}
+    	$(document).ready(function(){
+    		$('#proceed').unbind().bind('click',function(){
+    			var platformId = $('#platformId_').val();
+    			var appId = $('#appId_').val();
+    			var appSecret = $('#appSecret_').val();
+    			var account = $('#paccount_').val();
+    			var platformType = $('#plattypeId>option:selected').attr("value");
+    			var platReg=/^\w{15}$/;
+    			var appReg=/^[0-9a-zA-Z_]{18}$/;
+    			var sercReg=/^[0-9a-zA-Z_]{32}$/;
+    			if(!flag1){
+    				return false;
+    			}
+    			if(!flag2){
+    				return false;
+    			}
+    			if(!account){
+    				$('#aerrMsg').html('账号名称不能为空');
+    				return false;
+    			}
+    			$('#aerrMsg').html('');
+    			if(!platformId){
+    				$('#perrMsg').html('原始ID不能为空');
+    				return false;
+    			}
+    			if(!platReg.test(platformId)){
+    				$('#perrMsg').html('原始ID格式不正确');
+    				return false;
+    			}
+    			if(!platformType){
+    				$('#platMsg').html('请先选择账号类型');
+				    return false;
+    			}
+    			
+    			//=========================================================
+    			
+    			$('#perrMsg').html('');
+//     			if(!appReg.test(appId)){
+//     				$('#errMsg').html('App ID格式不正确');
+//     				return false;
+//     			}
+//     			if(!sercReg.test(appSecret)){
+//     				$('#errMsg').html('App Secret格式不正确');
+//     				return false;
+//     			}
+    		});
+    	});
+    ]]>
+    </script>
+    <form:create id="fc_com_nineclient_model_WccPlatformUser" chancle_url="wccplatformusers" modelAttribute="wccPlatformUser" path="/wccplatformusers" render="${empty dependencies}" z="user-managed">
+        <div class="grid">
+         
+            <div class="row">
+                <div class="span12">
+                    <span>账号名称：</span>
+                    <input type="text" id="paccount_" name="account" onblur="checkPlat(this)"/><span class="sp" style="color: red">*</span><span id="aerrMsg" style="color: red;width: 135px;"></span>
+                </div>
+            </div>
+         
+           <div class="row">
+            	<div class="span12">
+                    <span>账号类型：</span>
+                    <!-- <input type="text" id="password_" name="password" onfocus="changeType();"/> -->
+             <select id = "plattypeId" name = "platformType" onchange="">
+				 <!-- <option value="">请选择账号类型:</option> -->
+				 <c:forEach var="data" items="${platformArr}">
+					<option value="${data}">${data}</option>
+				</c:forEach> 
+			</select>
+			<span class="sp" style="color: red">*</span><span id="platMsg" style="color: red;width: 135px;"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <span>原始ID：</span>
+                    <input type="text" id="platformId_" name="platformId" onfocus="javascript:showNotic(this);" onblur="javascript:hiddenNotic(this);"/><span class="sp" style="color: red">*</span><span id="perrMsg" style="color: red"></span>
+                </div>
+            </div>
+            <div class="row">
+            	<div class="span12">
+                    <span>AppID：</span>
+                    <input type="text" id="appId_" name="appId" onfocus="javascript:showNotic(this);" onblur="javascript:hiddenNotic(this);"/>
+                </div>
+               
+            </div>
+            
+            <div class="row">
+                <div class="span12">
+                    <span>     AppSecret：</span>
+                    <input type="text" id="appSecret_" name="appSecret" onfocus="javascript:showNotic(this);" onblur="javascript:hiddenNotic(this);"/><span  style="color: red">${msg}</span>
+                </div>
+            </div>
+           
+            <div class="row">
+            	<div class="span12">
+            		<span id="errMsg" style="color: red"></span>
+            	</div>
+            </div>
+        </div>
+        
+         <div id="platid" style="position:absolute;display: none;width: 700px;height: auto;background-color: white;border: 1px solid #e5e5e5;padding-top:10px;padding-bottom:10px;">
+   			<div style="padding-left: 5%;padding-right: 5%">原始ID获取方法：打开腾讯公众账号后台，点击右上角公众号查看账号详情，第4栏即为原始ID。</div>
+   			<div><img src="./images/wccpmid.jpg"/></div>
+		</div>
+		 <div id="app" style="position:absolute;display: none;width: 700px;height: auto;background-color: white;border: 1px solid #e5e5e5;padding-top:10px;padding-bottom:10px;">
+   			<div style="padding-left: 5%;padding-right: 5%">AppID、AppSecrect获取方法：打开腾讯公众账号后台，点击开发者中心，进入配置项页面，可从开发者ID下查看AppID、AppSecrect</div>
+   			<div><img src="./images/wccappsecid.jpg"/></div>
+		</div>
+    </form:create> 
+    <div class="grid" style="width:820px;border:1px dashed red;padding:10px;margin-left: 20px;line-height: 24px;">
+
+    		
+    			<DIV style="color: red">提示</DIV>
+    		<DIV>需要在你的微信公众平台的“开发者中心”中启用“服务器配置”，并将以下URL和Token填入对应的URL和Token中，你在此添加的公众平台方能生效。</DIV>
+
+    			URL：${url }/ump/wxController/wx
+    		
+  
+    			<SPAN style="margin-left: 50px;">Token：${token }</SPAN>
+    	</div>
+  
+    <!-- <SPAN style="color: red">${msg}</SPAN> -->
+</div>

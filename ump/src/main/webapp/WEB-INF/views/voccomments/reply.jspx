@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<style type="text/css">
+.qw_pl{padding-bottom:10px;width:100%;height:auto;overflow:hidden;margin:0 auto;border:1px solid #e5e5e5;}
+.qw_pl_tit{width:100%; height:30px;line-height:30px;background:#f5f5f5;border-bottom:1px solid #e5e5e5;text-align:center;color:#333;font-family:"宋体";font-size:14px;font-weight:bolder}
+.pl_listcon{width:100%;height:auto;overflow:hidden;margin:0 auto;}
+.pl_listcon li{width:100%;height:auto;overflow:hidden;margin:0 auto;border-bottom:1px solid #e5e5e5;list-style-type:none}
+.pl_listcon li:last-child{border:0px;}
+.list_input{width:3%;height:auto;float:left;text-align:center;overflow:hidden;}
+.list_logo{width:12%;height:auto;float:left;text-align:center;overflow:hidden;}
+.list_logo img{width:85%;height:auto;vertical-align:top;}
+.list_neirong{width:82%;height:auto;float:left;text-align:center;overflow:hidden;}
+.pro_name,.cus_pl,.pl_time{width:100%;height:auto;overflow:hidden;margin:0 auto;margin-bottom:5px;}
+.pro_name{color:#333;font-family:"宋体";font-size:14px;{font-weight:bolder;}
+.cus_pl{color:#666;font-family:"宋体";font-size:14px;word-break:all-break;}
+.pl_time{color:#333;font-family:"宋体";font-size:14px}
+
+.qw_pl_hf_kate{width:83%; height: auto;overflow: hidden;margin-left:15%;}
+.qw_pl_hf_trea_kate{width:70%;height:auto; border:1px solid #e5e5e5; background:#fff;}
+.qw_pl_hf_trea_kate textarea{width:100%;height:80px;}
+.qw_pl_hf_sy_kate{width:50%;height:auto;float:left;}
+.qw_pl_hf_anniu_kate{width:50%;height:auto;float:left;}
+.faq_right{float: left;background:#069dd5;color:"#fff";cursor: pointer;color:white;font-family:"Microsoft YaHei";padding: 10px}
+</style>
+<SCRIPT type="text/javascript">
+$(document).ready(function() {
+	checkReplyBoxAll();
+});
+
+function checkReplyBoxAll() {
+	if ($('#replyCheckAll').prop('checked')) {
+		$("[name = replyCheckbox]:checkbox").prop("checked", true);
+	} else {
+		$("[name = replyCheckbox]:checkbox").prop("checked", false);
+	}
+} 
+
+function cancelCheckAllBox(){
+  if ($('#replyCheckAll').prop('checked')) {
+    $('#replyCheckAll').prop("checked", false);
+  } 
+}
+
+</SCRIPT>
+
+
+<div class="qw_pl">
+  <div class="qw_pl_tit" style="font-weight:bold;padding-left:8px;">
+   <div style="float:left;"><input type="checkbox" id="replyCheckAll" checked="checked" onclick="javascript:checkReplyBoxAll();"/></div>
+   <div style="float:left;padding-left:40%;font-weight:bold;">评论内容</div>
+   </div>
+   <c:forEach var="comment" items="${list}">
+    <c:set var="brandId" value="${comment.goods.vocBrand.id}" scope="session"></c:set>
+    <c:set var="commentLevel" value="${comment.commentLevel.id}" scope="session"></c:set>
+    <div class="pl_listcon">
+     <ul style="margin-left:0px; padding-left:0px;">
+       <li>
+         <div class="list_input"><input type="checkbox" name="replyCheckbox" id="reply_${comment.id}" onclick="javascript:cancelCheckAllBox();"/></div>
+         <div class="list_logo"> <img alt="" src="/ump/images/vocImg/jd.png"/></div>
+         <div class="list_neirong">
+           <div class="pro_name" style="font-weight:bold;">${comment.goods.name}</div>
+           <div class="cus_pl">${comment.commentContent}</div>
+           <div class="pl_time"><div style="float:left;">评论时间：</div><div style="float:left;color:#069dd5;"> 
+           <fmt:formatDate value="${comment.commentTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
+          </div></div>
+         </div>
+       </li>     
+     
+     </ul>
+     <input id="hiddenReplyId" name="commnetId" type="hidden" value="${comment.id}"/>
+     
+   </div>
+   </c:forEach>
+    
+  <div style="width:65%; height: auto;overflow: hidden;margin-left:15%;">
+        <div style="float:left;width:80%;height:auto; border:none; background:#fff;"><textarea id="replyContentId" onkeyup="changeNumTips(this)" style="width:100%;height:80px;border:1px solid #e5e5e5;appearance:none; -wekit-appearance:none"></textarea></div>
+	    <div style="float:left;float: left;background:#069dd5;color:#fff;cursor: pointer;color:white;font-family:Microsoft YaHei;padding: 10px" onclick="javascript:callTemplate('${brandId}','${commentLevel}');">FAQ<br/>调用</div>
+	    <div style="width:50%;height:auto;float:left;color:#333;margin-top:10px;color:#069dd5;font-size:14px;">还可以输入<span id="numbertips">500</span>字</div>
+	    <div style="width:30%;height:auto;float:left;margin-top:10px;"><input type="button" class="info" value="回 复" onclick="javascript:sendReply(${comment.id});" style="float:right;"/></div>
+  </div>
+  
+</div>
+
+</div>

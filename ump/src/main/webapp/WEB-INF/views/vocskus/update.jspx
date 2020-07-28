@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<style>
+	@IMPORT url("/ump/styles/validation.css");
+	@IMPORT url("/ump/styles/url.css");
+	</style>
+	<SCRIPT type="text/javascript"
+		src="/ump/ui/jquery-validation/jquery.validate.js">
+		//--
+	</SCRIPT>
+	<SCRIPT type="text/javascript" src="/ump/js/nineclient/vocreport/nineclient.js"><!--ss--></SCRIPT>
+	<SCRIPT type="text/javascript">
+		<![CDATA[
+
+		function loadBusiness(id, elemId) {
+			id = $("#_umpparentbusinesstype").val();
+			var url = "/ump/umpbusinesstypes/queryBusinessByParentId";
+			var param = {
+				id : id
+			};
+			dataAjax(url, param, null, null, createSelect, elemId)
+		}
+		function loadVocBrands(id, brandelemId) {
+			if(id==''||id==undefined||id==null){
+				id=$("#_umpparentbusinesstype").val();
+			}
+			var url = "/ump/vocbrands/queryVocBrandByBusinessId";
+			var param = {
+				id : id
+			};
+			dataAjax(url, param, null, null, createSelect, brandelemId)
+		}
+		function loadVocSkuProperty(elemId){
+			var url = "/ump/vocskupropertys/loadSkuProperty";
+			var param = {
+			};
+			dataAjax(url, param, null, null, createSelect, elemId)
+		}
+		]]>
+	</SCRIPT>
+	<form id="addGoodsForm" action="/ump/vocskus/update" method="POST"  width="400px;">
+		<div class="grid">
+		<INPUT type="hidden" id="_umpparentbusinesstype" value="${umpparentbusinesstype.id}"/>
+		<INPUT type="hidden" id="_umpbusenissTypeId" value="${vocSku.umpBusinessType.id}"/>
+		<INPUT type="hidden" id="_vocBrandId" value="${vocSku.vocBrand.id}"/>
+		<INPUT type="hidden" id="_vocSkuPropertyId" value="${vocSku.vocSkuProperty.id}"/>
+		<INPUT type="hidden" id="_umpCompanyId" value="${vocSku.vocBrand.umpCompany.id}"/>
+		<INPUT type="hidden" id="_skuId" name="id" value="${vocSku.id}"/>
+			<div class="row">
+				<div class="span1"><SPAN style="color: red;">*</SPAN>子行业:</div>
+				<div class="span4">
+					<SELECT name="businessTypeId" id="add_businessTypeId" class="publicSize">
+						<OPTION selected="selected" value="-1">请选择</OPTION>
+						
+					</SELECT>
+				</div>
+				<div class="span1"><SPAN style="color: red;">*</SPAN>品牌名称:</div>
+				<div class="span4">
+					<SELECT name="vocBrandId" id="add_umpBrandId" class="publicSize">
+						<OPTION selected="selected" value="-1">请选择</OPTION>
+					</SELECT>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span1"><SPAN style="color: red;">*</SPAN>商品名称:</div>
+				<div class="span4">
+					<input id="add_goodsName" type="text" class="publicSize" name="goodsName" value="${vocSku.name}"/>
+				</div>
+				<div class="span1"><SPAN style="color: red;">*</SPAN>sku编码:</div>
+				<div class="span4">
+					<input id="add_skuCode" type="text" class="publicSize" name="skuCode" value="${vocSku.skuCode}"/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span1">型号:</div>
+				<div class="span4">
+					<input id="add_skuModel" class="publicSize"  type="text" name="skuModel" value="${vocSku.skuModel}"/>
+				</div>
+				<div class="span1">sku属性:</div>
+				<div class="span4">
+					<SELECT name="skuPropertyId" id="add_vocSkuPropertyId" class="publicSize">
+						<OPTION selected="selected" value="-1">请选择</OPTION>
+					</SELECT>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span1">类型:</div>
+				<div class="span4">
+					<input id="add_skuType" type="text" name="skuType" value="${vocSku.skuType}" class="publicSize" />
+				</div>
+				<div class="span1">包装:</div>
+				<div class="span4">
+					<input id="add_skuPakage" class="publicSize"  type="text" name="skuPackage" value="${vocSku.skuPackage}"/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span1">商品产地:</div>
+				<div class="span4">
+					<input id="add_skuOrigin" type="text" class="publicSize"  name="skuOrigin" value="${vocSku.skuOrigin}"/>
+				</div>
+				<div class="span1">商品毛重:</div>
+				<div class="span4">
+					<input id="add_skuWeight" type="text" class="publicSize"  name="skuWeight" value="${vocSku.skuWeight}"/>
+				</div>
+			</div>
+		</div>
+	</form>
+	<div class="row">
+					<button class="info" onclick="update();">保存</button>
+					<button class="warning" style="margin-left: 30px;" type="button" onclick="cancel();">取消</button>
+	</div>
+	<SCRIPT type="text/javascript">
+		<![CDATA[
+		$(document).ready(function(){
+			/* noties("add_businessTypeId","businessTypeId_span");
+			noties("add_umpBrandId","vocBrandId_span");
+			noties("add_goodsName","goodsName_span");
+			noties("add_skuCode","skuCode_span"); */
+			$("#addGoodsForm").validate({
+				rules : {
+					businessTypeId : {required:true},
+					vocBrandId:{required:true},
+					goodsName:{required:true,remote:{
+								 url:"/ump/commentvalidata/validataUnique",
+								 type: "post", 
+								 data: {
+									field:'name',
+									value:function(){
+										return $("#add_goodsName").val();
+									},
+									table:"VocSku",
+									id:function (){
+										return $("#_skuId").val();
+									},
+									isCompany:true,
+									companyField:"companyCode"
+								 }
+					}},
+					skuCode:"required"
+				},
+
+				messages : {
+					businessTypeId :{
+						required:"请选择行业"
+					},
+					vocBrandId:{required:"请选择品牌"},
+					goodsName:{required:"请输入商品名称",remote:"品牌名称要唯一"},
+					skuCode:"请输入SKU编号"
+				},
+				errorElement:"em",
+				focusCleanup:true,
+				errorClass:"invalid"
+			});
+			loadBusiness('',"add_businessTypeId");
+			loadVocBrands(null,"add_umpBrandId");
+			loadVocSkuProperty("add_vocSkuPropertyId");
+			selectedOption();
+		});	
+		
+		function selectedOption(){
+			//选择 子行业//选择品牌
+			var businessId = $("#_umpbusenissTypeId").val();
+			var brandId = $("#_vocBrandId").val();
+			var vocSkuPropertyId = $("#_vocSkuPropertyId").val();
+			$("#add_businessTypeId").val(businessId);
+			$("#add_umpBrandId").val(brandId);
+			if(vocSkuPropertyId!=null){
+				$("#add_vocSkuPropertyId").val(vocSkuPropertyId);
+			}
+		}
+		function noties(id,spanId){
+			$("#"+id).blur(function(){
+				 if(!$("#"+id).val()||$.trim($("#"+id).val())==""||$.trim($("#"+id).val())==-1){
+					 $("#"+spanId).show();
+				 }
+			 });
+			 $("#"+id).focus(function(){
+				 $("#"+spanId).hide();
+			 });	
+			
+		}     
+		function update(){
+			if(!$("#addGoodsForm").valid()){
+				return;
+			}
+			var url="/ump/vocskus/update";
+			var param=$("#addGoodsForm").serialize();
+			dataAjax(url, param,Notify);
+			window.location.href = "/ump/vocskus?page=1&size=10";
+		}
+		function cancel() {
+			window.location.href = "/ump/vocskus?page=1&size=10";
+		}
+		]]>
+	</SCRIPT>
+</div>

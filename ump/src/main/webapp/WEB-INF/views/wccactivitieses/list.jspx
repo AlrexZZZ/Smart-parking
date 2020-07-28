@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_WccActivities" items="${wccactivitieses}" z="3ascelyiD1HI2B0WRqn/bzdz73g=">
+        <table:table data="${wccactivitieses}" id="l_com_nineclient_model_WccActivities" path="/wccactivitieses" z="M0w8eCz0gA6V7nVFs1gWf7QpDac=">
+            <table:column id="c_com_nineclient_model_WccActivities_isDeleted" property="isDeleted" z="KoOxGL5PVBcCCkB6BajSF9siNoY="/>
+            <table:column id="c_com_nineclient_model_WccActivities_activitiesName" property="activitiesName" z="HPzl59jy1vQ/Y+KnOqYvuiQyi6o="/>
+            <table:column id="c_com_nineclient_model_WccActivities_activitiesTopic" property="activitiesTopic" z="VxAXGHn4cKx971nbWWC2khdoFik="/>
+            <table:column date="true" dateTimePattern="${wccActivities_begintime_date_format}" id="c_com_nineclient_model_WccActivities_beginTime" property="beginTime" z="uOsNFmm/p1Jy5WlJ0J1IuNUJXCA="/>
+            <table:column date="true" dateTimePattern="${wccActivities_endtime_date_format}" id="c_com_nineclient_model_WccActivities_endTime" property="endTime" z="NRkzjKTbW4s+jbi5FeDX99rbusk="/>
+            <table:column id="c_com_nineclient_model_WccActivities_isAudit" property="isAudit" z="UU2zvdUCCgsRjVib6khw8sys3tw="/>
+        </table:table>
+    </page:list>
+</div>

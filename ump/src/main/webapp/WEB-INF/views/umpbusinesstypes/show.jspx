@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_UmpBusinessType" object="${umpbusinesstype}" path="/umpbusinesstypes" z="sybVoDHGZRGX46sRRn376pFfJZM=">
+        <field:display field="businessName" id="s_com_nineclient_model_UmpBusinessType_businessName" object="${umpbusinesstype}" z="iV6Fi1XHsyH3xdAqA0R5VqsdZtU="/>
+        <field:display field="sort" id="s_com_nineclient_model_UmpBusinessType_sort" object="${umpbusinesstype}" z="Lf2pSlqO3AEPWvdwPRhvGK0L9Ro="/>
+        <field:display field="remark" id="s_com_nineclient_model_UmpBusinessType_remark" object="${umpbusinesstype}" z="lnR9qnbazbcnUA7O/x2Ix3WaDBc="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_UmpBusinessType_isDeleted" object="${umpbusinesstype}" z="CxEOE3CMowzuZrPYr/8SwFeMILw="/>
+        <field:display date="true" dateTimePattern="${umpBusinessType_createtime_date_format}" field="createTime" id="s_com_nineclient_model_UmpBusinessType_createTime" object="${umpbusinesstype}" z="TUgzJ2Xyc1b3J4h6iCjunM6N5eQ="/>
+        <field:display field="isVisable" id="s_com_nineclient_model_UmpBusinessType_isVisable" object="${umpbusinesstype}" z="oy1NxpjuKy1qvOUdcHuyX3JPaQE="/>
+    </page:show>
+</div>

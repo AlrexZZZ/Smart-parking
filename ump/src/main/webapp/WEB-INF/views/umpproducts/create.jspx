@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:Springform="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:spring="http://www.springframework.org/tags" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<FORM id="productForm" method="POST">
+		<div class="grid">
+			<div class="row">
+				<div class="span1">产品名称:</div>
+				<div class="span3">
+					<INPUT name="productName" id="productName" class="publicSize" required="required" />
+				</div>
+			</div>
+			<div class="row">
+				<div class="span1">是否启用:</div>
+				<div class="span2">
+					<INPUT name="isVisable" id="isVisable" type="hidden" value="1" />
+					<img class="switchClass" style="cursor: pointer;"
+						onclick="switchImg(this,false,'isVisable')" src='images/ON.png' />
+					<img class="switchClass" onclick="switchImg(this,true,'isVisable')"
+						style="display: none; cursor: pointer;" src='images/OFF.png' />
+				</div>
+			</div>
+			<div class="row">
+				<div class="span1">备注信息:</div>
+				<div class="span3">
+					<div class="input-control textarea">
+						<![CDATA[<textarea name="remark"></textarea>]]>
+					</div>
+				</div>
+			</div>
+			<DIV class="row">
+				<DIV>
+					<a class="button info" onclick="submit('productForm');">确定</a> <INPUT
+						type="button" style="margin-left: 30px;" class="warning"
+						onclick="queryListPage()" value="取消" />
+				</DIV>
+			</DIV>
+		</div>
+	</FORM>
+	<style>
+@IMPORT url("/ump/styles/validation.css");
+</style>
+<style>
+	.publicSize{
+	width: 135px;
+	height: 28px;
+	border:1px solid;
+	border-color:#e4e4e4;
+}
+	</style>
+	<SCRIPT type="text/javascript" src="/ump/js/nineclient/ump/product.js">
+		//--
+	</SCRIPT>
+	<SCRIPT type="text/javascript"
+		src="/ump/js/nineclient/vocreport/nineclient.js">
+		//--
+	</SCRIPT>
+	<SCRIPT type="text/javascript"
+		src="/ump/ui/jquery-validation/jquery.validate.js">
+		//--
+	</SCRIPT>
+	<SCRIPT type="text/javascript">
+		<![CDATA[
+		$(document).ready(function() {
+			$("#productForm").validate({
+				rules : {
+					productName : {
+						required : true,
+						remote : {
+							url : "/ump/commentvalidata/validataUniqueId",
+							type : "post",
+							data : {
+								field : 'productName',
+								value : function() {
+									return $("#productName").val();
+								},
+								table : "UmpProduct"
+							}
+						}
+					}
+				},
+
+				messages : {
+					productName : {
+						required : "产品名称不能为空",
+						remote : "产品名称重复"
+					}
+
+				},
+				errorElement : "em",
+				focusCleanup : true,
+				errorClass : "invalid"
+			});
+		});
+		function submit(id) {
+			if (!$("#" + id).valid()) {
+				return;
+			}
+			var url = "/ump/umpproducts/create";
+			var param = {};
+			param = $("#" + id).serialize();
+			dataAjax(url, param, Notify);
+			window.location.href = "/ump/umpproducts/listPage?displayId=${displayId}";
+		}
+		function queryListPage() {
+			window.location.href = "/ump/umpproducts/listPage?displayId=${displayId}";
+		}
+		]]>
+	</SCRIPT>
+</div>

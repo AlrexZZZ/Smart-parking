@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:spring="http://www.springframework.org/tags" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<SCRIPT type="text/javascript">
+	var validator;
+		$(function() {
+			 validator = $('#wccEmailConfig').dtValidator();
+			if (!validator.validResult()) {
+				return;
+			} 
+		});
+		function checkValue() {
+			var validator = $('#wccEmailConfig').dtValidator();
+			if (!validator.validResult()) {
+				return;
+			}
+			var host = $("input[name='host']").val();
+			var username = $("input[name='username']").val();
+			var emailPass = $("input[name='emailPass']").val();
+			$.post("/ump/umpconfigs/wccEmailSava", {
+				"host" : host,
+				"port" : 25,
+				"username" : username,
+				"emailPass" : emailPass,
+				"sender" : username
+			}, function(data) {
+				if (data == 1) {
+					alert('保存成功，系统已发送一封测试邮件到您邮箱，请注意查收，如收不到邮件，请检查输入是否有误。');
+				} else {
+					alert('保存失败，请检查输入是否有误。');
+				}
+			});
+		}
+		function changeType(){
+			$("#emailPass").attr("Type","password");
+		}
+	</SCRIPT>
+	<div class="grid">
+		<div style="font-size: 16px;font-family: Microsoft Yahei;padding-left:20px" >回复邮箱配置</div>
+		<form id="wccEmailConfig">
+			<div class="row">
+				<div>
+					<label for="host">发件服务器 : </label>
+					<div class="input-control text" style="width: 275px;">
+						<input type="text" name="host" autocomplete="off" id="host"
+							style="width: 270px;" value="${host}" validTitle="发件服务器" valid="r"
+							placeholder="您的邮箱发件服务器如smtp.**.com"
+							validInfoArea="host_info_area" />
+					</div>
+					<font color="red"> *</font> <span id="host_info_area"></span>
+				</div>
+			</div>
+			<div class="row">
+				<label for="username">邮箱账号 : </label>
+				<div class="input-control text" style="width: 275px;">
+					<input type="text" name="username" autocomplete="off"
+						style="width: 270px;" placeholder="您的邮箱地址如**@**.com" id="username"
+						value="${emailname}" validTitle="邮箱账号" valid="r|email"
+						validInfoArea="username_info_area" />
+				</div>
+				<font color="red"> *</font> <span id="username_info_area"></span>
+			</div>
+			<div class="row">
+				<label for="password">邮箱密码 : </label>
+				<c:if test="${empty emailPass}">
+				<div class="input-control text" style="width: 275px;">
+					<input type="text" name="emailPass" placeholder="请输入您的密码"
+						style="width: 270px;" id="emailPass" value="" onfocus="changeType();"
+						validTitle="邮箱密码" valid="r" validInfoArea="password_info_area" />
+				</div>
+				</c:if>
+				<c:if test="${not empty emailPass}">
+				<div class="input-control text" style="width: 275px;">
+					<input type="password" name="emailPass" placeholder="请输入您的密码"
+						style="width: 270px;" id="emailPass" value="${emailPass}"
+						validTitle="邮箱密码" valid="r" validInfoArea="password_info_area" />
+				</div>
+				</c:if>
+				
+				<font color="red"> *</font> <span id="password_info_area"></span>
+			</div>
+		</form>
+		<div class="row">
+			<button class="button info" onclick="checkValue();"
+				style="margin-left: 20px;">保 存</button>
+		</div>
+	</div>
+</div>

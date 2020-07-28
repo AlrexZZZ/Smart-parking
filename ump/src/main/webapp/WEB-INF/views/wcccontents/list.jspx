@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <!-- <style>@IMPORT url("/ump/styles/style.css");</style> -->
+    <style>
+	    th {white-space: nowrap;}
+		td {white-space: nowrap;} 
+		input,select{width: 135px;height: 28px;background-color: #fff;border: 1px solid #e4e4e4;}
+		input[type="checkbox"]{width: 14px;height: 14px;}
+		input[type="radio"]{width: 14px;height: 14px;}
+		.metro label { display: block;font-size: 12px;font-weight: normal; margin: 5px 0;text-align: right;}
+	</style>
+   <script type="text/javascript">
+	<![CDATA[
+	$(document).ready(function() {
+		ToListByAjax();
+	});
+	
+    Date.prototype.Format = function(fmt) { //author: meizz   
+		var o = {
+			"M+" : this.getMonth() + 1, //月份   
+			"d+" : this.getDate(), //日   
+			"h+" : this.getHours(), //小时   
+			"m+" : this.getMinutes(), //分   
+			"s+" : this.getSeconds(), //秒   
+			"q+" : Math.floor((this.getMonth() + 3) / 3), //季度   
+			"S" : this.getMilliseconds()
+		//毫秒   
+		};
+		if (/(y+)/.test(fmt))
+			fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "")
+					.substr(4 - RegExp.$1.length));
+		for ( var k in o)
+			if (new RegExp("(" + k + ")").test(fmt))
+				fmt = fmt.replace(RegExp.$1,
+						(RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k])
+								.substr(("" + o[k]).length)));
+		return fmt;
+	}
+    
+	function formatData(time) {
+		var date = new Date(time);
+		var str = date.Format("yyyy-MM-dd hh:mm:ss");
+		return str;
+	}
+    
+    //查询分页
+    function ToListByAjax(page){
+    	var pageNo;
+		if (page) {
+			pageNo = page
+		} else {
+			pageNo = 1;
+		}
+    	var param={};
+    	param.page=pageNo;
+		param.size=10;
+		
+    	var SelIds = $("#SelIds").val();
+    	var starTime = $("#startTime2").val();
+    	var endTime = $("#endTime2").val();
+    	var isPrizeCommit = $("#isPrizeCommit").val();
+    	var isCheck = $("#isCheck").val();
+    	var title = $("#title").val();
+    	
+    	if(SelIds != ""){
+			param.platId=SelIds;
+		}
+    	
+    	if(starTime!=null&&$.trim(starTime)!=""){
+			if(endTime!=null&&$.trim(endTime)!=""){
+				if(starTime >= endTime){
+					alert("开始时间不能大于结束时间!");
+					return;
+				}
+			}
+		}
+    	
+    	if(starTime!=undefined&&starTime!=null&&$.trim(starTime)!=""){
+			param.starTime=starTime;
+		}
+    	if(endTime!=undefined&&endTime!=null&&$.trim(endTime)!=""){
+			param.endTime=endTime;
+		}
+    	
+    	if(isPrizeCommit!=99){ 
+			param.isPrizeCommit=isPrizeCommit;
+		}
+    	if(isCheck!=99){ 
+			param.isCheck=isCheck;
+		}
+    	if(title!=undefined&&title!=null&&$.trim(title)!=""){
+			param.title=title;
+		}
+    	
+    	var url = "/ump/wcccontents/findListByFiled";
+    	$.ajax({
+			url : url,
+			async : false,
+			dataType : "text",
+			type : "POST",
+			data :param,
+			error : function(msg) {
+			},
+			success : function(data) {
+				createData_Gride(data, "");
+			}
+		});
+    }
+    
+    function createData_Gride(data) {
+		var model = eval("(" + data + ")");
+		var list = eval(model.dataJson);
+		var table = "";
+		for (var i = 0; i < list.length; i++) {
+			table += "<tr>";
+			table += "<td>";
+				table += list[i].title;
+			table += "</td>";
+			if(list[i].isPrizeCommit == true){
+				table += "<td>";
+				table += '是';
+				table += "</td>";
+			}
+			if(list[i].isPrizeCommit == false){
+				table += "<td>";
+				table += '否';
+				table += "</td>";
+			}
+			table += "<td>";
+				table += '<a style="cursor: pointer;" onclick="showContentByContentId('+list[i].commentCount+','+list[i].id+')">'+list[i].commentCount+'</a>';
+			table += "</td>";
+			table += "<td>";
+				table += list[i].praiseCount;
+			table += "</td>";
+			table += "<td>";
+			table += list[i].userName;
+			table += "</td>";
+			table += "<td>";
+			table += formatData(list[i].insertTime);
+			table += "</td>";
+			table += "<td><div style='width:70px'>";
+			table += '<a href="javascript:goUpdate('+list[i].id+')" alt="编辑 " title="编辑 " style="width: 80px;"> <img alt="编辑 " class="image"src="/ump/resources/images/update.png" title="编辑 "/> </a> '
+			table += '<a href="javascript:deleteForm('+list[i].id+')" alt="删除 " title="删除 "style="width: 80px;" > <img alt="删除 " class="image" src="/ump/resources/images/delete.png" title="删除 "/></a> '
+			table += '<a href="javascript:showContentById('+list[i].id+')" alt="预览 " title="预览"style="width: 80px;" > <img alt="预览 " class="image" src="/ump/images/pub/show.png" title="预览 "/></a> '
+			table += "</div></td>";
+			table += "</tr>";
+		}
+		var foot = Page_sku(model);
+		$("#dataBody").html(table);
+		if (model.totalCount > 0) {
+			$("#dataFoot").html(foot);
+		} else {
+			$("#dataBody").html("<tr><td colspan='10' >暂无匹配数据</td></tr>");
+		}
+
+	}
+    
+    function Page_sku(model) {
+		var turnPage = '';
+		if (model.totalCount > 0) {
+			turnPage += '	<tr>';
+			turnPage += '	<td colspan="5" style="float:right">';
+			if (model.pageNo > 1) {
+				turnPage += ' <a class="default" href="javascript:void(0);" onclick="ToListByAjax('+ 1 +')" style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px"><img alt="首页" src="/ump/resources/images/resultset_first.png" title="首页" style="float:left"/></a>';
+				turnPage += ' <a style="float:left;padding-top: 4px;padding-left: 6px" class="default" href="javascript:void(0);" onclick="ToListByAjax('
+						+ (model.pageNo - 1) + ')"><img alt="上一页" src="/ump/resources/images/resultset_previous.png" title="上一页" style="float:left"/></a>';
+			}
+			turnPage += '<span style="color: #069dd5;height: 22px;line-height: 22px;float:left;padding-left: 6px">'+ model.pageNo+'</span><span style="float:left;padding-top: 4px;padding-left: 6px"> /</span> <span style="color: #069dd5;float:left;padding-top: 4px;padding-left:6px">'+model.totalPage+'</span>';
+			turnPage +='<input type="text" value="" style="width: 30px;height:22px;float:left;margin-left:6px" id="pageStr2"/><a  style="width: 28px;height:22px;background-color:#069dd5;color: white;display:inline-block;font-family:Arial;font-size: 10px;line-height: 22px;text-align:center;cursor: pointer;float:left" onclick="goPage2('+model.totalPage+');">GO</a>'
+
+			if (model.pageNo != model.totalPage) {
+				turnPage += '<a class="default" href="javascript:void(0);" onclick="ToListByAjax('
+						+ (model.pageNo + 1)
+						+ ')" style="cursor: hand; cursor: pointer;float:left;padding-top: 2px;padding-left:6px"><img alt="下一页" src="/ump/resources/images/resultset_next.png" title="下一页"/></a>';
+				turnPage += ' <a style="float:left;padding-top: 4px;padding-left: 6px" class="default" href="javascript:void(0);" onclick="ToListByAjax('+ model.totalPage +')" style="cursor: hand; cursor: pointer;"><img alt="首页" src="/ump/resources/images/resultset_last.png" title="首页" style="float:left"/></a>';
+			}
+			turnPage += '<span style="float:left;padding-top: 3px;padding-left: 6px">每页<span  style="color:#069dd5;">10</span>条</span></td>';
+			turnPage += '</tr>';
+			return turnPage;
+		}
+	}
+    
+    //添加
+    function goUpdate(id){
+    	window.location.href = '/ump/wcccontents/'+id+'?form';
+    }
+    
+    //删除
+	function deleteForm(id){
+    	var url = '${Global}';
+    	var menuUrl = url+'/ump/wxController/showContents?contentId='+id;
+    	$.post("/ump/wcccontents/findIdToWccMenu",{
+				"menuUrl":menuUrl,
+				async : false,
+				dataType : "json",
+			},function(data){
+				var str = eval('(' + data + ')');
+				if (str.msg == 'faile') {
+					if (confirm("该微内容被菜单引用,无法删除！")) {
+						return;
+					}
+				}else if(str.msg == 'success'){
+					if (!confirm("确定要删除吗？")) {
+						return;
+					}
+					window.location.href="/ump/wcccontents/delete?id="+id;
+				}
+		 });
+	}
+    
+    //查看所有微内容评论
+    function showConent(){
+    	window.location.href="/ump/wcccontents/showContent?page="+1+"&size="+10;
+    }
+    
+    //根据为内容id查看该微内容的评论
+    function showContentByContentId(commentCount,contentId){
+    	if(commentCount == 0){
+    		alert("该微内容没有评论！");
+    		return ;
+    	}
+    	window.location.href="/ump/wcccontents/showContentByContentId?contentId="+contentId+"&page="+1+"&size="+10;
+    }
+    
+    function goPage2(page){
+    	var pageStr = $("#pageStr2").val();
+    	if($.trim(pageStr) == ""){
+    		alert("请输入需要跳转的页数！");
+    		return false;
+    	}
+    	if(isNaN(pageStr)){
+    		alert("格式错误，请输入数字！");
+    		return false;
+    	}
+    	if(pageStr > page){
+    		alert("你输入的页数大于最大页数");
+    		return false;
+    	}
+    	if(pageStr <= 0){
+    		alert("你输入的页数不符合要求");
+    		return false;
+    	}
+    	ToListByAjax(pageStr);
+    }
+    
+    function startTimeFocus(){
+    	$('#startTime2').focus();
+    }
+    function endTimeFocus(){
+    	$('#endTime2').focus();
+    }
+    
+    function clearAll(){
+    	$('#startTime2').val('');
+		$('#endTime2').val('');
+		$('#title').val('');
+		$('#isPrizeCommit').val(99);
+		//清空多选框
+		$("#isCheck").val(99);
+    }
+    
+    //查看微内容效果
+    function showContentById(id){
+    	 $("#fade").toggle();
+    	 $.post("/ump/wcccontents/findContentsById",{
+				"id":id,
+				async : false,
+				dataType : "json",
+			},function(data){
+				var model = eval("(" + data + ")");
+				$("#wccConetntTitle").html(model.title);
+				$("#wccConetntTime").html(formatData(model.insertTime.time));
+				$("#wccConetntStr").html(model.content);
+   		 });
+    	$('#dialog').show();
+    }
+    
+   function conentHide(){
+		 $('#dialog').hide();
+		 $("#fade").hide();
+    }
+]]>
+</script>
+    <div class="grid">
+    	<FORM action="/ump/wcccontents/findListByFiled" method="post">
+    	<div class="row">
+    		<div class="span3">
+    			 <label>评论开启：</label>
+	                <SELECT name="isPrizeCommit" style="width: 135px;" id="isPrizeCommit">
+	                   <OPTION value="99">全部</OPTION>
+	                   <OPTION value="true">已开启</OPTION>
+	                   <OPTION value="false">未开启</OPTION>
+	                </SELECT>
+    		</div>
+    		<div class="span3">
+	        	<label>标 题：</label><INPUT name="title" value="" id="title"/>
+	        </div>
+	        <div class="span3">
+	        	<label>添加时间：</label>
+				<input type="text" name="startTime" value="" id="startTime2" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})"/>
+	       		<IMG onclick="startTimeFocus();" style="margin-left: -22px;" src="././js/date/skin/datePicker.gif" width="20" height="20" />
+	        </div>
+	        <div class="span3">
+	        	<label>至： </label>
+				<input type="text" name="endTime" value="" id="endTime2" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})"/>
+	        	<IMG onclick="endTimeFocus();" style="margin-left: -22px;" src="././js/date/skin/datePicker.gif" width="20" height="20" />
+	        </div>
+        </div>  
+        <div class="row">
+	    	<div class="span6" style="margin-left: 20px;"> 
+					<input type="button" value="查 询" class="info" onclick="ToListByAjax();" style="font-family:'微软雅黑';background-color: #069dd5"/>
+					<input class="warning" type="button" value="重 置" onclick="clearAll();" style="font-family:'微软雅黑'"></input>
+			</div>
+	    </div>       
+      </FORM>
+  </div>
+  <div class="buttondiv"
+			style="height: 46px; background: #edf1f9; border: 1px solid #e4e4e4; border-bottom: none;">
+			<a href="/ump/wcccontents?form">
+			<img src="/ump/resources/images/add.png" width="14" height="14" />添加微内容</a>
+			<a href="javascript:void(0);" onclick="showConent();">
+				<img src="/ump/resources/images/chakan.png" width="14" height="14" /> 评论管理</a>	
+				
+		</div>
+  <div class="grid" style="border-right: 1px solid #e5e5e5;">
+  	<table class="table striped hovered" style="overflow: scroll;width: 100%;">
+  		<THEAD>
+	  		<tr>
+	  			<th>标题</th>
+	  			<th>开启评论/点赞</th>
+	  			<th>评论数</th>
+	  			<th>点赞数</th>
+	  			<!-- <th>内容链接</th> -->
+	  			<th>添加者</th>
+	  			<th>创建时间</th>
+	  			<th>操作</th>
+	  		</tr>
+  		</THEAD>
+  		<TBODY id="dataBody">
+			
+		</TBODY>
+  	</table>
+  </div>
+  <div style="float: right;" id="table22">
+		 <div id="dataFoot"></div>
+ </div>
+  
+  <!-- 显示微内容效果 -->
+  <div id="dialog" style="display: none;position: absolute;top: 5%;left: 40%;z-index: 9999">
+		<div style="background: url('/ump/images/pub/iphone.png') no-repeat;width:296px;height:600px;">
+			<div style="padding-top: 90px;">&#160;</div>
+			<div style="width: 85%;height:370px;margin: 0px auto;overflow-y:auto;">
+				<div style="padding-top: 20PX;font-size:18px;width:90%;margin:0px auto" id="wccConetntTitle">测试</div>
+				<div style="padding-top: 20PX;width: 90%;margin:0px auto" id="wccConetntTime">2014-12-14 </div>
+				<div style="padding-top: 20PX;word-break:break-all;width:90%;margin:0px auto" id="wccConetntStr">ccccccc
+					测试数据</div>
+			</div>
+ 		</div>
+ 	</div>
+ 	<div id="fade" onclick="conentHide();" class="black_overlay" />
+</div>

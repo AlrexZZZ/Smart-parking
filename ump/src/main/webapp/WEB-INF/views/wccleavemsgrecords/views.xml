@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default_pub" name="wccleavemsgrecords/list">
+        <put-attribute name="body" value="/WEB-INF/views/wccleavemsgrecords/list.jspx"/>
+    </definition>
+<definition extends="default_pub" name="wccleavemsgrecords/show">
+        <put-attribute name="body" value="/WEB-INF/views/wccleavemsgrecords/show.jspx"/>
+    </definition>
+<definition extends="default_pub" name="wccleavemsgrecords/create">
+        <put-attribute name="body" value="/WEB-INF/views/wccleavemsgrecords/create.jspx"/>
+    </definition>
+<definition extends="default_pub" name="wccleavemsgrecords/update">
+        <put-attribute name="body" value="/WEB-INF/views/wccleavemsgrecords/update.jspx"/>
+    </definition>
+</tiles-definitions>

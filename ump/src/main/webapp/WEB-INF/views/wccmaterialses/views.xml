@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+	<definition extends="default_pub" name="wccmaterialses/list">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wccmaterialses/list.jspx" />
+	</definition>
+	<definition extends="default_pub" name="wccmaterialses/show">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wccmaterialses/show.jspx" />
+	</definition>
+	<definition extends="default_pub" name="wccmaterialses/create">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wccmaterialses/create.jspx" />
+	</definition>
+	<definition extends="default_pub" name="wccmaterialses/update">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wccmaterialses/update.jspx" />
+	</definition>
+	<definition extends="default_pub" name="wccmaterialses/wx_material_imagetext_list">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wccmaterialses/wx_material_imagetext_list.jspx" />
+	</definition>
+	<definition extends="default_pub" name="wccmaterialses/wx_material_pic_list">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wccmaterialses/wx_material_pic_list2.jspx" />
+	</definition>
+	<definition extends="default_pub" name="wccmaterialses/wx_material_sound_list">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wccmaterialses/wx_material_sound_list.jspx" />
+	</definition>
+	<definition extends="default_pub" name="wccmaterialses/wx_material_video_list">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wccmaterialses/wx_material_video_list.jspx" />
+	</definition>
+	<definition extends="default_pub" name="wccmaterialses/materiala">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wccmaterialses/materiala.jsp"></put-attribute>
+	</definition>
+	<definition extends="default_pub" name="wccmaterialses/editor">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wccmaterialses/editor.jsp"></put-attribute>
+	</definition>
+	<definition extends="default_pub" name="wccmaterialses/editormulti">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wccmaterialses/editorMany.jsp"></put-attribute>
+	</definition>
+	<definition extends="default_pub" name="wccmaterialses/addsn">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wccmaterialses/addsn.jsp"></put-attribute>
+	</definition>
+	<definition extends="default_pub" name="wccmaterialses/addmn">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wccmaterialses/addmn.jsp"></put-attribute>
+	</definition>
+	<definition extends="default_pub" name="wccmaterialses/addmnn">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wccmaterialses/addmnn.jsp"></put-attribute>
+	</definition>
+	<definition extends="default_pub" name="wccmaterialses/add_new_video">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wccmaterialses/wx_material_video_new.jspx"></put-attribute>
+	</definition>
+	<definition extends="default_pub" name="wccmaterialses/update_video">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wccmaterialses/wx_material_video_update.jspx"></put-attribute>
+	</definition>
+		<definition extends="bs" name="wccmaterialses/showdetail">
+		<put-attribute name="body"
+			value="/WEB-INF/views/wccmaterialses/showdetail.jsp"></put-attribute>
+	</definition>
+</tiles-definitions>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default_pub" name="vocappkeys/list">
+        <put-attribute name="body" value="/WEB-INF/views/vocappkeys/list.jspx"/>
+    </definition>
+<definition extends="default_pub" name="vocappkeys/show">
+        <put-attribute name="body" value="/WEB-INF/views/vocappkeys/show.jspx"/>
+    </definition>
+<definition extends="default_pub" name="vocappkeys/create">
+        <put-attribute name="body" value="/WEB-INF/views/vocappkeys/create.jspx"/>
+    </definition>
+<definition extends="default_pub" name="vocappkeys/update">
+        <put-attribute name="body" value="/WEB-INF/views/vocappkeys/update.jspx"/>
+    </definition>
+    <definition extends="default_pub" name="vocappkeys/appKeyManage">
+        <put-attribute name="body" value="/WEB-INF/views/vocappkeys/appKeyManage.jspx"/>
+    </definition>
+</tiles-definitions>

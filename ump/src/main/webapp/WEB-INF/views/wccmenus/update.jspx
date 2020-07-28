@@ -1,0 +1,739 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<style>
+input, select {
+	width: 135px;
+	height: 28px;
+	border: 1px solid #e4e4e4;
+	background: #fff;
+}
+input[type=radio] {
+	width: 14px;
+	height: 14px;
+}
+span {
+	margin-top: 10px;
+}
+div#showWayClass span label {
+	display: inherit;
+	float: inherit;
+}
+div#showWayClass span input#showWay2 {
+	margin-left: 20px;
+}
+div#matchWayClass span label {
+	display: inherit;
+	float: inherit;
+}
+div#matchWayClass span input#matchWay2 {
+	margin-left: 20px;
+}
+.container-fluid {
+	padding: 20px;
+	margin-top: 10px;
+}
+.tuwen_dandiv_newlist li:last-child {
+	border: 0px;
+}
+.tuwen_dandiv_newlist li {
+	width: 94%;
+	height: auto;
+	margin: 0 auto;
+	clear: both;
+	overflow: hidden;
+	border-bottom: 1px solid #e5e5e5;
+	font-family: Microsoft Yahei;
+	font-size: 14px;
+	color: #7d7d7d;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.boxs {
+	margin-bottom: 20px;
+	border: 1px solid #e5e5e5;
+}
+.tuwen_dandiv_newlist {
+	width: 100%;
+	height: auto;
+	clear: both;
+	overflow: hidden;
+	margin: 0 auto;
+}
+
+.tuwen_listw {
+	padding: 0px;
+	width: 120px;
+	height: auto;
+	float: left;
+	overflow: hidden;
+	font-family: Microsoft Yahei;
+}
+.tuwen_listw a {
+	color: #7d7d7d;
+	font-family: Microsoft Yahei;
+}
+.tuwen_listw a:hover {
+	text-decoration: underline;
+}
+.tuwen_dandiv_newlist li {
+	list-style: none;
+}
+.tuwen_listt {
+	width: 40px;
+	height: 40px;
+	float: right;
+	overflow: hidden;
+}
+.tuwen_listt img {
+	width: 40px;
+	height: 40px;
+}
+.boxs img {
+	max-width: 100%
+}
+.tupian_dandiv_img {
+	width: 170px;
+	height: 170px;
+	overflow: hidden;
+	margin-right: 20px;
+	margin-bottom: 20px;
+	float: left;
+	margin-bottom: 20px;
+}
+.tupian_dandiv_img img {
+	width: 170px;
+	height: 170px;
+}
+.myPic{border: 1px solid #e5e5e5; position:absolute;left:550px;top:300px;z-index: 999; background: #f6fbfe;padding:10px;padding-top:0px}
+.myUrl{border: 1px solid #e5e5e5; position:absolute;left:550px;top:160px;background: #f6fbfe;}
+.kk tr th:first-child{width:180px;}
+.kate_wtc_tit{width:90%;line-height:25px;padding-top:5px;padding-left:2.5%;padding-right:2.5%;height:30px;background:#f8f8f8;border:1px solid #e5e5e5;margin:0 auto; margin-top:10px;}
+.kate_wtc_leibiao{width:90%;max-height:245px;height:auto;overflow-y:auto;border:1px solid #e5e5e5;border-top:0px;margin:0 auto;}
+.kate_wtc_leibiao li{width:100%;height:30px;padding-left:2.5%;padding-right:2.5%;border-bottom:1px solid #e5e5e5;line-height:30px;}
+.kate_wtc_leibiao li:last-child{border:0px;list-type-style:none;}
+.metro ol li {line-height: 30px;}
+</style>
+	<script type="text/javascript">
+    <![CDATA[
+function masonry() {
+	var $container = $('#masonry');
+	$container.imagesLoaded(function() {
+		$container.masonry({
+			itemSelector : '.boxs',
+			gutterWidth : 20,
+			isAnimated : true,
+		});
+	});
+}             
+             
+function strlen(str) {
+    var len = 0;
+    for (var i = 0; i < str.length; i++) {
+	    var c = str.charCodeAt(i);
+	             //单字节加1 
+	    if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) {
+	                 len++;
+	     } else {
+	       len += 2;
+	     }	
+	}
+    return len;
+}        
+              
+    $(document).ready(function() {
+    	$("#flag2").val(${wccMenu.contentSelect});
+    	var maxValue = '${wccMenu.content}';
+    	var sort = '${wccMenu.sort}';
+    	$("#sort").val(sort);
+    	$("#numbertips").html(600 - maxValue.length);
+    	var reply  = ${wccMenu.contentSelect};
+    	if(${wccMenu.type} == 1){
+    		$("#type1").attr("checked","checked");
+    		testSeachMeun();
+    	}else if(${wccMenu.type} == 2){
+    		$("#type2").attr("checked","checked");
+    		testSeach();
+    	}else if(${wccMenu.type} == 3){
+    		$("#type3").attr("checked","checked");
+    		testSeachUrl();
+    	}
+    	$("#sort").val(${wccMenu.sort});
+    	masonry();
+    });
+    
+    var flagName = false;
+    function checkName(status,platId){
+    	var meunName = $("#meunName").val();
+    	if(meunName == ""){
+			$("#menuMsg").html("请输入菜单名");
+			flagName = false;
+			return false;
+		}
+    	
+    	var menuNameLength = strlen(meunName);
+    	if(status == 1){
+    		if(menuNameLength > 10){
+				$("#menuMsg").html("输入菜单名过长");
+				flagName = false;
+				return false;
+			}
+			$("#menuMsg").html("");
+    	}else if(status == 2){
+    		if(menuNameLength > 16){
+				$("#menuMsg").html("输入菜单名过长");
+				flagName = false;
+				return false;
+			}
+			$("#menuMsg").html("");
+    	}
+		var testName = '${wccMenu.menuName}';
+		if(testName == meunName){
+			flagName = true;
+			return true;
+		}else{
+			$.ajax({
+	            type: "post",
+	            cache : false,
+	            async : false,
+	            url: "/ump/wccmenus/addTreeByPid",
+	            data: {"name":meunName,"platId":platId},
+	            success: function(data) {
+	            	var str = eval('(' + data + ')');
+				  	if(str.msg == 'faile'){
+				  		$("#menuMsg").html("菜单存在");
+				  		flagName = false;
+				  		return;
+				  	}else if(str.msg == 'success'){
+				  		$("#menuMsg").html("");
+				  		flagName = true;
+				  		return;
+				  	}
+	            },
+	            error: function(data) {
+	            }
+	        })
+		}
+		return flagName;
+    }
+     
+    function testSeachMeun(){
+    	$("#url").attr('disabled',true);
+    	$("#urlSelect").attr('disabled',true);
+    	$("#mkey").attr('disabled',true); 
+    	$("#flag").attr('disabled',true); 
+    	$("#flag2").attr('disabled',true); 
+    	$("#content").attr('disabled',true);
+    	$("#urlFont").hide();
+    	$("#keyFont").hide();
+    }
+    //点击回复
+    function testSeach(){
+    	$("#url").attr('disabled',true);
+    	$("#urlSelect").val(99);
+    	$("#url").val('');
+    	$("#urlSelect").attr('disabled',true);
+    	$("#flag").attr('disabled',true);
+    	$("#urlTABEL").hide();
+    	$("#urlFont").hide();
+    	$("#keyFont").show();
+    	
+    	$("#flag2").removeAttr("disabled");
+    	$("#mkey").removeAttr("disabled");
+    	$("#content").removeAttr("disabled");
+    }
+    //点击跳转
+    function testSeachUrl(){
+    	var selectId = $("#urlSelect").val();
+		if($.trim(selectId) != 99 && $.trim(selectId) != ""){
+			$("#url").attr('disabled',true);
+		}else{
+			$("#url").removeAttr("disabled");
+		}
+    	$("#urlFont").show();
+    	$("#keyFont").hide();
+    	$("#mkey").attr('disabled',true); 
+    	$("#flag2").attr('disabled',true); 
+    	$("#content").attr('disabled',true);
+    	
+    	$("#keyMsg").html("");
+    	$("#flag").removeAttr("disabled");
+    	//$("#url").removeAttr("disabled");
+    	$("#urlSelect").removeAttr("disabled");
+    }
+    
+    var flagKey = false;
+    function checkKey(platId){
+    	var mkey = $("#mkey").val();
+    	if($.trim(mkey) == ""){
+    		$("#keyMsg").html("请输入KEY");
+    		flagKey = false;
+    		return false;
+    	}
+    	var testName = '${wccMenu.mkey}';
+		if(testName == mkey){
+			flagKey = true;
+			return true;
+		}
+	    $.ajax({
+	            type: "post",
+	            cache : false,
+	            async : false,
+	            url: "/ump/wccmenus/checkKeyExits",
+	            data: {"mkey":mkey,"platId":platId},
+	            success: function(data) {
+	            	var str = eval('(' + data + ')');
+				  	if(str.msg == 'faile'){
+				  		$("#keyMsg").html("KEY存在");
+				  		flagKey = false;
+				  		return false;
+				  	}else if(str.msg == 'success'){
+				  		$("#keyMsg").html("");
+				  		flagKey = true;
+				  		return true;
+				  	}
+	            }
+	      });
+    	return flagKey;
+    }
+    
+    function checkUrl(){
+    	var url = $("#url").val();
+    	if($.trim(url) == ""){
+    		$("#urlMsg").html("请输入http://开始的菜单链接");
+    		return false;
+    	}
+		/* var strRegex = "^http://[\s\S]*";	 */
+		 	var strRegex = "^(https|http)?://[\s\S]*";
+		var reg = new RegExp(strRegex);
+		if(!reg.test(url)){
+			$("#urlMsg").html("请输入http://开始的菜单链接");
+    		return false;
+		}
+		var menuUrlLength = strlen(url);
+    	if(menuUrlLength > 256){
+    		$("#urlMsg").html("输入的菜单链接过长");
+    		flag = false;
+    		return false;
+    	}
+    	return true;
+    }
+    
+    function returnForm(status,platId){
+		var type = $('input[name="type"]:checked').val();
+		if(type == 1){
+			if(checkName(status,platId)){
+				$("#form1").submit();
+	  			return;
+			}
+		}else if(type == 2){
+			if(checkName(status,platId)){
+				var reply = $("#flag2").val();
+		  		if(reply == 1){
+		  			if($.trim($("#content").val()) == ""){
+		  				$("#contentMsg").html("请输入回复内容");
+		  				return;
+		  			}
+		  		}else {
+					if ($("#selectId").val() == "div_") {
+						alert("选择素材不能为空");
+						return;
+					}
+				}
+		  		$("#imageTextMsg").html("");
+		  		$("#contentMsg").html("");
+		  		$("#picturesMsg").html(" ");
+		  		$("#menuMsg").html("");
+		  		if(checkKey(platId)){
+		  			$("#form1").submit();
+		  			return;
+		  		}
+			}
+		}else if(type == 3){
+			if(checkName(status,platId)){
+				var selectId = $("#urlSelect").val();
+				if($.trim(selectId) != 99 && $.trim(selectId) != ""){
+				  	$("#form1").submit();
+					return;
+				}else{
+					if(checkUrl()){
+						var urlVal = $("#url").val();
+						$("#urlVlaue").val(urlVal);
+				  		$("#form1").submit();
+						return;
+				  	}
+				}
+				/* if(checkUrl()){
+		  			$("#form1").submit();
+					return;
+		  		} */
+			}
+		}
+    }  
+    
+    function changeDiv() {
+    	var reply = $("#flag2").val();
+    	if (reply == 2) {
+    		$("#contents").hide();
+			$("#images").hide();
+			$("#sounds").hide();
+			$("#video").hide();
+			$("#pictures").show();
+    	}
+    	if (reply == 1) {
+    		$("#images").hide();
+			$("#pictures").hide();
+			$("#sounds").hide();
+			$("#video").hide();
+			$("#contents").show();
+    	}
+    	if (reply == 3) {
+    		$("#contents").hide();
+			$("#sounds").hide();
+			$("#video").hide();
+			$("#images").show();
+			$("#pictures").hide();
+			masonry();
+    	}
+    	
+    	if(reply == 4){
+    		$("#contents").hide();
+			$("#images").hide();
+			$("#sounds").show();
+			$("#video").hide();
+			$("#pictures").hide();
+    	}
+    	
+    	if(reply == 5){
+    		$("#contents").hide();
+			$("#images").hide();
+			$("#sounds").hide();
+			$("#video").show();
+			$("#pictures").hide();
+    	}
+    }
+    
+    function changeState(id) {
+    	var picId = $("#selectId").val();
+		$("#" + picId).toggleClass("selected")
+		$("#" + id).toggleClass("selected")
+		$("#selectId").val(id);
+		if (url.length > 0) {
+			var myAuto = document.getElementById('myaudio');
+			$("#myaudio").attr("src", url);
+			myAuto.play();
+		}
+    }
+  /*  function showEmotion(){
+		var emotion = $("#emotionId").html();
+		$("#showPic").html(emotion);
+		showPic('picdiv','fadeId');
+	}
+    function showPic(picdiv, fadeId) {
+		$("#" + picdiv).show();
+	} */
+    function selectEmotion(o){
+		sendType = 7;
+		var text =$(o)[0].alt;
+		var htext = $('#content').val();
+		var maxLength = $('#numbertips').text();
+		if(htext.length == 600){
+			alert("最多输入600字，一个表情占3个字");
+			$('#picdiv').hide();
+			return;
+		}
+		
+		if((htext+text).length > 600){
+			alert("最多输入600字，一个表情占3个字");
+			$('#picdiv').hide();
+			return;
+		}
+		$('#content').val(htext+text);
+		$('#numbertips').html(maxLength - 3);
+		$('#picdiv').hide();
+	}
+    function checkMaxLength(_this,num){
+    	$("#contentMsg").html('');
+    	var htext = _this.value;
+		var spans = $("#" + num);
+    	var remain = 600 - htext.length;
+    	if (remain < 0) {
+			remain = 0;
+			var val = htext.substr(0, 600);
+			_this.value = val;
+		}
+    	spans[0].innerHTML = remain;
+    }
+    /* function selectPic(type){
+		sendType = type;
+		$('#msg_').val(picid);
+		$('#msg_').attr('disabled','disabled');
+		$('#picdiv').hide();
+	} */
+    function closeAll(){
+    	$("#emotionId").hide();
+    	$("#picdiv").hide();
+    }
+    
+    function changeUrlSelect(){
+    	var id = $("#urlSelect").val();
+    	if($.trim(id) == "99"){
+    		$("#url").val('');
+    		$("#urlTABEL").hide();
+    		$("#urlMsg").html("请输入菜单链接");
+    		return;
+    	}
+    	var showUrl = '${wccMenu.url}';
+    	$.post("/ump/wccmenus/checkUrlById",{
+				"id":id,
+				async : false,
+				dataType : "json",
+			},function(data){
+				$("#fade").toggle();
+				$("#urlTABEL").show();
+				var model = eval("(" + data + ")");
+				if(model.length == 0){
+	                  $( '#dataBody')[0].innerHTML = '没有数据';
+	            } else{
+					var table = "";
+					for (var i = 0; i < model.length; i++) {
+						if(showUrl == model[i].url){
+							if(model[i].content.length > 17){
+								table += '<a href="javascript:void(0);" id="'+model[i].url+'" onclick=selectUrl(this,"'+ model[i].content+ '") style="cursor: pointer;" title="'+ model[i].content+ '" ><li style="cursor: pointer;padding-top:5px;background-color: #069dd5;">';
+									table += model[i].content.substr(0,15)+"...";
+								table += "</li></a>";
+							}else{
+								table += '<a href="javascript:void(0);" id="'+model[i].url+'" onclick=selectUrl(this,"'+ model[i].content+ '") style="cursor: pointer;" ><li style="cursor: pointer;padding-top:5px;background-color: #069dd5;">';
+									table += model[i].content;
+								table += "</li></a>";
+							}
+						}else{
+							if(model[i].content.length > 17){
+								table += '<a href="javascript:void(0);" id="'+model[i].url+'" onclick=selectUrl(this,"'+ model[i].content+ '") style="cursor: pointer;" title="'+ model[i].content+ '" ><li style="cursor: pointer;padding-top:5px;">';
+									table += model[i].content.substr(0,15)+"...";
+								table += "</li></a>";
+							}else{
+								table += '<a href="javascript:void(0);" id="'+model[i].url+'" onclick=selectUrl(this,"'+ model[i].content+ '") style="cursor: pointer;" ><li style="cursor: pointer;padding-top:5px;">';
+									table += model[i].content;
+								table += "</li></a>";
+							}
+						}
+					}
+					$("#dataBody").html(table);
+	            }
+		 });
+    }
+    
+    function selectUrl(menuUrl,title){
+    	$("#fade").hide();
+    	var url = $(menuUrl).attr('id');
+    	$("#url").val(url);
+    	$("#urlSelect").val(99);
+    	$("#urlVlaue").val(url);
+    	//$("#url").attr('disabled',true);
+    	$("#urlMsg").html("");
+    	$("#urlTABEL").hide();
+    }
+    
+    function closeDilog(){
+	   	 $("#urlSelect").val(99);
+	   	 $("#fade").hide();
+	   	 $('#urlTABEL').hide();
+    }
+    
+  //跳转素材页面
+	function goUrl() {
+		var type = $("#flag2").val();
+		if(type == 2){
+			window.open("/ump/wccmaterialses?&displayId=27&type=PICTURE");
+		}else if(type == 5){
+			window.open("/ump/wccmaterialses?&displayId=27&type=VIDEO");
+		}else if(type == 4){
+			window.open("/ump/wccmaterialses?&displayId=27&type=SOUNDS");
+		}else if(type == 3){
+			window.open("/ump/wccmaterialses?&displayId=27&type=IMAGETEXT");
+		}
+	}
+  
+	//刷新素材
+	function refresh() {
+		var platform = '${platId}';
+		var autoId = $("#id").val();
+		var menuId = '${wccMenu.id}';
+		$.post("/ump/wccmenus/materialsListForUpdate", {
+			"platformUserId" : platform,
+			"id" : menuId
+		}, function(data) {
+			$("#materials").html(data);
+			var type = $("#flag2").val();
+			if(type == 2){
+				$("#contents").hide();
+				$("#video").hide();
+				$("#sounds").hide();
+				$("#images").hide();
+				$("#pictures").show();
+			}else if(type == 5){
+				$("#contents").hide();
+				$("#sounds").hide();
+				$("#pictures").hide();
+				$("#images").hide();
+				$("#video").show();
+			}else if(type == 4){
+				$("#contents").hide();
+				$("#video").hide();
+				$("#sounds").hide();
+				$("#pictures").hide();
+				$("#sounds").show();
+			}else if(type == 3){
+				$("#contents").hide();
+				$("#video").hide();
+				$("#sounds").hide();
+				$("#pictures").hide();
+				$("#images").show();
+			}
+			masonry();
+			location.hash="anchor";
+		});
+	}
+    ]]>
+    </script>
+
+	<div class="grid">
+		<form id="form1" action="/ump/wccmenus/update" method="post">
+			<input type="hidden" id="id" name="id" value="${wccMenu.id}" /> 
+			<input type="hidden" id="selectId" name="selectId" value="div_${wccMenu.materials.id}" />
+			<div class="row">
+				<div class="span6">
+					<label>菜单类型：</label>
+					<div style="margin-top: 4px;">
+						<input id="type2" type="radio" name="type" value="2"
+							onclick="testSeach();" style="border: 0px;box-sizing: content-box;"/><span> 点击回复&#160;</span> <input id="type3"
+							type="radio" name="type" value="3" onclick="testSeachUrl();" style="border: 0px;box-sizing: content-box;"/><span>
+							点击跳转&#160;</span>
+						<c:if test="${status == 1}">
+							<input id="type1" type="radio" name="type" value="1"
+								onclick="testSeachMeun();" style="border: 0px;box-sizing: content-box;"/>
+							<span> 一级菜单</span>
+						</c:if>
+						<font style="color: red"> *</font>&#160;&#160;<span style="color: red" id="typeStr"></span>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span6">
+					<label>菜单名称：</label> <input id="meunName" type="text"
+						name="menuName" value="${wccMenu.menuName}" onblur="checkName(${status},${platId});" />
+					&#160;<font style="color: red;">*</font>&#160;&#160;<span style="color: red" id="menuMsg"></span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span10">
+					<label>URL：</label>
+					<select id="urlSelect" style="width: 135px;" onchange="changeUrlSelect();">
+						<option value="99" >链接	</option>
+						<option value="1" >微内容</option>
+						<option value="2">抽奖活动</option>
+					</select>
+					<input style="margin-left: 40px;width: 200px;" id="url" type="text" name="urlStr" value="${wccMenu.url}" onblur="checkUrl();" placeholder="跳转必填" />
+				     <input type="hidden" id="urlVlaue" name="url" value="${wccMenu.url}"/>
+				    <font style="color: red;padding-left: 5px;display: none;" id="urlFont">*</font>&#160;<span style="color: red" id="urlMsg"></span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span6">
+					<label>KEY：</label><input id="mkey" type="text" name="mkey"
+						value="${wccMenu.mkey}" onblur="checkKey(${platId});" placeholder="回复必填"/> 
+						<font style="color: red;padding-left: 5px;display: none;" id="keyFont">*</font>&#160;
+						<span style="color: red" id="keyMsg"></span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span6">
+					<label>排序：</label> <select id="sort" name="sort"
+						style="width: 135px;">
+						<option value="1" selected="selected">1</option>
+						<option value="2" selected="selected">2</option>
+						<option value="3" selected="selected">3</option>
+						<option value="4" selected="selected">4</option>
+						<option value="5" selected="selected">5</option>
+					</select>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span12">
+					<label>回复类型：</label> <select id="flag2" name="contentSelect"
+						style="width: 135px;" onchange="changeDiv();">
+						<option value="1" selected="selected">文本</option>
+						<option value="2">图片</option>
+						<option value="3">图文</option>
+						<option value="4">语音</option>
+						<option value="5">视频</option>
+					</select>
+				</div>
+			</div>
+			<SCRIPT type="text/javascript">
+				<![CDATA[
+					var platformId = '${platId}';
+					var menuId = '${wccMenu.id}';
+					$.post("/ump/wccmenus/materialsListForUpdate", {
+						"platformUserId" : platformId,
+						"id" : menuId
+					}, function(data) {
+						$("#materials").html(data);
+					});
+					]]>
+				</SCRIPT>
+			<div id="materials">
+				<!-- materials调用素材 -->
+			</div>
+		</form>
+		<div class="row">
+			<div class="span6" style="margin-left: 30px;">
+				<input type="button" value="确 定" class="info"
+					onclick="returnForm(${status},${platId});return false;" /> <input class="warning"
+					type="button" value="取 消" style="font-family: '微软雅黑'"
+					onclick="history.go(-1)"></input>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="span12">
+			<span style="color: red; font-size: 20px;">${msg}</span>
+		</div>
+	</div>
+	
+	 <div id="urlTABEL" class="myUrl" style="display: none;height: auto;width:300px;padding-top:5px;padding-bottom:5px;background:#fff;max-height: 350px;min-height:100px;height:auto;z-index: 9999">
+	  	<div style="height: 30px;line-height:30px;border-bottom:1px solid #e5e5e5;padding-left:10px;padding-right:10px;">
+		  	<img src="/ump/images/add.png" /> <span style="padding-left: 10px;padding-top: 5px;">请选择</span><img src="/ump/images/del.png" style="float: right;cursor: pointer;" onclick="closeDilog();"/>
+		</div>
+	  	<div class="kate_wtc_tit" style="font-size:14px;font-weight:bold;">标 题</div>
+		  	<div class="kate_wtc_leibiao">
+			  	  <ul style="list-type-style:none;padding:0px;margin:0px;" id="dataBody">
+			  	  </ul>
+		  	</div>
+  	</div>
+	<div id="fade" class="black_overlay" />
+	
+	<!-- <div class="myPic" id="picdiv" style="display: none;" >
+		<div class="close">
+			<img src="/ump/images/close.png" width="29" height="29"
+				onclick="javascript:closeAll();"
+				style="cursor: pointer;" />
+		</div>
+		<div id="showPic">
+		</div>
+	</div>
+	<div id="emotionId" style="display: none;">
+		<c:forEach items="${emotions}" var="data" varStatus="status">
+				<c:if test="${status.index%10==0 }">
+					<br/>
+				</c:if>
+				<img onclick="selectEmotion(this)" style="cursor: pointer;" src="${data.url}" alt="${data.content }" title="${data.content }"/>
+			</c:forEach>
+	</div> -->
+</div>

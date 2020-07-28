@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+<jsp:directive.page contentType="text/html;charset=UTF-8"/>
+<jsp:output omit-xml-declaration="yes"/>
+<style>
+th {white-space: nowrap;}
+td {white-space: nowrap;}
+input,select{width: 135px;height: 28px;background-color: #fff;border: 1px solid #e4e4e4;}
+.metro label { display: block;font-size: 12px;font-weight: normal; margin: 5px 0;text-align: right;}
+</style>
+<style>@IMPORT url("/ump/styles/selectTree.css");</style>
+<SCRIPT type="text/javascript" src="/ump/js/selectTree.js">/*selectTree*/</SCRIPT>
+<script type="text/javascript">
+<![CDATA[
+var aid = '';
+var htmlVar = ''; 
+function dele(id,status,endTime){
+	var dtime = new Date().getTime();
+	var estr =  endTime.substr(0,endTime.length-2);
+	var aestr = estr.split(" ");//年月日   时分秒
+	var esstr = aestr[0].replace(/-/gm,'/');// -替换为/
+	var endstr = esstr+' '+aestr[1];//YY/MM/DD hh:mm:ss
+	var estime = new Date(endstr);
+	var etime = estime.getTime();
+	if(status){
+		if(etime>dtime){
+			alert('该活动还没过期无法删除');
+			return;
+		}
+	}
+	var url = '${url}';
+	var menuUrl = url+id;
+	$.post("/ump/wcccontents/findIdToWccMenu",{
+			"menuUrl":menuUrl,
+			async : false,
+			dataType : "json",
+		},function(data){
+			var str = eval('(' + data + ')');
+			if (str.msg == 'faile') {
+				if (confirm("该抽奖活动被菜单引用,无法删除！")) {
+					//window.location.href="/ump/wcclotteryactivitys/delete?id="+id;
+					return;
+				}
+			}else if(str.msg == 'success'){
+				if (!confirm("确定要删除吗？")) {
+					return;
+				}
+				window.location.href="/ump/wcclotteryactivitys/delete?id="+id;
+			}
+	 });
+}
+
+function visibleSub(){
+	var visible = $('input:radio:checked').val();
+	window.location.href="/ump/wcclotteryactivitys/visible?id="+aid+"&status="+visible;
+	return;
+}
+function visible(id,status){
+	if(status){
+		alert('该活动已启用');
+		return;
+	}
+	aid = id;
+	if(!htmlVar){
+		htmlVar = $('#dialog').html();
+	}
+	$.Dialog({
+		width : 300,
+		height : 150,
+		overlay : true,
+		shadow : true,
+		flat : true,
+		icon : '<img src="/ump/images/swatch.png"/>',
+		title : '审核',
+		content : '',
+		padding : 20,
+		onShow : function(_dialog) {
+			var html = htmlVar;
+			$('#dialog').html('');
+			$.Dialog.content(html);
+			$.Metro.initInputs();
+		}
+	});
+}
+
+$(document).ready(function() {
+	queryActivities(1);
+});
+
+function goPage(page){
+			var pageStr = $("#pageStr").val();
+	    	if($.trim(pageStr) == ""){
+	    		alert("请输入需要跳转的页数！");
+	    		return;
+	    	}
+	    	if(isNaN(pageStr)){
+	    		alert("格式错误，请输入数字！");
+	    		return;
+	    	}
+	    	if(pageStr > page){
+	    		alert("你输入的页数大于最大页数");
+	    		return;
+	    	}
+	    	if(pageStr <= 0){
+	    		alert("你输入的页数不符合要求");
+	    		return;
+	    	}
+	    	queryActivities(pageStr);
+		}
+
+function queryActivities(pageNo) {
+	var start = 0;
+	var limit = $("#limit").val();
+	if (pageNo > 0) {
+		start = (pageNo - 1) * limit;
+	}
+	
+	var platformUserId = $('#SelIds').val();
+	var nickName = $('#activityName_').val();
+	var insertTime = $('#insertTime_').val();
+	var startTime = $('#startTime_').val();
+	var endTime = $('#endTime_').val();
+	var createEndTime = $('#createEndTime_').val();
+	var isvisible = $('#isvisible_').val();
+	
+	var parmam = {
+			start : start,
+			limit : limit,
+			platformUserId : platformUserId,
+			nickName : nickName,
+			insertTime : insertTime,
+			startTime : startTime,
+			endTime : endTime,
+			createEndTime : createEndTime,
+			isvisible : isvisible
+		};
+
+
+	$.ajax({
+		url : "/ump/wcclotteryactivitys/queryActivities",
+		type : "POST",
+		data : parmam,
+		error : function(msg) {
+		},
+		success : function(text) {
+			$("#showResult").html(text);
+		}
+	});
+	
+	function change(o){
+			if(o.src.contains('ON')){
+				$(o).attr('src','/ump/images/OFF.png');
+				status = false;
+				return;
+			}
+			$(o).attr('src','/ump/images/ON.png');
+			status = true;
+		}
+}
+
+function startTimeFocus(){
+	$('#insertTime_').focus();
+}
+function endTimeFocus(){
+	$('#createEndTime_').focus();
+}
+function startTime(){
+	$('#startTime_').focus();
+}
+function endTime(){
+	$('#endTime_').focus();
+}
+	window.onload = loadTree('/ump/wccplatformusers/tree');
+	function addActivity(){
+		window.location.href='/ump/wcclotteryactivitys?form';
+	}
+	
+	function clearAll(){
+		$('#activityName_').val('');
+		$('#insertTime_').val('');
+		$('#createEndTime_').val('');
+		$('#isvisible_').val('');
+		$('#startTime_').val('');
+		$('#endTime_').val('');
+	}
+]]>
+</script>
+	
+	<div id="seacher" class="seacher">
+		<div>
+			<input type="hidden" name="page" value='1'/>
+			<div class="grid">
+				<div class="row">
+					<div class="span4">
+<!-- 						<span>公众平台：</span> -->
+<!-- 						<div class="input-control text" style="width: 20%"> -->
+<!-- 							<input id="SelVals" type="text" readonly="readonly" -->
+<!-- 								value="" style="width: 135px;" onclick="showMenu();" />  -->
+<!-- 							<input id="SelIds" name="relatedIssues" type="hidden" value="" /> -->
+<!-- 							<div id="menuContent" class="menuContent" -->
+<!-- 								style="display: none; position: absolute; z-index: 99;"> -->
+<!-- 								<ul id="treeDemo" class="ztree" -->
+<!-- 									style="margin-left: 0px; margin-top: 0; width: 270px; height: 300px;"></ul> -->
+<!-- 							</div> -->
+<!-- 						</div> -->
+						<LABEL>活动名称：</LABEL>
+						<input type="text" id="activityName_" name="activityName"/>
+					</div>
+					<div class="span4">
+		<LABEL>活动创建时间：</LABEL><input type="text" id="insertTime_" name="insertTime" value="" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})"/>
+		<IMG onclick="startTimeFocus();" style="margin-left: -22px;" src="././js/date/skin/datePicker.gif" width="20" height="20" />
+					
+					</div>
+					<div class="span4">
+		<LABEL>至：</LABEL><input type="text" id="createEndTime_" name="createEndTime" value="" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})"/>
+	    <IMG onclick="endTimeFocus();" style="margin-left: -22px;" src="././js/date/skin/datePicker.gif" width="20" height="20" />
+					
+					</div>
+				</div>
+				<div class="row">
+					<div class="span4">
+						<LABEL>启用状态：</LABEL>
+						<select id="isvisible_" name="isvisible">
+									<option value="">全部</option>
+									<option value="0">未启用</option>
+									<option value="1">启用</option>
+							</select>
+					</div>
+					<div class="span4">
+						<LABEL>活动时间：</LABEL><input type="text" id="startTime_" name="startTime" value="" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})"/>
+			<IMG onclick="startTime();" style="margin-left: -22px;" src="././js/date/skin/datePicker.gif" width="20" height="20" />
+					
+					</div>
+					<div class="span4">
+						<LABEL>至：</LABEL><input type="text" id="endTime_" name="endTime" value="" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})"/>
+		 						 <IMG onclick="endTime();" style="margin-left: -22px;" src="././js/date/skin/datePicker.gif" width="20" height="20" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="span6" style="margin-left: 20px;"> 
+						<input type="button" value="查 询" class="info" onclick="queryActivities(1);" style="font-family:'微软雅黑';background-color: #069dd5"/>
+						<input class="warning" type="button" value="重 置" onclick="clearAll();" style="font-family:'微软雅黑'"></input>
+				    </div>
+			    </div>
+			</div>
+		</div>
+	</div>
+	
+	
+	 <div id="dialog" style="display: none;">
+			<div style="width: 200px;height:50px; margin-left: 5px;margin: 0px auto;">
+				<div>
+					<div style="text-align: center;">
+						<div style="text-align: center;">启用：<input id="check_" style="margin-right: 5s0px;" name="isCheck" type="radio" value="1" checked="checked" />
+						&#160;&#160; 不启用：<input id="notCheck_" name="isCheck" type="radio" value="0" />
+						</div>
+					</div>
+				</div>
+				<div style="text-align: center;width: 100%;clear: both;margin-top: 20px;">
+						<input type="button" value="提交"  onclick="visibleSub();" class="info"/>
+						<input class="warning" type="button" value="取 消"  onclick="$.Dialog.close()" style="font-family:'微软雅黑'"></input>
+				</div>
+			</div>
+ 	</div>
+	
+	<div id="under" class="buttondiv"
+		style="height: 46px; background: #edf1f9; border: 1px solid #e4e4e4; border-bottom: none;">
+			<a href="#" onclick="addActivity();"><i class="on-left"><img
+			src="/ump/images/add.png" style="vertical-align: middle" width="14" height="14" /></i>添加活动</a>
+			</div>
+
+	<input type="hidden" id="limit" value="${limit}"/>
+	<div style="overflow:auto;" id="showResult">
+    </div>		
+</div>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default_pub" name="wccmembershiplevels/list">
+        <put-attribute name="body" value="/WEB-INF/views/wccmembershiplevels/list.jspx"/>
+    </definition>
+<definition extends="default_pub" name="wccmembershiplevels/show">
+        <put-attribute name="body" value="/WEB-INF/views/wccmembershiplevels/show.jspx"/>
+    </definition>
+<definition extends="default_pub" name="wccmembershiplevels/create">
+        <put-attribute name="body" value="/WEB-INF/views/wccmembershiplevels/create.jspx"/>
+    </definition>
+<definition extends="default_pub" name="wccmembershiplevels/update">
+        <put-attribute name="body" value="/WEB-INF/views/wccmembershiplevels/update.jspx"/>
+    </definition>
+</tiles-definitions>

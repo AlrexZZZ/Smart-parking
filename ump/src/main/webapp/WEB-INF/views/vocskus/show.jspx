@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_VocSku" object="${vocsku}" path="/vocskus" z="WGAEmX0vsrpuZjRJo/BDOsUi91o=">
+        <field:display field="name" id="s_com_nineclient_model_VocSku_name" object="${vocsku}" z="zsZnYlre8Hw4+8pQIJU6AWPHl4w="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_VocSku_isDeleted" object="${vocsku}" z="rSxgMna195JNPtRwe6hSvdiv0cM="/>
+        <field:display date="true" dateTimePattern="${vocSku_createtime_date_format}" field="createTime" id="s_com_nineclient_model_VocSku_createTime" object="${vocsku}" z="evnw3weMUnGgipSgdEG7OaLf3Fk="/>
+    </page:show>
+</div>

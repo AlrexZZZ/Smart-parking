@@ -1,0 +1,216 @@
+enum type --class ~.constant.WccCheckStatus
+enum constant --name sport
+enum constant --name music
+
+entity jpa --class ~.model.WccStore
+field boolean --fieldName isDeleted 
+field string --fieldName storeName  --notNull yes --sizeMax 200  --sizeMin 1
+field string --fieldName storeAddres --notNull yes  --sizeMax 200  --sizeMin 1
+field string --fieldName storePhone  --notNull yes --sizeMax 100  --sizeMin 1
+field string --fieldName storeText  --notNull yes --sizeMax 4000  --sizeMin 1
+field string --fieldName storeCode --notNull yes  --sizeMax 100  --sizeMin 1
+field string --fieldName storeRemark  --sizeMax 4000  
+field string --fieldName storeLngx --notNull yes --sizeMax 200  --sizeMin 1
+field string --fieldName storeLaty  --notNull yes --sizeMax 200  --sizeMin 1
+field string --fieldName storeCodeUrl --notNull yes  --sizeMax 200  --sizeMin 1
+field string --fieldName storeBigImageUrl  --notNull yes --sizeMax 4000  --sizeMin 1
+field string --fieldName storeSmallImageUrl  --notNull yes --sizeMax 4000  --sizeMin 1
+field enum --fieldName storeAuditing --type ~.constant.WccCheckStatus 
+
+entity jpa --class ~.model.WccComment
+field boolean --fieldName isDeleted 
+field string --fieldName comment --notNull yes --sizeMax 4000 --sizeMin 1
+
+entity jpa --class ~.model.WccUtility
+field boolean --fieldName isDeleted
+field string --fieldName name --notNull yes --sizeMax 300 --sizeMin 1
+field string --fieldName remark --sizeMax 4000 
+field string --fieldName url --notNull yes --sizeMax 400 --sizeMin 1
+
+entity jpa --class ~.model.WccOffcAtivity
+field boolean --fieldName isDeleted
+field string --fieldName name --notNull yes --sizeMax 400 --unique  --sizeMin 1
+field date --type java.util.Date --fieldName createTime --notNull yes
+field date --type java.util.Date --fieldName startTime --notNull yes
+field date --type java.util.Date --fieldName endTime --notNull yes
+
+entity jpa --class ~.model.WccContent
+field boolean --fieldName isDeleted
+field string --fieldName title --notNull yes --sizeMax 200 --unique   --sizeMin 1
+field string --fieldName userName --notNull yes --sizeMax 32  --sizeMin 1
+field boolean --fieldName isPrizeCommit
+field boolean --fieldName isCheck
+field string --fieldName contentUrl --notNull yes --sizeMin 1 --sizeMax 4000
+field string --fieldName content --notNull yes --sizeMin 1 --sizeMax 4000
+field number --type int --fieldName praiseCount --notNull yes --value 0
+field number --type int --fieldName clickCount --notNull yes --value 0
+
+entity jpa --class ~.model.WccPraise
+field string --fieldName type --sizeMax 4000
+field boolean --fieldName isDeleted
+
+entity jpa --class ~.model.WccInterActiveApp
+field boolean --fieldName isDeleted
+field string --fieldName name --notNull yes --unique --sizeMin 1 --sizeMax 400
+field string --fieldName keyword --notNull yes --sizeMin 1 --sizeMax 4000
+field boolean --fieldName isOpen
+field string --fieldName url --notNull yes --sizeMin 1 --sizeMax  4000
+
+entity jpa --class ~.model.WccAwardInfo
+field boolean --fieldName isDeleted
+field string --fieldName awardName --notNull yes --unique --sizeMin 1 --sizeMax 400
+field string --fieldName awardInfo --notNull yes --sizeMin 1 --sizeMax 4000
+field number --type double --fieldName winRate --notNull 
+field string --fieldName cdkey --notNull yes --sizeMin 1 --sizeMax 200 --unique 
+field number --type int --fieldName awardNum --notNull yes --value 0
+
+entity jpa --class ~.model.WccActivities
+field boolean --fieldName isDeleted
+field string --fieldName activitiesName --unique --notNull yes --sizeMin 1 --sizeMax 400
+field string --fieldName activitiesTopic --notNull yes --sizeMin 1 --sizeMax 400
+field date --type java.util.Date --fieldName beginTime --notNull 
+field date --type java.util.Date --fieldName endTime --notNull 
+field boolean --fieldName isAudit
+field date --type java.util.Date --fieldName codeValidtime 
+field string --fieldName activitiesUrl --notNull yes --sizeMin 1 --sizeMax 4000
+field string --fieldName imageUrl --notNull yes --sizeMin 1 --sizeMax 4000
+field string --fieldName activityProvince --notNull yes --sizeMin 1 --sizeMax 4000
+field string --fieldName activityCity --notNull yes --sizeMin 1 --sizeMax 4000
+
+entity jpa --class ~.model.WccLeavemsgRecord
+field boolean --fieldName isDeleted
+field string --fieldName msgUserName --notNull yes --sizeMin 1 --sizeMax 4000
+field string --fieldName msgContent --notNull yes --sizeMin 1 --sizeMax 4000
+field date --type java.util.Date --fieldName msgTime --notNull 
+
+entity jpa --class ~.model.WccLotteryActivity
+field boolean --fieldName isDeleted
+field boolean --fieldName isVisibale 
+field string --fieldName keyword --notNull --sizeMin 1 --sizeMax 200
+field string --fieldName activityName --notNull --unique --sizeMin 1 --sizeMax 400
+field date --type java.util.Date --fieldName startTime --notNull 
+field date --type java.util.Date --fieldName endTime --notNull 
+field string --fieldName activityIntroduction --notNull yes --sizeMin 1 --sizeMax 4000
+field string --fieldName repeatAwardReply --notNull yes --sizeMin 1 --sizeMax 4000
+enum type --class ~.constant.WccActivityType
+enum constant --name sport
+enum constant --name music
+field enum --fieldName activityType --type ~.constant.WccActivityType --class ~.model.WccLotteryActivity
+field string --fieldName activityRemark
+field number --type int --fieldName visitorNumber --notNull yes --value 0
+field number --type int --fieldName effectiveNumber --notNull yes --value 0
+field string --fieldName awardMsg --notNull yes --sizeMin 1 --sizeMax 4000
+field string --fieldName imageUrl --notNull yes --sizeMin 1 --sizeMax 4000
+field number --type int --fieldName costPoint --notNull yes --value 0
+field number --type int --fieldName lotteryNum --notNull --value 0
+
+entity jpa --class ~.model.WccCommunity
+field boolean --fieldName isDeleted
+field string --fieldName communityName --notNull yes --unique --sizeMin 1 --sizeMax 200
+field string --fieldName communityUrl --notNull yes --sizeMin 1 --sizeMax 400
+enum type --class ~.constant.WccTopicStatus
+enum constant --name status1
+enum constant --name status2
+field enum --fieldName topicStatus --type ~.constant.WccTopicStatus --class ~.model.WccCommunity
+field number --type int --fieldName topicSort --notNull 
+field string --fieldName headImage --notNull yes --sizeMin 1 --sizeMax 400
+field string --fieldName officialImage --notNull yes --sizeMin 1 --sizeMax 400
+field string --fieldName officialNickName --notNull yes --sizeMin 1 --sizeMax 400
+
+entity jpa --class ~.model.WccPlate
+field boolean --fieldName isDeleted
+field string --fieldName plateName --notNull yes --unique --sizeMin 1 --sizeMax 200
+enum type --class ~.constant.WccPlateStatus
+enum constant --name status1
+enum constant --name status2
+field enum --fieldName status --type ~.constant.WccPlateStatus --class ~.model.WccPlate
+field string --fieldName remark --sizeMax 4000
+
+entity jpa --class ~.model.WccUserLottery
+field number --type int --fieldName lotteryNumber 
+field boolean --fieldName isDeleted
+
+entity jpa --class ~.model.WccTopic
+field boolean --fieldName isDeleted
+field enum --fieldName status --type ~.constant.WccTopicStatus --class ~.model.WccTopic
+field string --fieldName content --notNull yes --sizeMin 1 --sizeMax 4000
+field boolean --fieldName isOfficial
+field number --type int --fieldName commentCount --value 0
+field number --type int --fieldName praiseCount --value 0
+field string --fieldName topicImage --notNull yes --sizeMin 1 --sizeMax 4000
+
+entity jpa --class ~.model.WccComment
+field boolean --fieldName isDeleted
+field string --fieldName content --sizeMax 4000
+enum type --class ~.constant.WccCommentStatus
+enum constant --name status1
+enum constant --name status2
+field enum --fieldName status --type ~.constant.WccCommentStatus --class ~.model.WccComment
+
+entity jpa --class ~.model.WccSncode
+field boolean --fieldName isDeleted
+field string --fieldName snCode --notNull yes --sizeMin 1 --sizeMax 200
+enum type --class ~.constant.WccSnCodeStatus
+enum constant --name status1
+enum constant --name status2
+field enum --fieldName snStatus --type ~.constant.WccSnCodeStatus --class ~.model.WccSncode
+field date --type java.util.Date --fieldName awardTime --notNull yes
+field string --fieldName snRemark --sizeMax 4000
+
+entity jpa --class ~.model.WccUser
+field string --fieldName userName --unique --notNull yes --sizeMin 1 --sizeMax 200
+enum type --class  ~.constant.WccUserStatus
+enum constant --name qiyong
+enum constant --name buqiyong
+field enum --fieldName status --type ~.constant.WccUserStatus --class ~.model.WccUser
+field number --type int --fieldName commentCount --notNull yes --value 0
+field number --type int --fieldName praiseCount --notNull yes --value 0
+field number --type int --fieldName givenCommentCount --value 0
+field number --type int --fieldName givenPraiseCount --value 0
+field string --fieldName remark --sizeMax 4000
+field boolean --fieldName isDeleted
+field boolean --fieldName isOfficial
+field string --fieldName openId --sizeMax 100
+field date --type java.util.Date --fieldName firstTopicTime --notNull yes
+field number --type int --fieldName userTopicCount --notNull yes --value 0
+field string --fieldName lastTopicComment --notNull yes --sizeMin 1 --sizeMax 200
+field date --type java.util.Date --fieldName lastTopicTime --notNull yes
+field string --fieldName userImage --notNull yes --sizeMin 1 --sizeMax 300
+
+entity jpa --class ~.model.WccAnswer
+field string --fieldName answer --sizeMin 1 --sizeMax 4000
+field boolean --fieldName isDeleted
+field string --fieldName userName --sizeMin 1 --sizeMax 200 
+field string --fieldName userPhone --regexp (^[0-9]{11}$)
+
+entity jpa --class ~.model.WccQuestion
+field string --fieldName name --sizeMin 1 --sizeMax 400 
+field string --fieldName questionNo --sizeMin 1 --sizeMax 50
+field number --fieldName sort --type int 
+field boolean --fieldName isVisable 
+enum type --class ~.constant.WccQuestionType
+enum constant --name type1
+enum constant --name type2
+field enum --fieldName questionType --type ~.constant.WccQuestionType --class ~.model.WccQuestion
+
+entity jpa --class ~.model.WccQuestionnaire
+field boolean --fieldName isDeleted
+field string --fieldName name --sizeMin 1 --sizeMax 200
+field string --fieldName questionnaireCode --sizeMin 1 --sizeMax 200
+field date --fieldName visableTime --type java.util.Date
+field string --fieldName remark --sizeMax 4000
+field string --fieldName url --sizeMin 1 --sizeMax 400
+field number --fieldName sort --type int
+enum type --class ~.constant.WccStatus
+enum constant --name type1
+enum constant --name type2
+field enum --fieldName status --type ~.constant.WccStatus --class ~.model.WccQuestionnaire
+
+entity jpa --class ~.model.WccOption
+field number --type int --fieldName questionNo --notNull yes 
+field number --type int --fieldName sort --notNull --value 0
+enum type --class ~.constant.WccOptionType
+enum constant --name type1
+enum constant --name type2
+field enum --fieldName type --type ~.constant.WccOptionType --class ~.model.WccOption
+field boolean --fieldName isDeleted

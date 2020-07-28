@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_VocAccount" object="${vocaccount}" path="/vocaccounts" z="siqP5Dk7ZE2jx2iqgxHYgzhMCPc=">
+        <field:display field="account" id="s_com_nineclient_model_VocAccount_account" object="${vocaccount}" z="I8dmG7k4/NQXnJGT43EgJaYB/pY="/>
+        <field:display field="cookie" id="s_com_nineclient_model_VocAccount_cookie" object="${vocaccount}" z="mOUnzNx9kALpk6cC/s0pWxTfdyw="/>
+        <field:display field="password" id="s_com_nineclient_model_VocAccount_password" object="${vocaccount}" z="n/RrE90eOamQaMaYZr1DrSdgUxk="/>
+        <field:display field="sort" id="s_com_nineclient_model_VocAccount_sort" object="${vocaccount}" z="0FDERCBPPjYawVAtdeKI7y1eMps="/>
+        <field:display field="isVisable" id="s_com_nineclient_model_VocAccount_isVisable" object="${vocaccount}" z="ht+dFVVtHrF1GACSXG+PWoDVKGA="/>
+        <field:display field="remark" id="s_com_nineclient_model_VocAccount_remark" object="${vocaccount}" z="KwvIGurteztyMIc4wuJcl2FARs4="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_VocAccount_isDeleted" object="${vocaccount}" z="hrrmNCiGLENUqVJW7xtRZa4FnHc="/>
+        <field:display date="true" dateTimePattern="${vocAccount_createtime_date_format}" field="createTime" id="s_com_nineclient_model_VocAccount_createTime" object="${vocaccount}" z="tL3+VCgV1L5c4XdGQGNwhZ8de3Y="/>
+        <field:display field="isInvalid" id="s_com_nineclient_model_VocAccount_isInvalid" object="${vocaccount}" z="hLntpzx9buX6FDiKVX3pvbR/QL4="/>
+        <field:display field="sessionKey" id="s_com_nineclient_model_VocAccount_sessionKey" object="${vocaccount}" z="a0q+WrkiNzxQ8o6ojyvs7mKiMfQ="/>
+        <field:display date="true" dateTimePattern="${vocAccount_effecttime_date_format}" field="effectTime" id="s_com_nineclient_model_VocAccount_effectTime" object="${vocaccount}" z="KlpSXf/kwSfFXJXbjWDF0LydOfE="/>
+        <field:display date="true" dateTimePattern="${vocAccount_expirytime_date_format}" field="expiryTime" id="s_com_nineclient_model_VocAccount_expiryTime" object="${vocaccount}" z="xy8fxrkEr01feR2RwpvcXWOuhPo="/>
+    </page:show>
+</div>

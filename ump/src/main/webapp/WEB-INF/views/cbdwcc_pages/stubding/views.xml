@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+
+<definition extends="default_pub" name="qcloud/updateRepair">
+ <put-attribute name="body" value="/WEB-INF/views/cbdwcc_pages/stubding/repairUpdate.jspx"/>
+</definition>
+
+<definition extends="default_pub" name="qcloud/updateEnList">
+ <put-attribute name="body" value="/WEB-INF/views/cbdwcc_pages/stubding/enListUpdate.jspx"/>
+</definition>
+
+<definition extends="default_pub" name="qcloud/update">
+ <put-attribute name="body" value="/WEB-INF/views/cbdwcc_pages/stubding/stuUpdate.jspx"/>
+</definition>
+
+<definition extends="default_pub" name="qcloud/stuInfo">
+ <put-attribute name="body" value="/WEB-INF/views/cbdwcc_pages/stubding/stuInfo.jspx"/>
+</definition>
+
+<definition extends="default_pub" name="qcloud/repairInfo">
+ <put-attribute name="body" value="/WEB-INF/views/cbdwcc_pages/stubding/repairInfo.jspx"/>
+</definition>
+<definition extends="default_pub" name="qcloud/enListInfo">
+ <put-attribute name="body" value="/WEB-INF/views/cbdwcc_pages/stubding/enListInfo.jspx"/>
+</definition>
+</tiles-definitions>

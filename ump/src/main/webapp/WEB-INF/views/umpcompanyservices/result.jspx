@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+<table class="table striped hovered">
+		<thead>
+			<tr>
+			    <th></th>
+				<th>公司ID</th>
+				<th>申请产品</th>
+                <th>版本</th>
+				<th>接入渠道</th>
+				<th>开通账号数</th>
+				<th>开通时间</th>
+				<th>到期时间</th>
+				<th>状态</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+
+
+		<tbody>
+		<c:choose>
+		 <c:when test="${page > 0}">
+		   <c:forEach var="companyService" items="${list}">
+				<tr>
+				<td> <INPUT type="radio" name="rowsCheck" value="${companyService.companyCode}"/></td>
+					<td  onclick="showCompany('${companyService.companyCode}')">
+					<div style="cursor: pointer;color:#fa6800;">
+					${companyService.companyCode}
+					</div>
+					</td>
+
+					<td>
+					  ${companyService.productName }
+					</td>
+					
+					<td>
+					  ${companyService.versionName }
+					</td>
+					
+					<td>
+					<c:forEach var="channel" items="${companyService.channels}">
+					    ${channel.channelName}
+					</c:forEach>
+					</td>
+					
+					<td>${companyService.maxAccount}</td>
+					<td>
+					 <fmt:formatDate value="${companyService.serviceStartTime}" pattern="yyyy-MM-dd" />
+					</td>
+					<td>
+					<fmt:formatDate value="${companyService.serviceEndTime}" pattern="yyyy-MM-dd" />
+					</td>
+					
+					<c:choose>
+					    <c:when test="${companyService.companyServiceStatus=='开通'}">
+					   <td style="color: green;">${companyService.companyServiceStatus}</td>
+					  </c:when>
+					  <c:when test="${companyService.companyServiceStatus=='停止'}">
+					   <td style="color: red;">${companyService.companyServiceStatus}</td>
+					  </c:when>
+					  
+					    <c:when test="${companyService.companyServiceStatus=='预到期'}">
+					   <td style="color: yellow;">${companyService.companyServiceStatus}</td>
+					  </c:when>
+					  
+					    <c:when test="${companyService.companyServiceStatus=='到期'}">
+					   <td style="color: orange;">${companyService.companyServiceStatus}</td>
+					  </c:when>
+					  
+					  <c:otherwise>
+					   <td>${companyService.companyServiceStatus}</td>
+					  </c:otherwise>
+					</c:choose>
+					
+					<td>
+					<!-- <c:if test="${companyService.companyServiceStatus=='到期'}">
+					 <img title="编辑" src="/ump/resources/images/update.png" class="image" alt="编辑" />
+					</c:if>
+					<c:if test="${companyService.companyServiceStatus!='到期'}">
+					 <a title="编辑" alt="编辑" href="#">
+					  <img title="编辑" src="/ump/resources/images/update.png" class="image" alt="编辑" onclick="showUpdateService('${companyService.companyCode}',${companyService.id},${companyService.productId},${companyService.versionId},${companyService.maxAccount},'${companyService.serviceStartTime}','${companyService.serviceEndTime}',${companyService.companyServiceStatus.id});" />
+					</a>
+					</c:if> -->
+					<a title="编辑" alt="编辑" href="#">
+					  <img title="编辑" src="/ump/resources/images/update.png" class="image" alt="编辑" onclick="showUpdateService('${companyService.companyCode}',${companyService.id},${companyService.productId},${companyService.versionId},${companyService.maxAccount},'${companyService.serviceStartTime}','${companyService.serviceEndTime}',${companyService.companyServiceStatus.id});" />
+					</a>
+					</td>
+
+				</tr>
+
+			</c:forEach>
+		 </c:when>
+		   <c:otherwise>
+		      <tr><td colspan="10">查无匹配数据</td></tr>
+		   </c:otherwise>
+		</c:choose>
+			
+		</tbody>
+	</table>
+	<a onclick="showAddCompanyService();" style="float:left;"><img style="cursor: pointer;background-color: #069dd5;" src="/ump/images/add_01.png"/><!--  --></a>
+	<div style="text-align: right;margin-top:20px">
+		  <c:if test="${page>1}">
+			<a class="default"  style="cursor: pointer;" onclick="queryCompanyService(1)"><img src="/ump/images/resultset_first.png"/></a>
+		 </c:if>
+
+		<c:if test="${page>1}">
+			<a class="default"  style="cursor: pointer;margin-left:10px;" onclick="queryCompanyService(${page-1})"><img src="/ump/images/resultset_previous.png"/></a>
+		</c:if>
+		
+		 <span style="color:#069dd5;height: 22px;line-height: 22px;margin-left:10px;">${page}/${maxPages}</span><INPUT id="_go" style="margin-left:10px;width: 30px;height:22px"/><a class="info" style="width: 28px;height:22px;background-color:#069dd5;color: white;display:inline-block;font-family:Arial;font-size: 10px;line-height: 22px;text-align:center;cursor: pointer;" onclick="queryCompanyService($('#_go').val())">GO</a>
+
+		 <c:if test="${page != maxPages}">
+			<a onclick="queryCompanyService(${page+1})" style="cursor: pointer;margin-left:10px;"><img src="/ump/images/resultset_next.png"/></a>
+	  	 </c:if>
+
+		  <c:if test="${page != maxPages}">
+			<a class="default" style="cursor: pointer;margin-left:5px;" onclick="queryCompanyService(${maxPages})"><img src="/ump/images/resultset_last.png"/></a>
+		 </c:if>
+		<span style="margin-left:10px;">每页<span style="color:#069dd5;">${limit}</span>条</span>
+			</div>
+	<input type="hidden" id="pageNoId" value="${page}"/>
+</div>

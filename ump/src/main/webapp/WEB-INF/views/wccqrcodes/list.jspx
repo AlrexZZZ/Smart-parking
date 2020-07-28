@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_WccQrcode" items="${wccqrcodes}" z="ymBBTVdAzJGwOSXdyutik+fhi9o=">
+        <table:table data="${wccqrcodes}" id="l_com_nineclient_model_WccQrcode" path="/wccqrcodes" z="PMdwGJxCFR4qVaUAj1s0dNc8z/8=">
+            <table:column id="c_com_nineclient_model_WccQrcode_codeUrl" property="codeUrl" z="crdy9+1sPcWqClgfcBG41gUmg2w="/>
+            <table:column id="c_com_nineclient_model_WccQrcode_codeId" property="codeId" z="nXJUvkhTAEMT2+n6AjFd3FJXN5Q="/>
+            <table:column id="c_com_nineclient_model_WccQrcode_isUse" property="isUse" z="2uoUhP+IY0fNWbDCJwwny2DmqTM="/>
+            <table:column id="c_com_nineclient_model_WccQrcode_expireSeconds" property="expireSeconds" z="/zFrHw7tyqi0pJ/uwsj/O3puzw4="/>
+            <table:column id="c_com_nineclient_model_WccQrcode_actionType" property="actionType" z="3Ylwasu5vrdVF+NUe4hJzprI4bk="/>
+            <table:column id="c_com_nineclient_model_WccQrcode_useType" property="useType" z="BynHIVkNcokNNrt5MJj73wCFX+w="/>
+        </table:table>
+    </page:list>
+</div>

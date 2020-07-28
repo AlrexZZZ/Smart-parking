@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<div class="row" style="border-radius:10px;width:98%;border: 3px solid red;-webkit-border: 3px solid red;padding-bottom: 16px;">
+		<div style="background-color: red;color: white;border: 3px solid red;-webkit-border: 3px solid red;font-size: 16px;width:98.5%;font-style:微软雅黑;">活动提示</div>
+			<div style="border: 1px dashed red;width: 90%;margin: 0px auto;padding: 1%;margin-top: 10px;">
+				${info}
+			</div>
+	</div>
+</div>

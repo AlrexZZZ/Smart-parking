@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccUserFields" object="${wccuserfields}" path="/wccuserfieldses" z="RPi3DHB1K2YX5H8uYwD8Nwb15Mw=">
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccUserFields_isDeleted" object="${wccuserfields}" z="wbH0C0ymdHxaY3YFd+gDlRZZahU="/>
+        <field:display field="isVisable" id="s_com_nineclient_model_WccUserFields_isVisable" object="${wccuserfields}" z="XAzZr4/KNoZoo2CADJuoLrsMcW0="/>
+        <field:display date="true" dateTimePattern="${wccUserFields_createtime_date_format}" field="createTime" id="s_com_nineclient_model_WccUserFields_createTime" object="${wccuserfields}" z="owhTsMAhKDg773RpEMlO0V/J3YI="/>
+        <field:display field="fieldNameCh" id="s_com_nineclient_model_WccUserFields_fieldNameCh" object="${wccuserfields}" z="dcRDOEm1pW/DDtiV0qir3nQYaOU="/>
+        <field:display field="fieldNameEN" id="s_com_nineclient_model_WccUserFields_fieldNameEN" object="${wccuserfields}" z="WKQFNlRyICIcENbH4WUqsA/7bw0="/>
+        <field:display field="remark" id="s_com_nineclient_model_WccUserFields_remark" object="${wccuserfields}" z="eqEh7iGWWdFnKqzYDxpcqn9JF/I="/>
+        <field:display field="isEmail" id="s_com_nineclient_model_WccUserFields_isEmail" object="${wccuserfields}" z="cKMBI5lWzEji7M25rqmSI2+qPRM="/>
+        <field:display field="isKey" id="s_com_nineclient_model_WccUserFields_isKey" object="${wccuserfields}" z="vBY8rcMDR2ijqoQo2e65VYLsBA0="/>
+        <field:display field="isQueryType" id="s_com_nineclient_model_WccUserFields_isQueryType" object="${wccuserfields}" z="qrU50a73+DrTTGNPHaVCo4822Uk="/>
+        <field:display field="isCombox" id="s_com_nineclient_model_WccUserFields_isCombox" object="${wccuserfields}" z="ErRSF0YyWB/0pYzprdiFu7yl1ls="/>
+        <field:display field="isComBoxValue" id="s_com_nineclient_model_WccUserFields_isComBoxValue" object="${wccuserfields}" z="ZaB/8eaREBckyKY+ePZugC4CNbg="/>
+    </page:show>
+</div>

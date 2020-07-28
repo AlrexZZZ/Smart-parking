@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_VocComment" object="${voccomment}" path="/voccomments" z="86HabQXkW+lFYz80ZMu3yg99JeA=">
+        <field:display field="commentContent" id="s_com_nineclient_model_VocComment_commentContent" object="${voccomment}" z="e7Y2EsF5GhCuaajKGmjDBfjheZM="/>
+        <field:display field="commentTitle" id="s_com_nineclient_model_VocComment_commentTitle" object="${voccomment}" z="M7jY/yxNZ/xD3JrDa3rirhFbNqg="/>
+        <field:display date="true" dateTimePattern="${vocComment_commenttime_date_format}" field="commentTime" id="s_com_nineclient_model_VocComment_commentTime" object="${voccomment}" z="HTacwqFQKH/7ciGy3YOJ/f4SCmE="/>
+        <field:display date="true" dateTimePattern="${vocComment_buytime_date_format}" field="buyTime" id="s_com_nineclient_model_VocComment_buyTime" object="${voccomment}" z="hBmMIz/MW/9Lqo44PenotI/Jwtw="/>
+        <field:display date="true" dateTimePattern="${vocComment_createtime_date_format}" field="createTime" id="s_com_nineclient_model_VocComment_createTime" object="${voccomment}" z="o6wRJPyaLSTTgPoo65MfajJf1IE="/>
+        <field:display field="replyParam" id="s_com_nineclient_model_VocComment_replyParam" object="${voccomment}" z="ve5LyhA4xM0RgJoNWHH5Y9vAHxw="/>
+        <field:display field="replyUrl" id="s_com_nineclient_model_VocComment_replyUrl" object="${voccomment}" z="2elishWWkiCcyVm525J28M6qYM4="/>
+        <field:display field="replyState" id="s_com_nineclient_model_VocComment_replyState" object="${voccomment}" z="oTGU+f6G541gKZazXt0UgDiXuGE="/>
+        <field:display date="true" dateTimePattern="${vocComment_replytime_date_format}" field="replyTime" id="s_com_nineclient_model_VocComment_replyTime" object="${voccomment}" z="QCbfpMDsYliEzwslkLlDBFSINGc="/>
+        <field:display field="dispatchState" id="s_com_nineclient_model_VocComment_dispatchState" object="${voccomment}" z="+gO4iX69AmM3jXQ03jZoRqrzV6I="/>
+        <field:display field="dispatchOperator" id="s_com_nineclient_model_VocComment_dispatchOperator" object="${voccomment}" z="aHqjw9GVRxn4+HjgovCNKrCoKko="/>
+        <field:display date="true" dateTimePattern="${vocComment_dispatchtime_date_format}" field="dispatchTime" id="s_com_nineclient_model_VocComment_dispatchTime" object="${voccomment}" z="wcy+/4FpRXiVRZVchbBW5ZD+G4E="/>
+        <field:display field="commentLevel" id="s_com_nineclient_model_VocComment_commentLevel" object="${voccomment}" z="mDe6PFOY0rLWor/s42nioQZzess="/>
+        <field:display field="userName" id="s_com_nineclient_model_VocComment_userName" object="${voccomment}" z="HNLoi+Pvu9Op9ozrQjP5+sRdzbs="/>
+        <field:display field="commentCategory" id="s_com_nineclient_model_VocComment_commentCategory" object="${voccomment}" z="mGt7qr0yFSGfvTD8xa6P2TG4JsU="/>
+    </page:show>
+</div>

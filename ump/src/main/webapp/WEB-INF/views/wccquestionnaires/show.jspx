@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccQuestionnaire" object="${wccquestionnaire}" path="/wccquestionnaires" z="FQRte/QpCAZXyqRlr3xl8fsP4ag=">
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccQuestionnaire_isDeleted" object="${wccquestionnaire}" z="R+s7v2LGouUpYD3hxABCTpOvsGQ="/>
+        <field:display field="name" id="s_com_nineclient_model_WccQuestionnaire_name" object="${wccquestionnaire}" z="M6jSXTm+izDgKFeEL6MgU1Q3nbw="/>
+        <field:display field="questionnaireCode" id="s_com_nineclient_model_WccQuestionnaire_questionnaireCode" object="${wccquestionnaire}" z="V7MuT5tzEWfIHttMyRDMYipTY7c="/>
+        <field:display date="true" dateTimePattern="${wccQuestionnaire_visabletime_date_format}" field="visableTime" id="s_com_nineclient_model_WccQuestionnaire_visableTime" object="${wccquestionnaire}" z="TgKxG5cMBpQYoZPQjp122P6uOk8="/>
+        <field:display field="remark" id="s_com_nineclient_model_WccQuestionnaire_remark" object="${wccquestionnaire}" z="ZiQa7PV0HPbWUEaUjS5Pg0wj6Uk="/>
+        <field:display field="url" id="s_com_nineclient_model_WccQuestionnaire_url" object="${wccquestionnaire}" z="VcrtEiH0mhMsGcW7/XyexiO5qYI="/>
+        <field:display field="sort" id="s_com_nineclient_model_WccQuestionnaire_sort" object="${wccquestionnaire}" z="P850bsazRsYOpoBXeEkaRQbPPLQ="/>
+        <field:display field="status" id="s_com_nineclient_model_WccQuestionnaire_status" object="${wccquestionnaire}" z="rLnbRTK1ArUk/WrMXhOpC0n6eLg="/>
+    </page:show>
+</div>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_VocWordCategory" object="${vocwordcategory}" path="/vocwordcategorys" z="sv/XBtSb2LoZPV6DbSfvHvO6lEo=">
+        <field:display field="name" id="s_com_nineclient_model_VocWordCategory_name" object="${vocwordcategory}" z="sBxA0uOyJGmp19YtewI8byh+dhQ="/>
+        <field:display field="parentId" id="s_com_nineclient_model_VocWordCategory_parentId" object="${vocwordcategory}" z="R/Is3cTLqfMdylOt00nDCqjF72E="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_VocWordCategory_isDeleted" object="${vocwordcategory}" z="Ct1XDplJ0IxWPn4g5rHzxFeerzs="/>
+        <field:display date="true" dateTimePattern="${vocWordCategory_createtime_date_format}" field="createTime" id="s_com_nineclient_model_VocWordCategory_createTime" object="${vocwordcategory}" z="fTv6kZedC47R2gbsPlFnzhx1scs="/>
+    </page:show>
+</div>

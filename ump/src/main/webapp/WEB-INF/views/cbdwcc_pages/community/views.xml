@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+
+	<definition extends="cbdwcc_culture" name="community/create">
+		<put-attribute name="body" value="/WEB-INF/views/cbdwcc_pages/community/community_index.jsp" />
+	</definition>
+	<definition extends="cbdwcc_culture" name="community/introduction">
+		<put-attribute name="body" value="/WEB-INF/views/cbdwcc_pages/community/community_introduction.jsp"/>
+	</definition>
+	<definition extends="cbdwcc_culture" name="community/location">
+		<put-attribute name="body" value="/WEB-INF/views/cbdwcc_pages/community/community_location.jsp"/>
+	</definition>
+	
+	<definition extends="cbdwcc_culture" name="community/newCreate">
+		<put-attribute name="body" value="/WEB-INF/views/cbdwcc_pages/community/new_productindex.jsp"/>
+	</definition>
+	
+	<definition extends="cbdwcc_culture" name="community/newCreateItme">
+		<put-attribute name="body" value="/WEB-INF/views/cbdwcc_pages/community/New_community_introduction.jsp"/>
+	</definition>
+	<definition extends="cbdwcc_culture" name="community/newCreateImg">
+		<put-attribute name="body" value="/WEB-INF/views/cbdwcc_pages/community/New_community_houseType.jsp"/>
+	</definition>
+	<definition extends="cbdwcc_culture" name="community/introductionWg">
+		<put-attribute name="body" value="/WEB-INF/views/cbdwcc_pages/community/community_manger.jsp"/>
+	</definition>
+</tiles-definitions>

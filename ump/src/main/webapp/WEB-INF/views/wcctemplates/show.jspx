@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccTemplate" object="${wcctemplate}" path="/wcctemplates" z="w8WZXEUAVl3WHYRXixAlDZf4854=">
+        <field:display field="type" id="s_com_nineclient_model_WccTemplate_type" object="${wcctemplate}" z="JtIapc6N+5MrBbM9qGhyGyZ0hxE="/>
+        <field:display field="name" id="s_com_nineclient_model_WccTemplate_name" object="${wcctemplate}" z="ozPDjZYB+kqI6dR0XHNziwY2Z9s="/>
+        <field:display field="parentId" id="s_com_nineclient_model_WccTemplate_parentId" object="${wcctemplate}" z="DbiOKI/E6uueRvfTa4ftKfwustw="/>
+        <field:display field="title" id="s_com_nineclient_model_WccTemplate_title" object="${wcctemplate}" z="L08C9rHzwJLMXM3M4gC/pb41MXw="/>
+        <field:display field="content" id="s_com_nineclient_model_WccTemplate_content" object="${wcctemplate}" z="0fUtmZuMVkv5b3hqBz55plw7jmc="/>
+        <field:display field="useCount" id="s_com_nineclient_model_WccTemplate_useCount" object="${wcctemplate}" z="5KfOgcYTZtGAJsCisNdmLG/ZMP8="/>
+        <field:display field="sort" id="s_com_nineclient_model_WccTemplate_sort" object="${wcctemplate}" z="A6u7IT3g+J463wVFa4E2DKoyOdM="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccTemplate_isDeleted" object="${wcctemplate}" z="V/G1lxdfYWrVdsi9ONkrVChIGOQ="/>
+        <field:display field="isVisable" id="s_com_nineclient_model_WccTemplate_isVisable" object="${wcctemplate}" z="hl0v0jSooMEYhls7WG6xwSgdao4="/>
+        <field:display date="true" dateTimePattern="${wccTemplate_inserttime_date_format}" field="insertTime" id="s_com_nineclient_model_WccTemplate_insertTime" object="${wcctemplate}" z="+a3t64XKWQ+p+Js/rlvn4h9cLGE="/>
+    </page:show>
+</div>

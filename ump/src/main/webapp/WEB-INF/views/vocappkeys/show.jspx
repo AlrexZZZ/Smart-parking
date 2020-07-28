@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_VocAppkey" object="${vocappkey}" path="/vocappkeys" z="HRVuaAYTwQ5pswLe4dqjWosfDNw=">
+        <field:display field="appkey" id="s_com_nineclient_model_VocAppkey_appkey" object="${vocappkey}" z="r9HE2PnyZCJKZCcDU36I1aGv36o="/>
+        <field:display field="clientSecret" id="s_com_nineclient_model_VocAppkey_clientSecret" object="${vocappkey}" z="jxu0rQSTvG8JOMjSonUoeITwer8="/>
+        <field:display field="name" id="s_com_nineclient_model_VocAppkey_name" object="${vocappkey}" z="l5rKKXsO8iLCX8OJgIwGkT8H2cw="/>
+        <field:display date="true" dateTimePattern="${vocAppkey_createtime_date_format}" field="createTime" id="s_com_nineclient_model_VocAppkey_createTime" object="${vocappkey}" z="VWHrjvbFcIqDoPqGCIZbLZCQoXc="/>
+        <field:display field="redirectUrl" id="s_com_nineclient_model_VocAppkey_redirectUrl" object="${vocappkey}" z="6hc5HBcWFl/Jy8jOFARo0I/HlAs="/>
+        <field:display field="sort" id="s_com_nineclient_model_VocAppkey_sort" object="${vocappkey}" z="IY5avrvcX7oNtK+/6rJhrXUJRNE="/>
+        <field:display field="isVisable" id="s_com_nineclient_model_VocAppkey_isVisable" object="${vocappkey}" z="h1bMgODVdKtdRGsXgFU1C9rRnro="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_VocAppkey_isDeleted" object="${vocappkey}" z="F8S3rA8c6g+n83n1ZmB+KkFMaNg="/>
+        <field:display field="remark" id="s_com_nineclient_model_VocAppkey_remark" object="${vocappkey}" z="Z5xIy+LifYaliEGjwwpZxZXopts="/>
+    </page:show>
+</div>

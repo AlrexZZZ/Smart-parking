@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" 
+xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" 
+xmlns:client="urn:jsptagdir:/WEB-INF/tags/client" 
+xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" 
+xmlns:jsp="http://java.sun.com/JSP/Page" 
+xmlns:spring="http://www.springframework.org/tags" version="2.0">
+
+  <style>@IMPORT url("/ump/styles/autocomplete.css");</style>
+  <!-- 复选框引用css -->
+ <style>@IMPORT url("/ump/styles/selectTree.css");</style> 
+
+
+<!-- 复选框引用js -->
+<SCRIPT type="text/javascript" src="/ump/js/selectStoreOrPubTree.js">/*selectTree*/</SCRIPT>
+	
+    <script src="/ump/js/autocomplete.js">/*selectTree*/</script>
+
+	<script src="/ump/js/main.js"></script>
+
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+
+    <style>
+
+	
+ .ke-button{background:#e5e5e5 !important;font-family:"微软雅黑" !important; font-size:14px !important;
+ cursor:pointer !important; }
+    	
+    label{width: 110px; text-align: right; display:inline-block; cursor:default !important;}
+
+/* input[name='imgFile']{cursor:pointer;opacity:0;left:111px;position:absolute;} */
+
+.up_button{ width:270px;height:28px; appearance:none; -webkit-appearance:none; border:1px solid #e5e5e5; background:#fff;}
+
+/* .spanText{width: 110px; text-align: right; display:inline-block;} */
+    .sp{
+    	text-align: left;
+    	padding-left: 5px;
+    	width : 10px;
+    } 
+    .select_cheally{border: 1px solid #e5e5e5;width: 270px;height: 28px;margin-left: 5px;}
+    </style>
+    
+    	<SCRIPT type="text/javascript">
+	<![CDATA[
+	$(function () {
+	
+	});
+	 ]]> 
+	</SCRIPT>
+    
+    
+    
+    <script type="text/javascript">
+    <![CDATA[
+         var flag1 = true;
+         var flag2 = true;
+     		function changeType(){
+    			$("#password_").attr("Type","password");
+    		}
+             
+
+    	
+    	function checkPlat(o){
+    		var name = $(o).val();
+    		if(!name){
+    			flag1 = false;
+    			$('#aerrMsg').html('公众平台名不能为空');
+    			return;
+    		}
+    		$.ajax({
+    			url : "/ump/wccplatformusers/checkPlat",
+    			type : "POST",
+    			data : {'name':name},
+    			error : function(msg) {
+    				alert("error " + msg);
+    			},
+    			success : function(text) {
+    				if(text=='false'){
+    					flag1 = false;
+	    				$('#aerrMsg').html('公众平台名重复');
+	    				return;
+    				}
+    				flag1 = true;
+    				$('#aerrMsg').html('');
+    			}
+    		});
+    	}
+    	
+    	function checkPlatid(o){
+    		var platId = $(o).val();
+    		if(!platId){
+    			flag2 = false;
+    			$('#perrMsg').html('原始ID不能为空');
+    			return;
+    		}
+    		$.ajax({
+    			url : "/ump/wccplatformusers/checkPlatId",
+    			type : "POST",
+    			data : {'platId':platId},
+    			error : function(msg) {
+    				alert("error " + msg);
+    			},
+    			success : function(text) {
+    				if(text=='false'){
+    					flag2 = false;
+	    				$('#perrMsg').html('原始ID重复');
+	    				return;
+    				}
+    				flag2 = true;
+    				$('#perrMsg').html('');
+    			}
+    		});
+    	}
+    	
+
+    	$(document).ready(function(){
+    		
+    		loadTree('/ump/wccplatformusers/tree','${pltIds}');
+    		
+    		$('#proceed').unbind().bind('click',function(){
+    			var platformId = $('#platformId_').val();
+    			var appId = $('#appId_').val();
+    			var appSecret = $('#appSecret_').val();
+    			var account = $('#paccount_').val();
+    			var platReg=/^\w{15}$/;
+    			var appReg=/^[0-9a-zA-Z_]{18}$/;
+    			var sercReg=/^[0-9a-zA-Z_]{32}$/;
+    			if(!flag1){
+    				return false;
+    			}
+    			if(!flag2){
+    				return false;
+    			}
+    			if(!account){
+    				$('#aerrMsg').html('公众平台不能为空');
+    				return false;
+    			}
+    			$('#aerrMsg').html('');
+    			if(!platformId){
+    				$('#perrMsg').html('原始ID不能为空');
+    				return false;
+    			}
+    			if(!platReg.test(platformId)){
+    				$('#perrMsg').html('原始ID格式不正确');
+    				return false;
+    			}
+    			
+    			$('#perrMsg').html('');
+
+    		});
+    	});
+    	
+    	function check(){
+    		editor.sync();
+
+            editor.sync();
+            console.log($('#editor_id').val());
+    	// return false;
+    	}
+    	
+        function selectShowMenu2() {
+    		var SelObj = $("#SelVals");
+    		var SelOffset = $("#SelVals").offset();
+    		$("#selectMenuContent").css({
+    		}).slideDown("fast");
+    		$("body").bind("mousedown", selectOnBodyDown);
+    	}
+		function checkPlatForm(){
+			var platId = $("#platId").val();
+			if($.trim(platId) == ""){
+				$("#platformMsg").html("请选择公众平台");
+				return false;
+			}
+			$("#platformMsg").html("");
+			return true;
+		}
+		
+		function getId(){
+			if($("#SelIds").val()==""){
+				alert("请选择公众平台");return;
+			}
+		/* 	if($("#cellphone_").val()==""){
+				alert("请填写存在的手机号");return;
+			} */
+			if($("#itemNameId_").val()==""){
+				alert("没有此人手机号，请重新选择填写");return;
+			}
+		if($("#summary_").val()==""){
+			alert("请填写摘要");return;
+		}
+		if($("#summary_").val().trim().length > 5){
+			alert("摘要名称长度超过5个字符");return;
+		}
+		if($("#monthTimeStr").val()==""){
+			alert("请填年月");return;
+		}
+		if($("#amount_").val().trim()==""){
+			alert("请填金额，且保留两位小数");return;
+		}	
+			document.forms[0].submit();
+		}
+		
+	function 	setPro(){
+		
+		$("#itemName_").val($("#itemPk").val());
+		alert($("#itemPk").val());	
+			
+		}
+	function setState(){
+		$("#state_").val($("#stateId").val());
+	}	
+	
+	function validNum(){
+	 if(/^\d+(\.\d{2})?$/.test($("#amount_").val())){
+		
+	 }else{
+		 alert("请填写真确的金额，且保留两位小数！");
+		 $("#amount_").val("");
+		 return;
+	 } 
+			
+		
+	}
+	
+    ]]>
+    </script>
+    <client:create modelAttribute="wccFees"  path="wccFees" id="wccFeesId">
+       <div class="grid">
+       
+            
+            <div class="row">
+            
+     
+                		<div class="span12" id="platId" >
+						
+						<label>公众平台：</label>
+				<!-- 		<select id="platformUsers_" name="platformUsers" class="select_cheally">
+							<option value=""></option>
+							<c:forEach var="data" items="${platformUser}">
+								<option value="${data.id}">${data.account}</option>
+							</c:forEach>
+						</select> -->
+						<div class="input-control text" style="width: 270px;">
+							<input id="SelVals" type="text" readonly="readonly"
+								value="" style="width: 270px;" onclick="selectShowMenu2();" onblur="checkPlatForm();"/> 
+							<input id="SelIds" name="platformUsers" type="hidden" value="${pltIds }" />
+							<div id="selectMenuContent" class="menuContent"
+								style="display: none; position: absolute; z-index: 99;">
+								<ul id="selectTreeDemo" class="ztree"
+									style="margin-left: 0px; margin-top: 0;border: 1px solid #e5e5e5;"></ul>
+							</div>
+					</div>
+					</div>
+                
+            </div>
+
+           
+          
+      <div class="row">
+       <div > 
+       <label>手机号：</label>
+	   <div style="float:left;" id="search-form1"></div>
+	   <input type="text" id="cellphone_" hidden="true" value="${wccFees.cbdWccProprietor.phone}" name="cellphone" />
+	   
+       </div> 
+       </div>
+       
+            <div class="row" style="display: none">
+                <div class="span12">
+                    <label>wccFees.id：</label>
+                    <input type="text" id="id_" value="${wccFees.id}"  name="id" class="autocomplete-input"/>
+                </div>
+            </div>  
+                   <div class="row" style="display: none">
+                <div class="span12">
+                    <label>wccFees.cbdWccProprietor：</label>
+                    <input type="text" id="cbdWccProprietor_" value="${wccFees.cbdWccProprietor.id}"  name="cbdWccProprietor" class="autocomplete-input"/>
+                </div>
+            </div> 
+          <div class="row">
+                <div class="span12">
+                    <label>摘要：</label>
+                    <input type="text" id="summary_" value="${wccFees.summary}"  name="summary" class="autocomplete-input"/>
+                </div>
+            </div>  
+
+      <div class="row">
+                <div class="span12">
+                    <label>项目名称：</label>
+                    <input type="text" readonly="readonly" id="itemNameId_" value="${wccFees.cbdWccProprietor.wccappartment.itemName}"   class="autocomplete-input"/>
+                </div>
+      </div>
+
+      <div class="row">
+                <div class="span12">
+                    <label>姓名：</label>
+                <input type="text" id="uname_" readonly="readonly" value="${wccFees.cbdWccProprietor.name}"  name="userName" class="autocomplete-input"/>
+                </div>
+            
+            </div>
+            
+            <div class="row">
+                <div class="span12">
+                    <label>门牌号：</label>
+                    <input type="text" id="doorNum_"  readonly="readonly" value="${wccFees.cbdWccProprietor.doorplate}"  name="doorNum" class="autocomplete-input"/>
+                </div>
+            
+            </div>
+            <div class="row">
+                <div class="span12">
+                  
+          		<div class="input-control text">
+          		 <label>年月：</label>
+							<input 	type="text" class="autocomplete-input" id="monthTimeStr" value="${wccFees.monthStr}" name="monthStr"
+								onFocus="WdatePicker({dateFmt:'yyyyMM',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+							<IMG  style="margin-left: -22px;"
+								src="/ump/js/date/skin/datePicker.gif" width="20" height="16" />
+				</div>
+                </div>
+            
+            </div>
+                        <div class="row">
+                <div class="span12">
+                    <label>状态：</label>
+                    <INPUT type="text" id="state_" hidden="true" value="0" name="state" />
+                    <SELECT class="autocomplete-input" onchange="setState();"  name="stateName" id="stateId">
+                    <c:if test="${wccFees.state == null}">
+                    <OPTION id="s0_" value="0">未支付</OPTION>
+                    <OPTION id="s1_" value="1">已支付</OPTION>
+                    </c:if>
+                    <c:if test="${wccFees.state != null}">
+                       	         <c:if test="${wccFees.state == 0 || wccFees.state == ''}">
+                    			<OPTION id="s0_" selected="selected" value="0">未支付</OPTION>
+                    			<OPTION id="s1_" value="1">已支付</OPTION>
+                    			</c:if>
+                    			<c:if test="${wccFees.state == 1}">
+                    			<OPTION id="s1_" selected="selected" value="1">已支付</OPTION>
+                    			<OPTION id="s0_"  value="0">未支付</OPTION>
+                    			</c:if>
+                    
+                    </c:if>
+                    		
+                    </SELECT>                 
+                </div>
+            
+            </div>
+  
+        <div class="row">
+                <div class="span12">
+                    <label>金额：</label>
+                    <input type="text" placeholder="金额保留两位小数" onblur="validNum();" id="amount_" value="${wccFees.amount}"  name="amount" class="autocomplete-input"/>
+                </div>
+            
+        </div>
+            
+   
+
+        
+       </div>
+    
+        
+        
+     <client:button  submit="true" onclick="getId();" cancel="true"></client:button> 
+   
+     
+    </client:create>
+
+<!-- 复选框div -->
+    <div id="menuContent" class="menuContent"
+		style="display: none;position: absolute;background: #fff;padding: 20px;border: 1px solid #e4e4e4;box-shadow: -0px 6px 10px #888888;">
+		<ul id="treeDemo" class="ztree" style="margin-top: 0;"></ul>
+	</div>
+ 
+</div>

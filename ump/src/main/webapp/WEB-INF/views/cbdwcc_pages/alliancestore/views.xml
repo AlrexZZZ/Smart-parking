@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+ 
+<definition extends="cbdwcc_culture" name="page/Alliancestore">
+   <put-attribute name="body"  value="/WEB-INF/views/cbdwcc_pages/alliancestore/shop_around.jsp"/>
+</definition>
+
+<definition extends="cbdwcc_culture" name="page/showAlliancestore">
+   <put-attribute name="body"  value="/WEB-INF/views/cbdwcc_pages/alliancestore/shop_location.jsp"/>
+</definition>
+</tiles-definitions>

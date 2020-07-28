@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+<definition extends="pub" name="umpcompanyservices/result">
+        <put-attribute name="body" value="/WEB-INF/views/umpcompanyservices/result.jspx"/>
+    </definition>
+  <definition extends="default_pub" name="umpcompanyservices/companyServiceList">
+        <put-attribute name="body" value="/WEB-INF/views/umpcompanyservices/companyServiceList.jspx"/>
+    </definition>
+    <definition extends="default_pub" name="umpcompanyservices/list">
+        <put-attribute name="body" value="/WEB-INF/views/umpcompanyservices/list.jspx"/>
+    </definition>
+<definition extends="default_pub" name="umpcompanyservices/show">
+        <put-attribute name="body" value="/WEB-INF/views/umpcompanyservices/show.jspx"/>
+    </definition>
+<definition extends="default_pub" name="umpcompanyservices/create">
+        <put-attribute name="body" value="/WEB-INF/views/umpcompanyservices/create.jspx"/>
+    </definition>
+<definition extends="default_pub" name="umpcompanyservices/update">
+        <put-attribute name="body" value="/WEB-INF/views/umpcompanyservices/update.jspx"/>
+    </definition>
+</tiles-definitions>

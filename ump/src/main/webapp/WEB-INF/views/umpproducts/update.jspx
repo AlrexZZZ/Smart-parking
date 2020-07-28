@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:form="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<FORM id="productForm" method="POST">
+		<INPUT type="hidden" id="product_id" name="id"
+			value="${umpProduct.id}" />
+		<div class="grid">
+			<div class="row">
+				<div class="span1">产品名称:</div>
+				<div class="span3">
+					<INPUT name="productName" id="productName" required="required" readonly="readonly" class="publicSize"
+						value="${umpProduct.productName}" />
+				</div>
+			</div>
+			<div class="row">
+				<div class="span1">是否启用:</div>
+				<div class="span2">
+					<c:if test="${umpProduct.isVisable}">
+						<INPUT name="isVisable" id="isVisable" type="hidden" value="true" />
+						<img class="switchClass"
+							onclick="switchImg(this,false,'isVisable')"
+							src="/ump/images/ON.png" />
+						<img class="switchClass"
+							onclick="switchImg(this,true,'isVisable')" style="display: none;"
+							src="/ump/images/OFF.png" />
+					</c:if>
+					<c:if test="${!umpProduct.isVisable}">
+						<INPUT name="isVisable" id="isVisable" type="hidden" value="false" />
+						<img class="switchClass"
+							onclick="switchImg(this,false,'isVisable')"
+							style="display: none;" src="/ump/images/ON.png" />
+						<img class="switchClass"
+							onclick="switchImg(this,true,'isVisable')"
+							src="/ump/images/OFF.png" />
+					</c:if>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span1">备注信息:</div>
+				<div class="span2">
+					<div class="input-control textarea">
+						<textarea name="remark">${umpProduct.remark}</textarea>
+					</div>
+				</div>
+			</div>
+			<DIV class="row">
+					<a class="button info" onclick="submit('productForm');">确定</a>
+					<INPUT type="button" class="warning" onclick="queryListPage()"
+						value="取消" />
+			</DIV>
+		</div>
+	</FORM>
+	<SPAN style="color: red">${msg}</SPAN>
+	<style>
+@IMPORT url("/ump/styles/validation.css");
+</style>
+<style>
+	.publicSize{
+	width: 135px;
+	height: 28px;
+	border:1px solid;
+	border-color:#e4e4e4;
+}
+	</style>
+	<SCRIPT type="text/javascript" src="/ump/js/nineclient/ump/product.js">
+		//--
+	</SCRIPT>
+	<SCRIPT type="text/javascript"
+		src="/ump/js/nineclient/vocreport/nineclient.js">
+		//--
+	</SCRIPT>
+	<SCRIPT type="text/javascript"
+		src="/ump/ui/jquery-validation/jquery.validate.js">
+		//--
+	</SCRIPT>
+	<SCRIPT type="text/javascript">
+		<![CDATA[
+		$().ready(function() {
+			$("#productForm").validate({
+				rules : {
+					productName : {
+						required : true,
+						remote : {
+							url : "/ump/commentvalidata/validataUniqueId",
+							type : "post",
+							data : {
+								field : 'productName',
+								value : function() {
+									return $("#productName").val();
+								},
+								table : "UmpProduct",
+								id : function() {
+									return $("#product_id").val();
+								}
+							}
+						}
+					}
+				},
+				messages : {
+					productName : {
+						required : "请输入产品名称",
+						remote : "产品名已存在"
+					}
+				}
+				,
+				errorElement : "em",
+				focusCleanup : true,
+				errorClass : "invalid"
+			});
+		});
+		function submit(id) {
+			if (!$("#" + id).valid()) {
+				return;
+			}
+			var url = "/ump/umpproducts/update";
+			var param = {};
+			param = $("#" + id).serialize();
+			dataAjax(url, param, Notify);
+			window.location.href = "/ump/umpproducts/listPage";
+		}
+		function queryListPage() {
+			window.location.href = "/ump/umpproducts/listPage";
+		}
+		]]>
+	</SCRIPT>
+</div>

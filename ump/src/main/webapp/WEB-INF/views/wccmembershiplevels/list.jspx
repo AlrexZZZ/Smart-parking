@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_WccMembershipLevel" items="${wccmembershiplevels}" z="aS8gdGyh8VI0P/fB/o80buhcyIQ=">
+        <table:table data="${wccmembershiplevels}" id="l_com_nineclient_model_WccMembershipLevel" path="/wccmembershiplevels" z="NffZbCf/kg+nVD1eKrc5SzKqCjM=">
+            <table:column id="c_com_nineclient_model_WccMembershipLevel_name" property="name" z="5AEi2mc+xXp1i8rwr+XGqN8NLA0="/>
+            <table:column id="c_com_nineclient_model_WccMembershipLevel_code" property="code" z="xigZa6sKWIod1qBJDwGm4s4jLy4="/>
+            <table:column id="c_com_nineclient_model_WccMembershipLevel_isDeleted" property="isDeleted" z="hbmFFWVx87h3DUWcjEdIv/I7iTQ="/>
+            <table:column date="true" dateTimePattern="${wccMembershipLevel_createtime_date_format}" id="c_com_nineclient_model_WccMembershipLevel_createTime" property="createTime" z="qJQmA8GyG6aRMz+v6Ve3Hy7cur0="/>
+            <table:column id="c_com_nineclient_model_WccMembershipLevel_isVisable" property="isVisable" z="jTw2qEeGnH9jtolfsUg0ImXig98="/>
+        </table:table>
+    </page:list>
+</div>

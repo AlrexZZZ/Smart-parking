@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccUser" object="${wccuser}" path="/wccusers" z="PQqywZpH9Wy8DbkzfTmvL5ACywA=">
+        <field:display field="userName" id="s_com_nineclient_model_WccUser_userName" object="${wccuser}" z="Pg5BmIYvefHFtOnAhMrEZqnnqo8="/>
+        <field:display field="status" id="s_com_nineclient_model_WccUser_status" object="${wccuser}" z="d1h2uCIkW9jmfgFK7ChSH+VUwnE="/>
+        <field:display field="commentCount" id="s_com_nineclient_model_WccUser_commentCount" object="${wccuser}" z="67IsfJtKi3DWCJ7gn7YlPzJSrDM="/>
+        <field:display field="praiseCount" id="s_com_nineclient_model_WccUser_praiseCount" object="${wccuser}" z="XEw7VAvg6nM+qQvKvQQJENw6lu8="/>
+        <field:display field="givenCommentCount" id="s_com_nineclient_model_WccUser_givenCommentCount" object="${wccuser}" z="2NtWcbuKY2UWnVe3+krSdBMdsbw="/>
+        <field:display field="givenPraiseCount" id="s_com_nineclient_model_WccUser_givenPraiseCount" object="${wccuser}" z="7m8jOqQVWhE9B+Fd3C9J+MGXi2Y="/>
+        <field:display field="remark" id="s_com_nineclient_model_WccUser_remark" object="${wccuser}" z="4nBnfY0sF8AOlK4RMZN2Eo9K4TY="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccUser_isDeleted" object="${wccuser}" z="hekoF0siNuNdvZZzdJs3l6D6Iag="/>
+        <field:display field="isOfficial" id="s_com_nineclient_model_WccUser_isOfficial" object="${wccuser}" z="XesvDGc/arzi7DLjlVnysCRgwFU="/>
+        <field:display field="openId" id="s_com_nineclient_model_WccUser_openId" object="${wccuser}" z="QZ8k852l7lnXw52sFONHA2k65xg="/>
+        <field:display date="true" dateTimePattern="${wccUser_firsttopictime_date_format}" field="firstTopicTime" id="s_com_nineclient_model_WccUser_firstTopicTime" object="${wccuser}" z="fQzLiU0/sSj31rYE+n+UAo/xW8s="/>
+        <field:display field="userTopicCount" id="s_com_nineclient_model_WccUser_userTopicCount" object="${wccuser}" z="7EYgpsqS8bXEyU+YhX62NiaPWTU="/>
+        <field:display field="lastTopicComment" id="s_com_nineclient_model_WccUser_lastTopicComment" object="${wccuser}" z="pkAoZCOR6wRsZzAOzQEHnxRyKIc="/>
+        <field:display date="true" dateTimePattern="${wccUser_lasttopictime_date_format}" field="lastTopicTime" id="s_com_nineclient_model_WccUser_lastTopicTime" object="${wccuser}" z="laGy11P8tJbthxc7ek9DQ+RsK4s="/>
+        <field:display field="userImage" id="s_com_nineclient_model_WccUser_userImage" object="${wccuser}" z="W1lbGCbBWu5uYgsgDFr3nZsNgFQ="/>
+    </page:show>
+</div>

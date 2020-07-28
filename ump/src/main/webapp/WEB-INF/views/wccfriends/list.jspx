@@ -1,0 +1,1524 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" xmlns:form="http://www.springframework.org/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+<style >
+.metro .button {padding: 0px;}
+input,select{width: 135px;height: 28px;background-color: #fff;border: 1px solid #e4e4e4;}	
+box-sizing:content-box;
+.metro label { display: block;font-size: 12px;font-weight: normal; margin: 5px 0;text-align: right;}
+</style>
+	
+    <script	type="text/javascript">
+    <![CDATA[
+        var groupparmam = '';
+        var tempFlag=false;//是否选择文本
+    	var sfriendId = ''; 
+    	var sendType = 0;//0:文本,1:图片,2:语音,3:视频,4:图文,5:音乐,6:多图文,7:表情
+    	var picid = '';
+    	var picName = '';
+    	var picTextid = '';
+    	var sendTime = '';
+    	var isUcc = '${isUcc}';
+    	console.log(isUcc);
+    	
+    	$(document).ready(function() {
+			queryFriend(1);//粉丝信息
+		//	showTreeTemplate();//常用文本
+		});
+    	
+    	
+    	var settingTemplate = {
+    			view: {
+    				dblClickExpand: false
+    			},
+    			data: {
+    				simpleData: {
+    					enable: true
+    				}
+    			},
+    			callback: {
+    				onClick: onClickTemplate
+    			}
+    		};
+    	
+    	function onClickTemplate(e, treeId, treeNode) {
+    		var cNode = treeNode.children;
+    		if(!cNode){
+    			tempFlag = true;
+    			$('#templateErr')[0].innerHTML="";
+    			var id = treeNode.id;
+    			$.ajax({
+    		            url:"/ump/wcctemplates/findIdByContent",
+    		            datatype :"text",
+    		            data : {"id":id},
+    		            type: "POST",
+    		            error: function(msg){
+    		            },
+    		            success:function(data){
+    		            	if(data == "isTitle"){
+    		            		tempFlag = false;
+    		            		$('#templateErr')[0].innerHTML="请选择文本";
+    		            	}else if(data == null){
+    		            		tempFlag = false;
+    		            		$('#templateErr')[0].innerHTML="请选择文本";
+    		            	}else{
+	    						$('#templateText').val(data)
+    		            	}
+    					}
+    		       });
+				return;
+    		}
+    		tempFlag = false;
+    		$('#templateErr')[0].innerHTML="请选择文本";
+		}
+    	//选择常用文本
+    	function selectTemplatet(){
+    		sendType = 0;
+    		if(tempFlag){
+    			$('#msg_').val($('#templateText').val());
+    			$('#picdiv').hide();
+    		}
+    		$('#templateMsg').css('display','none');
+    	}
+
+		//根据产品id查询菜单
+		function showTreeTemplate(){
+			var zNodes = new Array();
+			var timestamp = new Date().getTime();
+			 $.ajax({
+	            url:"/ump/wcctemplates/ptree?timestamp="+timestamp,
+	            datatype :"text",
+	            type: "POST",
+	            error: function(msg){
+	            },
+	            success:function(data){
+	            	var str = '['+data+']';
+	            	zNodes = eval('('+str+')');
+	            	$.fn.zTree.init($("#treeTemplate"), settingTemplate, zNodes);
+				  }
+	        });
+		}
+    	
+    	
+		
+		function goPage(page){
+			var pageStr = $("#pageStr").val();
+	    	if($.trim(pageStr) == ""){
+	    		alert("请输入需要跳转的页数！");
+	    		return;
+	    	}
+	    	if(isNaN(pageStr)){
+	    		alert("格式错误，请输入数字！");
+	    		return;
+	    	}
+	    	if(pageStr > page){
+	    		alert("你输入的页数大于最大页数");
+	    		return;
+	    	}
+	    	if(pageStr <= 0){
+	    		alert("你输入的页数不符合要求");
+	    		return;
+	    	}
+	    	queryFriend(pageStr);
+		}
+		
+		//查询粉丝信息
+    	function queryFriend(pageNo) {
+			var start = 0;
+			var limit = $("#limit").val();
+			if (pageNo > 0) {
+				start = (pageNo - 1) * limit;
+			}
+			
+			var platformType = $('#plattypeId').val();//公众号类型
+			var platformUserId = $('#platformUser_').val();//公众号ID
+			var activityName = $('#activityName_').val();//活动名称	
+			var nickName = $('#nickName_').val();//昵称
+			var gender = $('#gender_').val();//性别
+			var groupId = $('#groups').val();//分组ID
+			//var isUserinfo = $('#userinfo_').val();//是否绑定会员
+			var area = $('#area').val();//地区
+			var from = $('#from_').val();//来源
+    		//var organization =	$('#underId').val();//组织架构
+			//var isunder = $('#isunder_').val();//是否关联
+			var timeEndId = $('#timeEndId').val();//对话结束时间
+			var startTime = $('#startTime_').val();//关注开始时间
+			var endTime = $('#endTime_').val();//关注结束时间
+			
+			var parmam = {
+				start : start,
+				limit : limit,
+				platformType:platformType,
+				platformUserId : platformUserId,
+				activityName:activityName,
+				nickName :nickName,
+				gender :gender,
+				groupId : groupId,
+				//isUserinfo : isUserinfo,
+				area :area,
+				from :from,
+				//organization : organization,
+				//isunder : isunder,
+				timeEndId : timeEndId,
+				startTime : startTime,
+				endTime : endTime
+			};
+
+			$.ajax({
+				url : "/ump/wccfriends/queryFriends",
+				type : "POST",
+				data : parmam,
+				error : function(msg) {
+					alert("error " + msg);
+				},
+				success : function(text) {
+					$("#showResult").html(text);
+				}
+			});
+		}
+    
+    	var flag = false;
+    	var friendIds = new Array();
+    	var underId = "";
+    	
+    	//根据公众号查询粉丝分组
+    	function querySelectType(type){
+    		$.ajax({
+    			url:"/ump/wccfriends/getPlatformUser",
+    			type:"Post",
+    			data:{'type':type},
+    			error:function(msg){
+    				
+    			},
+    			success:function(data){
+    				$('#platId').html("<label>公众平台 ：</label>"+ data);
+    			}
+    		})
+    	}
+    	
+    	
+    	//根据公众号查询粉丝分组
+    	function querySelect(id){
+    		$.ajax({
+    			url:"/ump/wccfriends/getGroupByPlatformUser",
+    			type:"Post",
+    			data:{'id':id},
+    			error:function(msg){
+    				
+    			},
+    			success:function(data){
+    				$('#groupId').html("<label>粉丝分组 ：</label>"+ data);
+    			}
+    		})
+    	}
+    	
+    	var setting = {
+    			view: {
+    				dblClickExpand: false
+    			},
+    			data: {
+    				simpleData: {
+    					enable: true
+    				}
+    			},
+    			callback: {
+    				onClick: onClick
+    			}
+    		};
+    		
+    		var settings = {
+    			view: {
+    				dblClickExpand: false
+    			},
+    			data: {
+    				simpleData: {
+    					enable: true
+    				}
+    			},
+    			callback: {
+    				onClick: onClicks
+    			}
+    		};
+
+    		
+    		function onClick(e, treeId, treeNode) {
+    			var id = treeNode.id;
+    			if(id == 0){
+    				alert("不能选择全部");
+    				return;
+    			} 
+    			$("#underSel").attr("value", treeNode.name);
+    			$("#underId").attr("value", treeNode.id);
+    		}
+    		
+    		function onClicks(e, treeId, treeNode) {
+    			var id = treeNode.id;
+    			if(id == 0){
+    				alert("不能选择全部");
+    				return;
+    			} 
+    				var zTree = $.fn.zTree.getZTreeObj("ctree"),
+    				nodes = zTree.getSelectedNodes(),
+    				v = "";
+    				d = "";
+    				nodes.sort(function compare(a,b){return a.id-b.id;});
+    				for (var i=0, l=nodes.length; i<l; i++) {
+    					v += nodes[i].name + ",";
+    					d += nodes[i].id + ",";
+    				}
+    				if (v.length > 0 ) v = v.substring(0, v.length-1);
+    				if (d.length > 0 ) underId = d.substring(0, d.length-1);
+    				var underObj = $("#underSels");
+    				underObj.attr("value", v);
+    				$("#menuContents").fadeOut("fast")
+    		}
+			
+    		function showMenu(o) {
+    		if(o==1){
+    			$("#menuContents").fadeIn("fast")
+    			$.ajax({
+	            url:"/ump/puborganizations/tree",
+	            datatype :"text",
+	            type: "POST",
+//	            data:{'id':id},
+	            error: function(msg){
+	            },
+	            success:function(data){
+	            	flag = true;
+	            	var str = '['+data+']';
+	            	zNodes = eval('('+str+')');
+	            	$.fn.zTree.init($("#ctree"), settings, zNodes);
+    				var cityObj = $("#underSels");
+    				var cityOffset = $("#underSels").offset();
+    				var leftv = cityOffset.left-425;
+    				var topv = cityOffset.top+cityObj.outerHeight()-7;
+    				$("#menuContents").css({left:110 + "px", top:62 + "px"}).slideDown("fast");
+				  }
+	        	});
+    		
+    		}else{
+				var cityObj = $("#underSel");
+    			var cityOffset = $("#underSel").offset();
+    			var o = $("#menuContent");
+    			$("#menuContent").css({left:cityOffset.left + "px", top:cityOffset.top + cityObj.outerHeight() + "px"}).slideDown("fast");
+    		}
+				$("body").bind("mousedown", onBodyDown);
+    		}
+    		function hideMenu() {
+    			$("#menuContent").fadeOut("fast");
+    			$("#menuContents").fadeOut("fast");
+    			$("body").unbind("mousedown", onBodyDown);
+    			$("form").unbind("mousedown", onBodyDown);
+    		}
+    		function onBodyDown(event) {
+    			var tclass = event.target.className;
+    			if (!(event.target.id == "menuBtn" || event.target.id == "menuContent" || $(event.target).parents("#menuContent").length>0) && tclass.length==0 ) {
+    				hideMenu();
+    			}
+    			if (!(event.target.id == "menuBtns" || event.target.id == "menuContents" || $(event.target).parents("#menuContents").length>0) && tclass.length==0) {
+    				hideMenu();
+    			}
+    		}
+
+    		$(document).ready(function(){
+    			$.ajax({
+	            url:"/ump/puborganizations/tree",
+	            datatype :"text",
+	            type: "POST",
+//	            data:{'id':id},
+	            error: function(msg){
+	            },
+	            success:function(data){
+	            	var str = '['+data+']';
+	            	zNodes = eval('('+str+')');
+	            	$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+				  }
+	        	});
+    		});
+    		
+    		//粉丝所属
+    		function friendUnder(){
+    			var pageNum = $('#pageNum')[0].value;
+    			var checks = $("input:checkbox[class='fcheck']:checked");
+    			var num = checks.length;
+    			if(num==0){
+    				$.Dialog({
+     			        overlay: true,
+     			        shadow: true,
+     			        flat: true,
+     			        title: 'Flat window',
+     			        content: '',
+     			        padding: 10,
+     			        onShow: function(_dialog){
+     			        	var content = '<div><span>请选择粉丝</span>' +
+     			        	'<div style="margin-top:80px;">'+
+     			        	'<button type="submit" class="info" onclick="exit()" style="margin-left:50px;">确定</button>'
+     			            $.Dialog.title("提示");
+     			            $.Dialog.content(content);
+     			           	$.Metro.initInputs();
+     			        }
+     			    });
+    			}
+    			$.Dialog({
+    			        overlay: true,
+    			        shadow: true,
+    			        flat: true,
+    			        title: '粉丝所属',
+    			        content: '',
+    			        width: 500,
+    			        height:350,
+    			        padding: 10,
+    			        onShow: function(_dialog){
+    			       		var n = parseInt(num)-1;
+    			       		var conhtml = '';
+    			       		for(i=0;i<num;i++){
+    			       			var fid = checks[i].value.split(',')[0];
+    			       			friendIds.push(fid);
+    			       			var fname = checks[i].value.split(',')[1];
+    			       			conhtml += '<div>'+
+    			         				  '<input type="checkbox" checked="checked" value="'+fid+'" name="friendUnderCheck"/>'+
+    			         				  '<span>'+fname+'</span>'+
+    			         				  '</div><br/>';
+    			       		}
+    			         	//var content = document.getElementById('underdia').innerHTML;
+    			         	var content = '<div>'+
+    			         				  '<div>'+
+    			         				  '<label>粉丝所属：</label>'+
+    			         				  '<input name="under" id="underSels" value="" type="text" placeholder="请选择" readonly="readonly" onclick="showMenu(1); return false;"/>'+
+    			         				 /*  '<input id="underSels" disabled="disabled" type="text" name="under"/>'+
+    			         				  '<a id="menuBtns" style="text-align: left;" href="#" onclick="showMenu(1);">选择</a>'+ */
+    			         				  '<div id="menuContents" class="menuContents" style="display: none; position: absolute;background: #fff;padding: 20px;border: 1px solid #e4e4e4;box-shadow: -0px 6px 10px #888888;">'+
+    			         				  '<ul id="ctree" class="ztree" style="margin-top:0;padding: 0"></ul>'+
+    			         				  '</div>'+
+    			         				  '</div>'+
+    			         				  '<div>'+
+    			         				  '<span style="color:white;">_</span>'+
+    			         				  '</div>'+
+    			         				  '<div>'+
+    			         				  '<legend style="font-size:14px;text-align:left;">选择的粉丝</legend>'+
+    			         				  conhtml+
+    			         				  '</div>'+
+    			         				  '<div style="text-align:center">'+
+    			         				  '<button type="submit" class="info" onclick="saveUnder(pageNum)">确定</button>'+
+    			         				  '<button class="warning" onclick="exit()">取消</button>'+
+    			         				  '</div>'+
+    			         				  '</div>';
+    			            $.Dialog.title('<i class="on-left"><img src="/ump/images/blackp.png" style="vertical-align: middle" width="14" height="14" /></i>粉丝所属');
+    			            $.Dialog.content(content);
+    			           	$.Metro.initInputs();
+    			        }
+    			    });
+    		}
+    		
+    		//粉丝分组
+    		function setFriendGroup(){
+    			var platformType = $('#plattypeId').val();//公众号类型
+    			var platformUserId = $('#platformUser_').val();//公众号ID
+    			var activityName = $('#activityName_').val();//活动名称	
+    			var nickName = $('#nickName_').val();//昵称
+    			var gender = $('#gender_').val();//性别
+    			var groupId = $('#groups').val();//分组ID
+    			var area = $('#area').val();//地区
+    			var from = $('#from_').val();//来源
+    			var timeEndId = $('#timeEndId').val();//对话结束时间
+    			var startTime = $('#startTime_').val();//关注开始时间
+    			var endTime = $('#endTime_').val();//关注结束时间
+    			if(platformType==""){
+    				alert("请选择公众平台类型!");
+    				return;
+    			}
+    			
+    			if(platformUserId==""){
+    				alert("请选择公众平台!");
+    				return;
+    			}else{
+    				 groupparmam = {
+            				platformType:platformType,
+            				platformUserId : platformUserId,
+            				activityName:activityName,
+            				nickName :nickName,
+            				gender :gender,
+            				groupId : groupId,
+            				area :area,
+            				from :from,
+            				timeEndId : timeEndId,
+            				startTime : startTime,
+            				endTime : endTime
+            			};
+        	            	$.Dialog({
+        				        overlay: true,
+        				        shadow: true,
+        				        flat: true,
+        				        title: '粉丝分组',
+        				        content: '',
+        				        width: 300,
+        				        height:200,
+        				        padding: 10,
+        				        onShow: function(_dialog){
+        				            $.Dialog.title('<i class="on-left"><img src="/ump/images/blackp.png" style="vertical-align: middle" width="14" height="14" /></i>粉丝分组');
+        				             $.ajax({
+        							url:"/ump/wccfriends/getGroupByPlatformUser2",
+        							type:"Post",
+        							data:{'id':platformUserId},
+        							error:function(msg){
+        							},
+        							success:function(data){
+        								var content = '<div class="row">'+
+        				         				  '<label>粉丝分组：</label>'+
+        				         				  '<div id="groupId_">'+
+        				         				  data+
+        				         				  '</div>'+
+        				         				  '<div class="row" style="text-align:center;margin-top:3px; ">'+
+        				         				  '<button type="submit" class="info" onclick="saveGroup()">确定</button>'+
+        				         				  '<button class="warning" onclick="exit()">取消</button>'+
+        				         				  '</div>'+
+        				         				  '</div>';
+        				            	$.Dialog.content(content);
+        				            	$.Metro.initInputs();
+        							}
+        							})
+        				        }
+        				    });
+        				 
+    			}
+    		
+    			
+    			
+    		}
+    		
+    		
+    		//粉丝分组
+    		function friendGroup(){
+    			var pageNum = $('#pageNum')[0].value;
+    			var checks = $("input:checkbox[class='fcheck']:checked");
+    			console.log(checks);
+    			var num = checks.length;
+    			if(num==0){
+     				$.Dialog({
+     			        overlay: true,
+     			        shadow: true,
+     			        flat: true,
+     			        title: 'Flat window',
+     			        content: '',
+     			        padding: 10,
+     			        onShow: function(_dialog){
+     			        	var content = '<div><span>请选择粉丝</span>' +
+     			        	'<div style="margin-top:80px;">'+
+     			        	'<button type="submit" class="info" onclick="exit()" style="margin-left:50px;">确定</button>'
+     			            $.Dialog.title("提示");
+     			            $.Dialog.content(content);
+     			           	$.Metro.initInputs();
+     			        }
+     			    });
+    			}
+    			$.Dialog({
+    			        overlay: true,
+    			        shadow: true,
+    			        flat: true,
+    			        title: '粉丝分组',
+    			        content: '',
+    			        width: 500,
+    			        height:500,
+    			        padding: 10,
+    			        onShow: function(_dialog){
+    			        	var id = '';
+    			       		var n = parseInt(num)-1;
+    			       		var conhtml = '';
+    			       		for(i=0;i<num;i++){
+    			       			friendIds = new Array();
+    			       			var fid = checks[i].value.split(',')[0];
+    			       			friendIds.push(fid);
+    			       			console.log('fid='+fid);
+    			       			var fname = checks[i].value.split(',')[1];
+    			       			id = checks[i].value.split(',')[2];
+    			       			conhtml += '<div>'+
+    			         				  '<input type="checkbox" checked="checked" value="'+fid+'" name="friendGroupCheck"/>'+
+    			         				  '<span>'+fname+'</span>'+
+    			         				  '</div><br/>';
+    			       		}
+    			         	//var content = document.getElementById('underdia').innerHTML;
+    			            $.Dialog.title('<i class="on-left"><img src="/ump/images/blackp.png" style="vertical-align: middle" width="14" height="14" /></i>粉丝分组');
+    			             $.ajax({
+    						url:"/ump/wccfriends/getGroupByPlatformUser2",
+    						type:"Post",
+    						data:{'id':id},
+    						error:function(msg){
+    				
+    						},
+    						success:function(data){
+    							var content = '<div>'+
+    			         				  '<label>粉丝分组：</label>'+
+    			         				  '<div id="groupId_">'+
+    			         				  data+
+    			         				  '</div>'+
+    			         				  '<fieldset>'+
+    			         				  '<legend style="font-size:14px">选择的粉丝</legend>'+
+    			         				  conhtml+
+    			         				  '</fieldset>'+
+    			         				  '<div style="text-align:center">'+
+    			         				  '<button type="submit" class="info" onclick="saveGroup(pageNum)">确定</button>'+
+    			         				  '<button class="warning" onclick="exit()">取消</button>'+
+    			         				  '</div>'+
+    			         				  '</div>';
+    			            	$.Dialog.content(content);
+    			            	$.Metro.initInputs();
+    						}
+    						})
+    			        }
+    			    });
+    		}
+    		
+    		
+    		function checkall(){
+    			var acheck =$("input:checkbox[class='acheck']");
+    			var ischeck = acheck[0].checked;
+    			var checks =$("input:checkbox[class='fcheck']");
+    			var num = checks.length;
+    			for(i=0;i<num;i++){
+    				if(ischeck==true){
+	    			    checks[i].checked=true;
+    				}else if(ischeck==false){
+    					checks[i].checked=false;
+    				}
+    			}
+    		}
+    		
+    		//保存所属
+    		function saveUnder(){
+    			var fids = friendIds.join(',');
+    			
+    			var friendIdss = new Array();
+    			var checkss = $("input:checkbox[name='friendUnderCheck']:checked");
+    			var num = checkss.length;
+    			for(i=0;i<num;i++){
+	       			var frid = checkss[i].value;
+	       			friendIdss.push(frid);
+	       		}
+    			var fidss = friendIdss.join(',');
+    			$.ajax({
+    				url:"/ump/wccfriends/under",
+    				datatype:"text",
+    				type:"POST",
+    				data:{'underId':underId,'fids':fidss},
+    				error:function(msg){
+    				
+    				},
+    				success:function(data){
+    					if(data=='true'){
+    						$.Dialog.close();
+    						queryFriend(pageNum);
+    					}
+    				}
+    				
+    			});
+    		}
+    		//保存分组
+    		function saveGroup(){
+    			var newgroupId = $('#groupsf').val();
+    		 $.ajax({
+    				url:"/ump/wccfriends/savegroupFriend?newgroupId="+newgroupId,
+    				datatype:"text",
+    				type:"POST",
+    				data:groupparmam,
+    				error:function(msg){
+    				
+    				},
+    				success:function(data){
+    					/* var res = eval('([{'+data+'}])');
+    	            	alert(res[0].msg); */
+    					if(data=='true'){
+    						$.Dialog.close();
+    						$('#groups').val('');
+	    					queryFriend(pageNum);
+    					}
+    				}
+    				
+    			});
+    		}
+    		
+    		function clearAll(){
+    			$('#nickName_').val('');
+				$('#gender_').val('');
+				$('#platformUser_').val('');
+				$('#groups').val('');
+				//$('#userinfo_').val('');
+				$('#area').val('');
+				$('#from_').val('');
+    			//$('#underId').val('');
+				//$('#isunder_').val('');
+				$('#timeEndId').val('');
+				//$("#underSel").attr("value","");
+				$('#startTime_').val('');
+				$('#endTime_').val('');
+				$('#plattypeId').val('');
+				$('#activityName_').val('');
+    		}
+    		
+    		function exit(){
+    				$.Dialog.close();
+    			}
+    		
+    		//显示页签
+    		function showTag(friendId,time,platFormId){
+    			$("#platFormId").val(platFormId);
+    			console.log(platFormId+"====platFormId===");
+    			sendTime = time;
+    			sendType = 0;
+    			$('#msg_').val('');
+				$('#msg_').attr('disabled',false);
+    			$('#showTab').css("display","block");
+    			$('#showMsg').css("display","block");
+    			sfriendId = friendId;
+    			queryRecordMsg(1);
+    			var tdate = new Date();
+    			var year = tdate.getFullYear();
+    			var month = Number(tdate.getMonth())+1;
+    			var day = tdate.getDate();
+    			var ttime =year+'-'+month+'-'+day;
+    			queryDkf(ttime);
+    			massMessageList(1);
+    		}
+    		
+    		
+    		function goPagePic(page){
+			var pageStr = $("#pagePicStr").val();
+	    	if($.trim(pageStr) == ""){
+	    		alert("请输入需要跳转的页数！");
+	    		return;
+	    	}
+	    	if(isNaN(pageStr)){
+	    		alert("格式错误，请输入数字！");
+	    		return;
+	    	}
+	    	if(pageStr > page){
+	    		alert("你输入的页数大于最大页数");
+	    		return;
+	    	}
+	    	if(pageStr <= 0){
+	    		alert("你输入的页数不符合要求");
+	    		return;
+	    	}
+	    	queryPic(pageStr);
+		}
+    		
+    		/**
+    		 *查询图片
+    		 */
+    	function queryPic(pageNo) {
+    		$('#templateMsg').css('display','none');
+    		$("#showPic").css('width','800px');
+    		$("#picdiv").css('width','800px');
+    		var platForm = $("#platFormId").val();
+			var start = 0;
+			var limit = 5;
+			if (pageNo > 0) {
+				start = (pageNo - 1) * limit;
+			}
+			
+			var parmam = {
+				start : start,
+				limit : limit,
+				platFormId : platForm
+			};
+			
+			$.ajax({
+				url : "/ump/wccfriends/queryPic",
+				type : "POST",
+				data :parmam,
+				error : function(msg) {
+					alert("error " + msg);
+				},
+				success : function(text) {
+					$("#showPic").html(text);
+					showPic('picdiv','fadeId');
+				}
+			});
+		}
+		
+		function goPagePicText(page){
+			var pageStr = $("#pageTextStr").val();
+	    	if($.trim(pageStr) == ""){
+	    		alert("请输入需要跳转的页数！");
+	    		return;
+	    	}
+	    	if(isNaN(pageStr)){
+	    		alert("格式错误，请输入数字！");
+	    		return;
+	    	}
+	    	if(pageStr > page){
+	    		alert("你输入的页数大于最大页数");
+	    		return;
+	    	}
+	    	if(pageStr <= 0){
+	    		alert("你输入的页数不符合要求");
+	    		return;
+	    	}
+	    	queryPicText(pageStr);
+		}
+		
+			/**
+    		 *查询图文
+    		 */
+    	function queryPicText(pageNo) {
+    		$('#templateMsg').css('display','none');
+    		$("#showPic").css('width','800px');
+    		$("#picdiv").css('width','800px');
+    		var platForm = $("#platFormId").val();
+			var start = 0;
+			var limit = 10;
+			if (pageNo > 0) {
+				start = (pageNo - 1) * limit;
+			}
+			
+			var parmam = {
+				start : start,
+				limit : limit,
+				platFormId : platForm
+			};
+			
+			$.ajax({
+				url : "/ump/wccfriends/queryPicText",
+				type : "POST",
+				data :parmam,
+				error : function(msg) {
+					alert("error " + msg);
+				},
+				success : function(text) {
+					$("#showPic").html(text);
+					showPic('picdiv','fadeId');
+				}
+			});
+		}
+		
+		function goPageTemplate(page){
+			var pageStr = $("#pageStr").val();
+	    	if($.trim(pageStr) == ""){
+	    		alert("请输入需要跳转的页数！");
+	    		return;
+	    	}
+	    	if(isNaN(pageStr)){
+	    		alert("格式错误，请输入数字！");
+	    		return;
+	    	}
+	    	if(pageStr > page){
+	    		alert("你输入的页数大于最大页数");
+	    		return;
+	    	}
+	    	if(pageStr <= 0){
+	    		alert("你输入的页数不符合要求");
+	    		return;
+	    	}
+	    	queryTemplate(pageStr);
+		}
+		
+	    /**
+    	*查询常用文本
+    	 */
+    	function queryTemplate(pageNo) {
+			var start = 0;
+			var limit = 5;
+			var platForm = $("#platFormId").val();
+			if (pageNo > 0) {
+				start = (pageNo - 1) * limit;
+			}
+			
+			var parmam = {
+				start : start,
+				limit : limit,
+				platFormId : platForm
+			};
+			
+			$.ajax({
+				url : "/ump/wccfriends/queryTemplate",
+				type : "POST",
+				data :parmam,
+				error : function(msg) {
+					alert("error " + msg);
+				},
+				success : function(text) {
+					$("#showPic").html(text);
+					showPic('picdiv','fadeId');
+				}
+			});
+		}
+		
+		//显示常用文本
+		function showTemplate(){
+			$("#showPic").css('width','800px');
+			$("#showPic").html('');
+			$('#templateMsg').css('display','block');
+			showPic('picdiv','fadeId');
+		}
+		
+		
+		function goPageRecord(page){
+			var pageStr = $("#pageStrs").val();
+	    	if($.trim(pageStr) == ""){
+	    		alert("请输入需要跳转的页数！");
+	    		return;
+	    	}
+	    	if(isNaN(pageStr)){
+	    		alert("格式错误，请输入数字！");
+	    		return;
+	    	}
+	    	if(pageStr > page){
+	    		alert("你输入的页数大于最大页数");
+	    		return;
+	    	}
+	    	if(pageStr <= 0){
+	    		alert("你输入的页数不符合要求");
+	    		return;
+	    	}
+	    	queryRecordMsg(pageStr);
+		}
+		
+			/**
+    		 *查询消息记录
+    		 */
+    		function queryRecordMsg(pageNo) {
+			var start = 0;
+			var limit = 3;
+			if (pageNo > 0) {
+				start = (pageNo - 1) * limit;
+			}
+			
+			var parmam = {
+				start : start,
+				limit : limit,
+				friendId : sfriendId
+			};
+			
+			$.ajax({
+				url : "/ump/wccfriends/queryRecord",
+				type : "POST",
+				data :parmam,
+				error : function(msg) {
+					alert("error " + msg);
+				},
+				success : function(text) {
+					$("#_page_4").html(text);
+				}
+			});
+		}
+		
+		
+			/**
+    		 *查询多客服消息记录
+    		 */
+    		function queryDkf(time) {
+				console.log(time);
+				if(time==0){
+    			  time = $('#queryTime_').val();
+				}
+    			var friendId = sfriendId;
+    			var pageIndex = 1;
+    			var	pageSize = 20;
+			var parmam = {
+				friendId : friendId,
+				insertTime : time,
+				pageIndex : pageIndex,
+				pageSize : pageSize
+			};
+			
+			$.ajax({
+				url : "/ump/wccfriends/dkf",
+				type : "POST",
+				data :parmam,
+				error : function(msg) {
+				},
+				success : function(text) {
+					if(data.trim().length == 0){
+						$("#showMsg").html("暂无多客服信息。");
+					}else{
+						$("#showMsg").html(text);
+					}
+				}
+			});
+		}
+		
+		function goPageVideo(page){
+			var pageStr = $("#pageVideoStr").val();
+	    	if($.trim(pageStr) == ""){
+	    		alert("请输入需要跳转的页数！");
+	    		return;
+	    	}
+	    	if(isNaN(pageStr)){
+	    		alert("格式错误，请输入数字！");
+	    		return;
+	    	}
+	    	if(pageStr > page){
+	    		alert("你输入的页数大于最大页数");
+	    		return;
+	    	}
+	    	if(pageStr <= 0){
+	    		alert("你输入的页数不符合要求");
+	    		return;
+	    	}
+	    	queryVideo(pageStr);
+		}
+		
+		
+		/**
+    	 *查询视频
+    	*/
+    	function queryVideo(pageNo) {
+    		$('#templateMsg').css('display','none');
+    		$("#showPic").css('width','800px');
+    		$("#picdiv").css('width','800px');
+    		var platForm = $("#platFormId").val();
+			var start = 0;
+			var limit = 10;
+			if (pageNo > 0) {
+				start = (pageNo - 1) * limit;
+			}
+			
+			var parmam = {
+				start : start,
+				limit : limit,
+				platFormId : platForm
+			};
+			
+			$.ajax({
+				url : "/ump/wccfriends/queryVideo",
+				type : "POST",
+				data :parmam,
+				error : function(msg) {
+					alert("error " + msg);
+				},
+				success : function(text) {
+					$("#showPic").html(text);
+					showPic('picdiv','fadeId');
+				}
+			});
+		}
+		
+		function goPageVoice(page){
+			var pageStr = $("#pageVoiceStr").val();
+	    	if($.trim(pageStr) == ""){
+	    		alert("请输入需要跳转的页数！");
+	    		return;
+	    	}
+	    	if(isNaN(pageStr)){
+	    		alert("格式错误，请输入数字！");
+	    		return;
+	    	}
+	    	if(pageStr > page){
+	    		alert("你输入的页数大于最大页数");
+	    		return;
+	    	}
+	    	if(pageStr <= 0){
+	    		alert("你输入的页数不符合要求");
+	    		return;
+	    	}
+	    	queryVoice(pageStr);
+		}
+		
+		/**
+    	 *查询语音
+    	*/
+    	function queryVoice(pageNo) {
+    		$('#templateMsg').css('display','none');
+    		$("#showPic").css('width','800px');
+    		$("#picdiv").css('width','800px');
+    		var platForm = $("#platFormId").val();
+			var start = 0;
+			var limit = 10;
+			if (pageNo > 0) {
+				start = (pageNo - 1) * limit;
+			}
+			
+			var parmam = {
+				start : start,
+				limit : limit,
+				platFormId : platForm
+			};
+			
+			$.ajax({
+				url : "/ump/wccfriends/queryVoice",
+				type : "POST",
+				data :parmam,
+				error : function(msg) {
+					alert("error " + msg);
+				},
+				success : function(text) {
+					$("#showPic").html(text);
+					showPic('picdiv','fadeId');
+				}
+			});
+		}
+		
+		
+		
+		
+		/**
+		 * 关闭所有
+		 */
+		function closeAll(picdiv, fadeId) {
+			$('#templateMsg').css('display','none');
+			$("#" + picdiv).hide();
+		}
+
+		/**
+		 * 显示图片
+		 */
+		function showPic(picdiv, fadeId) {
+			$("#" + picdiv).show();
+		}
+		
+		/**
+		 *选择图片
+		 */
+		function selectPic(type){
+			sendType = type;
+			//$('#msg_').val(picid);
+			$('#msg_').val(picName);
+			$('#msg_').attr('disabled','disabled');
+			$('#picdiv').hide();
+		}
+		
+		//主动发送消息
+		function sendMsg(){
+			var t = sendTime.substr(0,sendTime.length-2);
+			if(t!=""){
+				var str = t.replace(/-/g,"/");
+				var date = new Date(str );
+				var time1 = date.getTime();
+				var time2 = new Date().getTime();
+				if((Number(time2)-Number(time1))>3600*48*1000){
+					alert('该粉丝48小时内未与你互动，你不能再主动发消息给他。');
+					return;
+				}
+			}else{
+				alert('该粉丝48小时内未与你互动，你不能再主动发消息给他。');
+				return;
+			}
+			if(sendType==1||sendType==4||sendType==3||sendType==2){
+				var text = picid;
+			}else{
+				var text = $('#msg_').val();
+			}
+			console.log(text);
+			var param = {
+				friendId : sfriendId,
+				sendType : sendType,
+				textVal : text
+			};
+			$.ajax({
+				url : "/ump/wccfriends/sendMsg",
+				type : "POST",
+				data :param,
+				error : function(msg) {
+					alert("error " + msg);
+				},
+				success : function(text) {
+					if(text == 'false'){
+						$('#msgResult').html('发送失败');
+						return;
+					}
+					$('#msgResult').html('发送成功');
+					$('#msg_').val('')
+					$('#msg_').attr('disabled',false);
+					sendType = 0;
+					queryRecordMsg(1);
+				}
+			});
+		}
+		
+		//选择
+		function change(o,type,name){
+			$('li').attr('class','');
+			sendType = type;
+			if(type==1||type==4||type==3||type==2){
+				picid = $(o)[0].id;
+				picName = name;
+			}
+			var className = $(o)[0].className;
+			if(!className){
+				$(o).attr('class','image-container selected');
+				return;
+			}
+			$(o).attr('class','');
+		}
+		
+		//暂时不用
+		function selectTemplate(o){
+			sendType = 0;
+			var text = $(o).text();
+			$('#msg_').val(text);
+			$('#picdiv').hide();
+		}
+		
+		//显示表情
+		function showEmotion(){
+			$('#templateMsg').css('display','none');
+			var emotion = $("#emotionId").html();
+			$("#showPic").html(emotion);
+			$("#showPic").css('width','250px');
+			var emotionObj = $("#emotionImg");
+			var emotionOffset = $("#emotionImg").offset();
+			console.log('emotionOffset.left='+emotionOffset.left);
+			console.log('emotionOffset.top='+emotionOffset.top);
+			console.log('emotionObj.outerHeight()='+emotionObj.outerHeight());
+			var leftv = emotionOffset.left+50;
+			var topv = emotionOffset.top+emotionObj.outerHeight();
+// 			background: #f6fbfe;padding: 10px;
+			$("#picdiv").css({left:leftv + "px", top:topv + "px",width:250+"px",background:'#f6fbfe'}).slideDown("fast");
+			showPic('picdiv','fadeId');
+		}
+		
+		//选择表情
+		function selectEmotion(o){
+			sendType = 7;
+			var text =$(o)[0].alt;
+			var htext = $('#msg_').val();
+			$('#msg_').val(htext+text);
+			$('#picdiv').hide();
+			textNum($('#msg_'));
+		}
+		
+		function textNum(o){
+			var num = $(o).val().length;
+			var snum = 600 - Number(num);
+			if(snum <= 0){
+				snum = 0;
+			}
+			$(o).val($(o).val().substr(0,600));
+			$('#msgNum').html('还可输入'+snum+'字');
+		}
+		
+		function massMessageList(pageNo) {
+			var start = 0;
+			var limit = 5;
+			if (pageNo > 0) {
+				start = (pageNo - 1) * limit;
+			}
+			
+			var parmam = {
+				start : start,
+				limit : limit,
+				friendId : sfriendId
+			};
+			
+			$.ajax({
+				url : "/ump/wccfriends/massMessageList",
+				type : "POST",
+				data :parmam,
+				error : function(msg) {
+					alert("error " + msg);
+				},
+				success : function(text) {
+					$("#_page_3").html(text);
+				}
+			});
+		}
+		
+		]]>
+    </script>
+    
+<style>
+th {
+	white-space: nowrap;
+}
+
+td {
+	white-space: nowrap;
+	width: 25px;
+} 
+span.button.switch {
+    height: 18px;
+    padding: 0;
+    width: 18px;
+}
+span.button.ico_docu {
+    background-position: -110px -32px;
+    margin-right: 2px;
+    padding: 0;
+    vertical-align: top;
+}
+span.button.ico_open {
+    background-position: -110px -16px;
+    margin-right: 2px;
+    padding: 0;
+    vertical-align: top;
+}
+span.button.ico_close {
+    background-position: -110px -16px;
+    margin-right: 2px;
+    padding: 0;
+    vertical-align: top;
+}
+ .metro .button .ztree{
+ 	padding: 0px;
+ }
+#buttons input {
+	padding: 2px;
+	margin: 0 10px;
+}
+.span1{text-align:right;margin-right: 10px;line-height: 30px; height: 30px}
+
+
+
+.seacher input, select {
+	margin: 0 0px;
+	font-size: 100%;
+	width: 135px;border:1px solid #e4e4e4;
+	height: 28px;
+	
+}
+#buttons{
+	margin-top: 20px;
+}
+.showResult input{
+ 	width:20px;
+ }
+.img{
+	width: 30px;
+	height: 30px;
+}
+
+.myPic {
+	top: 110%;
+	left: 25%;
+	position: absolute;
+	height: auto;
+	margin: 0px auto;
+	clear: both;
+	background: #f6fbfe;
+	padding: 5px;
+	margin-top:0px;
+	border: 1px solid #CCC;
+	z-index: 1002;
+}
+.span6 i img{
+	margin-top: 5px;
+	margin-right:5px;
+}
+
+</style>
+
+    <div id="seacher" class="seacher">
+		<div>
+			<input type="hidden" name="page" value='1'/>
+			<div class="grid">
+				<div class="row">
+				<div class="span3">
+        				<label>公众帐号类型：</label>
+        				<select id = "plattypeId" name = "plattype" class="publicSize" onchange="javascript:querySelectType(this.value);">
+				<option value="">全部</option>
+				 <c:forEach var="data" items="${platformArr}">
+					<option value="${data}">${data}</option>
+				</c:forEach> 
+			</select>
+						</div>
+					<div class="span3" id="platId">
+						<label >公众平台： </label>
+							<select id="platformUser_" name="platformUserId" >
+									<option value="">全部</option>
+								<!-- <c:forEach var="data" items="${platformUser}">
+									<option value="${data.id}">${data.account}</option>
+								</c:forEach> -->
+							</select>
+					</div>
+					
+					<div class="span3" id="groupId">
+						<label >粉丝分组 ：</label>
+							<select id="groupss" name="groupId">
+									<option value="">全部</option>
+							</select>
+					</div>
+					<!-- <div class="span3" id="userinfoid">
+						<label >绑定会员： </label>
+							<select id="userinfo_" name="isUserinfo">
+									<option value="">全部</option>
+									<option value="0">未绑定</option>
+									<option value="1">已绑定</option>
+							</select>
+					</div> -->
+				<div class="span3">
+						<label >粉丝名 ：</label>
+					   	<input type="text" id="nickName_" name="nickName"/>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="span3" id="genderId">
+						<label >性别 ：</label>
+							<select id="gender_" name="gender">
+									<option value="">全部</option>
+									<option value="0">男</option>
+									<option value="1">女</option>
+									<option value="2">未知</option>
+							</select>
+					</div>
+					<div class="span3" id="fromId">
+						<label>粉丝来源：</label>
+							<select id="from_" name="from">
+									<option value="">全部</option>
+									<option value="0">直接获取</option>
+									<option value="1">关注</option>
+									<option value="4">活动二维码</option>
+							</select>
+					</div>
+					
+					<div class="span3">
+						<label>地区 ：</label>
+						<input type="text" id="area" name="area"/>
+					</div>
+					
+					<div class="span3">
+						<label >活动名称 ：</label>
+					   	<input type="text" id="activityName_" name="activityName"/>
+					</div>
+					<!-- <div class="span3" id="isunderid">
+						<label>是否关联 ：</label>
+							<select id="isunder_" name="isunder">
+									<option value="">全部</option>
+									<option value="0">是</option>
+									<option value="1">否</option>
+							</select>
+					</div> -->
+					
+				</div>
+				
+				<div class="row">
+					<div class="span3" id="timeId">
+						<label>结束时间：</label>
+							<select id="timeEndId" name="timeName">
+									<option value="">最近对话结束时间</option>
+									<option value="24">24</option>
+									<option value="36">36</option>
+									<option value="48">48</option>
+							</select>
+					</div>
+					<!-- <div class="span3">
+						<label>所属：</label>
+						<input type="hidden" id = "underId"/> 
+						<input id="underSel" readonly="readonly"  placeholder="请选择" onfocus="showMenu();" type="text" name="under"/> 
+					</div> -->
+					<div class="span3">
+						<LABEL>关注时间：</LABEL><input type="text" id="startTime_" name="startTime" value="" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})"/>
+						<IMG onclick="startTimeFocus();" style="margin-left: -22px;" src="././js/date/skin/datePicker.gif" width="20" height="20" />
+					</div>
+					<div class="span3">
+						<LABEL>至：</LABEL><input type="text" id="endTime_" name="endTime" value="" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})"/>
+						<IMG onclick="endTimeFocus();" style="margin-left: -22px;" src="././js/date/skin/datePicker.gif" width="20" height="20" />
+					</div>
+					<div class="span3" > 
+						<input type="button" value="查 询" class="info" onclick="queryFriend(1);" style="font-family:'微软雅黑';background-color: #069dd5"/>
+						<input class="warning" type="button" value="重 置" onclick="clearAll();" style="font-family:'微软雅黑'"></input>
+				    </div>
+				</div>
+				<!-- <div class="row">
+	    			<div class="span6" style="margin-left: 20px;"> 
+						<input type="button" value="查 询" class="info" onclick="queryFriend(1);" style="font-family:'微软雅黑';background-color: #069dd5"/>
+						<input class="warning" type="button" value="重 置" onclick="clearAll();" style="font-family:'微软雅黑'"></input>
+				    </div>
+	   			</div>  --> 
+			</div>
+			<div id="buttons">
+			</div>
+			<div id="menuContent" class="menuContent" 
+			  		style="display: none; position: absolute;background: #fff;padding: 20px;border: 1px solid #e4e4e4;box-shadow: -0px 6px 10px #888888;">
+				<ul id="treeDemo" class="ztree" style="margin-top:0;padding: 0"></ul>
+			</div>
+			<div id="under" class="buttondiv"
+		style="height: 46px; background: #edf1f9; border: 1px solid #e4e4e4; border-bottom: none;">
+			 <a href="javascript:void(0);" onclick="setFriendGroup();"><i class="on-left"><img
+			src="/ump/images/blackp.png" style="vertical-align: middle;" width="14" height="14" /></i>粉丝分组</a>
+			</div>
+			
+		</div>
+	</div>
+	
+	<input type="hidden" id="limit" value="${limit}"/>
+	<div id="showResult" class="showResult">
+		暂无信息
+	</div>
+
+	<div class="tab-control" data-role="tab-control" id="showTab" style="display: none;">
+	<input type="hidden" name="platForm" id="platFormId" value=""/>
+		<ul class="tabs">
+			<li class="active"><a href="#_page_1">回复记录</a></li>
+			<li><a href="#_page_3">群发信息</a></li> 
+		</ul>
+
+		<div class="frames">
+			<div class="frame" style="height: 500px;" id="_page_1">
+						<div style="float: left;">
+							<div style="width:470px;height:30px;background-color: #f8f8f8;border: 1px solid #e5e5e5;border-bottom: 0px;padding-left:5px;">
+								<a href="#showTab" id="emotionImg" onclick="showEmotion()"><i><img src="/ump/images/friend/biaoqing.png" title="选择表情"/></i></a>
+								<a href="#showTab" onclick="queryVoice(1)"><i><img src="/ump/images/friend/tongzhi.png" title="选择语音"/></i></a>
+								<a href="#showTab" onclick="queryPic(1)"><i><img src="/ump/images/friend/image.png" title="选择图片"/></i></a>
+								<a href="#showTab" onclick="queryVideo(1)"><i><img src="/ump/images/friend/video.png" title="选择视频"/></i></a>
+								<a href="#showTab" onclick="showTemplate()"><i><img src="/ump/images/friend/wen.png" title="选择常用文本"/></i></a>
+								<a href="#showTab" onclick="queryPicText(1)"><i><img src="/ump/images/friend/write.png" title="选择图文"/></i></a>
+							</div>
+							<div>
+								<textarea id="msg_" style="width: 470px;height: 200px;background-color: #fff;" onkeyup="textNum(this)">${test }</textarea>
+							</div>
+							<div style="margin-top: 20px;">
+								<input type="button" class="info" onclick="sendMsg()" value="发送"/> 
+								<span id="msgNum" style="color: red;float: right;padding-right: 34px;">还可输入600字</span>
+							</div>
+							<div>
+								<span id="msgResult" style="color: red"></span>
+							</div>
+						</div>
+						<div style="float: left;width: 500px;">
+							<div class="tab-control" data-role="tab-control">
+								<ul class="tabs">
+									<li class="active"><a href="#_page_4">平台消息</a></li>
+									<c:if test="${isUcc != true }">
+										<li><a href="#_page_5">多客服消息</a></li>
+									</c:if>
+								</ul>
+
+								<div class="frames">
+									<div class="frame" id="_page_4" style="display: block;padding-bottom: 40px;">...</div>
+									<c:if test="${isUcc != true }">
+										<div class="frame" id="_page_5">
+											<div class="input-control text">
+												<span>请选择时间：</span><input type="text" class="Wdate" id="queryTime_"
+												onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+												<input type="button" class="info" onclick="queryDkf(0)" value="查询"/>
+											</div>
+										<div class="frame" id="showMsg">...</div></div>
+									</c:if>
+								</div>
+							</div>
+							</div>
+						</div>
+			<div class="frame" id="_page_3">...</div> 
+		</div>
+	</div>
+	
+	<div class="myPic" id="picdiv" style="display: none;box-sizing:content-box" >
+		<div class="close">
+			<img src="/ump/images/close.png" width="29" height="29"
+				onclick="javascript:closeAll('picdiv','fade');"
+				style="cursor: pointer;" />
+		</div>
+		<div id="showPic" style="width:800px;position: absolute;background: #f6fbfe;">
+		</div>
+		<input type="checkbox" checked="checked"/>
+	</div>
+	<div id="emotionId" style="display: none;background: #f6fbfe;padding: 10px;">
+		<c:forEach items="${emotions }" var="data" varStatus="status">
+				<c:if test="${status.index%10==0 }">
+					<br/>
+				</c:if>
+				<img onclick="selectEmotion(this)" style="cursor: pointer;" src="${data.url }" alt="${data.content }" title="${data.content }"/>
+			</c:forEach>
+	</div>
+	<div id="templateMsg" style="display: none">
+				<div class="zTreeDemoBackground left" > 
+					<ul id="treeTemplate" class="ztree"></ul>
+				</div>
+				<input id="templateText" type="hidden" value="" /><br/>
+				<input type="button" value="确定" class="info" onclick="selectTemplatet()"/>
+				<input type="button" value="取消" onclick="javascript:closeAll('picdiv','fade');" class="warning"/>
+				<br/><span style="color:red" id="templateErr"></span>
+	</div>
+	
+</div>

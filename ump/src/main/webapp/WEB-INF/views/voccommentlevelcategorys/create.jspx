@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_com_nineclient_model_VocCommentLevelCategory" modelAttribute="vocCommentLevelCategory" path="/voccommentlevelcategorys" render="${empty dependencies}" z="L7Nug+Kqw8YulFyPghGd5JnSh6I=">
+        <field:textarea field="name" id="c_com_nineclient_model_VocCommentLevelCategory_name" required="true" z="X17nrSo4T56D8nKq0vazKLGobZ0="/>
+        <field:input field="parentId" id="c_com_nineclient_model_VocCommentLevelCategory_parentId" z="0cJNrG3PYVm6L0Th0wGCPNJFqms="/>
+        <field:datetime dateTimePattern="${vocCommentLevelCategory_createtime_date_format}" field="createTime" id="c_com_nineclient_model_VocCommentLevelCategory_createTime" z="Oqbd2+EuQFv2CpwSa8gfpcu5EDY="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_nineclient_model_VocCommentLevelCategory" render="${not empty dependencies}" z="zgqunDQ8FJSk33qoB0zyowTo9tk="/>
+</div>

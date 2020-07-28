@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_com_nineclient_model_WccCommunity" modelAttribute="wccCommunity" path="/wcccommunitys" render="${empty dependencies}" z="QvUGrW/2PtMh6YIYOiYrbGSucng=">
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_WccCommunity_isDeleted" z="+x2uRHQNr4SZ50QdqvaMxFZ/Nzw="/>
+        <field:textarea field="communityName" id="c_com_nineclient_model_WccCommunity_communityName" required="true" z="kwIL7PoXZRRASi6zhzadRVEm+Vk="/>
+        <field:textarea field="communityUrl" id="c_com_nineclient_model_WccCommunity_communityUrl" required="true" z="Ip1GIoXtNIVTdMauIUEjWYws5tk="/>
+        <field:select field="topicStatus" id="c_com_nineclient_model_WccCommunity_topicStatus" items="${wcctopicstatuses}" path="wcctopicstatuses" z="NcoNFKe9UzcNugpK66WBJmVKffQ="/>
+        <field:input field="topicSort" id="c_com_nineclient_model_WccCommunity_topicSort" required="true" z="jD65fw0LK3VnXPFpI09ZO3AznUo="/>
+        <field:textarea field="headImage" id="c_com_nineclient_model_WccCommunity_headImage" required="true" z="cS9DqiAq4qfCslawHHiIHkzpnGE="/>
+        <field:textarea field="officialImage" id="c_com_nineclient_model_WccCommunity_officialImage" required="true" z="BNtkD5f9xT38BzmTwnrk36QarzU="/>
+        <field:textarea field="officialNickName" id="c_com_nineclient_model_WccCommunity_officialNickName" required="true" z="9ezGZ9fvCQwbANehSzKKYwg9tHI="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_nineclient_model_WccCommunity" render="${not empty dependencies}" z="madj3RMBPEyiLk6cRTsFg1XxGFI="/>
+</div>

@@ -1,0 +1,26 @@
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core" 
+xmlns:fn="http://java.sun.com/jsp/jstl/functions" 
+xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" 
+xmlns:form="http://www.springframework.org/tags/form" 
+xmlns:client="urn:jsptagdir:/WEB-INF/tags/client" 
+xmlns:jsp="http://java.sun.com/JSP/Page" 
+xmlns:spring="http://www.springframework.org/tags" version="2.0">
+  <jsp:output omit-xml-declaration="yes" />
+
+  <jsp:directive.attribute name="id" type="java.lang.String" required="true" rtexprvalue="true" description="标签标识符" />
+  <jsp:directive.attribute name="label" type="java.lang.String" required="false" rtexprvalue="true" description="用于此对象的标题，默认为空" />
+  <jsp:directive.attribute name="labelPlural" type="java.lang.String" required="false" rtexprvalue="true" description="The label used for this object, will default to a message bundle if not supplied" />
+  <jsp:directive.attribute name="render" type="java.lang.Boolean" required="false" rtexprvalue="true" description="表明内容不为空则显示所有标签（默认为ture）" />
+
+  <c:if test="${empty render or render}">
+   <div class="grid">
+    <spring:message arguments="${labelPlural}" code="entity_list_all" var="title_msg" htmlEscape="false" />
+    <client:panel id="${id}" title="${title_msg}">
+	    <c:if test="${not empty label}">
+			<div class="headtitle">${label}</div>
+		</c:if>
+        <jsp:doBody />
+    </client:panel>
+    </div>
+  </c:if>
+</jsp:root>

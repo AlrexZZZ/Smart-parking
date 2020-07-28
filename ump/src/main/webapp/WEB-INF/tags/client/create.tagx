@@ -1,0 +1,42 @@
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core" 
+xmlns:fn="http://java.sun.com/jsp/jstl/functions" 
+xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" 
+xmlns:client="urn:jsptagdir:/WEB-INF/tags/client" 
+xmlns:form="http://www.springframework.org/tags/form" 
+xmlns:jsp="http://java.sun.com/JSP/Page" 
+xmlns:spring="http://www.springframework.org/tags" version="2.0">
+  <jsp:output omit-xml-declaration="yes"/>
+  
+  <jsp:directive.attribute name="id" type="java.lang.String" required="true" rtexprvalue="true" description="标签标识符"/>
+  <jsp:directive.attribute name="modelAttribute" type="java.lang.String" required="true" rtexprvalue="true" description="表单绑定的模型属性的名称"/>
+  <jsp:directive.attribute name="path" type="java.lang.String" required="true" rtexprvalue="true" description="指定的相对URL路径(自动加载/)" />
+  <jsp:directive.attribute name="label" type="java.lang.String" required="false" rtexprvalue="true" description="用于此对象的标题，默认为空"/>
+  <jsp:directive.attribute name="render" type="java.lang.Boolean" required="false" rtexprvalue="true" description="表明内容不为空则显示所有标签（默认为ture）" />
+
+	<c:if test="${empty render or render}">
+		<c:set var="enctype" value="application/x-www-form-urlencoded" />
+		<script type="text/javascript">
+          <![CDATA[
+			var validator;
+			$(function() {
+				validator = $('#${modelAttribute}').dtValidator();
+			});
+          ]]>
+          </script>
+		<div class="grid">
+			<spring:message arguments="${label}" code="entity_create"
+				var="title_msg" htmlEscape="false" />
+			<client:panel id="${id}" title="${title_msg}">
+				<spring:url value="${path}" var="form_url" />
+				<c:set var="jsCall" value="" />
+				<c:if test="${not empty label}">
+					<div class="headtitle">${label}</div>
+				</c:if>
+				<form:form action="${form_url}" method="POST"
+					modelAttribute="${modelAttribute}">
+					<jsp:doBody />
+				</form:form>
+			</client:panel>
+		</div>
+	</c:if>
+</jsp:root>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_WccUtility" items="${wccutilitys}" z="SoRIH46mF8vjmCNQMHovPcweoBM=">
+        <table:table data="${wccutilitys}" id="l_com_nineclient_model_WccUtility" path="/wccutilitys" z="aDz6v7AK0fvznK8LUyvTBhS/ne0=">
+            <table:column id="c_com_nineclient_model_WccUtility_isDeleted" property="isDeleted" z="j3B+Zj7ukbFpIfqwmWwmFGKXKcs="/>
+            <table:column id="c_com_nineclient_model_WccUtility_name" property="name" z="f9F/ag2FA34Kj/QdQ0Wz0WIUKDY="/>
+            <table:column id="c_com_nineclient_model_WccUtility_remark" property="remark" z="ab8X3+L0VcfnY/tZ+PAa8EXfNe8="/>
+            <table:column id="c_com_nineclient_model_WccUtility_url" property="url" z="waOMhQfNBcWABzrStXFwmP18u/U="/>
+        </table:table>
+    </page:list>
+</div>

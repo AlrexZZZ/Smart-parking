@@ -1,0 +1,616 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	 xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	 xmlns:jsp="http://java.sun.com/JSP/Page"
+	 xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	 xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" 
+	 xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+<jsp:directive.page import="org.redisson.core.RQueue"/>
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+	<style>@IMPORT url("/ump/styles/selectTree.css");</style>
+	<SCRIPT type="text/javascript" src="/ump/js/selectTree.js">/*selectTree*/</SCRIPT>
+	<script type="text/javascript" src="/ump/js/nineclient/vocreport/nineclient.js"><!--加载alert--></script>
+    <style>0
+    .metro .button {padding: 0px;}
+	.k_width tr th:first-child, .k_width tr td:first-child {width: 50px;text-align: center;}
+	input,select{width: 135px;height: 28px;background-color: #fff;border: 1px solid #e4e4e4;}	
+	.metro label { display: block;font-size: 12px;font-weight: normal; margin: 5px 0;text-align: right;}
+	</style>
+    <script type="text/javascript">
+
+    
+    
+    <![CDATA[
+             
+             window.onload = function (){
+             	
+            	    var tipstr = '${tishi}';
+            	    if(null != tipstr && "" != tipstr){
+            	    	alert(tipstr);
+            	    	tipstr = null;
+            	    }
+            	    }          
+             
+$(document).ready(function() 
+	{	
+	ToListByAjax(1);
+	});
+function formatData(time) 
+    {
+	var date = new Date(time);
+	var str = date.Format("yyyy-MM-dd hh:mm:ss");
+	return str;
+     }
+        function startTimeFocus(){
+         	    	$('#createStartTime').focus();
+         	  }
+        function endTimeFocus(){
+             	    $('#createEndTime').focus();
+         	    } 
+        function cstartTimeFocus(){
+     	    	$('#confirmStartTime').focus();
+     	    }
+        function cendTimeFocus(){
+         	    $('#confirmEndTime').focus();	
+     	    } 
+      //查询分页
+	    function ToListByAjax(page){
+	    	var pageNo;
+			if (page) {
+				pageNo = page
+				
+			} else {
+				pageNo = 1;
+			}
+			var start = 0;
+			var limit = 10;
+			if (pageNo > 0) {
+				start = (pageNo - 1) * limit;
+			}
+	    	var param={};
+	    	param.page=pageNo;
+			param.size=10;
+	    	var name = $("#name").val();
+	    	var phone = $("#phone").val();
+	    	var createStartTime = $("#createStartTime").val();
+	    	var createEndTime = $("#createEndTime").val();
+	    	var confirmStartTime = $("#confirmStartTime").val();
+	    	var confirmEndTime = $("#confirmEndTime").val();
+	    	var isensured = $("#isensured").val();
+	    	var itempk = $("#itempk").val();			
+				param.name=name;	
+				param.phone=phone;
+				param.itempk=itempk;
+				param.isensured=isensured;
+			    param.start=start;
+			    param.limit=limit;
+				param.createStartTime=createStartTime;
+				param.createEndTime=createEndTime;
+			if(createStartTime!=null&&$.trim(createStartTime)!=""){
+				if(createEndTime!=null&&$.trim(createEndTime)!=""){
+					if(createStartTime >= createEndTime){
+						alert("开始时间不能大于结束时间");
+						return;
+					}
+				}
+			}
+			
+				param.confirmStartTime=confirmStartTime;
+				param.confirmEndTime=confirmEndTime;
+			
+			if(confirmStartTime!=null&&$.trim(confirmStartTime)!=""){
+				if(confirmEndTime!=null&&$.trim(confirmEndTime)!=""){
+					if(confirmStartTime >= confirmEndTime){
+						alert("开始时间不能大于结束时间");
+						return;
+					}
+				}
+			}	
+			var url = "/ump/wccproprietor/getProprietor";
+	    	$.ajax({
+				url : url,
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data :param,
+				error : function(msg) {
+				},
+				success : function(data) {
+					createData_Gride(data, "");
+				}
+			});
+	    }
+      
+      
+      
+	    //查询分页
+	    function ToListByAjax2(){
+	    	var pageNo;
+			
+				
+				
+			
+				pageNo = 1;
+				pageNo = $("#pageStr2").val();
+			var start = 0;
+			var limit = 10;
+			if (pageNo > 0) {
+				start = (pageNo - 1) * limit;
+			}
+	    	var param={};
+	    	param.page=pageNo;
+			param.size=10;
+	    	var name = $("#name").val();
+	    	var phone = $("#phone").val();
+	    	var createStartTime = $("#createStartTime").val();
+	    	var createEndTime = $("#createEndTime").val();
+	    	var confirmStartTime = $("#confirmStartTime").val();
+	    	var confirmEndTime = $("#confirmEndTime").val();
+	    	var isensured = $("#isensured").val();
+	    	var itempk = $("#itempk").val();			
+				param.name=name;	
+				param.phone=phone;
+				param.itempk=itempk;
+				param.isensured=isensured;
+			    param.start=start;
+			    param.limit=limit;
+				param.createStartTime=createStartTime;
+				param.createEndTime=createEndTime;
+				param.tishi="";
+			if(createStartTime!=null&&$.trim(createStartTime)!=""){
+				if(createEndTime!=null&&$.trim(createEndTime)!=""){
+					if(createStartTime >= createEndTime){
+						alert("开始时间不能大于结束时间");
+						return;
+					}
+				}
+			}
+			
+				param.confirmStartTime=confirmStartTime;
+				param.confirmEndTime=confirmEndTime;
+			
+			if(confirmStartTime!=null&&$.trim(confirmStartTime)!=""){
+				if(confirmEndTime!=null&&$.trim(confirmEndTime)!=""){
+					if(confirmStartTime >= confirmEndTime){
+						alert("开始时间不能大于结束时间");
+						return;
+					}
+				}
+			}	
+			var url = "/ump/wccproprietor/getProprietor";
+	    	$.ajax({
+				url : url,
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data :param,
+				error : function(msg) {
+				},
+				success : function(data) {
+					createData_Gride(data, "");
+				}
+			});
+	    }
+      
+	
+	    
+	    function createData_Gride(data) {
+			var model = eval("(" + data + ")");
+			var list = eval(model.dataJson);
+			var table = "";
+			for (var i = 0; i < list.length; i++) {
+				table += "<tr>";
+				table += "<td style='width:120px;'>";
+				if(list[i].wccFriend!=null && list[i].wccFriend!=""){
+					table += list[i].wccFriend.nickName;
+				}
+				else{
+					table += "未认证";
+				}
+				table += "</td>";
+				table += "<td style='width:120px;'>";
+				table += list[i].name;
+				table += "</td>";
+				table += "<td>";
+				table += list[i].phone;
+				table += "</td>";
+				table += "<td>";
+				if(list[i].wccappartment==null)
+					{
+					table +="";
+					}
+				else
+					{
+				table += list[i].wccappartment.itemName;
+					}
+				
+				table += "</td>";
+				table += "<td>";
+				table += list[i].doorplate;
+				table += "</td>";
+				table += "<td>";
+				var isensured=list[i].isEnsured;
+				if(isensured=='0')
+					{
+					table += '未认证';
+					}
+				else
+					{
+					table += '已认证';
+					}
+				
+				table += "</td>";			
+				table += "<td>";
+				if(list[i].certificationTime==null)
+					{
+					table +="—";
+					}
+				else
+					{
+					table += formatData(list[i].certificationTime);	
+					}				
+				table += "</td>";
+				table += "<td>";
+				if(list[i].tempname==null || list[i].tempname==""){
+					table += "—";
+				}else{
+					table += list[i].tempname;
+				}
+				table += "</td>";
+				table += "<td>";
+				if(list[i].tempphone==null || list[i].tempphone==""){
+					table += "—";
+				}else{
+					table += list[i].tempphone;
+				}
+				
+				table += "</td>";
+				table += "<td>";
+				if(list[i].tempappartment==null)
+					{
+					table +="—";	
+					}
+				else
+					{
+					table += list[i].tempappartment.itemName;
+					}
+				
+				table += "</td>";
+				table += "<td>";
+				if(list[i].tempdoorplate==null)
+				{
+				table +="—";	
+				}
+			else
+				{
+				table += list[i].tempdoorplate;
+				}
+				
+				table += "</td>";
+				table += "<td>";
+				table += '<a href="javascript:goUpdate('+list[i].id+')" alt="编辑 " title="编辑 " style="width: 80px;"> <img alt="编辑 " class="image"src="/ump/resources/images/update.png" title="编辑 "/> </a> '
+				table += '<a href="javascript:deleteForm('+list[i].id+')" alt="删除 " title="删除 "style="width: 80px;" > <img alt="删除 " class="image" src="/ump/resources/images/delete.png" title="删除 "/></a> '
+				if(list[i].tempname!=''&&list[i].tempname!=null){
+					table += '<a href="javascript:confirmauto('+list[i].id+','+list[i].wccFees+')" alt="审核修改" title="审核修改 " style="width: 80px;"> <img alt="审核修改 " class="image" src="/ump/resources/images/swatch.png" title="审核修改 " /></a>'
+				}
+				table += "</td>";
+				table += "</tr>";
+			}
+			var foot = Page_sku(model);
+			$("#dataBody").html(table);
+			if (model.totalCount > 0) {
+				$("#dataFoot").html(foot);
+			} else {
+				$("#dataBody").html("<tr><td colspan='10'>暂无数据</td></tr>");
+			}
+	
+		}
+	    var ss;
+	    function ckkeyup(){
+	    	ss=$("#pageStr2").val();
+	    }
+	    function Page_sku(model)
+	    {
+			var turnPage = '';
+			if (model.totalCount > 0) {
+				turnPage += '	<tr>';
+				turnPage += '	<td colspan="5" style="float:right">';
+				if (model.pageNo > 1) {
+					turnPage += ' <a class="default" href="javascript:void(0);" onclick="ToListByAjax('+ 1 +')" style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px"><img alt="首页" src="/ump/resources/images/resultset_first.png" title="首页" style="float:left"/></a>';
+					turnPage += ' <a style="float:left;padding-top: 4px;padding-left: 6px" class="default" href="javascript:void(0);" onclick="ToListByAjax('
+							+ (model.pageNo - 1) + ')"><img alt="上一页" src="/ump/resources/images/resultset_previous.png" title="上一页" style="float:left"/></a>';
+				}
+				turnPage += '<span style="color: #069dd5;height: 22px;line-height: 22px;float:left;padding-left: 6px">'+ model.pageNo+'</span><span style="float:left;padding-top: 4px;padding-left: 6px"> /</span> <span style="color: #069dd5;float:left;padding-top: 4px;padding-left:6px">'+model.totalPage+'</span>';
+				
+				turnPage +='<input type="text" value=""  style="width: 30px;height:22px;float:left;margin-left:6px" id="pageStr2" onkeyup="ckkeyup();"/><a  style="width: 28px;height:22px;background-color:#069dd5;color: white;display:inline-block;font-family:Arial;font-size: 10px;line-height: 22px;text-align:center;cursor: pointer;float:left" onclick="ToListByAjax2();">GO</a>'
+
+				if (model.pageNo != model.totalPage) {
+					turnPage += '<a class="default" href="javascript:void(0);" onclick="ToListByAjax('
+							+ (model.pageNo + 1)
+							+ ')" style="cursor: hand; cursor: pointer;float:left;padding-top: 2px;padding-left:6px"><img alt="下一页" src="/ump/resources/images/resultset_next.png" title="下一页"/></a>';
+					turnPage += ' <a style="float:left;padding-top: 4px;padding-left: 6px" class="default" href="javascript:void(0);" onclick="ToListByAjax('+ model.totalPage +')" style="cursor: hand; cursor: pointer;"><img alt="首页" src="/ump/resources/images/resultset_last.png" title="首页" style="float:left"/></a>';
+				}
+				turnPage += '<span style="float:left;padding-top: 3px;padding-left: 6px">每页<span  style="color:#069dd5;">10</span>条</span></td>';
+				turnPage += '</tr>';
+				return turnPage;
+			}
+		}
+		//删除
+		function deleteForm(id) {
+			var isdelete=confirm('确定要删除吗？')
+			if(isdelete){
+				window.location.href="/ump/wccproprietor/delete?id="+id;
+				//alert("${shanchu2}");
+			/* $.ajax({
+				url : "/ump/wccproprietor/delete?id="+id,
+				type : "POST",
+				data : $('#importForm').serialize(),
+				error : function(msg) {
+				},
+				success : function(data) {
+					var aa  =  "${shanchu2}";
+				 //   alert(aa);	
+ 					$.Notify({
+						caption : "",
+						content : data,
+						timeout : 5000
+					// 10 seconds
+					});
+				}
+			}); */ 
+		}
+		}
+		function confirmauto(id){
+			var isauto = confirm('确定审核修改？');
+			if(isauto){
+    			window.location.href="/ump/wccproprietor/confirmed?id="+id;
+    		}
+		}
+		 function goUpdate(id){
+		    	window.location.href = '/ump/wccproprietor/'+id+'?form';
+		    }
+		 //下载模板
+	    function downLoadTemplate(){
+			window.location.href = "/ump/wccproprietor/downLoadTemplate";
+	    }
+	    function batchImport(){
+			$.Dialog({
+				overlay : true,
+				shadow : true,
+				flat : true,
+				draggable : true,
+				icon : '<img src="/ump/images/excel2013icon.png"/>',
+				title : '请选择导入信息',
+				content : '',
+				width : 300,
+				height : 100,
+				padding : 10,
+				onShow : function(_dialog) {
+					var content = '<form id="importForm" action="/ump/wccproprietor/importExcel" method="POST"  enctype="multipart/form-data">'
+						+ '<div class="grid">'
+						+ '<div class="row"><input type="file" name="importFile" id="importFile" />'
+						+ '</div>'
+						+ '<div class="form-actions row">'
+						+ '<button class="info" onclick="importToDb();">确定</button> '
+						+ '<button class="warning" type="button" onclick="$.Dialog.close()">取消</button> '
+						+ '</div>'
+						+ '</div>'
+						+ '</form>';
+					$.Dialog.content(content);
+				}
+			});
+		}
+	    
+	    
+		function importToDb() {
+			/*  window.location.href = "/ump/wccproprietor/importExcel";
+			 alert("${tishi}");	  */
+			$.ajax({
+				url : "",
+				type : "POST",
+				data : $('#importForm').serialize(),
+				error : function(msg) {
+				},
+				success : function(data) {
+					var aa  = "${tishi}";
+				 
+				    /* 	$.Notify({
+						caption : "",
+						content : data,
+						timeout : 5000
+					// 10 seconds
+					}) ; */
+				}
+			});
+		}
+	    
+	  //批量导出
+		function batchExport(){
+	    	var param={};
+	    	var name = $("#name").val();
+	    	var phone = $("#phone").val();
+	    	var createStartTime = $("#createStartTime").val();
+	    	var createEndTime = $("#createEndTime").val();
+	    	var confirmStartTime = $("#confirmStartTime").val();
+	    	var confirmEndTime = $("#confirmEndTime").val();
+	    	var isensured = $("#isensured").val();
+	    	var itempk = $("#itempk").val();			
+				param.name=name;	
+				param.phone=phone;
+				param.itempk=itempk;
+				param.isensured=isensured;
+			    param.start=0;
+			    param.limit=5000;
+				param.createStartTime=createStartTime;
+				param.createEndTime=createEndTime;
+			if(createStartTime!=null&&$.trim(createStartTime)!=""){
+				if(createEndTime!=null&&$.trim(createEndTime)!=""){
+					if(createStartTime >= createStartTime){
+						alert("开始时间不能大于结束时间");
+						return;
+					}
+				}
+			}
+			
+				param.confirmStartTime=confirmStartTime;
+				param.confirmEndTime=confirmEndTime;
+			
+			if(confirmStartTime!=null&&$.trim(confirmStartTime)!=""){
+				if(confirmEndTime!=null&&$.trim(confirmEndTime)!=""){
+					if(confirmStartTime >= confirmStartTime){
+						alert("开始时间不能大于结束时间");
+						return;
+					}
+				}
+			}	
+			var url = "/ump/wccproprietor/exportExcel";
+	    	$.ajax({
+				url : url,
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data :param,
+				error : function(msg) {
+					if(msg == "error"){
+						alertCon("操作失败");
+						return false;
+					}
+				},
+				success : function(data) {
+					if(data == "error"){
+						alertCon("操作失败");
+						return false;
+					}else{
+						 window.location.href = data;
+						 
+					}
+				}
+			});
+	    }
+	    function clearAll() {
+			$('#name').val('');
+			$('#phone').val('');
+			$('#createStartTime').val('');
+			$('#createEndTime').val('');
+			$('#isensured').val('');
+			$('#itempk').val('');
+			$('#confirmStartTime').val('');
+			$('#confirmEndTime').val('');
+			
+		}
+	]]>
+    </script>
+    <div class="grid">
+    	<form action="/ump/wccstores/getStoreListByFiled" method="post">
+    		<div class="row">
+    			<div class="span3">
+    				<span>名称：</span><input type="text" id="name" name="name" value="" />
+    			</div>
+    			<div class="span3">
+    				<span>电话：</span><input type="text" id="phone" name="phone" value="" />
+    			</div>
+    			<div class="span3">
+    				<span>创建时间：</span><input type="text" id="createStartTime" name="createStartTime" value="" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})"/>
+    			<IMG onclick="startTimeFocus();" style="margin-left: -22px;" src="../js/date/skin/datePicker.gif" width="20" height="20" />
+    			</div>
+    			<div class="span3">
+    				<span>至：</span><input type="text" id="createEndTime" name="createEndTimes" value="" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})"/>
+    			<IMG onclick="endTimeFocus();" style="margin-left: -22px;" src="../js/date/skin/datePicker.gif" width="20" height="20" />
+    			</div>
+    		</div>
+    		<div class="row">
+    			<div class="span3">
+    				<span>认证：</span>
+    				<span>
+    					<select name="isensured" style="width: 135px;" id="isensured">
+    						<OPTION value="">全部</OPTION>
+    						<OPTION value="0">未认证</OPTION>
+    						<OPTION value="1">已认证</OPTION>
+    					</select>
+    				</span>
+    			</div>
+    			<div class="span3">
+    				<span>项目：</span> 
+    				<select name="itempk" style="width: 135px;" id="itempk">
+    				  <OPTION value="">全部</OPTION>
+    				  <c:forEach items="${appartment }" var="data" varStatus="status">
+                      <option value="${data.id}">${data.itemName}</option>
+                      </c:forEach>
+    					</select>
+    			</div>
+    			<div class="span3">
+    				<span>认证时间：</span><input type="text" id="confirmStartTime" name="confirmStartTime" value="" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})"/>
+    			<IMG onclick="cstartTimeFocus();" style="margin-left: -22px;" src="../js/date/skin/datePicker.gif" width="20" height="20" />
+    			</div>
+    			<div class="span3">
+    				<span>至：</span><input type="text" id="confirmEndTime" name="confirmEndTime" value="" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})"/>
+    			<IMG onclick="cendTimeFocus();" style="margin-left: -22px;" src="../js/date/skin/datePicker.gif" width="20" height="20" />
+    			</div>
+    		</div>
+    		<div class="row">
+    			<div class="span6" style="margin-left: 20px;"> 
+					<input type="button" value="查 询" class="info" onclick="ToListByAjax(1);" style="font-family:'微软雅黑';background-color: #069dd5"/>
+					<input class="warning" type="button" value="重 置" onclick="clearAll();" style="font-family:'微软雅黑'"></input>
+			    </div>
+	   		</div>  
+    	</form>
+    </div>
+    
+    <div class="buttondiv"
+			style="height: 46px; background: #edf1f9; border: 1px solid #e4e4e4; border-bottom: none;">
+		<a href="/ump/wccproprietor?form">
+			<img alt="添加业主" src="/ump/resources/images/add.png" title="添加业主"></img>添加业主
+		</a>&#160;&#160;
+		 <a href="javascript:void(0);"  onclick="downLoadTemplate()" >
+		 <img id="activeOn"  src="/ump/images/wccImg/download.png" />
+		 下载模板</a>
+		 &#160;&#160;
+		 <a href="#" onclick="batchImport();">
+		  <img id="activeOn"  src="/ump/images/wccImg/pl_dr.png" />
+		 批量导入</a>
+		<!-- &#160;&#160;
+		 <a href="javascript:void(0);" onclick="batchExport();">
+		  <img id="activeOn"  src="/ump/images/wccImg/pl_dc.png" />
+		 批量导出</a>
+		&#160;&#160; -->		
+	</div>		
+	<div id="menuContent" class="menuContent"
+		style="display: none; position: absolute;background: #fff;padding: 20px;border: 1px solid #e4e4e4;box-shadow: -0px 6px 10px #888888;">
+		<ul id="treeDemo" class="ztree" style="margin-top: 0;"></ul>
+	</div>
+	<!-- 查询分页tabel开始 -->
+	 <div>
+		<table class="table striped hovered k_width">
+		<THEAD>
+			<tr>
+				<th>粉丝昵称</th>
+				<th>姓名</th>
+				<th>电话</th>
+				<th>项目名称</th>
+				<th>门牌号</th>
+				<th>是否认证</th>
+				<th>认证日期</th>
+				<th>临时姓名</th>
+				<th>临时电话</th>
+				<th>临时项目</th>
+				<th>临时门牌号</th>
+				<th>操作</th>
+			</tr>
+			</THEAD>
+			<TBODY id="dataBody">
+			
+			</TBODY>
+		</table>
+		 <div style="float: right;">
+		 	<div id="dataFoot"></div>
+		</div>
+		
+		
+		
+		
+	</div>
+	<!-- 查询分页结束 -->
+    
+</div>
+

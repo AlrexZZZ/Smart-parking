@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_WccGroupMessage" items="${wccgroupmessages}" z="xQlpMWbMMiRU/Hf2S182jrvxsHM=">
+        <table:table data="${wccgroupmessages}" id="l_com_nineclient_model_WccGroupMessage" path="/wccgroupmessages" z="WJbJHhNad8qp/Ll44D7oAOITYr0=">
+            <table:column id="c_com_nineclient_model_WccGroupMessage_isDeleted" property="isDeleted" z="zWQSkIq6kn56P9J0iraiM2b6c2E="/>
+            <table:column date="true" dateTimePattern="${wccGroupMessage_createtime_date_format}" id="c_com_nineclient_model_WccGroupMessage_createTime" property="createTime" z="Y/Dh6Kx2nybI6O09tw0lggOw1x8="/>
+            <table:column id="c_com_nineclient_model_WccGroupMessage_sendStatus" property="sendStatus" z="drNXkhAuwsY2rRgmfHZg8soDm68="/>
+            <table:column id="c_com_nineclient_model_WccGroupMessage_title" property="title" z="KcfYNnatomKpt8d1e1fdRwqclvg="/>
+            <table:column id="c_com_nineclient_model_WccGroupMessage_author" property="author" z="zboTdo95pKLtVZnSOOT2v8NYS2E="/>
+            <table:column id="c_com_nineclient_model_WccGroupMessage_content" property="content" z="7i5cONb6dTLn/Q5+9qeipVYsuBw="/>
+        </table:table>
+    </page:list>
+</div>

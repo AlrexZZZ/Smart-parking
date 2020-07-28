@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	 xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	 xmlns:jsp="http://java.sun.com/JSP/Page" 
+	 xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<script src="/ump/js/jquery.widget.min.js"><!-- 该页面js--></script>
+	<script src="/ump/ui/metro/js/metro.min.js"><!-- 该页面js--></script>
+	<style>
+		input,select{
+			width: 135px;
+			height: 28px;
+			background-color: #fff;
+			border: 1px solid #e4e4e4;
+		}
+	</style>
+	<script type="text/javascript">
+	<![CDATA[
+		function clearAll(){
+			$("#urole").val(99);
+			$("#active").val(99);
+			$("#accountStr").val('');
+			$("#email").val('');
+		}
+		
+		function ToListByAjax(page){
+			var param={};
+	    	if(page==undefined){
+				page=1;
+			}
+	    	
+	    	param.page=page;
+			param.size=10;
+			var urole = $("#urole").val();
+	    	var active = $("#active").val();
+	    	var account = $("#accountStr").val();
+	    	var email = $("#email").val();
+	    	
+	    	if(urole!=99){ 
+				param.urole=urole;
+			}
+	    	if(active!=99){ 
+				param.active=active;
+			}
+	    	if(account!=undefined&&account!=null&&$.trim(account)!=""){
+				param.account=account;
+			}
+	    	if(email!=undefined&&email!=null&&$.trim(email)!=""){
+				param.email=email;
+			}
+	    	
+	    	var url = "/ump/umpoperators/findListByFiled";
+	    	$.ajax({
+				url : url,
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data :param,
+				error : function(msg) {
+				},
+				success : function(data) {
+					$("#table1").hide();
+					$("#table2").show();
+					createData_Gride(data, "");
+				}
+			});
+		}
+		
+		function createData_Gride(data) {
+			var model = eval("(" + data + ")");
+			var list = eval(model.dataJson);
+			var table = "";
+			for (var i = 0; i < list.length; i++) {
+				table += "<tr>";
+					table += "<td>";
+					table += list[i].account;
+					table += "</td>";
+					table += "<td>";
+					table += list[i].operatorName;
+					table += "</td>";
+					table += "<td>";
+					table += list[i].urole.roleName;
+					table += "</td>";
+					table += "<td>";
+					table += list[i].mobile;
+					table += "</td>";
+					table += "<td>";
+					table += list[i].email;
+					table += "</td>";
+					table += "<td>";
+					if(list[i].active == true){
+						table +='<input id="actives'+list[i].id+'" type="hidden" name="active" value="true" />'
+						table +='<img id="activeOn2'+list[i].id+'" onclick="changeOnOff2('+list[i].id+','+model.pageNo+')" src="/ump/images/ON.png" />'
+						table +='<img src="/ump/images/OFF.png" id="activeOff2'+list[i].id+'" onclick="changeOnOff2('+list[i].id+','+model.pageNo+');" style="display: none;" />';
+					}
+					if(list[i].active == false){
+						table +='<input id="actives'+list[i].id+'" type="hidden" name="active" value="false" />'
+						table +='<img id="activeOn2'+list[i].id+'" onclick="changeOnOff2('+list[i].id+','+model.pageNo+')" src="/ump/images/ON.png" style="display: none;"/>'
+						table +='<img src="/ump/images/OFF.png" id="activeOff2'+list[i].id+'" onclick="changeOnOff2('+list[i].id+','+model.pageNo+');" />';
+					}
+					table += "</td>";
+					table += "<td>";
+						table += '<a href="javascript:goUpdate('+list[i].id+')" alt="更新 " title="更新 " style="width: 80px;"> <img alt="更新 " class="image"src="/ump/resources/images/update.png" title="更新 "/> </a> '
+						table += '<a href="javascript:deleteForm('+list[i].id+','+model.pageNo+','+10+')" alt="删除 " title="删除 "style="width: 80px;" > <img alt="删除 " class="image" src="/ump/resources/images/delete.png" title="删除 "/></a> '
+					table += "</td>";
+				table += "</tr>";
+			}
+			var foot = Page_sku(model);
+			$("#dataBoday").html(table);
+			if (model.totalCount > 0) {
+				$("#dataFoot").html(foot);
+			} else {
+				$("#dataFoot").html("<tr><td colspan='5'>查无匹配数据</td></tr>");
+			}
+		}
+		
+		function goUpdate(id){
+	    	window.location.href = '/ump/umpoperators/'+id+'?form';
+	    }
+		
+		 function Page_sku(model) {
+				var turnPage = '';
+				if (model.totalCount > 0) {
+					turnPage += '	<tr>';
+					turnPage += '	<td colspan="5">';
+					if (model.pageNo > 1) {
+						turnPage += ' <a class="default" href="#" onclick="ToListByAjax('+ 1 +')" style="cursor: hand; cursor: pointer;"><img alt="首页" src="/ump/resources/images/resultset_first.png" title="首页"/></a>';
+						turnPage += ' <a class="default" href="#" onclick="ToListByAjax('
+								+ (model.pageNo - 1) + ')"><img alt="上一页" src="/ump/resources/images/resultset_previous.png" title="上一页"/></a>&nbsp;';
+					}
+
+					turnPage += '<span style="color: #069dd5;height: 22px;line-height: 22px;">'+ model.pageNo+'</span> / <span style="color: #069dd5;">'+model.totalPage+'</span>&nbsp;&nbsp;';
+					turnPage +='<input type="text" value="" style="width: 30px;height:22px" id="pageStr2"/><a  style="width: 28px;height:22px;background-color:#069dd5;color: white;display:inline-block;font-family:Arial;font-size: 10px;line-height: 22px;text-align:center;cursor: pointer;" onclick="goPage2('+model.totalPage+');">GO</a>&nbsp;&nbsp;'		
+
+					if (model.pageNo != model.totalPage) {
+						turnPage += '<a class="default" href="#" onclick="ToListByAjax('
+								+ (model.pageNo + 1)
+								+ ')" style="cursor: hand; cursor: pointer;"><img alt="下一页" src="/ump/resources/images/resultset_next.png" title="下一页"/></a>';
+						turnPage += ' <a class="default" href="#" onclick="ToListByAjax('+ model.totalPage +')" style="cursor: hand; cursor: pointer;"><img alt="首页" src="/ump/resources/images/resultset_last.png" title="首页"/></a>&nbsp;';
+					}
+					turnPage += '&nbsp;每页<span style="color:#069dd5">10</span>条</td>';
+					turnPage += '</tr>';
+					return turnPage;
+				}
+			}
+		
+		 
+		  function changeOnOff2(id,page) {
+				var active = $("#actives"+id).val();
+				if (active == "true") {
+					$("#activeOn2"+id).hide();
+					$("#activeOff2"+id).show();
+					$("#actives"+id).val("false");
+					$.ajax({
+			            url:"/ump/umpoperators/updateStatus",
+			            dataType:"json",
+			            type:"POST",
+			            data:{'id':id,'active':false},
+			            error: function(msg){
+			            },
+			            success: function(text) { //若Ajax处理成功后的回调函数，text是返回的页面信息
+			            	//alert("操作成功");
+			            }
+			        });
+					
+				} else {
+					$("#activeOn2"+id).show();
+					$("#activeOff2"+id).hide();
+					$("#actives"+id).val("true");
+					 $.ajax({
+			            url:"/ump/umpoperators/updateStatus",
+			            dataType:"json",
+			            type:"POST",
+			            data:{'id':id,'active':true},
+			            error: function(msg){
+			            },
+			            success: function(text) { //若Ajax处理成功后的回调函数，text是返回的页面信息
+			            	//alert("操作成功");
+			            }
+			        }); 
+					
+				}
+			}
+		  
+		function changeOnOff1(id) {
+			var active = $("#active"+id).val();
+			if (active == "true") {
+				$("#activeOn"+id).hide();
+				$("#activeOff"+id).show();
+				$("#active"+id).val("false");
+				
+				$.ajax({
+		            url:"/ump/umpoperators/updateStatus",
+		            dataType:"json",
+		            type:"POST",
+		            data:{'id':id,'active':false},
+		            error: function(msg){
+		            },
+		            success: function(text) {
+		            	//alert("操作成功");
+		            }
+		        });
+				
+			} else {
+				$("#activeOn"+id).show();
+				$("#activeOff"+id).hide();
+				$("#active"+id).val("true");
+				$.ajax({
+		            url:"/ump/umpoperators/updateStatus",
+		            dataType:"json",
+		            type:"POST",
+		            data:{'id':id,'active':true},
+		            error: function(msg){
+		            },
+		            success: function(text) { //若Ajax处理成功后的回调函数，text是返回的页面信息
+		            	//alert("操作成功");
+		            }
+		        });
+				
+			}
+		}
+		
+		 function updateStatus(id){
+    		var activess = ("#actives"+id).val();
+    		alert(activess);
+    		$.ajax({
+	            url:"/ump/umpoperators/updateStatus",
+	            dataType:"json",
+	            type:"POST",
+	            data:{'id':id,'active':active},
+	            error: function(msg){
+	            },
+	            success: function(text) { //若Ajax处理成功后的回调函数，text是返回的页面信息
+	            	alert("操作成功");
+	            }
+	        });
+		}
+		
+	function goPage(page){
+			var pageStr = $("#pageStr").val();
+	    	if($.trim(pageStr) == ""){
+	    		alert("请输入需要跳转的页数！");
+	    		return false;
+	    	}
+	    	if(isNaN(pageStr)){
+	    		alert("格式错误，请输入数字！");
+	    		return false;
+	    	}
+	    	if(pageStr > page){
+	    		alert("你输入的页数大于最大页数");
+	    		return false;
+	    	}
+	    	if(pageStr <= 0){
+	    		alert("你输入的页数不符合要求");
+	    		return false;
+	    	}
+	    	window.location.href="/ump/umpoperators?page="+pageStr+"&amp;size=10";
+		}
+		function goPage2(page){
+	    	var pageStr = $("#pageStr2").val();
+	    	if($.trim(pageStr) == ""){
+	    		alert("请输入需要跳转的页数！");
+	    		return false;
+	    	}
+	    	if(isNaN(pageStr)){
+	    		alert("格式错误，请输入数字！");
+	    		return false;
+	    	}
+	    	if(pageStr > page){
+	    		alert("你输入的页数大于最大页数");
+	    		return false;
+	    	}
+	    	if(pageStr <= 0){
+	    		alert("你输入的页数不符合要求");
+	    		return false;
+	    	}
+	    	ToListByAjax(pageStr);
+	    }
+	]]>	
+	</script>
+	<div class="grid">
+		<form action="/ump/umpoperators/findListByFiled" method="post">
+			<div class="row">
+				<div class="span6">
+					<label>权限组: </label>
+					<SELECT name="urole" style="width: 135px;" id="urole">
+							<option value="99" selected="selected" >全部</option>
+							<c:forEach items="${umproles}" var="role" varStatus="index">
+								<option value="${role.id}">${role.roleName}</option>
+							</c:forEach>
+					</SELECT>
+				</div>
+
+				<div class="span6">
+					<label>账号状态: </label> 
+					<SELECT name="active" style="width: 135px;" id="active">
+							<option value="99" selected="selected">全部</option>
+							<option value="false">禁用</option>
+							<option value="true">启用</option>
+					</SELECT>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span6">
+					<label>账号: </label><input name="account" value="" id="accountStr"/>
+				</div>
+				<div class="span6">
+					<label>邮箱: </label><input name="email" value="" id="email"/>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="span6" style="margin-left: 50px;"> 
+					<input type="button" value="查 询" class="info" onclick="ToListByAjax();" style="font-family:'微软雅黑';background-color: #069dd5;"/>
+					<input class="warning" type="button" value="重 置" onclick="clearAll();" style="font-family:'微软雅黑'"></input>
+			    </div>
+			</div>
+		</form>
+	</div>
+
+	<div style="text-align: center;" id="table1">
+		<TABLE class="table striped hovered">
+		<THEAD>
+			<tr>
+				<th style="text-align: center;">账号</th>
+				<th style="text-align: center;">昵称</th>
+				<th style="text-align: center;">权限组</th>
+				<th style="text-align: center;">手机</th>
+				<th style="text-align: center;">邮箱</th>
+				<th style="text-align: center;">账号状态</th>
+				<th style="text-align: center;">操作</th>
+			</tr>
+		</THEAD>
+			<c:if test="${empty umpoperators}">
+				<tr>
+            		<td colspan='5'>查无匹配数据</td>
+            	</tr>
+			</c:if>
+			<c:forEach items="${umpoperators}" var="lu" varStatus="index">
+				<tr>
+					<td>${lu.account}</td>
+					<td>${lu.operatorName}</td>
+					<td>${lu.urole.roleName}</td>
+					<td>${lu.mobile}</td>
+					<td>${lu.email}</td>
+					<td>
+						<c:if test="${lu.active == true}">
+								<input id="active${lu.id}" type="hidden" name="active" value="true" />
+								<img id="activeOn${lu.id}" onclick="changeOnOff1(${lu.id})" src="/ump/images/ON.png" />
+								<img src="/ump/images/OFF.png" id="activeOff${lu.id}" onclick="changeOnOff1(${lu.id});" style="display: none;" />
+						</c:if>
+						<c:if test="${lu.active == false}">
+								<input id="active${lu.id}" type="hidden" name="active" value="false" />
+								<img id="activeOn${lu.id}" onclick="changeOnOff1(${lu.id})" src="/ump/images/ON.png" style="display: none;" />
+								<img src="/ump/images/OFF.png" id="activeOff${lu.id}" onclick="changeOnOff1(${lu.id});" />
+						</c:if>
+					</td>
+					<td>
+						<div style="text-align: center;">
+							<a href="/ump/umpoperators/${lu.id}?form" alt="修 改" title="修 改 " style="width: 80px;"> <img alt="修 改 " class="image" src="/ump/resources/images/update.png" title="修 改 " />
+							</a>
+							 <a href="javascript:void(0);" alt="删除 " title="删除 " style="width: 80px;" onclick="deleteForm(${lu.id},${page},${size});">
+								<img alt="删除 "  class="image" src="/ump/resources/images/delete.png" title="删除 " />
+							</a>
+						</div>
+					</td>
+				</tr>
+			</c:forEach>
+		</TABLE>
+		<span class="new" style="float: left;">
+			<a href="/ump/umpoperators?form">
+				<img alt="添加账号" src="/ump/images/add_01.png" title="添加账号"></img>
+			</a>
+		</span>
+		<span style="float: right;">
+				<c:if test="${umpoperators!= null and fn:length(umpoperators) > 0}">
+				<tr>
+					<td colspan="4">
+					    <c:if test="${page>1 }">
+					    	<a class="default" href="/ump/umpoperators?page=1&amp;size=10"
+								style="cursor: hand; cursor: pointer;">
+									<img alt="首页" src="/ump/resources/images/resultset_first.png" title="首页	"/>&#160;&#160;
+							</a>
+							<a class="default" href="/ump/umpoperators?page=${page-1}&amp;size=10"
+								style="cursor: hand; cursor: pointer;">
+									<img alt="前一页" src="/ump/resources/images/resultset_previous.png" title="前一页"/>
+							</a>
+						</c:if>
+						&#160;&#160;<span style="color: #069dd5;height: 22px;line-height: 22px;"> ${page} </span> / <span style="color: #069dd5;">${maxPages}</span>&#160;&#160;
+						<input type="text" value="" style="width: 30px;height:22px" id="pageStr"/><a  style="width: 28px;height:22px;background-color:#069dd5;color: white;display:inline-block;font-family:Arial;font-size: 10px;line-height: 22px;text-align:center;cursor: pointer;" onclick="goPage(${maxPages});">GO</a>&#160;&#160;
+						<c:if test="${page!=maxPages}">
+							<a class="default" href="/ump/umpoperators?page=${page + 1}&amp;size=10" style="cursor: hand; cursor: pointer;">
+								<img alt="下一页" src="/ump/resources/images/resultset_next.png" title="下一页"/>&#160;&#160;
+							</a>
+							<a class="default" href="/ump/umpoperators?page=${maxPages}&amp;size=10" style="cursor: hand; cursor: pointer;">
+								<img alt="末页" src="/ump/resources/images/resultset_last.png" title="末页"/>&#160;&#160;
+							</a>
+						</c:if>
+						<SPAN style="height: 22px;line-height: 22px;">每页 <span style="color: #069dd5;">${size}</span> 条</SPAN>
+					</td>
+				</tr>
+			</c:if>
+		</span>
+	</div>
+	
+	<div style="text-align: center;display: none;" id="table2">
+		<TABLE class="table striped hovered">
+			<THEAD>
+			<tr>
+				<th style="text-align: center;">账号</th>
+				<th style="text-align: center;">昵称</th>
+				<th style="text-align: center;">权限组</th>
+				<th style="text-align: center;">手机</th>
+				<th style="text-align: center;">邮箱</th>
+				<th style="text-align: center;">账号状态</th>
+				<th style="text-align: center;">操作</th>
+			</tr>
+			</THEAD>
+			<TBODY id="dataBoday">
+			
+			</TBODY>
+		</TABLE>
+		<span class="new" style="float: left;">
+			<a href="/ump/umpoperators?form">
+				<img alt="添加账号" src="/ump/images/add_01.png" title="添加账号"></img>
+			</a>
+		</span>
+		<span style="float: right;">
+		 	<div id="dataFoot"></div>
+		</span>
+	</div>
+
+	<script type="text/javascript">
+    function deleteForm(id,page,size){
+    	if(confirm("确定要删除吗？")){
+    		window.location.href="/ump/umpoperators/delete?id="+id+"&amp;page="+page+"&amp;size="+size;
+    	}
+    }
+    </script>
+</div>

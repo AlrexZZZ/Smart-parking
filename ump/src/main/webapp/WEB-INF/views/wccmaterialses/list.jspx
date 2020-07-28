@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" version="2.0">
+	
+    <script type="text/javascript" src="/ump/ui/masonry/jquery.masonry.min.js"></script>
+	
+	<spring:url value="/ump/ui/jquery-ui/jquery-ui.theme.css"
+		var="jquery_ui_css" />
+	<spring:url value="/ump/ui/jquery-ui/jquery-ui.js" var="jquery_ui_js" />
+	<script src="${jquery_ui_js}" type="text/javascript">
+	<!-- required for FF3 and Opera -->
+	</script>
+	<link rel="stylesheet" type="text/css" href="${jquery_ui_css}" />
+	
+	<link rel="stylesheet" href="/ump/ui/artDialog/ui-dialog.css" />
+	<script src="/ump/ui/artDialog/dialog-plus.js">
+	<!-- required for FF3 and Opera -->
+	</script>
+	
+	<style>
+.container-fluid {
+	margin-top: 38px;
+}
+
+.boxs {
+	margin-bottom: 20px;
+	float: left;
+	width: 180px;
+}
+
+.boxs img {
+	border: none ; 
+	max-width: 100%
+	
+}
+</style>
+<style>
+@IMPORT url("/ump/styles/selectTree.css");
+</style>
+<SCRIPT type="text/javascript" src="/ump/js/selectTree_materials.js">
+	//selectTree;
+</SCRIPT>
+
+	<SCRIPT type="text/javascript">
+	<![CDATA[
+		$(function(){
+			loadTree("/ump/wccautokbses/treePlatform");
+			 var $container = $('#masonry');
+				$container.imagesLoaded( function(){
+					$container.masonry({
+						itemSelector : '.boxs',
+						gutterWidth : 15,
+						isAnimated : true,
+					});
+				});
+				
+			var d = dialog({align: 'top'});
+			$(".opt").hover(function(){
+				var content = $(this).children('img').attr("alt");
+				d.content(content);
+				d.show(this);
+			},function(){
+				d.close();
+			});
+		});
+		
+		function codeDialog(id) {
+			$.post("/ump/wccmaterialses/seeCode", {
+				"id" : id
+			}, function(data) {
+				if(data==0){
+					alert("该消息未关联二维码！");
+				}else{
+					/* $.Dialog({
+						overlay : true,
+						shadow : true,
+						flat : true,
+						icon : '<img src="/ump/resources/images/2weima.png"/>',
+						title : '查看二维码',
+						content : '',
+						padding : 20,
+						height : 100,
+						width : 100,
+						onShow : function(_dialog) {
+							var html = '<div class="grid" style="width: 300px;margin-left: 5px;">'
+									+ '<div class="row"><div class="span6"><img src="'+data+'"/></div></div>'
+									+ '</div>';
+							$.Dialog.content(html);
+							$.Metro.initInputs();
+						}
+					}); */
+					var codePath = $('#codePath').val();
+					var d = dialog({title : '查看二维码'});
+						d.content("<img width= 265px height=265px src="+codePath+data+" />");
+						d.show(this);
+					
+				}
+			});
+		}
+		function toTop() {
+			location.hash="top";
+		}
+		function checkUsed(id) {
+			$.post("/ump/wccmaterialses/checkUsed", {
+				"id" : id
+			}, function(data) {
+				if(data==0){
+					 var r=confirm("确定要删除吗？")
+					 if(r==true){
+						location.href ="delete/"+id+"?WccMaterialsType=IMAGETEXT"
+					 }
+				}else{
+					alert("有关联数据，无法删除");
+				}
+			});
+		}
+
+	]]>
+	</SCRIPT>
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<spring:url value="/styles/mystyle.css" var="mycss"></spring:url>
+	<spring:url value="/images/tuwen_index_03.png" var="img_03"></spring:url>
+	<spring:url value="/images/tuwen_index_27" var="img_27"></spring:url>
+	<link rel="stylesheet" type="text/css" href="${mycss}" />
+	<script src="/ump/js/wcc_material/index.js" type="text/javascript">
+	<!-- required for FF3 and Opera -->
+		
+	</script>
+	<input type="hidden" value="${wxCtxPath}" id="codePath" />
+	
+	<div class="containout" id="containout"
+		style="position: relative; z-index: 0;">
+		<div class="contain" id="contain">
+						<a name="top"></a>
+			<div class="topic">素材管理</div>
+			<div class="top_menu">
+				<div class="menu">
+					<ul>
+						<![CDATA[ 
+						<li style="border-bottom: 5px solid #069dd5;"><a href="?WccMaterialsType=IMAGETEXT&sortFieldName=insertTime&sortOrder=DESC">图文消息</a></li>
+						<li><a href="?WccMaterialsType=PICTURE&sortFieldName=insertTime&sortOrder=DESC">图片</a></li>
+						<li><a href="?WccMaterialsType=SOUNDS&sortFieldName=insertTime&sortOrder=DESC">语音</a></li>
+						<li><a href="?WccMaterialsType=VIDEO&sortFieldName=insertTime&sortOrder=DESC">视频</a></li>
+					 ]]>
+					</ul>
+				</div>
+				<input type="hidden" id="WccMaterialsType" value="IMAGETEXT"/>
+				<div class="top_search">
+					<div class="top_search_lr">
+						<span>公众平台：</span>
+						<div class="input-control text" style="width: 270px;float: right;">
+							<input id="SelVals" type="text" readonly="readonly"
+								style="width: 270px;background: url('/ump/resources/images/sanjiao.png') no-repeat scroll 98% center rgba(0, 0, 0, 0);cursor: pointer;" placeholder="全部"
+								onclick="selectShowMenu();" value="${selVal}"/> <input id="SelIds"
+								name="platformUser" type="hidden" value="${SelIds}"/>
+							<div id="selectMenuContent" class="menuContent"
+								style="display: none; position: absolute; z-index: 99;">
+								<ul id="selectTreeDemo" class="ztree"
+									style="margin-top: 0; width: 270px; max-height: 300px; padding-left: 0px; margin-left: 0px;"></ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+
+			<div class="count_list">
+				图文消息列表（共<span>${wccmaterialses.size()}</span>个）
+			</div>
+			<div id="masonry" class="container-fluid">
+				<div class="tuwen_dandiv boxs" style="margin-left: 15px;">
+					<div class="tw_add" id="tw_add">
+						<div class="tw_add_tu" id="tw_add_tu">
+							<img src="${img_03}" alt="" />
+						</div>
+						<div class="tw_add_tw" id="tw_add_tw">
+							<div class="tw_add_tw_lr" onClick="location.href='#'">
+								<img src="/ump/resources/images/wendan1.png" alt="" id="dantuwen"
+									onClick="location.href='addsn'" />
+							</div>
+
+							<div class="tw_add_tw_lr" onClick="location.href='#'">
+								<img src="/ump/resources/images/wenduo1.png" alt="" id="duotuwen"
+									onClick="location.href='addmn'" />
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<c:forEach var="v" items="${wccmaterialses }">
+					<div class="tuwen_dandiv boxs">
+							<div class="tuwen_dandiv_time">
+								<fmt:formatDate value="${v.insertTime}" pattern="HH:mm" />
+							</div>
+						<c:if test="${empty v.children}">
+							<div class="tuwen_dandiv_imglist">
+								<img src="${v.thumbnailUrl }" />
+								<div class="little_black">
+									<a target="_blank" href="showdetail/${v.id}">${v.title }(${v.wccPlatformUsers.account })</a>
+								</div>
+							</div>
+							<div class="neirong">${v.description}</div>
+							<div class="tupian_dandiv_gongju">
+								<div class="tupian_dandiv_gongjulr opt"
+									style="border-right: 1px solid #e5e5e5;"
+									onClick="location.href='updateone/${v.id}'">
+									<img src="/ump/resources/images/tuwen_index_27.png" alt="编辑" />
+								</div>
+
+								<div class="tupian_dandiv_gongjulr delete opt"
+									onClick="checkUsed('${v.id}');" style="border-right: 1px solid #e5e5e5;">
+									<a class="opt" >
+										<img src="/ump/resources/images/tuwen_index_29.png" alt="删除" />
+									</a>
+								</div>
+								<div class="tupian_dandiv_gongjulr opt" onclick="codeDialog(${v.id});">
+									<a class="opt" >
+										<img src="/ump/resources/images/2weima.png" alt="二维码" />
+									</a>
+								</div>
+							</div>
+						</c:if>
+
+						<c:if test="${not empty v.children}">
+							<div class="tuwen_dandiv_imglist">
+								<img src="${v.thumbnailUrl }" />
+								<div class="little_black">
+									<a target="_blank" href="showdetail/${v.id}">${v.title }</a>
+								</div>
+							</div>
+							<div style="padding: 6px; padding-top: 0px;">
+								<c:forEach var="child" items="${ v.getChildren()}"
+									varStatus="sta">
+									<c:if test="${sta.index==0}">
+										<div
+											style="margin-top: 10px; border-bottom: 0px solid #e5e5e5;">
+											<c:if test="${fn:length(child.title) le 29}">
+												<div
+													style="float: left; width: 150px; overflow: hidden; margin-top: 5px; font-size: 14px;">
+													<a target="_blank" class="ztw_title" href="showdetail/${child.id}">${child.title}</a>
+												</div>
+											</c:if>
+											<c:if test="${fn:length(child.title) gt 29}">
+												<div
+													style="float: left; width: 150px; overflow: hidden; margin-top: 5px; font-size: 14px;">
+													<a target="_blank" class="ztw_title" href="showdetail/${child.id}" title="${child.title}">${fn:substring(child.title,0,29)}...</a>
+												</div>
+											</c:if>
+											<img src="${child.thumbnailUrl}"
+												style="width: 50px; height:50px;float: right; border-width: 0; margin-top: 10px;" />
+										</div>
+									</c:if>
+									<c:if test="${sta.index>0}">
+										<div
+											style="margin-top: 10px; border-bottom: 1px solid #e5e5e5;">
+											<c:if test="${fn:length(child.title) le 29}">
+												<div
+													style="float: left; width: 150px; overflow: hidden; margin-top: 5px; font-size: 14px;">
+													<a target="_blank" class="ztw_title" href="showdetail/${child.id}">${child.title}</a>
+												</div>
+											</c:if>
+											<c:if test="${fn:length(child.title) gt 29}">
+												<div
+													style="float: left; width: 150px; overflow: hidden; margin-top: 5px; font-size: 14px;">
+													<a target="_blank" class="ztw_title" href="showdetail/${child.id}" title="${child.title}">${fn:substring(child.title,0,29)}...</a>
+												</div>
+											</c:if>
+											<img src="${child.thumbnailUrl}"
+												style="width: 50px; height:50px;float: right; border-width: 0; margin-top: 10px;" />
+										</div>
+									</c:if>
+									<div style="clear: both;">
+										<!-- both -->
+									</div>
+								</c:forEach>
+							</div>
+							<div class="tupian_dandiv_gongju">
+								<div class="tupian_dandiv_gongjulr opt"
+									style="border-right: 1px solid #e5e5e5;"
+									onClick="location.href='updateone/${v.id}'">
+									<img src="/ump/resources/images/tuwen_index_27.png" alt="编辑" />
+								</div>
+
+								<div class="tupian_dandiv_gongjulr delete opt"
+									onClick="checkUsed('${v.id}');" style="border-right: 1px solid #e5e5e5;">
+									<a href="#" class="opt" >
+										<img src="/ump/resources/images/tuwen_index_29.png" alt="删除" />
+									</a>
+								</div>
+								<div class="tupian_dandiv_gongjulr opt" id="codema" onclick="codeDialog(${v.id});">
+									<a class="opt">
+										<img src="/ump/resources/images/2weima.png" alt="二维码" />
+									</a>
+								</div>
+							</div>
+						</c:if>
+					</div>
+				</c:forEach>
+			</div>
+		</div>
+	</div>
+	<img src="/ump/resources/images/back_top.png" onclick="toTop();" style="cursor: pointer; right:15px;position: fixed;width: 20px;height: 20px;overflow: hidden;bottom: 35px;"></img>
+</div>

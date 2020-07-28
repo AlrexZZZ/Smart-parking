@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="bs" template="/WEB-INF/layouts/bs.jsp"></definition>
+	
+	 <definition name="defaults" template="/WEB-INF/views/login.jspx">
+	  
+	 </definition>
+	 
+	 <definition name="default" template="/WEB-INF/layouts/default.jspx">
+	   <put-attribute name="header" value="/WEB-INF/views/header.jspx" />
+	   <put-attribute name="menu" value="/WEB-INF/views/menu_ump.jspx" />
+	   <put-attribute name="footer" value="/WEB-INF/views/footer.jspx" />
+	 </definition>
+	 
+ 	 <definition name="default_pub" template="/WEB-INF/layouts/default_pub.jspx"></definition>
+	 
+	
+	 <definition name="singlePage" template="/WEB-INF/layouts/singlePage.jspx">
+	
+	 </definition>
+	 
+	 <definition name="material" template="/WEB-INF/layouts/material.jsp"></definition>
+	 <definition name="pub" template="/WEB-INF/layouts/pub.jsp"></definition>
+	 <definition name="cbdwcc_culture" template="/WEB-INF/layouts/cbdwcc_culture.jsp"></definition>
+	 <definition name="public" template="/WEB-INF/layouts/default.jspx">
+	  <!-- <put-attribute name="header" value="/WEB-INF/views/header.jspx" /> --> 
+<!-- 	   <put-attribute name="menu" value="/WEB-INF/layouts/pub.jsp" /> -->
+	  <!-- <put-attribute name="footer" value="/WEB-INF/views/footer.jspx" /> --> 
+	 </definition>
+
+	 <definition name="register" template="/WEB-INF/layouts/registerPage.jspx">
+	   <put-attribute name="header" value="/WEB-INF/views/registerHeader.jspx" />
+	 </definition>
+	 <definition name="lottery" template="/WEB-INF/layouts/lottery.jspx">
+	 </definition>
+</tiles-definitions>

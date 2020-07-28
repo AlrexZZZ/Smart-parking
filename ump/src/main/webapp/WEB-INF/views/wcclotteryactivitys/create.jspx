@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:forms="http://www.springframework.org/tags/form" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+ 	<style>
+ 		/* input,select,textarea{width: 135px;height: 28px;background-color: #fff;border: 1px solid #e4e4e4;}	 */
+ 	</style>
+ 	<script type="text/javascript">
+ 	<![CDATA[
+ 	    var lotteryId = '';
+ 		var nameFlag = false;
+ 		$(document).ready(function(){
+ 			lotteryId = '${lottery.id}';
+ 			if(lotteryId){
+ 				nameFlag = true;
+ 			}
+ 		})
+ 		function checkLottery(o){
+ 			if(!lotteryId){
+ 				var name = $(o).val();
+ 	    		if(!name){
+ 	    			nameFlag = false;
+ 	    			$('#errMsg').html('活动名称不能为空');
+ 	    			return;
+ 	    		}
+ 	    		$.ajax({
+ 	    			url : "/ump/wcclotteryactivitys/checkLottery",
+ 	    			type : "POST",
+ 	    			data : {'name':name},
+ 	    			error : function(msg) {
+ 	    				alert("error " + msg);
+ 	    			},
+ 	    			success : function(text) {
+ 	    				if(text=='false'){
+ 	    					nameFlag = false;
+ 		    				$('#errMsg').html('活动名称重复');
+ 		    				return;
+ 	    				}
+ 	    				nameFlag = true;
+ 	    				$('#errMsg').html('');
+ 	    			}
+ 	    		});
+ 			}else{
+	 			nameFlag = true;
+ 			}
+    	}
+ 		
+ 		function checkStratTime(){
+ 			var startTime = $("#stime_").val();
+	    	if($.trim(startTime) == ""){
+	    		$('#strMsg').html('活动开始时间不能为空');
+	    		return false;
+	    	}
+	    	$('#strMsg').html('');
+	    	return true;
+ 		}
+ 		
+ 		function checkEndTime(){
+ 			var endTime = $("#etime_").val();
+	    	if($.trim(endTime) == ""){
+	    		$('#endMsg').html('活动结束时间不能为空');
+	    		return false;
+	    	}
+	    	$('#endMsg').html('');
+	    	return true;
+ 		}
+ 		
+ 		function goList(){
+			window.location.href="/ump/wcclotteryactivitys?page=1&amp;size=10";
+		}
+ 		function next(){
+ 			
+ 			if(!nameFlag){
+ 				$('#errMsg').html('活动名称不能为空');
+ 				if(checkStratTime()&&checkEndTime()){
+ 	 				return;
+ 	 			}
+ 			}
+ 			$('#errMsg').html('');
+ 			var aname = $('#aname').val();
+ 			var stime = $('#stime_').val();
+ 			var etime = $('#etime_').val();
+ 			var activityIntroduction = $('#activityIntroduction_').val();
+ 			var activityEndInfo = $('#activityEndInfo_').val();
+ 			var repeatAwardReply = $('#repeatAwardReply_').val();
+ 			
+ 			if(!aname || !stime || !etime || !activityIntroduction || !activityEndInfo || !repeatAwardReply){
+ 				return;
+ 			}
+ 			
+ 			$('#first').attr("class","");
+ 			$('#twoStr').attr("class","current");
+ 			$('#firstStep')[0].style.display="none";
+ 			$('#secondStep')[0].style.display="block";
+ 		}
+ 		
+ 		function prior(){
+ 			$('#first').attr("class","current");
+ 			$('#second').attr("class","");
+ 			$('#firstStep')[0].style.display="block";
+ 			$('#secondStep')[0].style.display="none";
+ 		}
+ 		
+ 		function mycheck(){
+ 			var aname = $('#aname').val();
+ 			var stime = $('#stime_').val();
+ 			var etime = $('#etime_').val();
+ 			var activityIntroduction = $('#activityIntroduction_').val();
+ 			var activityEndInfo = $('#activityEndInfo_').val();
+ 			var repeatAwardReply = $('#repeatAwardReply_').val();
+ 			var numEndInfo = $('#numEndInfo_').val();
+ 			var oneName = $('#oneName_').val();
+ 			var oneNumber = $('#oneNumber_').val();
+ 			var oneProbability = $('#oneProbability_').val();
+ 			var oneAwardInfo = $('#oneAwardInfo_').val();
+ 			var twoName = $('#twoName_').val();
+ 			var twoNumber = $('#twoNumber_').val();
+ 			var twoProbability = $('#twoProbability_').val();
+ 			var twoAwardInfo = $('#twoAwardInfo_').val();
+ 			var threeName = $('#threeName_').val();
+ 			var threeNumber = $('#threeNumber_').val();
+ 			var threeProbability = $('#threeProbability_').val();
+ 			var threeAwardInfo = $('#threeAwardInfo_').val();
+ 			var fourName = $('#fourName_').val();
+ 			var fourNumber = $('#fourNumber_').val();
+ 			var fourProbability = $('#fourProbability_').val();
+ 			var fourAwardInfo = $('#fourAwardInfo_').val();
+ 			var fiveName = $('#fiveName_').val();
+ 			var fiveNumber = $('#fiveNumber_').val();
+ 			var fiveProbability = $('#fiveProbability_').val();
+ 			var fiveAwardInfo = $('#fiveAwardInfo_').val();
+ 			var sixName = $('#sixName_').val();
+ 			var sixNumber = $('#sixNumber_').val();
+ 			var sixProbability = $('#sixProbability_').val();
+ 			var sixAwardInfo = $('#sixAwardInfo_').val();
+ 			var lotteryDayNum = $("#lotteryDayNum_").val();
+ 			var lotteryNum = $("#lotteryNum_").val();
+			if(stime>etime){
+				alert('开始时间大于结束时间');
+				return;
+			}
+		
+			if(lotteryDayNum > lotteryNum){
+				alert('每人可抽奖次数必须大于每天可抽奖次数');
+				return;
+			}
+ 			if(!aname || !stime || !etime || !activityIntroduction || !activityEndInfo || !repeatAwardReply || !numEndInfo
+ 			|| !oneName || !oneNumber || !oneProbability || !oneAwardInfo || !twoName || !twoNumber || !twoProbability ||
+ 			!twoAwardInfo || !threeName || !threeNumber || !threeProbability || !threeAwardInfo || !fourName || !fourNumber ||
+ 			!fourProbability || !fourAwardInfo || !fiveName || !fiveNumber || !fiveProbability || !fiveAwardInfo || !sixName ||
+ 			!sixNumber || !sixProbability || !sixAwardInfo){
+ 				$("#tsStr").show();
+ 				return;
+ 			}
+ 			if(test_one(oneProbability)&&test_one(twoProbability)&&test_one(threeProbability)&&test_one(fourProbability)
+ 					&&test_one(fiveProbability)&&test_one(sixProbability)&&
+ 					test_two(oneNumber)&&test_two(twoNumber)&&test_two(threeNumber)&&test_two(fourNumber)
+ 					&&test_two(fiveNumber)&&test_two(sixNumber)){
+ 				$("#tsStr").hide();
+ 				lotteryForm.submit();
+ 			}
+ 		}
+ 		
+ 		//验证中奖概率
+ 		function test_one(num){
+ 			if($.trim(num) == ""){
+ 				$("#errorMsg").html("中奖概率请输入1-100之间的数字");
+ 		 		return false;
+ 			}
+	 		var reg = /^\d{1,3}$/;
+	 		var re = num.match(reg);
+	 		if(re){
+	 		  if($.trim(num)>100){
+	 			 $("#errorMsg").html("中奖概率请输入1-100之间的数字");
+			 	 return false;
+	 		  }else{
+	 		 	 return true;
+	 		  }
+	 		}else{
+	 			$("#errorMsg").html("中奖概率请输入1-100之间的数字");
+		 		return false;
+	 		}
+ 		}
+ 		
+ 		//验证奖品数量
+ 		function test_two(num){
+ 			if($.trim(num) == ""){
+ 				$("#errorMsg").html("请输入正确的奖品数量");
+ 		 		return false;
+ 			}
+	 		var reg = /^\d{1,3}$/;
+	 		var re = num.match(reg);
+	 		if(re){
+	 		 	 return true;
+	 		}else{
+	 			$("#errorMsg").html("请输入正确的奖品数量");
+		 		return false;
+	 		}
+ 		}
+ 		function startTimeFocus(){
+ 		$('#stime_').focus();
+ 		}
+ 			function endTimeFocus(){
+ 		$('#etime_').focus();
+ 		}
+ 			
+ 		]]>
+ 	</script>
+ 	
+ 	<style>
+ 	.sp{
+    	text-align: left;
+    	padding-left: 5px;
+    	width : 10px;
+    }
+ 	.span5{margin-right: 5px;}
+ 	 input {height: 28px; width:120px;border: 1px solid #e4e4e4;}
+ 	select {height: 28px; width:120px;border: 1px solid #e4e4e4;}
+ 	.span1{width: 250px;height: 100px;;text-align: right}
+ 	</style>
+
+ 		<input type="hidden" id="startTime" value="${lottery.startTime }"/>
+ 		<input type="hidden" id="endTime" value="${lottery.endTime }"/>
+ 		<input type="hidden" id="platformId" value="${platformUser.id }"/>
+ 		<input type="hidden" id="platformName" value="${platformUser.account }"/>
+ 		
+		<!-- <div class="stepper"  style="margin-left: 20%; margin-right: 20%;">
+				<ul>
+					<li id ="first" style="left: 0px;" class="current"></li>
+					<li id="second" style="left: 100%;" ></li>
+				</ul>
+		</div> -->
+		<div style="margin-left: 20%; margin-right: 20%;" class="stepper">
+			<ul>
+				<li style="left: 0px;" class="current" id="first"></li>
+				<li style="left: 100%;" id="twoStr"></li>
+			</ul>
+		</div>
+		<div style="width: 1000px; margin: 0px auto; clear: both; overflow: hidden; margin-top: -10px">
+			<div style="width: 380px;float: left ;text-align: center">活动内容</div>
+			<div style="width: 480px; float: left;text-align:right; ">奖项设置</div>
+		</div>
+		<form name="lotteryForm" action="/ump/wcclotteryactivitys" method="post">
+    	<div style="margin-left: 30px">
+    		<div class="grid" id="firstStep">
+    			<!-- <div class="row">
+    				<span style="font-size: 16px;font-style: '微软雅黑';">创建抽奖活动</span>
+    			</div> -->
+    			<div class="row">
+    				<div class="span5">
+<!--     					<label><span class="sp" style="color: red">*</span>公众平台：</label> -->
+<!--     					<select id="platform_"  name="platformId" required="required"> -->
+<!--     						<option value="0">全部</option> -->
+<!--     						<c:forEach items="${platformUsers }" var="data"> -->
+<!--     							<option value="${data.id }">${data.account }</option> -->
+<!--     						</c:forEach> -->
+<!--     					</select> -->
+						<label>活动名称：</label>
+    					<input type="text" id="aname" name="activityName" onblur="checkLottery(this)" value="${lottery.activityName }" required="required"></input><span class="sp" style="color: red">*</span><span id="errMsg" style="color: red"></span>
+    				</div>
+    				<div class="span5">
+<!--     					<label><span class="sp" style="color: red">*</span>活动名称：</label> -->
+<!--     					<input type="text" id="aname" name="activityName" value="${lottery.activityName }" required="required"></input> -->
+    				</div>
+    			</div>
+    			<div class="row">
+    				<div class="span5">
+    					<label>开始时间：</label>
+    					<input type="text" id="stime_" name="startTimes" value="${stime }" required="required" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" onblur="checkStratTime()"/>
+    					<IMG onclick="startTimeFocus();" style="margin-left: -22px;" src="././js/date/skin/datePicker.gif" width="20" height="20" /><span class="sp" style="color: red">*</span><span id="strMsg" style="color: red"></span>
+    				</div>
+    				<div class="span5">
+    					<label>结束时间：</label>
+    					<input type="text" id="etime_" name="endTimes" value="${etime }" required="required" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" onblur="checkEndTime()"/>
+						<IMG onclick="endTimeFocus();" style="margin-left: -22px;" src="././js/date/skin/datePicker.gif" width="20" height="16" /><span class="sp" style="color: red">*</span><span id="endMsg" style="color: red"></span>    				
+						</div>
+    			</div>
+    			<div class="row">
+    				<div class="span5 input-control">
+    					<label>活动说明：</label>
+    					<c:if test="${empty lottery.activityIntroduction}">
+    						<textarea  style="width: 250px;height: 100px;"  id="activityIntroduction_" name="activityIntroduction" required="required">点击“开始抽奖“吧~祝你好运连连~</textarea>
+    					</c:if>
+    					<c:if test="${!empty lottery.activityIntroduction}">
+    						<textarea  style="width: 250px;height: 100px;"  id="activityIntroduction_" name="activityIntroduction" required="required">${lottery.activityIntroduction }</textarea>
+    					</c:if><span class="sp" style="color: red">*</span>
+    					
+    				</div>
+    				<div class="span5 input-control">
+    					<label>未开始说明：</label>
+    					<c:if test="${empty lottery.activityIntroduction}">
+    						<textarea style="width: 250px;height: 100px;"  id="activityNStartInfo_" name="activityNStartInfo" required="required">活动尚未开始，敬请期待~</textarea>
+    					</c:if>
+    					<c:if test="${!empty lottery.activityIntroduction}">
+    						<textarea style="width: 250px;height: 100px;"  id="activityNStartInfo_" name="activityNStartInfo" required="required">${lottery.activityNStartInfo }</textarea>
+    					</c:if><span class="sp" style="color: red">*</span>
+    				</div>
+    			</div>
+    			<div class="row">
+    				<div class="span5 input-control">
+    					<label>活动结束说明：</label>
+    					<c:if test="${empty lottery.activityIntroduction}">
+    						<textarea style="width: 250px;height: 100px;"  id="activityEndInfo_" name="activityEndInfo" required="required">活动已经结束了，敬请期待下次活动吧~</textarea>
+    					</c:if>
+    					<c:if test="${!empty lottery.activityIntroduction}">
+    						<textarea style="width: 250px;height: 100px;"  id="activityEndInfo_" name="activityEndInfo" required="required">${lottery.activityEndInfo }</textarea>
+    					</c:if><span class="sp" style="color: red">*</span>
+    				</div>
+    				<div class="span5 input-control">
+    					<label>未中奖提醒：</label>
+    					<c:if test="${empty lottery.activityIntroduction}">
+    						<textarea style="width: 250px;height: 100px;;height: 100px;"  id="repeatAwardReply_" name="repeatAwardReply" required="required">真遗憾，没中奖！再接再励吧~</textarea>
+    					</c:if>
+    					<c:if test="${!empty lottery.activityIntroduction}">
+    						<textarea style="width: 250px;height: 100px;"  id="repeatAwardReply_" name="repeatAwardReply" required="required">${lottery.repeatAwardReply }</textarea>
+    					</c:if><span class="sp" style="color: red">*</span>
+    				</div>
+    			</div>
+    			<div class="row">
+    				<div class="span5 input-control">
+    					<label>次数已满说明：</label>
+    					<c:if test="${empty lottery.activityIntroduction}">
+    						<textarea style="width: 250px;height: 100px;"  id="numEndInfo_" name="numEndInfo" required="required">你的抽奖次数已满，不能再抽了，下次再来吧</textarea>
+    					</c:if>
+    					<c:if test="${!empty lottery.activityIntroduction}">
+    						<textarea style="width: 250px;height: 100px;"  id="numEndInfo_" name="numEndInfo" required="required">${lottery.numEndInfo }</textarea>
+    					</c:if><span class="sp" style="color: red">*</span>
+    				</div>
+    			</div>
+    			<div class="row">
+    				<div class="span5">
+    					<input type="button" class="info" id="next_" onclick="javascript:next();" value="下一步"/>
+    					<input type="button" id="prior_" class="warning" onclick="goList()" value="返 回"/>
+    				</div>
+    			</div>
+    		</div>
+    		
+    		<input type="hidden" name="lotteryId" value="${lotteryId }"/>
+    		
+    		<div class="grid" id="secondStep" style="display: none;">
+    			<!-- <div class="row">
+    				<div class="span3">
+    					<span style="font-size: 16px;font-style: '微软雅黑';">奖项设置</span>
+    				</div>
+    			</div> -->
+    			<div class="row">
+    				<div class="span3">
+    					<label>一等奖奖品：</label>
+    					<input type="text" id="oneName_" name="oneName" value="${award1.awardName }" required="required"></input><span class="sp" style="color: red">*</span>
+    				</div>
+    				<div class="span3">
+    					<label>奖品数量：</label>
+    					<input type="text" id="oneNumber_" name="oneNumber" value="${award1.awardNum }" required="required" maxlength="5" onblur="test_two(this.value);"></input><span class="sp" style="color: red">*</span>
+    				</div>
+    				<div class="span3">
+    					<label>中奖概率(%)：</label>
+    					<input type="text" id="oneProbability_" name="oneProbability" value="${award1.winRate }" required="required" onblur="test_one(this.value);"></input><span class="sp" style="color: red">*</span>
+    				</div>
+    				<div class="span3">
+    					<label>中奖提示语：</label>
+    					<c:if test="${empty award1.awardInfo}">
+    						<input type="text" id="oneAwardInfo_" name="oneAwardInfo" value="恭喜你抽中一等奖" required="required"></input>
+    					</c:if>
+    					<c:if test="${!empty award1.awardInfo}">
+    						<input type="text" id="oneAwardInfo_" name="oneAwardInfo" value="${award1.awardInfo }" required="required"></input>
+    					</c:if><span class="sp" style="color: red">*</span>
+    				</div>
+    			</div>
+    			<div class="row">
+    				<div class="span3">
+    					<label>二等奖奖品：</label>
+    					<input type="text" id="twoName_" name="twoName" value="${award2.awardName }" required="required"></input><span class="sp" style="color: red">*</span>
+    				</div>
+    				<div class="span3">
+    					<label>奖品数量：</label>
+    					<input type="text" id="twoNumber_" name="twoNumber" value="${award2.awardNum }" onblur="test_two(this.value);" required="required" maxlength="5" ></input><span class="sp" style="color: red">*</span>
+    				</div>
+    				<div class="span3">
+    					<label>中奖概率(%)：</label>
+    					<input type="text" id="twoProbability_" name="twoProbability" value="${award2.winRate }" required="required" onblur="test_one(this.value);"></input><span class="sp" style="color: red">*</span>
+    				</div>
+    				<div class="span3">
+    					<label>中奖提示语：</label>
+    					<c:if test="${empty award2.awardInfo}">
+    						<input type="text" id="twoAwardInfo_" name="twoAwardInfo" value="恭喜你抽中二等奖" required="required"></input><span class="sp" style="color: red">*</span>
+    					</c:if>
+    					<c:if test="${!empty award2.awardInfo}">
+    						<input type="text" id="twoAwardInfo_" name="twoAwardInfo" value="${award2.awardInfo }" required="required"></input><span class="sp" style="color: red">*</span>
+    					</c:if>
+    				</div>
+    			</div>
+    			<div class="row">
+    				<div class="span3">
+    					<label>三等奖奖品：</label>
+    					<input type="text" id="threeName_" name="threeName" value="${award3.awardName }" required="required"></input><span class="sp" style="color: red">*</span>
+    				</div>
+    				<div class="span3">
+    					<label>奖品数量：</label> 
+    					<input type="text" id="threeNumber_" name="threeNumber" value="${award3.awardNum }" onblur="test_two(this.value);" required="required" maxlength="5" ></input><span class="sp" style="color: red">*</span>
+    				</div>
+    				<div class="span3">
+    					<label>中奖概率(%)：</label>
+    					<input type="text" id="threeProbability_" name="threeProbability" value="${award3.winRate }" required="required" onblur="test_one(this.value);"></input><span class="sp" style="color: red">*</span>
+    				</div>
+    				<div class="span3">
+    					<label>中奖提示语：</label>
+    					<c:if test="${empty award3.awardInfo}">
+    						<input type="text" id="threeAwardInfo_" name="threeAwardInfo" value="恭喜你抽中三等奖" required="required"></input><span class="sp" style="color: red">*</span>
+    					</c:if>
+    					<c:if test="${!empty award3.awardInfo}">
+    						<input type="text" id="threeAwardInfo_" name="threeAwardInfo" value="${award3.awardInfo }" required="required"></input><span class="sp" style="color: red">*</span>
+    					</c:if>
+    					
+    				</div>
+    			</div>
+    			<div class="row">
+    				<div class="span3">
+    					<label>四等奖奖品：</label>
+    					<input type="text" id="fourName_" name="fourName" value="${award4.awardName }" required="required"></input><span class="sp" style="color: red">*</span>
+    				</div>
+    				<div class="span3">
+    					<label>奖品数量：</label>
+    					<input type="text" id="fourNumber_" name="fourNumber" value="${award4.awardNum }" onblur="test_two(this.value);" required="required" maxlength="5" ></input><span class="sp" style="color: red">*</span>
+    				</div>
+    				<div class="span3">
+    					<label>中奖概率(%)：</label>
+    					<input type="text" id="fourProbability_" name="fourProbability" value="${award4.winRate }" required="required" onblur="test_one(this.value);"></input><span class="sp" style="color: red">*</span>
+    				</div>
+    				<div class="span3">
+    					<label>中奖提示语：</label>
+    					<c:if test="${empty award4.awardInfo}">
+    						<input type="text" id="fourAwardInfo_" name="fourAwardInfo" value="恭喜你抽中四等奖" required="required"></input><span class="sp" style="color: red">*</span>
+    					</c:if>
+    					<c:if test="${!empty award4.awardInfo}">
+    						<input type="text" id="fourAwardInfo_" name="fourAwardInfo" value="${award4.awardInfo }" required="required"></input><span class="sp" style="color: red">*</span>
+    					</c:if>
+    				</div>
+    			</div>
+    			<div class="row">
+    				<div class="span3">
+    					<label>五等奖奖品：</label>
+    					<input type="text" id="fiveName_" name="fiveName" value="${award5.awardName }" required="required"></input><span class="sp" style="color: red">*</span>
+    				</div>
+    				<div class="span3">
+    					<label>奖品数量：</label>
+    					<input type="text" id="fiveNumber_" name="fiveNumber" value="${award5.awardNum }" onblur="test_two(this.value);" required="required" maxlength="5" ></input><span class="sp" style="color: red">*</span>
+    				</div>
+    				<div class="span3">
+    					<label>中奖概率(%)：</label>
+    					<input type="text" id="fiveProbability_" name="fiveProbability" value="${award5.winRate }" required="required" onblur="test_one(this.value);"></input><span class="sp" style="color: red">*</span>
+    				</div>
+    				<div class="span3">
+    					<label>中奖提示语：</label>
+    					<c:if test="${empty award5.awardInfo}">
+    						<input type="text" id="fiveAwardInfo_" name="fiveAwardInfo" value="恭喜你抽中五等奖" required="required"></input><span class="sp" style="color: red">*</span>
+    					</c:if>
+    					<c:if test="${!empty award5.awardInfo}">
+    						<input type="text" id="fiveAwardInfo_" name="fiveAwardInfo" value="${award5.awardInfo }" required="required"></input><span class="sp" style="color: red">*</span>
+    					</c:if>
+    				</div>
+    			</div>
+    			<div class="row">
+    				<div class="span3">
+    					<label>六等奖奖品：</label>
+    					<input type="text" id="sixName_" name="sixName" value="${award6.awardName }" required="required"></input><span class="sp" style="color: red">*</span>
+    				</div>
+    				<div class="span3">
+    					<label>奖品数量：</label>
+    					<input type="text" id="sixNumber_" name="sixNumber" value="${award6.awardNum }" onblur="test_two(this.value);" required="required" maxlength="5" ></input><span class="sp" style="color: red">*</span>
+    				</div>
+    				<div class="span3">
+    					<label>中奖概率(%)：</label>
+    					<input type="text" id="sixProbability_" name="sixProbability" value="${award6.winRate }" required="required" onblur="test_one(this.value);"></input><span class="sp" style="color: red">*</span>
+    				</div>
+    				<div class="span3">
+    					<label>中奖提示语：</label>
+    					<c:if test="${empty award6.awardInfo}">
+    						<input type="text" id="sixAwardInfo_" name="sixAwardInfo" value="恭喜你抽中六等奖" required="required"></input><span class="sp" style="color: red">*</span>
+    					</c:if>
+    					<c:if test="${!empty award6.awardInfo}">
+    						<input type="text" id="sixAwardInfo_" name="sixAwardInfo" value="${award6.awardInfo }" required="required"></input><span class="sp" style="color: red">*</span>
+    					</c:if>
+    				</div>
+    			</div>
+    			<div class="row">
+    				<div class="span6">
+    					<label style="width: 140px;">每人每天抽奖次数：</label>
+    					<c:if test="${empty lottery.lotteryDayNum}">
+    						<input type="text" id="lotteryDayNum_" name="lotteryDayNum" value="0" required="required"></input><span class="sp" style="color: red">*</span>
+    					</c:if>
+    					<c:if test="${!empty lottery.lotteryDayNum}">
+    						<input type="text" id="lotteryDayNum_" name="lotteryDayNum" value="${lottery.lotteryDayNum }" required="required"></input><span class="sp" style="color: red">*</span>
+    					</c:if>
+    				</div>
+    			</div>
+    			<div class="row">
+    				<div class="span6">
+    					<label style="width: 140px;">每人抽奖总次数：</label>
+    					<c:if test="${empty lottery.lotteryNum}">
+    						<input type="text" id="lotteryNum_" name="lotteryNum" value="1" required="required"></input><span class="sp" style="color: red">*</span>
+    					</c:if>
+    					<c:if test="${!empty lottery.lotteryNum}">
+    						<input type="text" id="lotteryNum_" name="lotteryNum" value="${lottery.lotteryNum }" required="required"></input><span class="sp" style="color: red">*</span>
+    					</c:if>
+    				</div>
+    			</div>
+    			<div class="row">
+    				<div class="span5">
+    					<span style="color: red;display: none" id="tsStr">请填写所有必填项</span>&#160;&#160;&#160;&#160;<span id="errorMsg" style="color: red"></span>
+    				</div>
+    			</div>
+    			<div class="row">
+    				<div class="span">
+    					<span id="msg"></span>
+    				</div>
+    			</div>
+    			<div class="row">
+    				
+    					<input type="button" class="info" onclick="mycheck()" value="确 定"/>
+    			
+    					<input type="button" id="prior_" class="warning" onclick="javascript:prior();" value="上一步"/>
+    				
+    			</div>
+    		</div>
+    	</div>
+		</form>
+</div>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+
+		
+		<div class="grid">
+			<c:forEach items="${wccTemplates}" var="data">
+				<c:if test="${data.type eq 'CLASSIFY' and data.parentId != 0}">
+					<div class="row">
+						${data.title}
+					</div>
+					<c:forEach items="${wccTemplates}" var="template">
+						<c:if test="${template.parentId == data.id}">
+							<div class="row" style="margin-left: 20px">
+								${template.title }
+							</div>
+							<div class="row" style="margin-left: 50px;cursor: pointer;" onclick="selectTemplate(this)"><span style="color: #069dd5">${template.content}</span></div>
+						</c:if>
+					</c:forEach>
+				</c:if>
+			</c:forEach>
+		</div>
+		<div style="clear: both;">
+		</div>
+		<div style="float:right;">
+			<input id="pageNum" type="hidden" value="${page}" />
+			<c:if test="${page>1 }">
+				<a class="default" href="#" onclick="queryTemplate(1)"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px">
+					<img alt="首页" src="/ump/resources/images/resultset_first.png" title="首页" style="float:left"/>
+				</a>
+				<a class="default"
+					href="javascript:void(0);" onclick="queryTemplate(${page-1})"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px">
+					<img alt="前一页" src="/ump/resources/images/resultset_previous.png" title="前一页" style="float:left"/>
+				</a>
+			</c:if>
+			<c:if test="${wccTemplates!= null and fn:length(wccTemplates) > 0}">
+				<TFOOT>
+					<span style="color: #069dd5; height: 22px; line-height: 22px;float:left;padding-left: 6px">${page}</span>
+					<span style="float:left;padding-top: 4px;padding-left: 6px"> /</span>
+					<span style="color: #069dd5;float:left;padding-top: 4px;padding-left:6px;">${maxPages}</span>
+					<input type="text" value="" style="width: 30px; height: 22px;float:left;margin-left:6px" id="pageStr" />
+					<a href="javascript:void(0);"
+						style="width: 28px; height: 22px; background-color: #069dd5; color: white; display: inline-block; font-family: Arial; font-size: 10px; line-height: 22px; text-align: center; cursor: pointer;float:left"
+						onclick="goPageTemplate(${maxPages});">GO</a>
+
+				</TFOOT>
+			</c:if>
+			<c:if test="${page!=maxPages}">
+				<a class="default"
+					href="javascript:void(0);" onclick="queryTemplate(${page+1})"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left:6px">
+					<img alt="下一页" src="/ump/resources/images/resultset_next.png" title="下一页" style="float:left"/>
+				</a>
+				<a class="default"
+					href="javascript:void(0);" onclick="queryTemplate(${maxPages})"
+					style="cursor: hand; cursor: pointer;float:left;padding-top: 4px;padding-left: 6px">
+					<img alt="末页" src="/ump/resources/images/resultset_last.png" title="末页" style="float:left"/>
+				</a>
+			</c:if>
+			<span style="float:left;padding-top: 3px;padding-left: 6px">每页<span  style="color:#069dd5;">${limit}</span>条</span>
+		</div><br/><br/>
+		<div style="margin-left: 40%;margin-bottom: 10px;" >
+			<input type="button" value="确定" class="info" onclick="selectPic(1)"/> <input type="button" value="取消" onclick="javascript:closeAll('picdiv','fade');" class="warning"/>
+		</div>
+</div>

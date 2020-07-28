@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <div class="tab-control" data-role="tab-control">
+	    <ul class="tabs">
+		    <li id="page_li_P"><a href="#_page_P" onclick="queryP();">行业管理</a></li>
+		    <li id="page_li_S"><a href="#_page_S" onclick="query();">子行业管理</a></li>
+	    </ul>
+	    <div class="frames">
+		    <div class="frame" id="_page_P">
+		    	<TABLE class="table striped hovered">
+	  			    <THEAD>
+						<tr>
+							<th>行业名称</th>
+							<th>提交时间</th>
+							<th>启用状态</th>
+							<th>操作</th>
+						</tr>
+				    </THEAD>
+					<TBODY id="_tbody">
+		
+					</TBODY>
+					
+	  	        </TABLE>
+	  	        	<div align="right" style="text-align: right;" id="_tfoot">
+	  	        	<!--  -->
+	  				</div>
+		    </div>
+		    <div class="frame" id="_page_S">
+		    	<TABLE class="table striped hovered">
+				<THEAD>
+					<tr>
+						<th>行业名称</th>
+						<th>子行业名称</th>
+						<th>提交时间</th>
+						<th>操作</th>
+					</tr>
+					</THEAD>
+					<TBODY id="tbody">
+			
+					</TBODY>
+				</TABLE>
+				<div align="right" style="text-align: right;" id="tfoot">
+				<!--  -->
+	  			</div>
+		    </div>
+	    </div>
+    </div>
+  	
+  	
+  	<SCRIPT type="text/javascript" src="/ump/js/nineclient/ump/product.js">
+		//--
+	</SCRIPT>
+	<SCRIPT type="text/javascript"
+		src="/ump/js/nineclient/vocreport/nineclient.js">
+		//--
+	</SCRIPT>
+    <SCRIPT type="text/javascript">
+    <![CDATA[
+             var active='${active}';
+         $(document).ready(function (){
+        	 queryP();
+        	 query();
+        	 if(active){
+ 				$("#page_li_P").removeClass("active");
+ 				$("#page_li_S").removeClass("active");
+ 				$("#_page_P").css("display","none");
+ 				$("#_page_S").css("display","none");
+ 				$("#page_li_"+active).addClass("active");
+ 				$("#_page_"+active).css("display","block");
+ 			}
+         });
+		function createDataGrideP(data) {
+			var model = eval("(" + data + ")");
+			var list = eval(model.dataJson);
+			//添加表头
+			var th = "";
+			var table = "";
+			for (var i = 0; i < list.length; i++) {
+				table += "<tr>";
+				table += "<td>";
+				table += list[i].businessName;
+				table += "</td>";
+				table += "<td>";
+				table += formatData(list[i].createTime);
+				table += "</td>";
+				table += "<td>";
+				if(list[i].isVisable){
+					table +="<img class='switchClass_"+list[i].id+"' onclick='switchImgP(this,false,"+list[i].id+")' src='/ump/images/ON.png' />";
+					table +="<img class='switchClass_"+list[i].id+"' onclick='switchImgP(this,true,"+list[i].id+")' src='/ump/images/OFF.png' style='display:none;'/>";
+				}else{
+					table +="<img class='switchClass_"+list[i].id+"' onclick='switchImgP(this,false,"+list[i].id+")' src='/ump/images/ON.png' style='display:none;'/>";
+					table +="<img class='switchClass_"+list[i].id+"' onclick='switchImgP(this,true,"+list[i].id+")' src='/ump/images/OFF.png' />";
+				}
+				table += "</td>";
+				table += "<td>";
+				table += '<a href="/ump/umpparentbusinesstypes/'
+						+ list[i].id
+						+ '?form" alt="编辑" title="编辑"><img alt="编辑" class="image" src="/ump/images/update.png" title="编辑"></a>';
+				table += '<a href="javascript:deleteProductP('
+						+ list[i].id
+						+ ')" alt="删除" title="删除 "><img alt="删除" class="image" src="/ump/images/delete.png" title="删除"></a>';
+				table += "</td>";
+				table += "</tr>";
+			}
+			$("#_tbody").html(table);
+			var addBtn ='<a onclick="addProductPageP();"><img style="cursor: pointer;" src="/ump/images/add_01.png"/></a>';
+			if (model.totalCount > 0) {
+				var foot = Page(model, 'queryP',5,addBtn,'addProductPageP');
+				$("#_tfoot").html(foot);
+			} else {
+				$("#_tfoot").html('<tr><td  colspan="5"><a onclick="addProductPageP();"><img style="cursor: pointer;" src="/ump/images/add_01.png"/></a>无数据</td></tr>');
+			}
+		
+		}
+		function addProductPageP(){
+			window.location.href="/ump/umpparentbusinesstypes?form";
+			
+		}
+		function queryP(page){
+			var pageNo;
+			if (page) {
+				pageNo = page
+			} else {
+				pageNo = 1;
+			}
+			var param={};
+			param.page=pageNo;
+			param.size=10;
+			var url="/ump/umpparentbusinesstypes/list";
+			dataAjax(url, param, null,null,createDataGrideP,null);
+		}
+		function deleteProductP(id){
+			var flag=true;
+			$.ajax({
+				url : "/ump/umpparentbusinesstypes/hasSubBusiness",
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data : {
+					id : id
+				},
+				error : function(msg) {
+				},
+				success : function(data) {
+					 flag=eval(data);
+				}
+			});
+			if(flag){
+				if(!confirm("该行业下有数据，删除后无法恢复，确定删除？")){
+					return;
+				}
+			}else{
+				if(!confirm("确定删除?")){
+					return;
+				}
+			}
+			var url="/ump/umpparentbusinesstypes/delete"
+			var param={id:id};
+			dataAjax(url, param, Notify);
+			queryP();
+		}
+		function switchImgP(obj, vl, id) {
+			$.ajax({
+				url : "/ump/umpparentbusinesstypes/updateVisable",
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data : {
+					id : id,
+					isVisable : vl
+				},
+				error : function(msg) {
+				},
+				success : function(data) {
+					Notify(data,1000);
+					$(".switchClass_" + id).toggle();
+				}
+			});
+		
+		}
+		//子行业
+		function createDataGride(data) {
+			var model = eval("(" + data + ")");
+			var list = eval(model.dataJson);
+			//添加表头
+			var th = "";
+			var table = "";
+			for (var i = 0; i < list.length; i++) {
+				table += "<tr>";
+				table += "<td>";
+				table += list[i].parentBusinessType.businessName;
+				table += "</td>";
+				table += "<td>";
+				table += list[i].businessName;
+				table += "</td>";
+				table += "<td>";
+				table += formatData(list[i].createTime);
+				table += "</td>";
+				/* table += "<td>";
+				if (list[i].isVisable) {
+					table += "<img class='switchClass_" + list[i].id
+							+ "' onclick='switchImg(this,false," + list[i].id
+							+ ")' src='/ump/images/ON.png' />";
+					table += "<img class='switchClass_"
+							+ list[i].id
+							+ "' onclick='switchImg(this,true,"
+							+ list[i].id
+							+ ")' src='/ump/images/OFF.png' style='display:none;'/>";
+				} else {
+					table += "<img class='switchClass_"
+							+ list[i].id
+							+ "' onclick='switchImg(this,false,"
+							+ list[i].id
+							+ ")' src='/ump/images/ON.png' style='display:none;'/>";
+					table += "<img class='switchClass_" + list[i].id
+							+ "' onclick='switchImg(this,true," + list[i].id
+							+ ")' src='/ump/images/OFF.png' />";
+				}
+				table += "</td>"; */
+				table += "<td>";
+				table += '<a href="javascript:update('
+						+ list[i].id
+						+ ');" alt="编辑" title="编辑 "><img alt="编辑" class="image" src="/ump/images/update.png" title="编辑"></a>';
+				table += '<a href="javascript:deleteProduct('
+						+ list[i].id
+						+ ')" alt="删除" title="删除 "><img alt="删除" class="image" src="/ump/images/delete.png" title="删除"></a>';
+				table += "</td>";
+				table += "</tr>";
+			}
+			$("#tbody").html(table);
+			var addBtn ='<a onclick="addProductPage();"><img style="cursor: pointer;" src="/ump/images/add_01.png"/></a>';
+			if (model.totalCount > 0) {
+				var foot = Page(model, 'query',5,addBtn,'addProductPage');
+				$("#tfoot").html(foot);
+			} else {
+				$("#tfoot").html('<tr><td  colspan="5"><a onclick="addProductPage();"><img style="cursor: pointer;" src="/ump/images/add_01.png"/></a>无数据</td></tr>');
+			}
+
+		}
+		function addProductPage() {
+			window.location.href = "/ump/umpbusinesstypes?form";
+
+		}
+		function query(page) {
+			var pageNo;
+			if (page) {
+				pageNo = page
+			} else {
+				pageNo = 1;
+			}
+			var param={};
+			param.page=pageNo;
+			param.size=10;
+			var url = "/ump/umpbusinesstypes/list";
+			dataAjax(url, param, null, null, createDataGride, null);
+		}
+		function update(id){
+			//判读子行业是否被使用  品牌关键词 ,
+			var url="/ump/commentvalidata/businessIsUsing";
+			var ret=ajaxJsonReturn(url, {businessId:id});
+			if(ret=='true'){
+				alert("该子行业在被使用，不得编辑");
+				return;
+			}
+			window.location.href = "/ump/umpbusinesstypes/"+id+"?form";
+		}
+		function deleteProduct(id) {
+			//判读子行业是否被使用  品牌关键词 ,
+			var url="/ump/commentvalidata/businessIsUsing";
+			var ret=ajaxJsonReturn(url, {businessId:id});
+			if(ret=='true'){
+				alert("该子行业在被使用，不得删除");
+				return;
+			}
+			if(!confirm("确定删除?")){
+				return;
+			}
+			var url = "/ump/umpbusinesstypes/delete"
+			var param = {
+				id : id
+			};
+			dataAjax(url, param, Notify);
+			query();
+		}
+		function switchImg(obj, vl, id) {
+			$.ajax({
+				url : "/ump/umpbusinesstypes/updateVisable",
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data : {
+					id : id,
+					isVisable : vl
+				},
+				error : function(msg) {
+				},
+				success : function(data) {
+					Notify(data, 1000);
+					$(".switchClass_" + id).toggle();
+				}
+			});
+
+		}
+		
+             ]]>
+    </SCRIPT>
+</div>

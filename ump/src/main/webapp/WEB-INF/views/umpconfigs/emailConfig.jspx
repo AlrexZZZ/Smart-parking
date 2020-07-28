@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:spring="http://www.springframework.org/tags" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<SCRIPT type="text/javascript">
+		var validator;
+		$(function() {
+			validator = $('#emailConfig').dtValidator();
+			if (!validator.validResult()) {
+				return;
+			}
+		});
+		function checkValue() {
+			if (!validator.validResult()) {
+				return;
+			}
+			var host = $("input[name='host']").val();
+			var port = $("input[name='port']").val();
+			var username = $("input[name='username']").val();
+			var emailPass = $("input[name='emailPass']").val();
+			var sender = $("input[name='sender']").val();
+			$.post("/ump/umpconfigs/emailSava", {
+				"host" : host,
+				"port" : port,
+				"username" : username,
+				"emailPass" : emailPass,
+				"sender" : sender
+			}, function(data) {
+				if (data == 1) {
+					alert('保存成功，系统已发送一封测试邮件到您邮箱，请注意查收，如收不到邮件，请检查输入是否有误。');
+				} else {
+					alert('保存失败，请检查输入是否有误。');
+				}
+			});
+		}
+	</SCRIPT>
+	<div class="grid">
+		<div
+			style="font-size: 16px; font-family: Microsoft Yahei; padding-left: 20px">回复邮箱配置</div>
+		<form id="emailConfig">
+			<div class="row">
+				<div>
+					<label for="host">发件服务器 : </label>
+					<div class="input-control text " style="width: 275px;">
+						<c:if test="${empty host}">
+							<input type="text" name="host" autocomplete="off" id="host"
+								value="smtp.9client.com" validTitle="HOST" valid="r"
+								style="width: 270px;" validInfoArea="host_info_area" />
+						</c:if>
+						<c:if test="${not empty host}">
+							<input type="text" name="host" autocomplete="off" id="host"
+								value="${host}" validTitle="HOST" valid="r"
+								style="width: 270px;" validInfoArea="host_info_area" />
+						</c:if>
+					</div>
+					<font color="red"> *</font> <span id="host_info_area"></span>
+				</div>
+			</div>
+			<div class="row">
+				<label for="port">端口号 : </label>
+				<div class="input-control text " style="width: 275px;">
+					<c:if test="${empty port}">
+						<input type="text" name="port" autocomplete="off" id="port"
+							value="25" validTitle="PORT" valid="r|number"
+							style="width: 270px;" validInfoArea="port_info_area" />
+					</c:if>
+					<c:if test="${not empty port}">
+						<input type="text" name="port" autocomplete="off" id="port"
+							value="${port}" validTitle="PORT" valid="r|number"
+							style="width: 270px;" validInfoArea="port_info_area" />
+					</c:if>
+				</div>
+				<font color="red"> *</font><span id="port_info_area"></span>
+			</div>
+			<div class="row">
+				<label for="username">邮箱账号 : </label>
+				<div class="input-control text " style="width: 275px;">
+					<input type="text" name="username" autocomplete="off"
+						style="width: 270px;" id="username" value="${emailname}"
+						validTitle="邮箱账号" valid="r|email"
+						validInfoArea="username_info_area" />
+				</div>
+				<font color="red"> *</font><span id="username_info_area"></span>
+			</div>
+			<div class="row">
+				<label for="password">邮箱密码 : </label>
+				<div class="input-control password " style="width: 275px;">
+					<input type="password" name="emailPass" style="width: 270px;"
+						id="emailPass" value="${emailPass}" validTitle="邮箱密码" valid="r"
+						validInfoArea="password_info_area" />
+				</div>
+				<font color="red"> *</font><span id="password_info_area"></span>
+			</div>
+			<div class="row">
+				<label for="sender">发件人名称 : </label>
+				<div class="input-control text " style="width: 275px;">
+					<c:if test="${empty sender}">
+						<input type="text" name="sender" autocomplete="off" id="sender"
+							style="width: 270px;" value="help@9client.com" validTitle="发件人名称"
+							valid="r|email" validInfoArea="sender_info_area" />
+					</c:if>
+					<c:if test="${not empty sender}">
+						<input type="text" name="sender" autocomplete="off" id="sender"
+							value="${sender}" validTitle="发件人名称" valid="r|email"
+							style="width: 270px;" validInfoArea="sender_info_area" />
+					</c:if>
+				</div>
+				<font color="red"> *</font><span id="sender_info_area"></span>
+			</div>
+		</form>
+		<div class="row">
+			<button class="button info" onclick="checkValue();"
+				style="margin-left: 20px;">确 定</button>
+		</div>
+	</div>
+</div>

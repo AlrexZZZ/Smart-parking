@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_nineclient_model_UmpCompany" modelAttribute="umpCompany" path="/umpcompanys" versionField="Version" z="ISDkhtAwKiF/ZYH/ldG+Q++9m/g=">
+        <field:input field="name" id="c_com_nineclient_model_UmpCompany_name" required="true" z="tTI+CHl1+xvN/fnQ+cLVPqX1nYA="/>
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_UmpCompany_isDeleted" z="kvNfEoFhmq6Dg34GE7epgGoku0Q="/>
+        <field:checkbox field="isVisable" id="c_com_nineclient_model_UmpCompany_isVisable" z="lVw/vPfuu314xdHBDS91wseA8kk="/>
+        <field:datetime dateTimePattern="${umpCompany_createtime_date_format}" field="createTime" id="c_com_nineclient_model_UmpCompany_createTime" z="nDMQUHsKV5IVRAZwEojNVHCb9Wk="/>
+        <field:input field="companyCode" id="c_com_nineclient_model_UmpCompany_companyCode" required="true" z="GYi60qBRxs8MG9zUxwMcx1Yyz94="/>
+        <field:input field="maxAccount" id="c_com_nineclient_model_UmpCompany_maxAccount" required="true" z="UrI8BLVYeWRIw+kQL/K8yydUhYI="/>
+        <field:datetime dateTimePattern="${umpCompany_servicestarttime_date_format}" field="serviceStartTime" id="c_com_nineclient_model_UmpCompany_serviceStartTime" z="VLH/PTuGLfZdEO+veu6Nm2le9tg="/>
+        <field:datetime dateTimePattern="${umpCompany_serviceendtime_date_format}" field="serviceEndTime" id="c_com_nineclient_model_UmpCompany_serviceEndTime" z="Hx3z6VdhfsD81mw6HNFrNhBzMJs="/>
+        <field:select field="status" id="c_com_nineclient_model_UmpCompany_status" items="${umpcompanystatuses}" path="umpcompanystatuses" z="Ru/PxGsAcQd+7SEFePpS2tdLDr4="/>
+        <field:select field="products" id="c_com_nineclient_model_UmpCompany_products" itemValue="id" items="${umpproducts}" multiple="true" path="/umpproducts" z="x/8lcUZP2U/qWlEgx9K8GnY9U5w="/>
+    </form:update>
+</div>

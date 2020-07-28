@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_VocTemplateCategory" object="${voctemplatecategory}" path="/voctemplatecategorys" z="/6B09HYehwNCOvHtwQ6f9LUJSWU=">
+        <field:display field="name" id="s_com_nineclient_model_VocTemplateCategory_name" object="${voctemplatecategory}" z="v/5sbkI1iKdA0vuzRc8G9b7wd7k="/>
+        <field:display field="sort" id="s_com_nineclient_model_VocTemplateCategory_sort" object="${voctemplatecategory}" z="tqYRNG2RpTq2aw1orw6gliszNjk="/>
+        <field:display field="isVisable" id="s_com_nineclient_model_VocTemplateCategory_isVisable" object="${voctemplatecategory}" z="dQp5ikvwQJPHZ013toRzz7h8/Bs="/>
+        <field:display field="isDeleted" id="s_com_nineclient_model_VocTemplateCategory_isDeleted" object="${voctemplatecategory}" z="b2uF2cOzD4qWdOciSlfs389Ee+w="/>
+        <field:display date="true" dateTimePattern="${vocTemplateCategory_createtime_date_format}" field="createTime" id="s_com_nineclient_model_VocTemplateCategory_createTime" object="${voctemplatecategory}" z="TK15s65Yjw8jVAefHSSWMOiSQdk="/>
+    </page:show>
+</div>

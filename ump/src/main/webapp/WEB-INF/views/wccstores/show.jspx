@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccStore" object="${wccstore}" path="/wccstores" z="EA8AKkRdDgO5hPK788fw6RIQTMc=">
+        <field:display field="storeName" id="s_com_nineclient_model_WccStore_storeName" object="${wccstore}" z="iqkulOmcWdcSCbYq4Mv6D34WDv8="/>
+        <field:display field="storeAddres" id="s_com_nineclient_model_WccStore_storeAddres" object="${wccstore}" z="7DKzfbXSUZ0aVxg9czeXkKAnCwc="/>
+        <field:display field="storePhone" id="s_com_nineclient_model_WccStore_storePhone" object="${wccstore}" z="aug9svIA5lYtpsdDWzGRdZcFPbo="/>
+        <field:display field="storeText" id="s_com_nineclient_model_WccStore_storeText" object="${wccstore}" z="YCDuO2et+FPblCWWF99nLxBSrR8="/>
+        <field:display field="storeRemark" id="s_com_nineclient_model_WccStore_storeRemark" object="${wccstore}" z="8HX9rgLspMyCodiXBjpu67tDGvU="/>
+        <field:display field="storeLngx" id="s_com_nineclient_model_WccStore_storeLngx" object="${wccstore}" z="HkG0ec0FJ2t0vCUUGhzCq3EJKVk="/>
+        <field:display field="storeLaty" id="s_com_nineclient_model_WccStore_storeLaty" object="${wccstore}" z="tNOl0AqqE8qDVO4LY4/ESkNTaDc="/>
+        <field:display field="storeBigImageUrl" id="s_com_nineclient_model_WccStore_storeBigImageUrl" object="${wccstore}" z="dYlMR8YdjRVQ0g9IW5dZ2ksD9kA="/>
+        <field:display field="storeSmallImageUrl" id="s_com_nineclient_model_WccStore_storeSmallImageUrl" object="${wccstore}" z="IZpU1FOg/0mjwCY9qkTZq3H03nc="/>
+    </page:show>
+</div>

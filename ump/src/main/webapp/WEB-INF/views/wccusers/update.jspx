@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_nineclient_model_WccUser" modelAttribute="wccUser" path="/wccusers" versionField="Version" z="gN0wGNKngkgubSvtGlLKWpKw+tE=">
+        <field:textarea field="userName" id="c_com_nineclient_model_WccUser_userName" required="true" z="6M9Cx02uNbf1B8jTdtf3+KXCmOg="/>
+        <field:select field="status" id="c_com_nineclient_model_WccUser_status" items="${wccuserstatuses}" path="wccuserstatuses" z="OstLMpFxUuyGhjVyNbhzXalXqTc="/>
+        <field:input field="commentCount" id="c_com_nineclient_model_WccUser_commentCount" required="true" z="GirCCZKyxLHN2TXpaH/ZTqcic7o="/>
+        <field:input field="praiseCount" id="c_com_nineclient_model_WccUser_praiseCount" required="true" z="hVtHAyEz4lMftsVXwMK8Kn/cuN8="/>
+        <field:input field="givenCommentCount" id="c_com_nineclient_model_WccUser_givenCommentCount" z="PLxAjr71XqOtn3ZfgrAy33Uln1M="/>
+        <field:input field="givenPraiseCount" id="c_com_nineclient_model_WccUser_givenPraiseCount" z="34JDUgkOpCKmyS65cdMIZGE1GdI="/>
+        <field:textarea field="remark" id="c_com_nineclient_model_WccUser_remark" z="yJqtsWrXekRxYmtpv0UVCFiCX54="/>
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_WccUser_isDeleted" z="A9iM7msjtVQGZx9rR0l5gTaUUOA="/>
+        <field:checkbox field="isOfficial" id="c_com_nineclient_model_WccUser_isOfficial" z="gJBH6fb39EDot1vFCw9tdgaIYi4="/>
+        <field:textarea field="openId" id="c_com_nineclient_model_WccUser_openId" z="rQ6EjB6il4VHqbwKW7QNtjEUkGM="/>
+        <field:datetime dateTimePattern="${wccUser_firsttopictime_date_format}" field="firstTopicTime" id="c_com_nineclient_model_WccUser_firstTopicTime" required="true" z="Nbfts7Sx6NYHISK1gVsIFMeHgsw="/>
+        <field:input field="userTopicCount" id="c_com_nineclient_model_WccUser_userTopicCount" required="true" z="KtNBWAwkjHzhym4NfHqiSwnjpaU="/>
+        <field:textarea field="lastTopicComment" id="c_com_nineclient_model_WccUser_lastTopicComment" required="true" z="PL0+Ap09cpCJWMvjwAmfFF0ON2s="/>
+        <field:datetime dateTimePattern="${wccUser_lasttopictime_date_format}" field="lastTopicTime" id="c_com_nineclient_model_WccUser_lastTopicTime" required="true" z="jyklP0YNTRp7XTotHghTm4CMTuo="/>
+        <field:textarea field="userImage" id="c_com_nineclient_model_WccUser_userImage" required="true" z="/Xkd/bmx3gcE72jc8nMbUzdhjY0="/>
+    </form:update>
+</div>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default_pub" name="voccommentlevelrules/list">
+        <put-attribute name="body" value="/WEB-INF/views/voccommentlevelrules/list.jspx"/>
+    </definition>
+    <definition extends="pub" name="voccommentlevelrules/result">
+        <put-attribute name="body" value="/WEB-INF/views/voccommentlevelrules/result.jspx"/>
+    </definition>
+    
+     <definition extends="pub" name="voccommentlevelrules/wordExpressionsList">
+        <put-attribute name="body" value="/WEB-INF/views/voccommentlevelrules/wordExpressionsList.jspx"/>
+    </definition>
+    
+<definition extends="default_pub" name="voccommentlevelrules/show">
+        <put-attribute name="body" value="/WEB-INF/views/voccommentlevelrules/show.jspx"/>
+    </definition>
+<definition extends="default_pub" name="voccommentlevelrules/create">
+        <put-attribute name="body" value="/WEB-INF/views/voccommentlevelrules/create.jspx"/>
+    </definition>
+<definition extends="default_pub" name="voccommentlevelrules/update">
+        <put-attribute name="body" value="/WEB-INF/views/voccommentlevelrules/update.jspx"/>
+    </definition>
+</tiles-definitions>

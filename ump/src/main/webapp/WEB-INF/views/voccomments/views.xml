@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default_pub" name="voccomments/list">
+        <put-attribute name="body" value="/WEB-INF/views/voccomments/list.jspx"/>
+    </definition>
+    <definition extends="pub" name="voccomments/result">
+        <put-attribute name="body" value="/WEB-INF/views/voccomments/result.jspx"/>
+    </definition>
+     <definition extends="pub" name="voccomments/reply">
+        <put-attribute name="body" value="/WEB-INF/views/voccomments/reply.jspx"/>
+    </definition>
+    
+     <definition extends="default_pub" name="voccomments/replyRecordlist">
+        <put-attribute name="body" value="/WEB-INF/views/voccomments/replyRecordlist.jspx"/>
+     </definition>
+     
+     <definition extends="pub" name="voccomments/replyRecordResult">
+        <put-attribute name="body" value="/WEB-INF/views/voccomments/replyRecordResult.jspx"/>
+     </definition>
+
+</tiles-definitions>

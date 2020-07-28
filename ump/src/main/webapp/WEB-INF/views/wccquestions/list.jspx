@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_WccQuestion" items="${wccquestions}" z="p9ektaPrEARxY/bp8K2T4MSx/qg=">
+        <table:table data="${wccquestions}" id="l_com_nineclient_model_WccQuestion" path="/wccquestions" z="A25V1g5dKZ1aw3i2aTM94UVHuTk=">
+            <table:column id="c_com_nineclient_model_WccQuestion_name" property="name" z="U2Y1wP7XOolJe39DrLtKTXUj4rM="/>
+            <table:column id="c_com_nineclient_model_WccQuestion_questionNo" property="questionNo" z="5bWfyXW1i4l5nfVg3fFoDzBgEIw="/>
+            <table:column id="c_com_nineclient_model_WccQuestion_sort" property="sort" z="D0deuatCqykVifYoL4aEmvzdp8U="/>
+            <table:column id="c_com_nineclient_model_WccQuestion_isVisable" property="isVisable" z="nypfSILSNO77UGMFYEFmWl2wrNA="/>
+            <table:column id="c_com_nineclient_model_WccQuestion_questionType" property="questionType" z="JY5eI5Zf778vLFFs3Q7Bot5gucw="/>
+        </table:table>
+    </page:list>
+</div>

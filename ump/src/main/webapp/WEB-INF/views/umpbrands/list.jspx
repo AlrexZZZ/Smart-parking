@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:formTbale="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<style>
+		@IMPORT url("/ump/styles/url.css");
+		.metro .span1, .metro .size1 {
+   			 width: 80px !important;
+		}
+		</style>
+		<style>
+th {
+	white-space: nowrap;
+}
+
+td {
+	white-space: nowrap;
+	overflow: hidden;
+}
+</style>
+	<div class="tab-control" data-role="tab-control">
+		<ul class="tabs">
+			<li id="page_li_U"><a href="#_page_1" onclick="queryBrand();">关键词查询</a></li>
+			<li id="page_li_V"><a href="#_page_2" onclick="listVocBrand();">关键词审核</a></li>
+		</ul>
+		<div class="frames">
+			<div class="frame" id="_page_1">
+				<form id="pageform_1" action="/ump/umpbrands/list" method="post"
+					style="width: 100%">
+					<DIV class="grid">
+						<div class="row">
+							<div class="span1">
+							<LABEL class="lableStyle">所在行业 :</LABEL></div>
+							<div class="span2">
+								<select id="businessTypeId" class="publicSize" name="businessTypeId">
+									<OPTION>请选择</OPTION>
+									<c:forEach items="${umpbusinesstypes}" var="businesses">
+										<OPTION value="${businesses.id}">${businesses.businessName}</OPTION>
+									</c:forEach>
+								</select>
+							</div>
+							<div class="span1"><LABEL class="lableStyle">品牌:</LABEL></div>
+							<div class="span2">
+								<input tyep="text" name="brandName" class="publicSize"  />
+							</div>
+						</div>
+						<div class="row">
+							<div class="span1"><LABEL class="lableStyle">关键字:</LABEL></div>
+							<div class="span2">
+								<input tyep="text" name="keyName" class="publicSize"  />
+							</div>
+						</div>
+					</DIV>
+					<DIV class="toolbar-group">
+						<a class="button info" onclick="queryBrand();">查询</a> 
+						<button class="warning" type="reset">重置</button>
+					</DIV>
+				</form>
+				<TABLE class="table striped hovered" style="table-layout:fixed;margin-top: 20px;">
+					<THEAD id="thead">
+						<tr>
+							<th>所在行业</th>
+							<th>品牌</th>
+							<th>关键词</th>
+							<th>入库时间</th>
+							<th>启用状态</th>
+							<th>操作</th>
+						</tr>
+					</THEAD>
+					<TBODY id="tbody">
+
+					</TBODY>
+				</TABLE>
+				<div align="right" style="text-align: right;" id="tfoot">
+				<!--  -->
+	  			</div>
+			</div>
+			<div class="frame" id="_page_2">
+				<form id="pageform_2" action="/ump/umpbrands/querCheckList"
+					method="post">
+					<div class="grid">
+						<div class="row">
+							<div class="span1"><LABEL class="lableStyle">公司ID:</LABEL></div>
+							<div class="span2">
+								<input name="companyCode" class="publicSize"/>
+							</div>
+							<div class="span1"><LABEL class="lableStyle">所在行业:</LABEL></div>
+							<div class="span2">
+								<select id="_businessTypeId" name="businessTypeId"
+									 class="publicSize">
+									<c:forEach items="${umpbusinesstypes}" var="businesses">
+										<OPTION value="${businesses.id}">${businesses.businessName}</OPTION>
+									</c:forEach>
+								</select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="span1"><LABEL class="lableStyle">品牌:</LABEL></div>
+							<div class="span2">
+								<input name="brandName"  class="publicSize" />
+							</div>
+							<div class="span1"><LABEL class="lableStyle">关键词:</LABEL></div>
+							<div class="span2">
+								<input name="keyName"  class="publicSize" />
+							</div>
+						</div>
+					</div>
+					<DIV class="toolbar-group">
+					<a class="button info" onclick="listVocBrand();">查询</a> 
+					<button class="warning" type="reset">重置</button>
+					</DIV>
+				</form>
+				<TABLE class="table striped hovered" style="margin-top: 20px;">
+					<THEAD>
+					<tr style="">
+						<td colspan="7" ><INPUT type="button" class="info" style="float: left;width: 80px;" onclick="bacthapproveWindow();"
+						value="批量审核" /></td>
+					</tr>
+					<tr>
+						<th><input type="checkbox" onclick="selectAll(this);" /></th>
+						<th>公司ID</th>
+						<th>所在行业</th>
+						<th>品牌</th>
+						<th>关键词</th>
+						<th>提交时间</th>
+						<th>操作</th>
+					</tr>
+					</THEAD>
+					<TBODY id="_tbody">
+
+					</TBODY>
+				</TABLE>
+				<div align="right" style="text-align: right;" id="_tfoot">
+				<!--  -->
+	  			</div>
+			</div>
+		</div>
+	</div>
+
+	<SCRIPT type="text/javascript" src="/ump/js/nineclient/ump/product.js">
+		//--
+	</SCRIPT>
+	<SCRIPT type="text/javascript"
+		src="/ump/js/nineclient/vocreport/nineclient.js">
+		//--
+	</SCRIPT>
+	<SCRIPT type="text/javascript"
+		src="/ump/ui/jquery-validation/jquery.validate.js">
+		//--
+	</SCRIPT>
+	<SCRIPT type="text/javascript">
+		<![CDATA[
+		  var active='${active}';
+		$(document).ready(function() {
+			loadBusiness();//加载行业
+			queryBrand();
+			if(active){
+				$("#page_li_U").removeClass("active");
+				$("#page_li_V").removeClass("active");
+				$("#page_li_"+active).addClass("active");
+			}
+		});
+		function addParentBusiness(){
+			window.location.href='/ump/umpbrands?form';
+		}
+		function queryBrand(page) {
+			var pageNo;
+			if (page) {
+				pageNo = page
+			} else {
+				pageNo = 1;
+			}
+			var url = "/ump/umpbrands/list";
+			var param = "";
+			param = $("#pageform_1").serialize();
+			param += "&size=10";
+			param += "&page=" + pageNo;
+			dataAjax(url, param, null, null, createDataGride, null);
+		}
+		function loadBusiness() {
+			var url = "/ump/umpparentbusinesstypes/loadParentBusiness";
+			dataAjax(url, {}, null, null, createSelect, "businessTypeId");
+			dataAjax(url, {}, null, null, createSelect, "_businessTypeId");
+		}
+		function umpBrandTableHead() {
+			var head = [ '所在行业', '品牌', '关键词', '入库时间', '启用状态', '操作' ];
+			var h = "";
+			var thead = tableHead(head, "thead", false, null);
+			$("#thead").val(thead);
+		}
+		function vocBrandTableHead() {
+			var head = [ '公司ID', '所在行业', '品牌', '关键词', '提交时间', '操作' ];
+			var thead = tableHead(head, "thead", false, null);
+			$("#thead").val(thead);
+		}
+		function selectAll(obj) {
+			if (obj.checked) {
+				$('input[name="chk_list"]').each(function() {
+					this.checked = true;
+				});
+			} else {
+				$('input[name="chk_list"]').each(function() {
+					this.checked = false;
+				});
+			}
+
+		}
+		function listVocBrand(page) {
+			var pageNo;
+			if (page) {
+				pageNo = page
+			} else {
+				pageNo = 1;
+			}
+			var url = "/ump/umpbrands/querCheckList";
+			var param = "";
+			param = $("#pageform_2").serialize();
+			param += "&size=10";
+			param += "&page=" + pageNo;
+			dataAjax(url, param, null, null, createVocBrandTb, null);
+
+		}
+		function createVocBrandTb(data) {
+			var model = eval("(" + data + ")");
+			var list = eval(model.dataJson);
+			//添加表头
+			var th = "";
+			var table = "";
+			for (var i = 0; i < list.length; i++) {
+				table += "<tr>";
+				table += "<td>";
+				table += "<input type='checkBox' name='chk_list' value='"+list[i].id+"'/>";
+				table += "</td>";
+				table += "<td>";
+				table += list[i].companyCode;
+				table += "</td>";
+				table += "<td>";
+				table += list[i].businessName;
+				table += "</td>";
+				table += "<td>";
+				table += list[i].brandName;
+				table += "</td>";
+				var keyName=list[i].name == null ? "" : (list[i].name=="null"?"":list[i].name);
+				table += "<td title='"+keyName+"'>";
+				table += keyName;
+				table += "</td>";
+				table += "<td>";
+				var time =list[i].createTime==null?"":list[i].createTime.time;
+				table += formatData(time);
+				table += "</td>";
+				table += "<td>";
+				if (list[i].status !=1) {
+					table += '<a href="javascript:approveWindow('
+							+ list[i].id
+							+ ','
+							+ model.pageNo
+							+ ');" alt="审核" title="审核"><img alt="审核" class="image" src="/ump/images/swatch.png" title="审核"></a>';
+				} else {
+					table += '<a><img alt="审核" class="image" src="/ump/images/swatch_02.png" title="审核"></a>';
+				}
+				table += "</td>";
+				table += "</tr>";
+			}
+			$("#_tbody").html(table);
+			if (model.totalCount > 0) {
+				var foot = Page(model, 'listVocBrand', 7);
+				$("#_tfoot").html(foot);
+			} else {
+				$("#_tfoot").html("<tr><td  colspan='7'>查无匹配数据</td></tr>");
+			}
+		}
+		function approveWindow(id, pageNo) {
+			
+			checkItem(approve, id, pageNo);
+		}
+		function approve(id, pageNo) {
+			var url = "/ump/umpbrands/checkStatus";
+			var param = {};
+			param.id = id;
+			var status = $("input[name='status']:checked").val();
+			param.status = status;
+			$.Dialog.close();
+			waitDialog();
+			dataAjax(url, param, Notify, null, null, null);
+			$.Dialog.close();
+			listVocBrand(pageNo);
+		}
+		function createDataGride(data) {
+			var model = eval("(" + data + ")");
+			var list = eval(model.dataJson);
+			//添加表头
+			var th = "";
+			var table = "";
+			for (var i = 0; i < list.length; i++) {
+				table += "<tr>";
+				table += "<td>";
+				table += list[i].business.businessName;
+				table += "</td>";
+				table += "<td>";
+				table += list[i].brandName;
+				table += "</td>";
+				var keyName=list[i].keyName == null ? "" : (list[i].keyName=="null"?"":list[i].keyName);
+				table += "<td title='"+keyName+"'>";
+				table += keyName;
+				table += "</td>";
+				table += "<td>";
+				table += formatData(list[i].createTime);
+				table += "</td>";
+				table += "<td>";
+				if (list[i].isVisable) {
+					table += "<img style='cursor: pointer;' class='switchClass_" + list[i].id
+							+ "' onclick='switchImg(this,false," + list[i].id
+							+ ")' src='/ump/images/ON.png' />";
+					table += "<img style='cursor: pointer;display:none;'  class='switchClass_" 
+							+ list[i].id
+							+ "' onclick='switchImg(this,true,"
+							+ list[i].id
+							+ ")' src='/ump/images/OFF.png' style='display:none;'/>";
+				} else {
+					table += "<img style='cursor: pointer;display:none;' class='switchClass_"
+							+ list[i].id
+							+ "' onclick='switchImg(this,false,"
+							+ list[i].id
+							+ ")' src='/ump/images/ON.png' style='display:none;'/>";
+					table += "<img style='cursor: pointer;' class='switchClass_" + list[i].id
+							+ "' onclick='switchImg(this,true," + list[i].id
+							+ ")' src='/ump/images/OFF.png' />";
+				}
+				table += "</td>";
+				table += "<td>";
+				table += '<a href="/ump/umpbrands/'
+						+ list[i].id
+						+ '?form" alt="编辑" title="编辑 "><img alt="编辑" class="image" src="/ump/images/update.png" title="编辑"></a>';
+				table += '<a href="javascript:deleteBrand('
+						+ list[i].id
+						+ ')" alt="删除" title="删除 "><img alt="删除" class="image" src="/ump/images/delete.png" title="删除"></a>';
+				table += "</td>";
+				table += "</tr>";
+			}
+			$("#tbody").html(table);
+			var addBtn ='<a onclick="addParentBusiness();"><img style="cursor: pointer;" src="/ump/images/add_01.png"/></a>';
+			if (model.totalCount > 0) {
+				var foot = Page(model, 'queryBrand', 6,addBtn,'addParentBusiness');
+				$("#tfoot").html(foot);
+			} else {
+				$("#tfoot").html("<tr><td  colspan='6'>"+addBtn+"查无匹配数据</td></tr>");
+			}
+		}
+		function deleteBrand(id) {
+			if (!confirm("确定删除?")) {
+				return;
+			}
+			var url = "/ump/umpbrands/delete";
+			var param = {
+				id : id
+			};
+			dataAjax(url, param, Notify, null, null, null);
+			queryBrand();
+		}
+		function bacthapproveWindow() {
+			var id = new Array();
+			$("input[name='chk_list']:checked").each(function() {
+				id.push(this.value);
+			});
+			if(id.length<1){
+				Notify("请选择一行记录",2000);
+				return;
+			}
+			checkItem(bacthCheck, null, null);
+
+		}
+		function bacthCheck(nth) {
+			var url = "/ump/umpbrands/batchCheck";
+			var id = new Array();
+			$("input[name='chk_list']:checked").each(function() {
+				id.push(this.value);
+			});
+			if(id.length<1){
+				Notify("请选择一行记录",2000);
+				return;
+			}
+			var status = $("input[name='status']:checked").val();
+			var param = {};
+			param.status = status;
+			param.id = id.join(",");
+			$.Dialog.close();
+			waitDialog();
+			dataAjax(url, param, Notify, listVocBrand, null, null);
+			$.Dialog.close();
+		}
+		function switchImg(obj, vl, id) {
+			var visable = vl ? 1 : 0;
+			$.ajax({
+				url : "/ump/umpbrands/updateVisable",
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data : {
+					id : id,
+					visable : visable
+				},
+				error : function(msg) {
+				},
+				success : function(data) {
+					$(".switchClass_" + id).toggle();
+				}
+			});
+
+		}
+		]]>
+	</SCRIPT>
+</div>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_UmpChannel" items="${umpchannels}" z="0GOOeGwXqA5WJqfGMmnI3NhVGJI=">
+        <table:table data="${umpchannels}" id="l_com_nineclient_model_UmpChannel" path="/umpchannels" z="Gqf1B7B1agkUwSmqxf4fZxxYpcU=">
+            <table:column id="c_com_nineclient_model_UmpChannel_channelName" property="channelName" z="sQVvWy8nS9xG/FvfWhlplrwF3YQ="/>
+            <table:column id="c_com_nineclient_model_UmpChannel_productPk" property="productPk" z="Fyu9tSQZgCqPVPiJY3FZt7JzMr4="/>
+            <table:column id="c_com_nineclient_model_UmpChannel_remark" property="remark" z="XBvUT0PPzYSMenznlfSIHxmU70c="/>
+            <table:column id="c_com_nineclient_model_UmpChannel_isVisable" property="isVisable" z="+ORwu7/hU0nRf8OkrVEUlf7XPX4="/>
+            <table:column id="c_com_nineclient_model_UmpChannel_isDeleted" property="isDeleted" z="gDM+lF10s25toNx8TjyQTI5rXcc="/>
+            <table:column date="true" dateTimePattern="${umpChannel_createtime_date_format}" id="c_com_nineclient_model_UmpChannel_createTime" property="createTime" z="R+sfCE3T8mX/JYt90Cdpbp0mNF0="/>
+        </table:table>
+    </page:list>
+</div>

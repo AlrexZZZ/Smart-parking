@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+<style>
+.metro .button {padding: 0px;}
+.ztree li span.button.add {margin-left: 2px;margin-right: -1px;background-position: -144px 0;vertical-align: top;*vertical-align: middle}
+.mySearch {top: 30%;left: 40%;position: absolute;height: auto;margin: 0px auto;clear: both;background: #FFF;padding: 20px;margin-top: 10px;border: 1px solid #CCC;z-index: 1002;}
+.search_bt {width: 180px;margin: 0px auto;}
+.search_bt  input{ widt:78px;height:28px; line-height: 28px;}
+.ok{background: #fa6800}
+.cl{ backgroud:#069dd5;margin-left:30px;}
+select {width: 100%;}
+.ztree li span.button.add {background-position: -144px 0;margin-left: 2px;margin-right: -1px;vertical-align: top;}
+.ztree li span .buttonAdd { background-attachment: scroll;background-color: transparent; background-image: url("images/add.png"); background-repeat: no-repeat;border: 0 none;cursor: pointer; display: inline-block;height: 16px;line-height: 0;margin: 0;outline: medium none;vertical-align: middle;width: 16px;}
+</style>
+<SCRIPT type="text/javascript">
+		var htmlL = "";
+</SCRIPT>
+ <SCRIPT type="text/javascript">
+<![CDATA[
+ $(document).ready(function(){
+		var setting = {
+			check: {
+				enable: false,
+				nocheckInherit: true 
+			},
+			view: {
+				addHoverDom: addHoverDom,
+				removeHoverDom: removeHoverDom,
+				selectedMulti: false
+			}, 
+			data: {
+				simpleData: {
+					enable: true
+				}
+			},
+			edit:{
+				enable: true,
+				showAddBtn : true,
+				showRenameBtn :  setRenameBtn,
+				showRemoveBtn :  setRemoveBtn,
+				editNameSelectAll: true,
+				removeTitle : "删除",
+				renameTitle : "编辑"
+				
+			},
+			callback: {
+				beforeRemove: beforeRemove,//如果返回 false，zTree 将不删除节点，也无法触发 onRemove 事件回调函数
+				beforeDrag: beforeDrag,
+				onRemove: onRemove,
+				beforeRename: beforeRename,
+				onRename: onRename,
+				
+			}
+		};
+		readyTree(setting);
+	})	
+
+function readyTree(setting){
+	var zNodes = new Array();
+	$.ajax({
+	    url:"/ump/puborganizations/tree",
+	    datatype :"text",
+	    type: "POST",
+	    error: function(msg){},
+	    success:function(data){
+	        var str = '['+data+']';
+	        zNodes = eval('('+str+')');
+	        $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+			}
+	 });
+}
+
+function setRemoveBtn(treeId, treeNode) {
+	var id = treeNode.id;
+	if(id == 0){
+		return false;
+	}else{
+		return true;
+	}
+}
+function setRenameBtn(treeId, treeNode) {
+	var id = treeNode.id;
+	if(id == 0){
+		return;
+	}else{
+		return true;
+	}
+}
+
+//如果返回 false，zTree 将不删除节点，也无法触发 onRemove 事件回调函数
+function beforeRemove(treeId, treeNode) {
+	var id = treeNode.id;
+	if(id == 0){
+		alert("全部不可以删除");
+		return false;
+	}else{
+		if (confirm("是否删除该组织")) {
+           	return true;
+       	}
+       	return false;
+	}
+	return true;
+}
+
+//删除
+function onRemove(event, treeId, treeNode){
+	var id = treeNode.id;
+	$.ajax({
+		  type: "POST",   
+		  url: "/ump/puborganizations/deleteTreeById",
+		  data: {"id":id},
+		  error: function(data){
+	      },
+		  success: function(data){
+			  	var str = eval('(' + data + ')');
+			  	if(str.msg == 'faile'){
+			  		alert("该节点或子节点存在关联信息，无法删除");
+			  		window.location.reload();
+			  	}else if(str.msg == 'fails'){
+			  		alert("该节点或子节点存在关联信息，无法删除");
+			  		window.location.reload();
+				}else if(str.msg == 'failes'){
+					alert("该节点或子节点存在关联信息，无法删除");
+					window.location.reload();
+				}else if(str.msg == 'success'){
+			  		delectall(id);
+			  	}
+	   	  	}
+	  });
+}
+
+//给予节点集合，
+function delectall(id) {
+	  $.ajax({
+		  type: "POST",   
+		  url: "/ump/puborganizations/deleteTreeByIdOrIds",
+		  data: {"id":id},
+		  error: function(data){
+	      },
+		  success: function(data){
+			  	var str = eval('(' + data + ')');
+			  	if(str.msg == 'faile'){
+			  		alert("刪除失敗");
+			  	}else if(str.msg == 'success'){
+			  		window.location.reload();
+			  	}
+	   	  	}
+	  });  
+}
+		
+function beforeRename(treeId, treeNode, newName,codes) {
+    var id = treeNode.id;
+	if(id == 0){
+		alert("全部不可以修改");
+		return false;
+	}
+	if(newName.length>50) {
+	    alert("名称长度过长，应在50字以内。");
+			return false;
+		}else if(newName.length > 0){
+			return true;
+		}else{
+			alert("不可以为空");
+			return false;
+	}
+}
+		
+var log, className = "dark";
+function beforeDrag(treeId, treeNodes) {
+	return false;
+} 
+//添加
+function addHoverDom(treeId, treeNode) {
+    $("#parentNa").val(treeNode.name);
+	var sObj = $("#" + treeNode.tId + "_span");
+	if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+		var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+		+ "' title='添加' onfocus='this.blur();'></span>";
+		sObj.after(addStr);
+		var btn = $("#addBtn_"+treeNode.tId);
+		if (btn) btn.bind("click", function(){
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+			var pId = treeNode.pId;
+			var id = treeNode.id;
+			if(pId == 0 || pId == null){
+				pId = id;
+			}else{
+				pId = id;
+			}
+			$.Dialog({
+				overlay : true,
+				shadow : true,
+				flat : true,
+				draggable:true,
+				icon : '<img src="/ump/images/add.png"/>',
+				title : '添加子节点',
+				content : '',
+				width:160,
+				padding : 10,
+				onShow : function(_dialog) {
+					if(htmlL==""){
+						htmlL = $("#addMeunForm").html();
+						$("#addMeunForm").remove();
+					}
+					var content = htmlL;
+					$.Dialog.title("添加子节点");
+					$.Dialog.content(content);
+					$.Metro.initInputs();
+					$("#subbtn").click(function(){
+					var meunName = $("#meunName").val();
+					if($.trim(meunName) == ""){
+						$("#organStr").html("请输入组织名称");
+						//alert("请输入组织名称");
+						return;
+					}
+					if(meunName.length > 50){
+						$("#organStr").html("输入的组织名称过长,应在50字之内");
+						//alert("输入的组织名称过长,应在50字之内");
+						return;
+					}
+			        $.ajax({
+			                type: "post",
+			                url: "/ump/puborganizations/addTreeByPid",
+			                data: {"pId":pId,"name":meunName},    
+			                success: function(data) {
+			                	var str = eval('(' + data + ')');
+							  	if(str.msg == 'faile'){
+							  		$("#organStr").html("不存在的组织名称");
+							  		//alert("不存在组织名称");
+							  	}else if(str.msg == 'success'){
+							  		$.Dialog.close();
+							  		window.location.reload();
+							  	}else if(str.msg == 'fail'){
+							  		$("#organStr").html("组织名称存在");
+							  		//alert("组织名称存在");
+							  	}
+			                },
+			                error: function(data) {
+			                	$.Dialog.close();
+			                }
+			            })
+			        });
+				}
+			});
+		});
+};
+
+function removeHoverDom(treeId, treeNode,newName) {
+	$("#addBtn_"+treeNode.tId).unbind().remove();
+}; 
+		
+//编辑名稱
+function onRename(event, treeId, treeNode, isCancel) {
+	update(treeNode.id,treeNode.name,treeNode.pId,"");
+}	
+//修改名稱的Ajax
+function update(id,name,pid,sequenceNumber){
+		  $.ajax({
+		   type: "POST",   
+		   url: "/ump/puborganizations/updateTree",
+		   data: {"id":id,"name":name},
+		   error: function(data){
+		      },
+			  success: function(data){
+				  	var str = eval('(' + data + ')');
+				  	if(str.msg == 'faile'){
+				  		alert("组织名称存在");
+				  	}else if(str.msg == 'success'){
+				  		alert("编辑成功");
+				  	}else{
+				  		alert("编辑失败");
+				  	}
+		   	  	}
+		   });
+  	 }
+  	 
+  	 
+ //批量导入模板相关
+ function importDialog(){
+	 $.Dialog({
+			overlay : true,
+			shadow : true,
+			flat : true,
+			icon : '<img src="/ump/resources/images/swatch.png"/>',
+			title : '批量导入',
+			content : '',
+			padding : 20,
+			onShow : function(_dialog) {
+				var html = '<div class="grid" style="width: 400px; margin: 0px auto; text-align: center;"'
+				+'align="center">'
+						+ '<form id="importForm" method="POST" action="/ump/puborganizations/importExcel" enctype="multipart/form-data">'
+						+ '	<div class="row">'
+						+ '		<div style="text-align: center;">'
+						+ '			<input style="margin-left: 20px;" type="file" name="importFile" id="importFile" />'
+						+ '		</div>'
+						+ '	</div>'
+						+ '	<div class="row">'
+						+ '		<div style="text-align: center;">'
+						+ '			<a href="/ump/puborganizations/downLoadTemplate">下载模版</a>(请按标准模版上传)'
+						+ '		</div>'
+						+ '	</div>'
+						+ '	<div class="row" style="text-align: center;">'
+						+ '		<a class="button info" onclick="uploadExcel();"'
+						+ '			style="padding: 4px;">确 定</a> <a class="button warning"'
+						+ '			style="margin-left: 20px; padding: 4px;"'
+						+ '			onclick="$.Dialog.close()">取 消</a>'
+						+ '	</div>' + '</form>' + '</div>';
+				$.Dialog.content(html);
+				$.Metro.initInputs();
+			}
+		});
+ }
+ 
+ function uploadExcel() {
+		var imports = $("#importFile").val();
+		if (imports == "") {
+			alert("请上传文件!");
+		} else {
+			document.getElementById("importForm").submit();
+		}
+	}
+]]>		
+</SCRIPT>
+		<div class="zTreeDemoBackground left" id="_page_1">
+			<!-- <div id ="butId">
+				<input type="button" value="批量导入组织架构" onclick="importDialog();"/>
+			</div> -->
+			<ul id="treeDemo" class="ztree"></ul>
+		</div>
+		<input type="hidden" id="pid" name="parentId" value="0" /><br />
+		<div id="addMeunForm" style="display: none;">
+		 	<div class="grid" style="width: 220px;">
+				<form id="form1" action="" method="post" >
+			 		<div class="row">
+			 			<div class="span3">
+			 				上级组织：<input id="parentNa" type="text" name="parentName" value="" disabled="disabled" style="height: 28px;width: 135px;border: 1px solid #e4e4e4;background-color: #fff;"/>
+			 			</div>
+					</div>
+					<div class="row">
+			 			<div class="span3">
+			 				组织名称：<input id="meunName" type="text" name="meunName" value="" style="height: 28px;width: 135px;border: 1px solid #e4e4e4;background-color: #fff;"/>
+			 			</div>
+			 			<span id="organStr" style="color: red"></span>
+					</div>
+				</form>
+				 <div class="row" style="margin-left: 30px;">
+				 	<input id="subbtn" type="button" value="确 定" class="info"/>
+					<input class="warning" type="button" onclick="$.Dialog.close()" value="取 消" style="font-family:'微软雅黑'"></input>
+				</div>
+			</div>	
+		</div>
+</div>

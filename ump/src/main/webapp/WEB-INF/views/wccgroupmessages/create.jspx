@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_com_nineclient_model_WccGroupMessage" modelAttribute="wccGroupMessage" path="/wccgroupmessages" render="${empty dependencies}" z="GhFtYoh4Rz7+B9GaQlsMH41R6QI=">
+        <field:checkbox field="isDeleted" id="c_com_nineclient_model_WccGroupMessage_isDeleted" z="dE8qtdx6pOiPEZq6Yhk1NLecR08="/>
+        <field:datetime dateTimePattern="${wccGroupMessage_createtime_date_format}" field="createTime" id="c_com_nineclient_model_WccGroupMessage_createTime" z="D0MvPavaRSPxGh4opd24GFzxVl4="/>
+        <field:select field="sendStatus" id="c_com_nineclient_model_WccGroupMessage_sendStatus" items="${wccsendmssagestatuses}" path="wccsendmssagestatuses" z="2vCRVLHjguSQnS03iNW29Ob4lMU="/>
+        <field:textarea field="title" id="c_com_nineclient_model_WccGroupMessage_title" required="true" z="FaeU+cJV+5kfCHQNg8TFbIa0x3o="/>
+        <field:textarea field="author" id="c_com_nineclient_model_WccGroupMessage_author" z="qDFiS9oIz2+FP46vy7wXVaK7MYQ="/>
+        <field:textarea field="content" id="c_com_nineclient_model_WccGroupMessage_content" z="lpPEVfvaB83FiEdTEdbfbk0XZ+A="/>
+        <field:textarea field="digest" id="c_com_nineclient_model_WccGroupMessage_digest" z="loPTTCxN02H1CJeGK4weryZOxO8="/>
+        <field:textarea field="url" id="c_com_nineclient_model_WccGroupMessage_url" z="Hk9N29iUlodqzXmYvcvekj5c4Cc="/>
+        <field:select field="sex" id="c_com_nineclient_model_WccGroupMessage_sex" items="${umpsexvalues}" path="umpsexvalues" z="KDa94iFws8pRdsBIiW78LsIY3mc="/>
+        <field:textarea field="area" id="c_com_nineclient_model_WccGroupMessage_area" z="LUtlFS7gSYCQtlX4SYVRziOKbeE="/>
+        <field:textarea field="mediaUrl" id="c_com_nineclient_model_WccGroupMessage_mediaUrl" z="McI4VHVROdSdXKnp6AwpdyHljMo="/>
+        <field:input field="msgNum" id="c_com_nineclient_model_WccGroupMessage_msgNum" z="9/HoE2L+NVYGINhV0fBOZbQrRJk="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_nineclient_model_WccGroupMessage" render="${not empty dependencies}" z="7mZjz3QgV3oGVhRizjs/wnxDbrQ="/>
+</div>

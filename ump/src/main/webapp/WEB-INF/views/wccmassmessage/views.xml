@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+<definition extends="default_pub" name="wccmassmessage/show">
+        <put-attribute name="body" value="/WEB-INF/views/wccmassmessage/show.jspx"/>
+    </definition>
+    <definition extends="pub" name="wccmassmessage/list">
+        <put-attribute name="body" value="/WEB-INF/views/wccmassmessage/list.jspx"/>
+    </definition>
+    <definition extends="pub" name="wccmassmessage/dyhshow">
+        <put-attribute name="body" value="/WEB-INF/views/wccmassmessage/dyhshow.jspx"/>
+    </definition>
+      <definition extends="pub" name="wccmassmessage/list2">
+        <put-attribute name="body" value="/WEB-INF/views/wccmassmessage/list2.jspx"/>
+    </definition>
+     <definition extends="pub" name="wccmassmessage/result">
+        <put-attribute name="body" value="/WEB-INF/views/wccmassmessage/result.jspx"/>
+    </definition>
+    <definition extends="default_pub" name="wccmassmessage/show2">
+        <put-attribute name="body" value="/WEB-INF/views/wccmassmessage/show2.jspx"/>
+    </definition>
+</tiles-definitions>

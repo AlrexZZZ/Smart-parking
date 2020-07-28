@@ -1,0 +1,420 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>jQuery MultiSelect Plugin Demo</title>
+    <link href="HighLightSyntax/styles/shCore.css" rel="stylesheet" type="text/css" />
+    <link href="HighLightSyntax/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
+    <link href="fanex.multiSelect.css" rel="stylesheet" type="text/css" />
+    <script src="jquery.min.js" type="text/javascript"></script>
+    <script src="HighLightSyntax/scripts/XRegExp.js" type="text/javascript"></script>
+    <script src="HighLightSyntax/scripts/shCore.js" type="text/javascript"></script>
+    <script src="HighLightSyntax/scripts/shLegacy.js" type="text/javascript"></script>
+    <script src="HighLightSyntax/scripts/shBrushGroovy.js" type="text/javascript"></script>
+    <style type="text/css">
+        .demo-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .demo-table tr, .demo-table tr td, .demo-table tr th {
+                border: 1px solid black;
+                border-collapse: collapse;
+                border-spacing: 0;
+            }
+    </style>
+    <script src="fanex.multiSelect.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var myListData =
+            [{
+                id: "1",
+                value: "bicycle",
+                text: "Bicycle",
+                checked: true,
+                enable: true
+            }, {
+                id: "2",
+                value: "motobike",
+                text: "Motobike",
+                checked: true,
+                enable: false,
+                cssClass: "demoCssClass"
+            }, {
+                id: "3",
+                value: "Car",
+                text: "Car",
+                checked: false,
+                enable: true
+            }, {
+                id: "4",
+                value: "truck",
+                text: "Truck",
+                checked: false,
+                enable: true
+            }];
+
+        var myGroupData =
+            [{
+                id: "Food",
+                value: "Food",
+                text: "Food",
+                checked: true,
+                enable: true,
+                cssClass: "demo-class",
+                items: [
+                    {
+                        id: "Meet",
+                        value: "Meet",
+                        text: "Meet",
+                        checked: true,
+                        enable: true,
+                        items: [{
+                            id: "Beef",
+                            value: "Beef",
+                            text: "Beef",
+                            checked: true,
+                            enable: true,
+                        }, {
+                            id: "Pork",
+                            value: "Pork",
+                            text: "Pork",
+                            checked: true,
+                            enable: true,
+                        }, {
+                            id: "Chicken",
+                            value: "Chicken",
+                            text: "Chicken",
+                            checked: true,
+                            enable: true,
+                        }]
+                    },
+                    {
+                        id: "Fruit",
+                        value: "Fruit",
+                        text: "Fruit",
+                        checked: true,
+                        enable: true,
+                        items: [{
+                            id: "Red",
+                            value: "Red",
+                            text: "Red",
+                            checked: true,
+                            enable: true,
+                            items: [{
+                                id: "Cherry",
+                                value: "Cherry",
+                                text: "Cherry",
+                                checked: true,
+                                enable: false,
+                            }, {
+                                id: "Strawberry",
+                                value: "Strawberry",
+                                text: "Strawberry",
+                                checked: true,
+                                enable: true,
+                            }, {
+                                id: "Pineapple",
+                                value: "Pineapple",
+                                text: "Pineapple",
+                                checked: true,
+                                enable: true,
+                            }]
+                        }, {
+                            id: "Yellow",
+                            value: "Yellow",
+                            text: "Yellow",
+                            checked: true,
+                            enable: true,
+                            show: false,
+                            items: [{
+                                id: "Banana",
+                                value: "Banana",
+                                text: "Banana",
+                                checked: true,
+                                enable: true,
+                            }, {
+                                id: "Pear",
+                                value: "Pear",
+                                text: "Pear",
+                                checked: true,
+                                enable: true,
+                            }]
+                        }]
+                    },
+                    {
+                        id: "Vegetable",
+                        value: "Vegetable",
+                        text: "Vegetable",
+                        checked: true,
+                        enable: true,
+                        items: [{
+                            id: "Cucumber",
+                            value: "Cucumber",
+                            text: "Cucumber",
+                            checked: true,
+                            enable: true,
+                        }, {
+                            id: "Spinach",
+                            value: "Spinach",
+                            text: "Spinach",
+                            checked: true,
+                            enable: true,
+                        }, {
+                            id: "Onion",
+                            value: "Onion",
+                            text: "Onion",
+                            checked: true,
+                            enable: true,
+                        }]
+                    }
+                ]
+            }, {
+                id: "Beverage",
+                value: "Beverage",
+                text: "Beverage",
+                checked: true,
+                enable: true,
+                items: [{
+                    id: "Beer",
+                    value: "Beer",
+                    text: "Beer",
+                    checked: true,
+                    enable: true
+                }, {
+                    id: "Wine",
+                    value: "Wine",
+                    text: "Wine",
+                    checked: true,
+                    enable: true
+                }]
+            }];
+
+
+
+
+        function GroupData(dataId) {
+            var numGroup = 3;
+            var numItem = 2;
+            var arrayGroup = [];
+            for (var i = 0; i < numGroup; i++) {
+                var group = {
+                    id: "group" + dataId + i + "b",
+                    value: "Value group" + dataId + i + "b",
+                    text: "Text group" + dataId + i + "b",
+                    checked: false,
+                    enable: true,
+                    cssClass: "",
+                    items: []
+                }
+                for (var j = 0; j < numItem; j++) {
+                    var item = {
+                        id: "item" + dataId + i + j + "a",
+                        value: "Value " + dataId + i + j + "a",
+                        text: "Text " + dataId + i + j + "a",
+                        checked: i == 0 && j != 0,
+                        enable: i > 0 || j == 0,
+                        cssClass: "demoCssClass",
+                        show: j != 1,
+                        items: []
+                    };
+                    for (var m = 0; m < i; m++) {
+                        var subitem = {
+                            id: "item" + dataId + i + j + m + "a",
+                            value: "Value " + dataId + i + j + m + "a",
+                            text: "Text " + dataId + i + j + m + "a",
+                            checked: false,
+                            enable: true,
+                            cssClass: "demoCssClass",
+                            items: []
+                        };
+
+                        for (var l = 0; l < 2; l++) {
+                            var subSubitem = {
+                                id: "item" + dataId + i + j + m + l + "a",
+                                value: "Value " + dataId + i + j + m + l + "a",
+                                text: "Text " + dataId + i + j + m + l + "a",
+                                checked: false,
+                                enable: true,
+                                cssClass: "demoCssClass"
+                            };
+                            subitem.items.push(subSubitem);
+                        }
+
+                        item.items.push(subitem);
+                    }
+                    group.items.push(item);
+                }
+                arrayGroup.push(group);
+            }
+
+            return arrayGroup;
+        }
+
+        $(document).ready(function () {
+            var groupData = GroupData('1');
+            $("#demoMultiselect").fanexMultiSelect({
+                listData: myGroupData
+            });
+
+            $('#defaultOptionMultiselect').fanexMultiSelect({
+                showHeader: false,
+                showFooter: true,
+                showTooltip: false,
+                maxHeight: 500,
+                minWidth: 250,
+                checkAllText: 'Check All Item',
+                noItemText: 'No item found.',
+                updateResult: 'Update Result Table',
+                noneSelectedText: 'Select options !',
+                selectedText: '# selected',
+                tooltipNoItem: 'There is no selected item.',
+                position: 'top', /* top|middle|bottom */
+                fadeSpeed: 500,
+                disabled: false,
+                state: 'open',
+                isCheckAll: true,
+                listData: GroupData('2'),
+                useCustomCheckAllText: true,
+                customCheckAllText: 'All Checked',
+                showParentSelectedText: false,
+                onLeave: function () {
+                    window.console.log('on leave');
+                },
+                onCheck: function () {
+                    window.console.log('on check');
+                }, /* when an individual checkbox is clicked */
+                onOpen: function () {
+                    window.console.log('on open');
+                }, /* when the select menu is opened */
+                onCheckAll: function () {
+                    window.console.log('on check all');
+                }, /* when the check all link is clicked */
+                onFooterButtonClick: function () {
+                    window.console.log('on footer click');
+                }
+            });
+
+            $("#demoOneLevel").fanexMultiSelect({
+                listData: myListData
+            });
+
+            $('#getCheckedItems').click(function () {
+                alert($('#defaultOptionMultiselect').fanexMultiSelect('getItems', true).join(','));
+            });
+
+            $('#getUnCheckItems').click(function () {
+                alert($('#defaultOptionMultiselect').fanexMultiSelect('getItems', false).join(','));
+            });
+
+            $('#setCheckAll').click(function () {
+                $('#defaultOptionMultiselect').fanexMultiSelect('setCheckAll', true);
+            });
+
+            $('#setUnCheckAll').click(function () {
+                $('#defaultOptionMultiselect').fanexMultiSelect('setCheckAll', false);
+            });
+
+            dp.SyntaxHighlighter.HighlightAll('code');
+        });
+
+    </script>
+</head>
+<body>
+    <h3 style="text-align: center;">Fanex Multiple Select Demo Page</h3>
+    <table class="demo-table">
+        <thead>
+            <tr>
+                <th colspan="2">Demo
+                </th>
+                <th style="width: 60%;">Code
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="2" align="center">
+                    <select id="demoOneLevel">
+                    </select>
+                </td>
+                <td>
+                    <pre name="code" class="groovy">
+                        $("#demoOneLevel").fanexMultiSelect({
+                            listData: myListData,
+                        });
+                </pre>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <select id="demoMultiselect">
+                    </select>
+                </td>
+                <td>
+                    <pre name="code" class="groovy">
+                        $("#demoMultiselect").fanexMultiSelect({
+                            listData: myGroupData
+                        });
+                </pre>
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <select id="defaultOptionMultiselect">
+                    </select>
+                </td>
+                <td align="center">
+                    <input type="button" id="getCheckedItems" value="Get Checked Items" />
+                    <br />
+                    <br />
+                    <input type="button" id="getUnCheckItems" value="Get UnCheck Items" />
+                    <br />
+                    <br />
+                    <input type="button" id="setCheckAll" value="Set Check All" />
+                    <br />
+                    <br />
+                    <input type="button" id="setUnCheckAll" value="Set UnCheck All" />
+                </td>
+                <td>
+                    <pre name="code" class="groovy">
+                    $('#defaultOptionMultiselect').fanexMultiSelect({
+                        showHeader: false,
+                        showFooter: true,
+                        showTooltip: false,
+                        maxHeight: 500, 
+                        minWidth: 250,
+                        checkAllText: 'Check All Item',
+                        noItemText: 'No item found.',
+                        updateResult: 'Update Result Table',
+                        noneSelectedText: 'Select options !',
+                        selectedText: '# selected',
+                        tooltipNoItem: 'There is no selected item.',
+                        position: 'top', /* top|middle|bottom */
+                        fadeSpeed: 500,
+                        disabled: false,
+                        state: 'open',
+                        isCheckAll: true,
+                        listData: GroupData('2'),
+                        useCustomCheckAllText: true,
+                        customCheckAllText: 'All Checked',
+                        showParentSelectedText: false,
+                        onLeave: function () {
+                            window.console.log('on leave');
+                        },
+                        onCheck: function () {
+                            window.console.log('on check');
+                        }, /* when an individual checkbox is clicked */
+                        onOpen: function () {
+                            window.console.log('on open');
+                        }, /* when the select menu is opened */
+                        onCheckAll: function () {
+                            window.console.log('on check all');
+                        }, /* when the check all link is clicked */
+                        onUpdateResult: function () { }
+                    });
+                </pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

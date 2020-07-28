@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<style>
+@IMPORT url("/ump/ui/dtGrid/dependents/bootstrap/css/bootstrap.min.css");
+@IMPORT url("/ump/ui/dtGrid/dependents/fontAwesome/css/font-awesome.min.css");
+@IMPORT url("/ump/ui/dtGrid/jquery.dtGrid.css");
+@IMPORT url("/ump/ui/dtGrid/dependents/datePicker/skin/WdatePicker.css");
+@IMPORT url("/ump/ui/dtGrid/dependents/datePicker/skin/default/datepicker.css");
+</style>
+	<script type="text/javascript"
+		src="/ump/js/nineclient/vocreport/nineclient.js">
+		//---
+	</script>
+	<div class="grid">
+		<FORM id="queryForm">
+			<DIV class="row">
+				<div class="span3">
+				<label>平台名称：</label>
+					<SELECT id="channelName" name="channelName"  class="publicSize"
+						onchange="selectChannel(this.value,'shopName')">
+						<OPTION value="" selected="selected">请选择</OPTION>
+						<c:forEach items="${channels}" var="item">
+							<OPTION value="${item.id}">${item.channelName}</OPTION>
+						</c:forEach>
+					</SELECT>
+				</div>
+				<div class="span3">
+				<LABEL>店铺名称：</LABEL>
+					<SELECT id="shopName" name="shopName" class="publicSize" onchange="selectShop(this.value,'brandName')">
+						<OPTION value="" selected="selected">请选择</OPTION>
+					</SELECT>
+				</div>
+				<div class="span3">
+				<LABEL>品牌名称：</LABEL>
+					<SELECT id="brandName" name="brandName" class="publicSize"
+						onchange="selectBrand(this.value,'skuName');">
+						<OPTION value="-1" selected="selected">请选择</OPTION>
+					</SELECT>
+				</div>
+				<div class="span3">
+				<LABEL>SKU名称：</LABEL>
+					<SELECT id="skuName" name="skuName" class="publicSize">
+						<OPTION value="-1">请选择</OPTION>
+					</SELECT>
+				</div>
+			</DIV>
+			<DIV class="row">
+				<div class="span3">
+				<LABEL>评论类型：</LABEL>
+					<SELECT id="commentTypes" name="commentTypes" class="publicSize">
+						<OPTION value="-1">请选择</OPTION>
+						<OPTION value="好评">好评</OPTION>
+						<OPTION value="中评">中评</OPTION>
+						<OPTION value="差评">差评</OPTION>
+					</SELECT>
+				</div>
+			
+			</DIV>
+			<DIV class="row">
+				<div class="span3">
+				<LABEL>时间：</LABEL>
+					<input type="text" name="startTimeStr"
+						class="publicSize" value="" id="startTimeStr"
+						onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+				</div>
+				<div class="span3">
+				<LABEL>至</LABEL>
+					<input type="text" name="endTimeStr"
+						class="publicSize" value="" id="endTimeStr"
+						onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+				</div>
+			</DIV>
+			<DIV class="row">
+			<DIV style="margin-left: 20px;" class="span6">
+					<input type="button" class="info" onclick="queryDataList();" value="查 询" />
+					<input type="button" class="warning" onclick="exportExcel();" value="导 出" />
+			</DIV>
+			</DIV>
+		</FORM>
+	</div>
+	<div id="content" class="grid">
+		<div class="row">
+		<div id="container" class="span7"
+			style="width: 60%; height: 300px; margin: 0 auto;">Loading...</div>
+		<div id="containerPie"  class="span5"
+			style="width: 40%; height: 300px; margin: 0 auto;float: left;">Loading...</div>
+		</div>
+	</div>
+
+	<style>
+	
+	
+	.publicSize{
+	width: 135px;
+	height: 28px;
+	border:1px solid;
+	border-color:#e4e4e4;
+	}
+.metro .table th {
+height: 30px;
+line-height: 20px;
+padding-left: 10px;
+padding-right: 10px;
+font-size: 12px;
+background-color:#f8f8f8;
+border-bottom: 1px #e5e5e5 solid;
+}
+ .metro .table td{
+ background-color:white;
+ height: 30px;
+line-height: 20px;
+padding-left: 10px;
+padding-right: 10px;
+font-size: 12px;
+text-align:left;
+border-bottom: 1px #e5e5e5 solid;
+}
+
+input {
+	width: 100%;
+}
+
+select {
+	width: 100%;
+}
+
+.metro label {
+display: block;
+margin: 5px 0;
+font-weight:normal;
+font-size:12px;
+text-align: right;
+}
+</style>
+	<SCRIPT type="text/javascript">
+		<![CDATA[
+		$(document).ready(function() {
+			queryData();
+			queryDataList();
+		});
+		//定义图表	
+		var option = {
+			      chart: {
+			          
+			            	renderTo:'container'
+			        },
+			    exporting: { enabled:false },
+		        title: {
+		            text: '好中差分布趋势',
+		            x: -20 //center
+		        },
+		        subtitle: {
+		            text: '',
+		            x: -20
+		        },
+		        xAxis: {
+		        	labels: {
+		            rotation:-45,
+		            step:3
+		        },
+		            categories:[1,2,3,4,5]
+		        },
+		        yAxis: {
+		            title: {
+		                text: '次数'
+		            },
+		            plotLines: [{
+		                value: 0,
+		                width: 1,
+		                color: '#808080'
+		            }]
+		        },
+		        
+		        legend: {
+		            layout: 'vertical',
+		            align: 'right',
+		            verticalAlign: 'middle',
+		            borderWidth: 0
+		        },
+		        series: [
+		                 {
+		            name: '好评',
+		            data: []
+		        },{
+		            name: '中评',
+		            data: []
+		        },{
+		            name: '差评',
+		            data: []
+		        }]
+		    };
+		
+		/**
+		 *包装查询条件
+		 */
+		function createQueryParam() {
+			var parmam = {
+					channelName:$("#channelName").find("option:selected").text(),
+					shopName:$("#shopName").find("option:selected").text(),
+					brandName:$("#brandName").find("option:selected").text(),
+					skuName:$("#skuName").find("option:selected").text(),
+					commentTypes:$("#commentTypes").find("option:selected").text(),
+					dateDayStart:$("#startTimeStr").val(),
+					dateDayEnd:$("#endTimeStr").val()
+			};
+			return parmam;
+		}
+
+		
+		function exportExcel(){
+			var url = "/ump/labelratioreport/exportExecl";
+			var parmam = createQueryParam();
+			
+			window.location.href = url+"?";
+		}
+		
+		/**
+		 *查询折线图
+		 */
+		function queryData() {
+			var parmam = createQueryParam();
+		//	 饼图 /ump/labelratioreport/queryDataPieChart",
+			// url="/ump/labelratioreport/queryDataBarChart";
+			// dataAjax(url, parmam, null, null, createTrend, null);
+			
+           $.ajax({
+				type : "post",
+				url : "/ump/labelratioreport/queryDataBarChart",
+				data : parmam,
+				error:function(msg){
+				},
+				success : function(data) {
+					option.xAxis.categories = [];
+					option.series[0].data = [];
+					option.series[1].data = [];
+					option.series[2].data = [];	
+				if(data != ""){
+					//转为数组
+					 objs = eval('('+data+')');
+					
+		if(objs.length > 0){
+			var commentType=$("#commentTypes").val();
+			if(dateType == '好评'){
+				option.xAxis.labels.step = 1;
+				for(var i = 0;i < objs.length;i++){
+					 option.series[0].data.push(objs[i].commentGood);
+					 option.series[1].data.push(objs[i].commentBetter);
+					 option.series[2].data.push(objs[i].commentBad);
+				     option.xAxis.categories.push(objs[i].dateDayStr);
+				}
+			}if(dateType == '中评'){
+				for(var i = 0;i < objs.length;i++){
+				 option.series[0].data.push(objs[i].commentGood);
+				 option.series[1].data.push(objs[i].commentBetter);
+				 option.series[2].data.push(objs[i].commentBad);
+				 
+			 option.xAxis.categories.push(objs[i].dateMonthStr);
+			}
+			}if(dateType == '差评'){
+				option.xAxis.labels.step = 1;
+				for(var i = 0;i < objs.length;i++){
+					 option.series[0].data.push(objs[i].commentGood);
+					 option.series[1].data.push(objs[i].commentBetter);
+					 option.series[2].data.push(objs[i].commentBad);
+				     option.xAxis.categories.push(objs[i].dateYearStr);
+				}
+				}
+			
+		}
+		}
+			var chartBar = new Highcharts.Chart(option);				
+				}
+			});
+           
+		}
+		
+		
+		function createTrend(ajaxdata){
+			var data = eval("(" + ajaxdata + ")");
+			var chart =initHlineChart("标签占比趋势分析", "标签占比", "单位(个)", data)
+			$('#container').highcharts(chart);
+		}
+
+		/**
+		 * 查询所有数据
+		 */
+		function queryDataList(page) {
+			queryData();
+			
+
+		}
+		
+
+		
+		function exportExcel(){
+			var param = createQueryParam();
+			var url = "/ump/labelratioreport/exportExecl";
+			window.location.href = url+"?";
+		}
+		
+		function selectDefaut(id,elementId){
+			if(id==-1||id==''){
+				$("#"+elementId).val(id);
+			}
+		}
+		
+		function selectBrand(id, elementId) {
+			selectDefaut(id,elementId); 
+			var url = "/ump/vocskus/querySkuGoodsList";
+			var param = {};
+			param.vocBrandId = id;
+			dataAjax(url, param, null, null, createSelect, elementId);
+		}
+		function selectChannel(id, elementId) {
+			
+			selectDefaut(id,elementId);
+			var url = "/ump/vocshops/queryVocShops";
+			var param = {};
+			param.umpChannelId = id;
+			dataAjax(url, param, null, null, createSelect, elementId);
+		}
+		
+		function selectShop(id, elementId) {
+			selectDefaut(id,elementId);
+			var url = "/ump/vocshops/queryVocBrands";
+			var param = {};
+			if(id==''){
+				id=-1;
+			}
+			param.shopId = id;
+			dataAjax(url, param, null, null, createSelect, elementId);
+		}
+		
+		function selectBrand(id, elementId) {
+			selectDefaut(id,elementId);
+			var url = "/ump/vocskus/querySkuGoodsList";
+			var param = {};
+			param.vocBrandId = id;
+			dataAjax(url, param, null, null, createSelect, elementId);
+		}
+		
+		]]>
+	</SCRIPT>
+		<SCRIPT type="text/javascript">
+	//定义表格
+	var z = 0;
+	var dtGridColumns_2_1_4 = [
+	{
+		id:'id',
+		title:'排行', 
+		type:'string', 
+		headerStyle : 'background:white;text-align:center;',
+		fastQuery:true, 
+		fastQueryType:'range',
+		resolution : function(record, value) {
+			return value;
+		} 
+		},{
+		id : 'commentTagName',
+		title : '标签名称',
+		type : 'string',
+		fastQuery : true,
+		fastQueryType : 'eq',
+		columnClass : 'text-center',
+		headerStyle : 'background:white;text-align:center;'
+	}, {
+		id : 'increaseCount',
+		title : '评论数量',
+		type : 'string',
+		fastQuery : true,
+		fastQueryType : 'eq',
+		columnClass : 'text-center',
+		headerStyle : 'background:white;text-align:center;'
+	}];
+	 dtGridOption_2_1_4 = {
+			ajaxLoad : true,
+			params:{
+				skuName :'0'	
+			},
+			
+			loadURL : '/ump/productproblemrandlist/queryDtGrid',
+			columns : dtGridColumns_2_1_4,
+			gridContainer : 'dtGridContainer_2_1_1',
+			tools : '',
+			pageSize : 10
+		};
+	
+		var grid_2_1_4 = $.fn.DtGrid.init(dtGridOption_2_1_4);
+		$(function() {
+			grid_2_1_4.load();
+			
+		});
+
+	</SCRIPT>
+	  	<div id="dtGridContainer_2_1_1" class="dt-grid-container">
+		<DIV>
+			<SPAN></SPAN>
+		</DIV>
+	</div>
+	
+</div>

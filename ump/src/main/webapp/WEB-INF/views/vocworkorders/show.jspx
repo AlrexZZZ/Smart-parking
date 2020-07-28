@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_VocWorkOrder" object="${vocworkorder}" path="/vocworkorders" z="FP8Pe+0/KkuFgKDCRuvubAG7qVE=">
+        <field:display field="updateReason" id="s_com_nineclient_model_VocWorkOrder_updateReason" object="${vocworkorder}" z="hvjhERysmPqY+yT0rsRhUlVrYxg="/>
+        <field:display date="true" dateTimePattern="${vocWorkOrder_createtime_date_format}" field="createTime" id="s_com_nineclient_model_VocWorkOrder_createTime" object="${vocworkorder}" z="TY+Ht4qZ2NdrPuIDFZFuOrMMZ8U="/>
+    </page:show>
+</div>

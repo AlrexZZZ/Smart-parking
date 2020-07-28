@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_UmpOperator" object="${umpoperator}" path="/umpoperators" z="/kuli/VM3mb9GY3Zxk98kxNLx18=">
+        <field:display field="email" id="s_com_nineclient_model_umpoperator_email" object="${umpoperator}" z="5MtfsyZ665lmt3w+F0m4PorS1qA="/>
+        <field:display field="operatorName" id="s_com_nineclient_model_umpoperator_operatorName" object="${umpoperator}" z="4JriRzOBgQyru92YFkacc0Gycgo="/>
+        <field:display field="account" id="s_com_nineclient_model_umpoperator_account" object="${umpoperator}" z="m07E6GQscmTkN6dIF9wChdo7JTA="/>
+        <field:display field="password" id="s_com_nineclient_model_umpoperator_password" object="${umpoperator}" z="+eAlgLF7vEylXeVtsEfKPDvTp4s="/>
+        <field:display field="telephone" id="s_com_nineclient_model_umpoperator_telephone" object="${umpoperator}" z="x0eE1w2lJG7eNaFcD2az8X9pKNA="/>
+        <field:display field="mobile" id="s_com_nineclient_model_umpoperator_mobile" object="${umpoperator}" z="0Ba+gJPg9+1jMtmWaFmi2PXYwrM="/>
+        <field:display field="active" id="s_com_nineclient_model_umpoperator_active" object="${umpoperator}" z="MAZdaZUWarjEVReY7PNqPlIkc4o="/>
+        <field:display field="autoAllocate" id="s_com_nineclient_model_umpoperator_autoAllocate" object="${umpoperator}" z="wP2aiI8T7r50x4AeGEPYdcqfcJs="/>
+        <field:display field="urole" id="s_com_nineclient_model_umpoperator_urole" object="${umpoperator}" z="r5WAYtr5ShilAUeLElD+MijXfMU="/>
+        <field:display field="company" id="s_com_nineclient_model_umpoperator_company" object="${umpoperator}" z="J7/timdpdOhunT/RD2RHxBEnLnU="/>
+    </page:show>
+</div>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:spring="http://www.springframework.org/tags" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<SCRIPT type="text/javascript">
+		//用户协议
+		var htmlVar = "";
+		function openDialog() {
+			if ($('#Dialog').html()) {
+				htmlVar = $('#Dialog').html();
+			} else {
+				$('#Dialog').html(htmlVar);
+			}
+			$.Dialog({
+				overlay : true,
+				shadow : true,
+				flat : true,
+				icon : '<img src="/ump/resources/images/editor.png"/>',
+				title : '重新填写',
+				content : '',
+				padding : 20,
+				height : 100,
+				width : 100,
+				onShow : function(_dialog) {
+					$('#Dialog').html("");
+					$.Dialog.content(htmlVar);
+					$.Metro.initInputs();
+				}
+			});
+
+		}
+
+		function resetEmail(id) {
+			var reEmail = $("#reEmail").val();
+			$
+					.post(
+							"/ump/checkEmail",
+							{
+								"email" : reEmail,
+							},
+							function(data) {
+								if (reEmail.length != 0) {
+									if (data == 0) {
+										alert("Email已存在，重新输入公司Email");
+									} else {
+										if (reEmail.length != 0) {
+											var reg = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+											if (!reg.test(reEmail)) {
+												alert("请输 入正确的邮箱");
+											} else {
+												location.href = "/ump/activationMail?id="+id+"&#38;email="+reEmail+"&#38;type=1";
+											}
+										} else {
+											alert("请输 入正确的邮箱");
+										}
+									}
+								} else {
+									$("#hint4").html("* 请输入正确的邮箱");
+								}
+							});
+
+		}
+		function reSend(id,email,type) {
+			$.post("/ump/activationMail",{
+				id:id,email:email,type:type
+			},function(data){
+				alert("发送成功，请登录邮箱激活");
+			});
+		}
+	</SCRIPT>
+	<div style="margin-left: 20%; margin-right: 20%;" class="stepper">
+		<ul>
+			<li id="li1" style="left: 0px;"></li>
+			<li id="li2" style="left: 50%;"></li>
+			<li id="li3" style="left: 100%;" class="current"></li>
+		</ul>
+	</div>
+	<div style="margin-left: 20%; margin-right: 17%; margin-top: -20px;">
+		<span style="margin-left: 0px;">基本信息</span><span
+			style="margin-left: 41%;">产品配置</span><span style="margin-left: 42%;">账号激活</span>
+	</div>
+	<div
+		style="width: 600px; margin: 0px auto; clear: both; overflow: hidden; display: block; margin-bottom: 20px">
+		<div style="width: 100px; height: 100px; float: left">
+			<img src="/ump/images/success.png" alt="" />
+		</div>
+		<DIV
+			style="width: 490px; height: auto; float: right; margin-top: 20px;">
+			<div class="text">
+				<p>
+					<span>账号激活</span>
+				</p>
+			</div>
+			<div class="text">
+				<p>
+					<span>感谢注册！确认邮件已发送至你的注册邮箱 :<font color="blue">${email}</font>
+					</span>
+				</p>
+				<p>
+					<span>请进入邮箱查看邮件，并激活帐号。</span>
+				</p>
+			</div>
+		</DIV>
+	</div>
+	<div
+		style="width: 600px; clear: both; overflow: hide; padding-top: 20px; border-top: 1px solid #e4e4e4; line-height: 30px; margin: 0px auto; margin-top: 30px;">
+		<p>
+			<span>没有收到邮件？</span>
+		</p>
+		<p>
+			<span>1、请检查邮箱地址是否正确，你可以返回 <a href="#" onclick="openDialog();"
+				style="color: blue;">重新填写</a>
+			</span>
+		</p>
+		<p>
+			<span>2、检查你的邮件垃圾箱</span>
+		</p>
+		<p>
+			<span>3、若仍未收到确认，请尝试 <a href="#" style="color: blue;"
+				onclick="reSend(${id},'${email}',2);">重新发送</a>
+			</span>
+		</p>
+	</div>
+	<div id="Dialog" style="display: none;">
+		<div class="grid" style="width: 350px; margin-bottom: 0px;">
+			<div class="row" style="width: 300px; margin: 0px auto;">
+				<div class="input-control text span4"
+					style="height: 50px; width: 300px; margin: 0px auto; text-align: center;">
+					Email: <input type="text" id="reEmail" name="reEmail"
+						value="${email}" />
+				</div>
+				<div class="row">
+					<div class="span4"
+						style="width: 300px; margin: 0px auto; text-align: center;">
+						<a class="button info" onclick="resetEmail(${id});">确定</a>
+						<a class="button warning" onclick="javascript:$.Dialog.close();">关闭</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

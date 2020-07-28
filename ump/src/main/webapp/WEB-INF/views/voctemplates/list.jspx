@@ -1,0 +1,924 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <style>
+   .mySearch {
+	top: 30%;
+	left: 40%;
+	position: absolute;
+	height: auto;
+	margin: 0px auto;
+	clear: both;
+	background: #FFF;
+	padding: 20px;
+	margin-top: 10px;
+	border: 1px solid #CCC;
+	z-index: 1002;
+   }
+   
+	.search_bt {
+		width: 180px;
+		margin: 0px auto;
+		
+	}
+	
+	.search_bt  input{ widt:78px;height:28px; line-height: 28px;}
+	.ok{background: #fa6800}
+	.cl{ backgroud:#069dd5;margin-left:30px;}
+	
+	select {
+	width: 100%;
+	}
+	
+	
+
+	</style>
+    <SCRIPT type="text/javascript">
+    $(document).ready(function() {
+    	queryTemplate();
+	});
+   
+    
+    /**
+     *查询模板
+     */
+    function queryTemplate(pageNo) {
+		var start = 0;
+		var limit = 10;
+		if (pageNo > 0) {
+			start = (pageNo - 1) * limit;
+		}
+		var brandIds = $("#queryBrandId").val();
+		var commentLevels = $("#queryCommentLevelId").val();
+		
+		var parmam = {
+			start : start,
+			limit : limit,
+			brandIds:brandIds,
+			commentLevels:commentLevels
+		};
+
+		$.ajax({
+			url : "/ump/voctemplates/getQueryTemplate",
+			type : "POST",
+			data : parmam,
+			async:true,
+			error : function(msg) {
+				alert("error " + msg);
+			},
+			success : function(text) {
+				 var jsonStr = eval("("+text+")");	
+				 var datas = jsonStr.data;
+				 var turnPage = '';
+				 if(datas.length > 0){
+					 turnPage += ' <TFOOT>';
+					 turnPage += '	<tr>';
+					 turnPage += '	<td colspan="20">';
+					 
+					 if(jsonStr.page > 1){
+					    turnPage += ' <a class="default" href="#" onclick="queryTemplate('+(jsonStr.page-1)+')">上一页</a>'; 
+					 }
+							
+					 turnPage += ' <span>第'+jsonStr.page+'页</span> <span>共'+jsonStr.maxPages+'页</span><span>每页10条</span>';
+					 
+					  if(jsonStr.page != jsonStr.maxPages){
+						 turnPage += '<a class="default" href="#" onclick="queryTemplate('+(jsonStr.page+1)+')" style="cursor: hand; cursor: pointer;">下一页</a>';
+					  }
+					
+					 
+				     turnPage += '</td>';
+					 turnPage += '</tr>';
+					 turnPage += '</TFOOT>';
+				 }
+				 var addTitle = "\'添加模板\'";
+				 var tableStr = '<table width="450px" class="table striped hovered">';
+				 tableStr += '<tr> <th>序号</th> <th>操作</th>  <th>品牌名</th> <th>评论类型</th> <th>评论子类</th> <th>标题</th> <th>回复内容</th></tr>';
+				 
+				 $.each(datas,function(id,data) {
+					 var commentLevel = "\'"+data.commentLevel+"\'";
+					 var title = "\'"+data.title+"\'";
+					 var content = "\'"+data.content+"\'";
+					 tableStr += '<tr> <td>'+data.id+'</td> <td> <a href="#"><image src="/ump/resources/images/update.png" onclick="showEditDialog('+data.brand.id+','+commentLevel+','+data.vocWordCategory.id+','+title+','+content+','+data.id+')"/></a><a href="#" onclick="deleteTemplate('+data.id+')"><img title="删除" src="/ump/resources/images/delete.png"/></a></td> <td>'+data.brand.brandName+'</td> <td>'+data.commentLevel+'</td> <td>'+data.vocWordCategory.name+'</td> <td>'+data.title+'</td> <td>'+data.content+'</td></tr>';
+			     }); 
+				 var searchDivId = "\'searchDivId\'";
+				 var fade = "\'fade\'";
+				// tableStr +='<tr><td><input type="button" value="添加" onclick="showAddDialog('+addTitle+')"/></td> <td colspan="8"><input type="button" value="查询" onclick="searchPage('+searchDivId+','+fade+')" /></td></tr>'
+			     tableStr += turnPage;
+				 tableStr += '</table>';
+				 $("#_page_1").html(tableStr); 
+			}
+		});
+	}
+    
+    
+    /**
+     * 添加模板
+     */
+    function addTemplate(){
+		 var commentLevel = $("#commentLevelId").val();
+		 var brandId = $("#enditBrandId").val();
+		 var wordCategoryId = $("#wordCategoryId").val();
+		 var title = $("#titleId").val();
+		 var content = $("#contentId").val();
+		 var id=$("#templateId").val();
+		 
+		 
+		 if(commentLevel == ""){
+			 alert("请选择评论类别");
+			 return;
+		 }
+		 
+		 if(brandId == ""){
+			 alert("请选择品牌");
+			 return;
+		 }
+		 
+		 if(wordCategoryId == ""){
+			 alert("请选择评论子类");
+			 return;
+		 }
+		 
+		 if(title == ""){
+			 alert("请输入标题");
+			 return;
+		 }
+		 
+		 if(content == ""){
+			 alert("请输入内容");
+			 return;
+		 }
+		 
+		 var parmam = {
+				       commentLevel:commentLevel,
+				       brandId:brandId,
+				       wordCategoryId:wordCategoryId,
+				       title:title,
+				       content:content,
+				       id:id
+		           };
+		 
+		 $.ajax({
+				url : "/ump/voctemplates/addTemplate",
+				type : "POST",
+				data : parmam,
+				async:true,
+				error : function(msg) {
+					alert("error...");
+				},
+				success : function(text) {
+					var result = eval("("+text+")");
+					if(result.success){
+						alert("操作成功!");
+						queryTemplate(1);
+						$.Dialog.close();
+						
+					}else{
+						alert("操作失败!");
+					}
+					
+				}
+			}); 	
+    }
+    
+    
+     var html = "";
+	 function showAddDialog(title) {
+			$.Dialog({
+				overlay : true,
+				shadow : true,
+				flat : true,
+				icon : '<img src="images/excel2013icon.png"/>',
+				title : title,
+				content : '',
+				padding : 20,
+				height : 300,
+				width : 500,
+				onShow : function(_dialog) {
+					if(html==""){
+					  html = $("#editTemplateDialogId").html();
+					  $("#editTemplateDialogId").remove();
+					}
+					$.Dialog.content(html);
+					$.Metro.initInputs();
+				}
+			});
+	}
+	
+  /**
+   *显示编辑页面
+   */	 
+ function showEditDialog(brandId,commentLevel,wordCategoryId,title,content,id){
+	 showAddDialog("编辑模板");
+	 //设置默认值
+	 $("#commentLevelId").val(commentLevel);
+	 $("#enditBrandId").val(brandId);
+	 $("#wordCategoryId").val(wordCategoryId);
+	 $("#titleId").val(title);
+	 $("#contentId").val(content);
+	 $("#templateId").val(id);
+	 $("#commentLevelId").find("option").each(function(i){    
+		 if($(this).text() == commentLevel){
+			$("#commentLevelId").val($(this).val());
+			getWordCategoryByCommentLevelId("wordCategoryId","commentLevelId");
+			$("#wordCategoryId").val(wordCategoryId);
+		  }
+	 });  
+	 
+	 
+ }	 
+	 
+  
+ 
+  
+	 
+	 /**
+	  *根据商品分类，级联查询子分类和品牌
+	  */
+	 function createSelectEle(parentBussinessTypeId,bussinessTypeId,brandId){
+		 getBussinessTypeByParentId(parentBussinessTypeId, bussinessTypeId);
+		 getBrandsByParentId(parentBussinessTypeId, brandId);
+	 }
+	 
+	 /**
+	  *根据品牌查询模板标题
+	  */
+	 function createTemplateByBrandId(brandId,templateTitleId){
+		 var brandId = $("#"+brandId).val();
+			var param = {
+					start:0,
+					limit:1000,
+					brandIds : brandId
+			};
+			$.ajax({
+				url : "/ump/voctemplates/getQueryTemplate",
+				type : "POST",
+				data : param,
+				error : function(msg) {
+					alert("请求错误! ");
+				},
+				success : function(text) {
+					var jsonStr = eval("(" + text + ")");
+					var data = jsonStr.data;
+
+					if (data.length > 0) {
+						$("#"+templateTitleId).empty();
+						var defaultId = "";
+						$("#"+templateTitleId).append(
+								"<option value="+defaultId+" >请选择</option>");
+						$.each(data,
+								function(id, template) {
+									$("#"+templateTitleId).append(
+											"<option value="+template.id+">"
+													+ template.title
+													+ "</option>");
+								});
+					}
+
+				}
+			}); 
+	 }
+	 
+	 function getBussinessTypeByParentId(parentBussinessTypeId,bussinessTypeId) {
+			var parentBussinessTypeId = $("#"+parentBussinessTypeId).val();
+			var param = {
+				id : parentBussinessTypeId
+			};
+			$.ajax({
+				url : "/ump/voccommentlevelrules/getBussinessTypeByParentId",
+				type : "POST",
+				data : param,
+				error : function(msg) {
+					alert("请求错误! ");
+				},
+				success : function(text) {
+					var jsonStr = eval("(" + text + ")");
+
+					if (jsonStr.length > 0) {
+						$("#"+bussinessTypeId).empty();
+						var defaultId = "";
+						$("#"+bussinessTypeId).append(
+								"<option value="+defaultId+" >请选择</option>");
+						$.each(jsonStr,
+								function(id, bussinessType) {
+									$("#"+bussinessTypeId).append(
+											"<option value="+bussinessType.id+">"
+													+ bussinessType.name
+													+ "</option>");
+								});
+					}
+
+				}
+			});
+		}
+		
+	 
+	 /**
+	  *根据分类获取品牌
+	  */
+	 function getBrandsByParentId(parentBussinessTypeId,brandId) {
+			var parentBussinessTypeId = $("#"+parentBussinessTypeId).val();
+			var param = {
+				id : parentBussinessTypeId
+			};
+			$.ajax({
+				url : "/ump/voctemplates/getBrandByParentBussinessTypeId",
+				type : "POST",
+				data : param,
+				error : function(msg) {
+					alert("请求错误! ");
+				},
+				success : function(text) {
+					var jsonStr = eval("(" + text + ")");
+
+					if (jsonStr.length > 0) {
+						$("#"+brandId).empty();
+						var defaultId = "";
+						$("#"+brandId).append(
+								"<option value="+defaultId+" >请选择</option>");
+						$.each(jsonStr,
+								function(id, brand) {
+									$("#"+brandId).append(
+											"<option value="+brand.id+">"
+													+ brand.name
+													+ "</option>");
+								});
+					}
+
+				}
+			});
+		}
+    
+	 /**
+	  *根据好中差获取词库里对应好中差的分类
+	  */
+	 function getWordCategoryByCommentLevelId(wordCategoryId,commentLevelId){
+	    var wordCategoryCommentLevelId = parseInt($("#"+commentLevelId).val())+2;
+	    var param = {
+				id : wordCategoryCommentLevelId
+			};
+			$.ajax({
+				url : "/ump/voctemplates/getWordCategoryById",
+				type : "POST",
+				data : param,
+				async:false,
+				error : function(msg) {
+					alert("请求错误! ");
+				},
+				success : function(text) {
+					var jsonStr = eval("(" + text + ")");
+
+					if (jsonStr.length > 0) {
+						$("#"+wordCategoryId).empty();
+						var defaultId = "";
+						$("#"+wordCategoryId).append(
+								"<option value="+defaultId+" >请选择</option>");
+						$.each(jsonStr,
+								function(id, wordCategory) {
+									$("#"+wordCategoryId).append(
+											"<option value="+wordCategory.id+">"
+													+ wordCategory.name
+													+ "</option>");
+								});
+					}
+
+				}
+			});
+	   
+	 }
+	 
+    </SCRIPT>
+    
+    <SCRIPT type="text/javascript">
+    
+    /**
+     * 选择子分类
+     */
+     function selectedBussienssType(parentBussinessTypeId,bussinessTypeId){
+   	  var param = {
+   				id : parentBussinessTypeId
+   			};
+   			$.ajax({
+   				url : "/ump/voccommentlevelrules/getBussinessTypeByParentId",
+   				type : "POST",
+   				data : param,
+   				error : function(msg) {
+   					alert("请求错误! ");
+   				},
+   				success : function(text) {
+   					var jsonStr = eval("(" + text + ")");
+
+   					if (jsonStr.length > 0) {
+   						$("#editBussinessTypeId").empty();
+   						var defaultId = "";
+   						$("#editBussinessTypeId").append(
+   								"<option value="+defaultId+" >请选择</option>");
+   						$.each(jsonStr,
+   								function(id, bussinessType) {
+   									$("#editBussinessTypeId").append(
+   											"<option value="+bussinessType.id+">"
+   													+ bussinessType.name
+   													+ "</option>");
+   								});
+   						
+   						
+   						$("#editBussinessTypeId").val(bussinessTypeId);
+   					}
+
+   				}
+   			});
+   			
+   			
+     }
+     
+    /**
+    *选择品牌 
+    */
+    function selectedBrand(parentBussinessTypeId,brandId){
+    	var param = {
+				id : parentBussinessTypeId
+			};
+			$.ajax({
+				url : "/ump/voctemplates/getBrandByParentBussinessTypeId",
+				type : "POST",
+				data : param,
+				error : function(msg) {
+					alert("请求错误! ");
+				},
+				success : function(text) {
+					var jsonStr = eval("(" + text + ")");
+
+					if (jsonStr.length > 0) {
+						$("#enditBrandId").empty();
+						var defaultId = "";
+						$("#enditBrandId").append(
+								"<option value="+defaultId+" >请选择</option>");
+						$.each(jsonStr,
+								function(id, brand) {
+									$("#enditBrandId").append(
+											"<option value="+brand.id+">"
+													+ brand.name
+													+ "</option>");
+								});
+						$("#enditBrandId").val(brandId);
+					}
+
+				}
+			});
+    }
+    
+    </SCRIPT>
+    
+    <!-- 模板规则管理 -->
+    <SCRIPT type="text/javascript">
+    
+    /**
+     *查询模板规则
+     */
+    function queryTemplateRule(pageNo){
+    	var start = 0;
+		var limit = 10;
+		if (pageNo > 0) {
+			start = (pageNo - 1) * limit;
+		}
+		var brandIds = $("#queryRuleBrandId").val();
+		var commentLevels = $("#queryRuleCommentLevelId").val();
+		
+		var parmam = {
+			start : start,
+			limit : limit,
+			brandIds:brandIds,
+			commentLevels:commentLevels
+		};
+
+		$.ajax({
+			url : "/ump/voctemplates/getQueryTemplateRule",
+			type : "POST",
+			data : parmam,
+			async:true,
+			error : function(msg) {
+				alert("error " + msg);
+			},
+			success : function(text) {
+				 var jsonStr = eval("("+text+")");	
+				 var datas = jsonStr.data;
+				 var turnPage = '';
+				 if(datas.length > 0){
+					 turnPage += ' <TFOOT>';
+					 turnPage += '	<tr>';
+					 turnPage += '	<td colspan="20">';
+					 
+					 if(jsonStr.page > 1){
+					    turnPage += ' <a class="default" href="#" onclick="queryTemplateRule('+(jsonStr.page-1)+')">上一页</a>'; 
+					 }
+							
+					 turnPage += ' <span>第'+jsonStr.page+'页</span> <span>共'+jsonStr.maxPages+'页</span><span>每页10条</span>';
+					 
+					  if(jsonStr.page != jsonStr.maxPages){
+						 turnPage += '<a class="default" href="#" onclick="queryTemplateRule('+(jsonStr.page+1)+')" style="cursor: hand; cursor: pointer;">下一页</a>';
+					  }
+					
+					 
+				     turnPage += '</td>';
+					 turnPage += '</tr>';
+					 turnPage += '</TFOOT>';
+				 }
+				 var addTitle = "\'添加规则\'";
+				 var editTitle = "\'编辑规则\'";
+				 var tableStr = '<table width="450px" class="table striped bordered hovered">';
+				 tableStr += '<tr>  <td>操作</td> <td>品牌名称</td> <td>评论类型</td> <td>评论子类</td> <td>关键词</td> <td>标题</td></tr>';
+				 
+				 $.each(datas,function(id,data) {
+					 var commentLevel = "\'"+data.commentLevel+"\'";
+					 var title = "\'"+data.title+"\'";
+					 var content = "\'"+data.content+"\'";
+					 tableStr += '<tr> <td> <a href="#" onclick="showEditTemplateRule()"><image src="/ump/resources/images/update.png" /></a><a href="#" onclick="deleteTemplateRule('+data.id+')"><img title="删除" src="/ump/resources/images/delete.png"/></a></td> <td>'+data.template.brand.brandName+'</td> <td>'+data.template.commentLevel+'</td> <td>'+data.template.vocWordCategory.name+'</td> <td>'+data.name+'</td> <td>'+data.template.title+'</td></tr>';
+			     }); 
+				 var searchDivId = "\'searchRuleId\'";
+				 var fade = "\'fade\'";
+				 //tableStr +='<tr><td><input type="button" value="添加" onclick="showAddTemplateRuleDialog('+addTitle+')" /></td> <td colspan="8"><input type="button" value="查询" onclick="searchPage('+searchDivId+','+fade+')" /></td></tr>'
+			     tableStr += turnPage;
+				 tableStr += '</table>';
+				 $("#_page_2").html(tableStr); 
+			}
+		});
+    }
+    
+     var templateRuleHtml = "";
+	 function showAddTemplateRuleDialog(title) {
+			$.Dialog({
+				overlay : true,
+				shadow : true,
+				flat : true,
+				icon : '<img src="images/excel2013icon.png"/>',
+				title : title,
+				content : '',
+				padding : 20,
+				height : 300,
+				width : 500,
+				onShow : function(_dialog) {
+					if(templateRuleHtml==""){
+						templateRuleHtml = $("#editTemplateRuleDialogId").html();
+					  $("#editTemplateRuleDialogId").remove();
+					}
+					$.Dialog.content(templateRuleHtml);
+					$.Metro.initInputs();
+				}
+			});
+	}
+	 
+	
+	 /**
+	  *编辑
+	  */
+	 function showEditTemplateRule(parentBussinessTypeId,brandId,bussinessTypeId,commentLevel,wordCategoryId,name,title) {
+		 
+		 $("#editParentBussinessTypeId_").val(parentBussinessTypeId);
+		 $("#enditBrandId_").val(brandId);
+		 $("#editBussinessTypeId_").val(bussinessTypeId);
+		 $("#wordCategoryId_").val(wordCategoryId);
+		 $("#title").val(title);
+		 $("#commentLevelId").find("option").each(function(i){    
+			 if($(this).text() == commentLevel){
+				$("#commentLevelId").val($(this).val());
+				getWordCategoryByCommentLevelId("wordCategoryId_","commentLevelId_");
+				$("#wordCategoryId_").val(wordCategoryId);
+			  }
+		 });  
+		 
+		 showAddTemplateRuleDialog(title);
+			 
+	}
+	 
+	 
+	 
+	 /**
+	  *根据词库分类查询关键词
+	  */
+	 function getWordExpressionsByWordCateoryId(wordCategoryId){
+		 var param = {
+				 wordCategoryId : $("#"+wordCategoryId).val()
+				};
+				$.ajax({
+					url : "/ump/voctemplates/getWordExpressionByWordCategoryId",
+					type : "POST",
+					data : param,
+					error : function(msg) {
+						alert("请求错误! ");
+					},
+					success : function(text) {
+						var jsonStr = eval("(" + text + ")");
+
+						if (jsonStr.length > 0) {
+							$("#namesId").empty();
+							$("#selectedNamesId").empty();
+							$.each(jsonStr,function(id,data){
+								$("#namesId").append("<option value="+data.id+">"+data.name+"</option>");
+							});
+							
+						}
+
+					}
+				});
+		 
+	 }
+	 
+	 /**
+	 * 添加关键词
+	 */
+	 function addWordExpressons(){
+		 $("#namesId option:selected").each(function(){
+		   $("#selectedNamesId").append("<option value="+ $(this).val()+">"+ $(this).text()+"</option>");
+		 });
+	 }
+	 
+	 /**
+	  * 删除关键词
+	  */
+	 function removeExpressons(){
+	  $("#selectedNamesId option:selected").remove();
+	 }
+	 
+	 /**
+	 * 根据条件查询要生成规则的模板
+	 */
+	 function queryTemplateToRules(){
+		var brandId = $("#enditBrandId_").val();
+		var commentLevel = $("#commentLevelId_").val();
+		         
+		 var param = {
+				 brandId:brandId,
+				 commentLevel:commentLevel
+				};
+				$.ajax({
+					url : "/ump/voctemplates/queryTemplateToRules",
+					type : "POST",
+					data : param,
+					error : function(msg) {
+						alert("请求错误! ");
+					},
+					success : function(text) {
+						var jsonStr = eval("(" + text + ")");
+						if (jsonStr.length > 0) {
+							$("#titleId_").empty();
+							var defaultValue = "\'\'";
+							$("#titleId_").append("<option value="+defaultValue+">请选择</option>");
+							$.each(jsonStr,function(id,data){
+								$("#titleId_").append("<option value="+data.id+">"+data.name+"</option>");
+							});
+							
+						}
+
+					}
+				});
+	 }
+	 
+
+	 /**
+	 * 添加模板规则
+	 */
+	function addTemplateRule(){
+		 var templateId = $("#titleId_").val();
+		 var names =  $("#namesId option:selected").text();
+		 if("" == templateId){
+            alert("选择模板");
+			 return; 
+		 }
+		 
+		 if("" == names){
+	        alert("选择关键词");
+			return; 
+		 }
+		 
+		 
+		 var param = {
+				 templateId:templateId,
+				 names:names
+				};
+				$.ajax({
+					url : "/ump/voctemplates/addTemplateRule",
+					type : "POST",
+					data : param,
+					error : function(msg) {
+						alert("请求错误! ");
+					},
+					success : function(text) {
+						var jsonStr = eval("(" + text + ")");
+						if (jsonStr.success) {
+							alert("添加成功");
+							queryTemplateRule(1);
+							$.Dialog.close();
+							
+						}
+
+					}
+				});
+		 
+		 
+	}
+	 
+    
+	 /**
+	  * 查询条件显示
+	  */
+	 function searchPage(searchDivId,fadeId) {
+	 	  $("#"+searchDivId).toggle();
+	      $("#"+fadeId).toggle();
+		 
+
+	 }
+	 
+	 /**
+	  * 关闭所有
+	  */
+	 function closeAll(searchDivId,fadeId) {
+	      $("#"+searchDivId).toggle();
+	      $("#"+fadeId).toggle();
+	 }
+	 
+	 /**
+	 *删除模板
+	 */
+	 function deleteTemplate(id){
+		 if(confirm("确定要删除该模板?")){
+			 var param = {
+				id:id
+			  };
+					$.ajax({
+						url : "/ump/voctemplates/deleteTemplate",
+						type : "POST",
+						data : param,
+						error : function(msg) {
+							alert("请求错误! ");
+						},
+						success : function(text) {
+							var jsonStr = eval("(" + text + ")");
+							if (jsonStr.success) {
+								alert("删除成功");
+								queryTemplate();
+								$.Dialog.close();
+							}
+
+						}
+					});
+		}
+		 
+	 }
+	 
+	 
+	 /**
+	 *删除模板规则
+	 */
+	 function deleteTemplateRule(id){
+		 if(confirm("确定要删除该规则?")){
+			 var param = {
+				id:id
+			  };
+					$.ajax({
+						url : "/ump/voctemplates/deleteTemplateRule",
+						type : "POST",
+						data : param,
+						error : function(msg) {
+							alert("请求错误! ");
+						},
+						success : function(text) {
+							var jsonStr = eval("(" + text + ")");
+							if (jsonStr.success) {
+								alert("删除成功");
+								queryTemplateRule();
+								$.Dialog.close();
+							}
+
+						}
+					});
+		}
+		 
+	 }
+	 
+	 
+    </SCRIPT>
+    
+    
+    
+   <DIV>
+    <div class="tab-control" data-role="tab-control">
+    <ul class="tabs">
+        <li class="active"><a href="#_page_1" onclick="queryTemplate(1)">回复模板管理</a></li>
+       <!--  <li><a href="#_page_2" onclick="javascript:queryTemplateRule(1)">回复规则管理</a></li>  -->
+    </ul>
+ 
+    <div class="frames">
+    <div class="buttondiv" style="height: 46px; background: #edf1f9; border: 1px solid #e4e4e4; border-bottom: none;">
+	<a style="cursor: pointer;" onclick="searchPage('searchDivId','fade')">
+						<i class="on-left"><img src="/ump/images/search.png" width="14" height="14" /></i>
+						查 询</a>&#160;&#160;
+						<a style="cursor: pointer;" onclick="showAddDialog('添加模板');">
+							<i class="on-left"><IMG src="/ump/images/add.png"  width="14" height="14" /></i>添 加
+						</a>&#160;&#160;
+	</div>
+        <div class="frame" id="_page_1">1...</div>
+        <div class="frame" id="_page_2">2...</div>
+    </div>
+   </div>
+   </DIV>
+
+
+<div id="editTemplateDialogId" style="display: none">
+ <table>
+ <input type="hidden" id="templateId"/>
+ 
+ <tr><td>品牌名</td><td><select id="enditBrandId"><option value="">请选择</option> <c:forEach var="brand" items="${brands}"><option value="${brand.id}">${brand.brandName}</option></c:forEach></select></td><td>评论类型</td><td><select id="commentLevelId" onchange="getWordCategoryByCommentLevelId('wordCategoryId','commentLevelId')"> <option value="">请选择</option> <c:forEach var="commentLevel" items="${commentLevels}"><option value="${commentLevel.id}">${commentLevel.name}</option> </c:forEach> </select></td></tr>
+ <tr><td>评论子类</td><td><select  id="wordCategoryId"><option value="">请选择</option></select></td> </tr>
+ <tr><td>标题</td><td><input id="titleId" type="text"/></td></tr>
+ <tr><td>回复内容</td><td><![CDATA[<textarea id="contentId" rows="3" cols="20"></textarea>]]></td></tr>
+ <tr><td> <input type="button" value="确定" onclick="addTemplate()"/> </td> <td colspan="3"><input type="button" value="取消" onclick="$.Dialog.close()"/></td></tr>
+ </table>	
+</div>
+
+
+
+
+
+
+<!-- 模板规则 -->
+<div id="editTemplateRuleDialogId" style="display: none">
+ <table>
+ <input type="hidden" id="templateRuleId"/>
+ <tr><td>评论类型</td><td><select id="editParentBussinessTypeId_" onchange="createSelectEle('editParentBussinessTypeId_','editBussinessTypeId_','enditBrandId_')" ><option value="">请选择</option><c:forEach var="parentBussinessType" items="${parentBussinessTypes}"><option value="${parentBussinessType.id}">${parentBussinessType.businessName}</option></c:forEach></select></td><td>评论子类</td><td><select id="editBussinessTypeId_"><option value="">请选择</option></select></td></tr>
+ <tr><td>品牌名</td><td><select id="enditBrandId_" onchange="createTemplateByBrandId('enditBrandId_','titleId_')"><option value="">请选择</option></select></td><td>评论类型</td><td><select id="commentLevelId_" onchange="getWordCategoryByCommentLevelId('wordCategoryId_','commentLevelId_')"> <option value="">请选择</option> <c:forEach var="commentLevel" items="${commentLevels}"><option value="${commentLevel.id}">${commentLevel.name}</option> </c:forEach> </select></td></tr>
+ <tr><td>评论子类</td><td><select  id="wordCategoryId_" onchange="getWordExpressionsByWordCateoryId('wordCategoryId_')"><option value="">请选择</option></select></td> </tr>
+ <tr><td>关键词</td><td><select id="namesId" multiple="multiple" style="height:100px;width:150px"></select></td><td><a href="#" onclick="addWordExpressons()">---></a></td><td><select id="selectedNamesId" multiple="multiple" style="height:100px;width:150px"></select></td><td><a href="#" onclick="removeExpressons()">X</a></td></tr>
+ <tr><td>标题</td><td><select id="titleId_" ><option value="">请选择</option></select></td></tr>
+ <tr><td> <input type="button" value="确定" onclick="addTemplateRule()"/> </td> <td colspan="3"><input type="button" value="取消" onclick="$.Dialog.close()"/></td></tr>
+ </table>	
+</div>
+
+
+<div class="mySearch" id="searchDivId" style="display: none;">
+		<div class="close">
+			<img src="images/close.png" width="29" height="29"
+				onclick="javascript:closeAll('searchDivId','fade');" style="cursor: pointer;" />
+		</div>
+		<div>
+			<div class="grid">
+			<FORM>
+			 <div class="row">
+			 <div class="span1">品牌</div>
+			 <div class="span2"><select id="queryBrandId"><option value="">请选择</option><c:forEach var="brand" items="${brands}"><option value="${brand.id}">${brand.brandName}</option></c:forEach></select></div>
+			 <div class="span1">评论类型</div>
+			 <div class="span2"><select id="queryCommentLevelId"><option value="">请选择</option><c:forEach var="commentLevel" items="${commentLevels}"><option value="${commentLevel.id}">${commentLevel.name}</option></c:forEach></select></div></div>
+			  <div class="row">
+			   <div class="span2"><span></span></div>
+			  
+		      <div class="span1"> 
+				<input type="button" value="查 询" class="info" onclick="javascript:queryTemplate();"/>
+				</div>
+				<div class="span1"> 
+				<button   class="warning"  type="reset" >重 置</button>
+			 </div>
+			</div>
+			</FORM>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="mySearch" id="searchRuleId" style="display: none;">
+		<div class="close">
+			<img src="images/close.png" width="29" height="29"
+				onclick="javascript:closeAll('searchRuleId','fade');" style="cursor: pointer;" />
+		</div>
+		<div>
+			<div class="grid">
+			<FORM>
+			 <div class="row">
+			 <div class="span1">品牌</div>
+			 <div class="span2"><select id="queryRuleBrandId"><option value="">请选择</option><c:forEach var="brand" items="${brands}"><option value="${brand.id}">${brand.brandName}</option></c:forEach></select></div>
+			 <div class="span1">评论类型</div>
+			 <div class="span2"><select id="queryRuleCommentLevelId"><option value="">请选择</option><c:forEach var="commentLevel" items="${commentLevels}"><option value="${commentLevel.id}">${commentLevel.name}</option></c:forEach></select></div></div>
+			  <div class="row">
+			   <div class="span2"><span></span></div>
+			  
+		    <div class="span1"> 
+				<input type="button" value="查 询" class="info" onclick="javascript:queryTemplateRule();"/>
+			</div>
+			<div class="span1"> 
+				<button   class="warning"  type="reset" >重 置</button>
+			 </div>
+			</div>
+			</FORM>
+			</div>
+		</div>
+	</div>
+	
+	
+ <div id="fade" class="black_overlay"></div> 
+</div>

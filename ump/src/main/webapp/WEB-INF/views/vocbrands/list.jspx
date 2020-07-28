@@ -1,0 +1,914 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<style>
+i {
+	cursor: pointer;
+}
+
+img {
+	cursor: pointer;
+}
+
+.vocKeyWord li {
+	height: 100%;
+	padding-right: 8px;
+	padding-left: 8px;
+	float: left;
+	margin-right: 10px;
+	list-style: none;
+	margin-top: -15px;
+	margin-left: -20px;
+}
+
+.vocKeyWord li:hover {
+	border: 1px solid #e5e5e5;
+}
+
+.vocKeyWord li img {
+	float: right;
+	margin-top: 5px;
+	margin-left: 5px;
+}
+</style>
+	<style>
+@IMPORT url("/ump/styles/url.css");
+</style>
+	<SCRIPT type="text/javascript" src="/ump/js/nineclient/vocreport/nineclient.js">
+	<!--ss-->
+	</SCRIPT>
+	<SCRIPT type="text/javascript">
+		<![CDATA[
+		$(document).ready(function() {
+			var url = "/ump/vocbrands/list";
+			var param = {
+				page : 1,
+				size : 10
+			};
+			dataAjax(url, param, null, null, createData, null);
+			//ajaxQuery(url, param);
+		});
+		function queryList(pageNo) {
+			if (pageNo == undefined || pageNo == "") {
+				pageNo = 1;
+			}
+			var url = "/ump/vocbrands/list";
+			var param = {
+				page : pageNo,
+				size : 10
+			};
+			dataAjax(url, param, null, null, createData, null);
+		}
+		function mouseOver(obj) {
+			$(obj).find('img').show();
+		}
+		function mouseOut(obj) {
+			$(obj).find('img').hide();
+		}
+		var currTr;
+		function keyWordShow(obj, id) {
+			currTr = obj;
+			$(".keyWord").remove();
+			var td = "<tr class='keyWord' style='background-color: #ffffff;'><td colspan='5' >";
+			$.ajax({
+						url : "/ump/vocbrands/queryKeyWord",
+						async : false,
+						dataType : "text",
+						type : "POST",
+						data : {
+							id : id
+						},
+						error : function(msg) {
+						},
+						success : function(data) {
+							var keys = eval("(" + data + ")");
+							var html = "";
+							html += "<div class='vocKeyWord'><ul>"
+							for (var i = 0; i < keys.length; i++) {
+								var color = "#E5E5E5";
+								if (keys[i].status == '已审核') {
+									color = "#000";
+								}
+								html += "<li class='li_img' onmouseover='mouseOver(this);' onmouseout='mouseOut(this);' style='color:"
+										+ color + "'>";
+								html += "<img src='/ump/images/de.png' onclick='deleteKey(this,\""
+										+ keys[i].id
+										+ "\","
+										+ id
+										+ ");'/><span>"
+										+ keys[i].name
+										+ "</span>";
+								/* html += "<a class='link' style='cursor:pointer;color:"+color+"' onclick='deleteKey(this,\""
+										+ keys[i].id + "\"," + id + ");'>";
+								html += keys[i].name+"<span style='background-color: #ffffff;height: 6px;width: 10px;float:right;'>X</span>";
+								html += "</a>" */
+								html += "";
+								html += "</li>";
+								if (keys.length > 1) {
+									html += "<li>|</li>";
+								}
+
+							}
+							/* html += "<img src='/ump/images/add.png' style='cursor:pointer;' onclick='showAddInput(this,"
+									+ id + ");'></img>"; */
+							html += "</url></div>";
+							td += html;
+						}
+					});
+			$(obj).after(td + "</tr>");
+
+		}
+		function showAddInput(obj, id) {
+			var inp = "<input class='keyInput' type='text' onblur='keyAdd(this,"
+					+ id + ");' onfocus='' />";
+			$(obj).after(inp);
+			$(".keyInput")[0].focus();
+		}
+		function keyAdd(obj, id) {
+			if ($(obj).val() != "" && $(obj).val() != undefined) {
+				$.ajax({
+					url : "/ump/vocbrands/addKeyWord",
+					async : false,
+					dataType : "text",
+					type : "POST",
+					data : {
+						id : id,
+						keyWord : $(obj).val()
+					},
+					error : function(msg) {
+					},
+					success : function(data) {
+						$.Notify({
+							caption : "",
+							content : data,
+							timeout : 3000
+						});
+						keyWordShow(currTr, id)
+						$(obj).remove();
+					}
+				});
+			} else {
+				$(obj).remove();
+			}
+
+		}
+		function createData(data) {
+			var model = eval("(" + data + ")");
+			var list = eval(model.dataJson);
+			var table = "";
+			for (var i = 0; i < list.length; i++) {
+				table += "<tr onclick='keyWordShow(this," + list[i].id + ");'>";
+				//table += "<td>";
+				//table += "<input type='checkbox' name='checkBoxList' value='"+list[i].id+"'/>"
+				//table += "</td>";
+				table += "<td>";
+				table += list[i].brandName;
+				table += "</td>";
+				table += "<td>";
+				table += formatData(list[i].createTime);
+				table += "</td>";
+				table += "<td title='"+list[i].remark+"'>";
+				if(list[i].remark.length > 30){
+					table += list[i].remark.substring(0,30) +".....";
+				}else{
+					table += list[i].remark
+				}
+				
+				table += "</td>";
+				table += "<td>";
+				if (list[i].isVisable) {
+					table += "<img class='switchClass_" + list[i].id
+							+ "' onclick='switchImg(this,1," + list[i].id
+							+ ")' src='/ump/images/ON.png' />";
+					table += "<img class='switchClass_"
+							+ list[i].id
+							+ "' onclick='switchImg(this,0,"
+							+ list[i].id
+							+ ")' src='/ump/images/OFF.png' style='display:none;'/>";
+				} else {
+					table += "<img class='switchClass_"
+							+ list[i].id
+							+ "' onclick='switchImg(this,1,"
+							+ list[i].id
+							+ ")' src='/ump/images/ON.png' style='display:none;'/>";
+					table += "<img class='switchClass_" + list[i].id
+							+ "' onclick='switchImg(this,0," + list[i].id
+							+ ")' src='/ump/images/OFF.png' />";
+				}
+				table += "</td>";
+				table += "<td>";
+				table += '<a onclick="editBrand('
+						+ list[i].id
+						+ ",'"
+						+ list[i].brandName
+						+ "','"
+						+ list[i].remark
+						+ "'"
+						+ ');editBrandFormOr.valid();" alt="编辑" title="编辑 "><img alt="编辑" class="image" src="/ump/images/update.png" title="编辑"></a>';
+				table += '<a href="javascript:deleteObjet('
+						+ list[i].id
+						+ ','
+						+ model.pageNo
+						+ ');" alt="删除" title="删除"><img alt="删除" class="image" src="/ump/images/delete.png" title="删除"></a>';
+				table += "</td>";
+				table += "</tr>";
+			}
+			$("#tbody").html(table);
+			//if (model.totalCount > 0) {
+			var foot = Page(model, 'queryList', 6, true, 'dilogWindow',
+					'addBrandWindow');
+			$("#tfoot").html(foot);
+			//} else {
+			//	var ide="\'addBrandWindow\'";
+			//	$("#tfoot")
+			//			.html(
+			//					'<tr><td  colspan="6"><a onclick="addWindow();" style="float:left;"><img style="cursor: pointer;" src="/ump/images/add_01.png"/></a>无匹配数据</td></tr>');
+			//}
+
+		}
+
+		function createRow(id) {
+			//查询关键词
+			var url = "/ump/vocbrands/queryBrandKeyWord";
+			var param = {
+				id : id
+			};
+			var keyStr = ajaxJsonReturn(url, param);
+			var keyWord = eval("(" + keyStr + ")");
+			url = "/ump/umpbusinesstypes/queryCompanyBusinessTypes";
+			var businessStr = ajaxJsonReturn(url, {});
+			var businessList = eval("(" + businessStr + ")");
+			var rows = "";
+			if (keyWord.length >= 1) {
+				for (var i = 0; i < keyWord.length; i++) {
+					rows += '<div class="row">';
+					rows += '<div class="span gridTitle">关键词：</div>';
+					rows += '<div class="span4"><input type="hidden" name="keyWordId" value="'+keyWord[i].id+'"><INPUT class="publicSize editKeyInput" name="keyWordName" value="'+keyWord[i].name+'"/><span style="color:red">*</span></div>';
+					rows += '<div class="span gridTitle">子行业：</div>';
+					rows += '<div class="span3">';
+					rows += '<SELECT name="businessTypeIds" class="publicSize">';
+					for (var j = 0; j < businessList.length; j++) {
+						if (keyWord[i].businessTypeId == businessList[j].id) {
+							rows += '<OPTION value="'+businessList[j].id+'" selected="selected">'
+									+ businessList[j].businessName
+									+ '</OPTION>';
+						} else {
+							//rows+='<OPTION value="'+businessList[j].id+'">'+businessList[j].businessName+'</OPTION>';
+						}
+					}
+					rows += '</SELECT><span style="color:red">*</span>';
+					rows += '</div>';
+					rows += '<div class="span1 girdTitle">';
+					rows += "<input type='button' value='删除' class='warning' onclick='javascript:deleteRowById(this,"
+							+ keyWord[i].id + ");'>";
+					rows += '</div>';
+					rows += '</div>';
+				}
+			} else {
+				rows += '<div class="row">';
+				rows += '<div class="span gridTitle">关键词：</div>';
+				rows += '<div class="span4"><INPUT class="publicSize editKeyInput" name="keyWords" /><span style="color:red">*</span></div>';
+				rows += '<div class="span gridTitle">子行业：</div>';
+				rows += '<div class="span3">';
+				rows += '<SELECT name="businessTypes" class="publicSize">';
+				rows += '<OPTION value="">请选择</OPTION>';
+				for (var j = 0; j < businessList.length; j++) {
+					rows += '<OPTION value="'+businessList[j].id+'">'
+							+ businessList[j].businessName + '</OPTION>';
+				}
+				rows += '</SELECT><span style="color:red">*</span>';
+				rows += '</div>';
+				rows += '</div>';
+			}
+			return rows;
+		}
+		var editBrandFormOr;
+		function editBrand(id, brandName, remark) {
+			$("#vocBrand_id").val(id);
+			$("#edit_brandName").val(brandName);
+			$("#edit_remark").val(remark);
+			$("#editBrandWindow").toggle();
+			dilogCenter('editBrandWindow');
+			//查询关键词
+			var rows = createRow(id);
+			$("#edit_keyDiv").html("");
+			$("#edit_keyDiv").html(rows);
+			bindAddInput('editKeyInput');
+			$("#fade").toggle();
+			editBrandFormOr = $("#editBrandForm").validate({
+				rules : {
+					brandName : {
+						required : true,
+						maxlength : 10,
+						remote : {
+							url : "/ump/commentvalidata/validataUniqueJoin",
+							type : "post",
+							data : {
+
+								field : 'brandName',
+								value : function() {
+									return $("#edit_brandName").val();
+								},
+								id : function() {
+									return $("#vocBrand_id").val();
+								},
+								table : "VocBrand",
+								companyField : "umpCompany"
+							}
+						}
+					}
+				},
+				messages : {
+					brandName : {
+						required : "品牌名称不能为空",
+						maxlength : "品牌名称不能超过10个字",
+						remote : "品牌名称重复"
+					}
+				},
+				errorElement : "em",
+				focusCleanup : true,
+				errorClass : "invalid",
+				errorPlacement : function(error, element) {
+					error.appendTo($(element).parent().find("span"));
+				}
+			});
+		}
+		function update() {
+			var row = $("#edit_keyDiv").html();
+			if (row == '') {
+				alert("关键词不能为空");
+				return;
+			}
+			//判读关键词
+			var keyArr = [];
+			$.each($("#edit_keyDiv").find(".editKeyInput"), function(
+					id, obj) {
+				keyArr.push($(obj).val());
+			});
+			for (var i = 0; i < keyArr.length; i++) {
+				if (keyArr[i] == '' || keyArr[i] == undefined) {
+					alert("关键词不能为空");
+					return;
+				}
+				
+				if(strlen2(keyArr[i]) > 10){
+					alert("关键词不能超过10个字符");
+					return;
+				}
+				for (var j = 0; j < keyArr.length; j++) {
+					if (keyArr[i] == keyArr[j] && i != j) {
+						//存在重复的数据
+						alert("关键词重复");
+						return;
+					}
+				}
+			}
+			var bArr = [];
+			var buSe = $("#edit_keyDiv").find("select");
+			var flag = false;
+			$.each(buSe, function(id, obj) {
+				if ($(obj).val() == '') {
+					flag = true;
+					return;
+				}
+			})
+			if (flag) {
+				alert("子行业不能为空");
+				return;
+			}
+			if (!$("#editBrandForm").valid()) {
+				return;
+			} else {
+				var url = "/ump/vocbrands/update";
+				var param = $("#editBrandForm").serialize();
+				dataAjax(url, param, Notify, queryList);
+				dilogWindow('editBrandWindow');
+			}
+		}
+		function switchImg(obj, vl, id) {
+			var visable = vl == 1 ? 0 : 1;
+			$.ajax({
+				url : "/ump/vocbrands/updateVisable",
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data : {
+					id : id,
+					visable : visable
+				},
+				error : function(msg) {
+				},
+				success : function(data) {
+					$(".switchClass_" + id).toggle();
+				}
+			});
+
+		}
+		
+		/**
+		 *删除品牌
+		 */
+		function deleteObjet(id, page) {
+			if (!confirm("确定删除?")) {
+				return;
+			}
+			$.ajax({
+				url : "/ump/vocbrands/delete",
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data : {
+					id : id
+				},
+				error : function(msg) {
+				},
+				success : function(data) {
+					$.Notify({
+						caption : "",
+						content : data,
+						timeout : 3000
+					});
+					queryList(page);
+				}
+			});
+
+		}
+		function deleteKey(obj, key, id) {
+			if (!confirm("确定删除?")) {
+				return;
+			}
+			$.ajax({
+				url : "/ump/vocbrands/deleteKey",
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data : {
+					id : id,
+					key : key
+				},
+				error : function(msg) {
+					$.Notify({
+						caption : "",
+						content : msg,
+						timeout : 5000
+					});
+				},
+				success : function(data) {
+					$(obj).parent().remove();
+				}
+			});
+
+		}
+		]]>
+	</SCRIPT>
+	<div id="fade" class="black_overlay">
+		<!--  -->
+	</div>
+	<TABLE class="table striped hovered">
+		<THEAD>
+			<tr>
+				<th>品牌名称</th>
+				<th>添加时间</th>
+				<th>备注</th>
+				<th>是否启用</th>
+				<th>操作</th>
+			</tr>
+		</THEAD>
+		<TBODY id="tbody">
+
+		</TBODY>
+	</TABLE>
+	<div align="right" style="text-align: right;" id="tfoot">
+		<!-- 添加 -->
+	</div>
+	<DIV style="width: 760px;display: none;" class="search" id="addBrandWindow">
+		<div class="close">
+			<img src="/ump/images/close.png" width="24" height="24"
+				onclick="javascript:dilogWindow('addBrandWindow');addForm.resetForm();$('#brandForm')[0].reset();"
+				style="cursor: pointer;" />
+		</div>
+		<DIV class="mtitle">
+			<i class="on-left"><img src="/ump/images/add.png" width="14"
+				height="14" style="cursor: pointer;" /></i>添加
+		</DIV>
+		<FORM id="brandForm" action="/ump/vocbrands/addVocBrand" method="POST">
+			<div class="grid">
+				<DIV class="row">
+					<DIV class="span gridTitle">品牌名称：</DIV>
+					<DIV class="span5">
+						<INPUT type="text" id="brandName" name="brandName"
+							class="publicSize" /><span class="hintSpan" style="color: red;">*</span>
+					</DIV>
+				</DIV>
+				<div class="row">
+					<div class="span gridTitle">是否启用：</div>
+					<DIV class="span4">
+						<INPUT name="isOn" id="isOn" type="hidden" value="1"
+							checked="checked" /> <img class="switchClass"
+							onclick="addSwitchImg(this,1)" src='images/ON.png' /><img
+							class="switchClass" onclick="addSwitchImg(this,0)"
+							style="display: none;" src='images/OFF.png' />
+					</DIV>
+				</div>
+				<DIV class="row">
+					<div class="span gridTitle">备注：</div>
+					<div class="span6">
+						<![CDATA[<textarea name="remark" class="gridTextArea"></textarea>]]>
+					</div>
+				</DIV>
+			</div>
+			<HR />
+			<div class="grid" id="keyDiv" style="width: auto;">
+				<div class="row" id="keyRow">
+					<div class="span gridTitle">关键词：</div>
+					<div class="span4">
+						<INPUT class="publicSize addKeyInput" name="keyWords" /><span class="hintSpan" style="color: red">*</span>
+					</div>
+					<div class="span gridTitle">子行业：</div>
+					<div class="span3">
+						<SELECT name="businessTypes" class="publicSize addKeySelect">
+							<OPTION value="" select="selected">请选择</OPTION>
+							<c:forEach items="${businessTypes}" var="b">
+								<OPTION value="${b.id}">${b.businessName}</OPTION>
+							</c:forEach>
+						</SELECT><span style="color: red">*</span>
+					</div>
+				</div>
+			</div>
+			<HR />
+			<div>
+				<INPUT id="createInputStr" type="button" onclick="createNewInput();" style="background-color: #069dd5; border-radius: 2px; color: #fff; font-family: '微软雅黑'; font-size: 14px; height: 28px;" value="添加关键词" /><span style="color: red;display: none;padding-left: 20px;" id="keyLength">最多能添加7个关键词</span>
+			</div>
+		</FORM>
+		<DIV class="btnCenter">
+			<a class="button"
+				style="background-color: #069dd5; border-radius: 2px; color: #fff; font-family: '微软雅黑'; font-size: 14px; height: 28px; width: 64px;"
+				onclick="submit();">确定</a> <INPUT
+				type="button" class="warning"
+				onclick="javascript:dilogWindow('addBrandWindow');$('#brandForm')[0].reset();"
+				value="取消" />
+		</DIV>
+	</DIV>
+	<!-- 修改 -->
+	<div style="display: none; width: 760px;" class="search"
+		id="editBrandWindow">
+		<div class="close">
+			<img src="/ump/images/close.png" width="24" height="24"
+				onclick="javascript:dilogWindow('editBrandWindow');editBrandFormOr.resetForm();"
+				style="cursor: pointer;" />
+		</div>
+		<DIV class="mtitle">
+			<i class="on-left"><img src="/ump/images/editor.png" width="14"
+				height="14" style="cursor: pointer;" /></i>编辑
+		</DIV>
+		<FORM id="editBrandForm" method="POST">
+			<INPUT type="hidden" id="vocBrand_id" name="id" value="" />
+			<div class="grid">
+				<DIV class="row">
+					<DIV class="span gridTitle">品牌名称：</DIV>
+					<DIV class="span6">
+						<INPUT type="text" id="edit_brandName" name="brandName"
+							class="publicSize" value="" /><span class="hintSpan"
+							style="color: red;">*</span>
+					</DIV>
+				</DIV>
+				<DIV class="row">
+					<div class="span gridTitle">备注：</div>
+					<div class="span6">
+						<![CDATA[<textarea id="edit_remark" name="remark" class="gridTextArea"></textarea>]]>
+					</div>
+				</DIV>
+			</div>
+			<HR />
+			<div class="grid" id="edit_keyDiv" style="overflow: auto">
+				<!--  -->
+			</div>
+			<HR />
+			<div>
+				<INPUT type="button" onclick="createEditNewInput();"
+					style="background-color: #069dd5; border-radius: 2px; color: #fff; font-family: '微软雅黑'; font-size: 14px; height: 28px;"
+					value="添加关键词" /><span style="color: red;display: none;padding-left: 20px;" id="keyLength2">最多能添加7个关键词</span>
+			</div>
+		</FORM>
+		<HR />
+		<div></div>
+		<DIV class="btnCenter">
+			<INPUT type="button" class="info" onclick="update();" value="确定" /> <INPUT
+				type="button" class="warning"
+				onclick="dilogWindow('editBrandWindow');editBrandFormOr.resetForm();"
+				value="取消" />
+		</DIV>
+	</div>
+	<SCRIPT type="text/javascript"
+		src="/ump/ui/jquery-validation/jquery.validate.js">
+		//--
+	</SCRIPT>
+	<style>
+@IMPORT url("/ump/styles/validation.css");
+</style>
+	<SCRIPT type="text/javascript">
+		<![CDATA[
+		$.validator.addMethod("keyWords", function(value, element, params) {
+			var list = $("#brandForm").find(":input[name='keyWords']");
+			var flag = true;
+			if (list && list.length > 0) {
+				$.each(list, function(id, obj) {
+					var val = $(obj).val();
+					console.log("-------1val-------"+ val);
+					if (!val || val == '') {
+						flag = false;
+					}
+				});
+			}
+			return flag;
+		}, "关键词不能为空");
+		var addForm;
+		function initAddBrandWind(){
+			addForm = $("#brandForm").validate({
+				rules : {
+					brandName : {
+						required : true,
+						maxlength : 10,
+						remote : {
+							url : "/ump/commentvalidata/validataUniqueCompany",
+							type : "post",
+							data : {
+								field : 'brandName',
+								value : function() {
+									return $("#brandName").val();
+								},
+								table : "VocBrand",
+								companyField : "umpCompany"
+							}
+						}
+					}
+				},
+				messages : {
+					brandName : {
+						required : "品牌名称不能为空",
+						maxlength : "品牌名称不能超过10个字",
+						remote : "品牌名称重复"
+					}
+				},
+				errorElement : "em",
+				focusCleanup : true,
+				errorClass : "invalid",
+				errorPlacement : function(error, element) {
+					error.appendTo($(element).parent().find("span"));
+				}
+			});
+		}
+		
+		$(document).ready(function() {
+			initAddBrandWind();
+		
+		});
+		function createEditNewInput() {
+			//判读关键词长度，最大能添加7个
+			var keyArrLength2 = [];
+			$.each($(".editKeyInput"), function(id, obj) {
+				keyArrLength2.push($(obj).val());
+			});
+			
+			if(keyArrLength2.length > 7){
+				$("#keyLength2").show();
+				return;
+			}else{
+				$("#keyLength2").hide();
+				var row = $("#keyRow").html();
+				var newRow = "<div class='row'>"
+						+ row
+						+ "<div class='span gridTitle'><input type='button' value='删除' class='warning' onclick='removeRow(this);'></div></div>";
+				$("#edit_keyDiv").append(newRow);
+				bindAddInput('editKeyInput');
+				bindAddInput('addKeyInput');
+			}
+		}
+		function createNewInput() {
+			//判读关键词长度，最大能添加10个
+			var keyArrLength = [];
+			$.each($(".addKeyInput"), function(id, obj) {
+				keyArrLength.push($(obj).val());
+			});
+			
+			if(keyArrLength.length > 7){
+				$("#keyLength").show();
+				return;
+			}
+			$("#keyLength").hide();
+			var row = $("#keyRow").html();
+			var newRow = "<div class='row'>"
+					+ row
+					+ "<div class='span gridTitle'><input type='button' value='删除' class='warning' onclick='removeRow(this);'></div></div>";
+			$("#keyDiv").append(newRow);
+			//绑定验证事件
+			bindAddInput('addKeyInput');
+		}
+		var arr = [];
+		var arrobj = [];
+		var str = "";
+		var i=0;
+		function bindAddInput(classId) {
+			$.each($("." + classId),function(id, obj) {
+					$(obj).blur(
+						function() {
+							var n = $(this).parent().find("em");
+							if (n) {
+								n.remove();
+							}
+							var v = $(this).val();
+							if (v == '') {
+								$(this).after("<em class='invalid'>关键词不能为空</em>");
+								return;
+							}else {
+								var nodesName = strlen2(v);
+								if(nodesName > 10){
+									$(this).after("<em class='invalid'>关键词不能超过10个字符</em>");
+									return;
+								}
+								$.each($(".addKeyInput"),function(num,objs) {
+										str = $(".addKeyInput").length;
+										if(num == 0){
+											
+										}else{
+											if (this == objs) {
+												
+											} else {
+													if (v == $(objs).val()&& $(objs).val() != '') {
+														$(this).after("<em class='invalid'>关键词重复</em>");
+														return;
+													}
+											}
+										}
+								});
+							}
+					});
+					$(obj).focus(function() {
+						arr = [];
+						$.each($("." + classId), function(id, obj) {
+								arr.push($(obj).val());
+						});
+						var n = $(this).parent().find("em");
+						if (n) {
+							n.remove();
+						}
+					});
+			});
+		}
+		
+		//判断字符
+		function strlen2(str) {
+		     var len = 0;
+		     for (var i = 0; i < str.length; i++) {
+		           var c = str.charCodeAt(i); //单字节加1 
+		           if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) {
+		                      len++;
+		           } else {
+		               len += 2;
+		           }
+			}
+		       return len;
+		} 	
+		
+		function removeRow(obj) {
+			$(obj).parent().parent().remove();
+		}
+		
+		function deleteRowById(obj, key) {
+			if (!confirm("确定删除?")) {
+				return;
+			}
+			$.ajax({
+				url : "/ump/vocbrands/deleteKey",
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data : {
+					key : key
+				},
+				error : function(msg) {
+					$.Notify({
+						caption : "",
+						content : msg,
+						timeout : 2000
+					});
+				},
+				success : function(data) {
+					removeRow(obj);
+				}
+			});
+		}
+		function addSwitchImg(obj, vl) {
+			if (vl == 1) {
+				$("#isOn").val(0);
+			} else {
+				$("#isOn").val(1);
+			}
+			$(".switchClass").toggle();
+		}
+		
+		function submit() {
+			if (!$("#brandForm").valid()) {
+				return;
+			}
+			//判读关键词
+			var keyArr = [];
+			$.each($(".addKeyInput"), function(id, obj) {
+				keyArr.push($(obj).val());
+			});
+			var busArr = [];
+			$.each($(".addKeySelect"), function(id, obj) {
+				busArr.push($(obj).val());
+			});
+
+			for (var i = 0; i < keyArr.length; i++) {
+				if (keyArr[i] == '') {
+					alert("关键词不能为空");
+					return;
+				}
+				if(strlen2(keyArr[i]) > 10){
+					alert("关键词不能超过10个字符");
+					return;
+				}
+				for (var j = 0; j < keyArr.length; j++) {
+					if (keyArr[i] == keyArr[j] && i != j) {
+						//存在重复的数据
+						alert("关键词重复");
+						return;
+					}
+				}
+			}
+			for (var i = 0; i < busArr.length; i++) {
+				if (busArr[i] == '') {
+					alert("子行业不能为空");
+					return;
+				}
+			}
+			var url = "/ump/vocbrands/addVocBrand";
+			brandAjaxSubmitForm(url, 'brandForm');
+
+		}
+		function dilogWindow(id) {
+			$("#" + id).toggle();
+			$("#fade").toggle();
+			dilogCenter(id);
+			var form = $("#"+id).find("form");
+			if(form){
+				form.valid();
+			}
+		}
+
+		function addWindow() {
+			$("#addBrandWindow").toggle();
+			$("#fade").toggle();
+			dilogCenter('addBrandWindow');
+		}
+
+		function checkUniqueName(brandName) {
+			var url = "/ump/vocbrands/queryVocBrands?name=" + brandName;
+			var method = "GET"; // http get or post method
+			var returnVal = null;
+			returnVal = requestMethod(method, url);
+			if (null != returnVal) {
+				var respText = eval('(' + returnVal + ')');
+				return respText.success;
+			}
+
+			return false;
+		}
+
+		function brandAjaxSubmitForm(url, formId) {
+			var brandName = $("#brandName").val();
+			if (!brandName) {
+				alert("品牌名称不能为空!");
+				return;
+			} else if (checkUniqueName(brandName)) {
+				alert("品牌名称重复!");
+				return;
+			}
+
+			$.ajax({
+				url : url,
+				async : false,
+				dataType : "text",
+				type : "POST",
+				data : $("#" + formId).serialize(),
+				error : function(msg) {
+					Notify(msg, 2000);
+				},
+				success : function(msg) {
+					$('#brandForm')[0].reset();
+					Notify(msg, 2000);
+					dilogWindow('addBrandWindow');
+					queryList();
+				}
+			});
+		}
+		
+		]]>
+	</SCRIPT>
+</div>

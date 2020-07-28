@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_nineclient_model_WccCommunity" object="${wcccommunity}" path="/wcccommunitys" z="jRztrFNd8kjqL9fjOW/VOZOQmxM=">
+        <field:display field="isDeleted" id="s_com_nineclient_model_WccCommunity_isDeleted" object="${wcccommunity}" z="zktz3mHjDLtVO+7+SbVE6D6DQp8="/>
+        <field:display field="communityName" id="s_com_nineclient_model_WccCommunity_communityName" object="${wcccommunity}" z="K5q3yJ0WMQOohALqQokLEO7WJLg="/>
+        <field:display field="communityUrl" id="s_com_nineclient_model_WccCommunity_communityUrl" object="${wcccommunity}" z="U0kuS0Aro9ZdR1/WcFQbxZnZS7A="/>
+        <field:display field="topicStatus" id="s_com_nineclient_model_WccCommunity_topicStatus" object="${wcccommunity}" z="KLFzYJt3DfyXITAMeO37cB9mE9Q="/>
+        <field:display field="topicSort" id="s_com_nineclient_model_WccCommunity_topicSort" object="${wcccommunity}" z="Gom6jlLIa9PbOJ+1J0H+/FktJis="/>
+        <field:display field="headImage" id="s_com_nineclient_model_WccCommunity_headImage" object="${wcccommunity}" z="sfuI3oW0Pr0V3RSu2XgRd+gGysQ="/>
+        <field:display field="officialImage" id="s_com_nineclient_model_WccCommunity_officialImage" object="${wcccommunity}" z="v38MzplCaxtNrYBHfYbgceFlm7Y="/>
+        <field:display field="officialNickName" id="s_com_nineclient_model_WccCommunity_officialNickName" object="${wcccommunity}" z="Yj0oU/1FMJhjSCLRW+EZaHca4k8="/>
+    </page:show>
+</div>

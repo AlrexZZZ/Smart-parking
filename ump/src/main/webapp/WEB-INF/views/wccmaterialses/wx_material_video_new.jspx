@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:sf="http://www.springframework.org/tags/form"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<spring:url value="/styles/mystyle.css" var="mycss"></spring:url>
+	<link rel="stylesheet" type="text/css" href="${mycss}" />
+	<spring:url value="/ui/kindeditor/kindeditor.js" var="kind">
+		<!-- required for FF3 and Opera -->
+	</spring:url>
+	<script src="${kind}" type="text/javascript">
+	<!-- required for FF3 and Opera -->
+	</script>
+
+	<link rel="stylesheet" href="../ui/artDialog/ui-dialog.css" />
+	
+	<script src="../ui/artDialog/dialog-plus.js">
+	<!-- required for FF3 and Opera -->
+	</script>
+
+<style>
+.metro table {
+	border: 0;
+	background: transparent;
+}
+
+.metro h1, .metro h2, .metro h3, .metro h4, .metro h5, .metro h6 {
+    margin: 0 0;
+}
+</style>
+<!-- 复选框引用js -->
+<style>
+@IMPORT url("/ump/styles/selectTree.css");
+</style>
+<SCRIPT type="text/javascript" src="/ump/js/selectTree_materials2.js">
+	//selectTree;
+</SCRIPT>
+
+	<SCRIPT type="text/javascript">
+	window.onload=function(){
+		loadTree2("/ump/wccautokbses/treePlatform");
+	} 
+		<![CDATA[
+		function save() {
+			var boo = true;
+			if ($('#SelIds2').val().length == 0) {
+				$('#hint_1').html("请选择平台");
+				boo = false;
+			}else{
+				$('#hint_1').html("");
+			}
+			if ($('#thumbnailUrl').val().length == 0) {
+				$('#hint_2').html("请上传视频");
+				boo = false;
+			}else{
+				$('#hint_2').html("");
+			}
+			if ($('#title').val().length == 0 || $('#title').val().length > 64) {
+				$('#hint_3').html("标题不能为空且长度不能超过64字");
+				boo = false;
+			}else{
+				$('#hint_3').html("");
+			}
+			if ($('#description').val().length > 120) {
+				$('#hint_4').html("简介长度不能超过120字");
+				boo = false;
+			}else{
+				$('#hint_4').html("");
+			}
+			if (boo) {
+				$('form').submit();
+			}
+		}
+
+		$(function() {
+			KindEditor.ready(function(K) {
+				var uploadbutton = K.uploadbutton({
+					button : K('#uploadButton')[0],
+					fieldName : 'imgFile',
+					url : '../ui/kindeditor/jsp/upload_json.jsp?dir=wx_video&maxSize=10240',
+					afterUpload : function(data) {
+						if (data.error === 0) {
+							var url = K.formatUrl(data.url, 'absolute');
+							$('#video_preview').css("display", "block");
+							$('#video').attr("src", url);
+							$('#thumbnailUrl').val(url);
+							$('#hint_2').html("");
+						} else {
+							alert(data.message);
+						}
+					},
+					afterError : function(str) {
+						alert('自定义错误信息: ' + str);
+					}
+				});
+
+				$("input[name='imgFile']").css("top", "-20px");
+
+				uploadbutton.fileBox.change(function(e) {
+					uploadbutton.submit();
+				});
+			});
+		});
+		$("body").on("click", ".mydel",function () {
+			$('#video_preview').css("display", "none");
+			$('#video').attr("src", "");
+			$('#thumbnailUrl').val("");
+   		});
+	
+		]]>
+	</SCRIPT>
+
+	<sf:form action="add_new_video_form" modelAttribute="materials"
+		id="form">
+		<div class="containout" id="containout"
+			style="position: relative; z-index: 0;">
+			<div class="contain" id="contain">
+				<div class="topic">素材管理</div>
+
+				<div class="top_menu">
+					<div class="menu">
+						<ul>
+							<![CDATA[
+							<li><a href="../wccmaterialses/wxarticlelist?WccMaterialsType=IMAGETEXT&sortFieldName=insertTime&sortOrder=DESC">图文消息</a></li>
+							<li><a href="../wccmaterialses/wxarticlelist?WccMaterialsType=PICTURE&sortFieldName=insertTime&sortOrder=DESC">图片</a></li>
+							<li><a href="../wccmaterialses/wxarticlelist?WccMaterialsType=SOUNDS&sortFieldName=insertTime&sortOrder=DESC">语音</a></li>
+							<li style="border-bottom: 5px solid #069dd5;"><a href="../wccmaterialses/wxarticlelist?WccMaterialsType=VIDEO&sortFieldName=insertTime&sortOrder=DESC">视频</a></li>						</ul>
+						]]>
+						</ul>
+					</div>
+				</div>
+
+				<div class="editor_con2">
+					<div class="middle_menu2">
+						<div class="middle_search2">
+							<div class="middle_menu">
+								<div class="middle_menu_tu">
+									<img alt="" src="../images/tuwen_editor.png" />
+								</div>
+								<div class="middle_menu_w">
+									<h1><![CDATA[
+										<a href="../wccmaterialses/wxarticlelist?WccMaterialsType=VIDEO&sortFieldName=insertTime&sortOrder=DESC">视频消息</a>
+										]]>
+									</h1>
+									<h2>/</h2>
+									<h3>新建视频消息</h3>
+								</div>
+							</div>
+
+						</div>
+					</div>
+					<div class="viform_wenben" style="padding-left:10.5px;float:left;">
+						 
+					<!--  	<select id="wccPlatformUsers" name="wccPlatformUsers"
+							style="border: 1px solid #e5e5e5; border-radius: 2px; color: #7d7d7d; font-size: 15px; height: 28px; width: 290px;">
+							<c:forEach items="${plats}" var="p">
+								<option value="${p.id }">${p.account}</option>
+							</c:forEach>
+						</select> -->
+					<div class="top_search">
+					<div class="top_search_lr">
+					<div class="diyLabel">公众平台：</div>
+						<div class="input-control text" style="width: 270px;float: right;">
+							<input id="SelVals2" type="text" readonly="readonly"
+								style="width: 270px;background: url('/ump/resources/images/sanjiao.png') no-repeat scroll 98% center rgba(0, 0, 0, 0);cursor: pointer;" placeholder="请选择"
+								onclick="selectShowMenu2();" value="${selVal}"/> <input id="SelIds2"
+								name="platformUsers" type="hidden" value="${SelIds}"/>
+							<div id="selectMenuContent2" class="menuContent"
+								style="display: none; position: absolute; z-index: 99;">
+								<ul id="selectTreeDemo2" class="ztree"
+									style="margin-top: 0; width: 270px; max-height: 300px; padding-left: 0px; margin-left: 0px;"></ul>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+						
+						
+						<div color="red" id="hint_1" class="tixing">
+							<!-- 请选择平台 -->
+						</div>
+					</div>
+
+					<div class="video_sc_con">
+						<sf:hidden path="thumbnailUrl" id="thumbnailUrl" />
+						<div class="diyLabel">视 频：</div>
+						<div class="video_sc">
+							<input type="button" id="uploadButton"
+								style="width: 200px; height: 50px;" value="上传" />
+							<div class="filebotton2">本地上传</div>
+						</div>
+						<div class="video_sign">大小:不超过10M，格式:mp4</div>
+						<div color="red" id="hint_2" class="video_sign" style="color: red;font-size: 13px;">
+							<!-- 请上传视频 -->
+						</div>
+					</div>
+					<div id="video_preview" style="display: none;">
+						<div style="width: 325px;float: left;margin-bottom: 20px;">
+							<video id="video" src="" width="320" height="240"
+								controls="controls" translate="yes"></video>
+						</div>
+						<div class="mydel" style="width: 100px;float: left;vertical-align: bottom;color: #069dd5;cursor: pointer;display: inline-block;font-family: '微软雅黑';font-size: 13px;margin-left: 5px;margin-top: 225px;'">
+							删除
+						</div>
+					</div>
+					<div class="viform_wenben">
+						<div class="diyLabel">标 题：</div>
+						<sf:input path="title" cssStyle="width: 270px;" />
+						<div color="red" id="hint_3" class="tixing">
+							<!-- 标题不能为空且长度不能超过64字 -->
+						</div>
+					</div>
+
+					<div class="viform_wenben">
+						<div class="diyLabel">简 介：</div>
+					</div>
+					<div class="viform_wenben">
+						<sf:textarea path="description" cssStyle="width: 550px;" />
+						<div color="red" id="hint_4" class="tixing"
+							style="margin-left: 30px;">
+							<!-- 简介不能超过120字 -->
+						</div>
+					</div>
+				</div>
+				<div class="save_look">
+					<a class="button info" onclick="save()">保 存</a>
+					<![CDATA[
+					<a onclick="window.location.href='../wccmaterialses/wxarticlelist?WccMaterialsType=VIDEO&sortFieldName=insertTime&sortOrder=DESC'"
+						class="button warning" >取 消</a>
+					]]>
+				</div>
+			</div>
+		</div>
+	</sf:form>
+</div>

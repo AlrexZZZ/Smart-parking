@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_WccAwardInfo" items="${wccawardinfoes}" z="qQAmvR0c12M28lKtrjLfmsW72nU=">
+        <table:table data="${wccawardinfoes}" id="l_com_nineclient_model_WccAwardInfo" path="/wccawardinfoes" z="5ZuyF2B64Kpqc3lBiqZwdTsNRIs=">
+            <table:column id="c_com_nineclient_model_WccAwardInfo_isDeleted" property="isDeleted" z="CCF+JoHSM9JFYZ76eeVLLGVt864="/>
+            <table:column id="c_com_nineclient_model_WccAwardInfo_awardName" property="awardName" z="akfZyN2tb68DurCevE0A6TwZZJk="/>
+            <table:column id="c_com_nineclient_model_WccAwardInfo_awardInfo" property="awardInfo" z="FTIVRyB/f7720PpQ5esH5NGwjko="/>
+            <table:column id="c_com_nineclient_model_WccAwardInfo_winRate" property="winRate" z="KXGf8SuR37c2LP1h14SqO5fyz/8="/>
+            <table:column id="c_com_nineclient_model_WccAwardInfo_cdkey" property="cdkey" z="URg48ebBA5dth35LKdpbcwioWMw="/>
+            <table:column id="c_com_nineclient_model_WccAwardInfo_awardNum" property="awardNum" z="mdYUM1t8HM/GyxYkIQoKe4GpP+E="/>
+        </table:table>
+    </page:list>
+</div>

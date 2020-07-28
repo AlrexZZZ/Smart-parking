@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_WccAnswer" items="${wccanswers}" z="JUPrbNB5b0W5QDOjINVFb2jTDOg=">
+        <table:table data="${wccanswers}" id="l_com_nineclient_model_WccAnswer" path="/wccanswers" z="MCNj9KVAKrdvMPb3IhAvTwdm9gg=">
+            <table:column id="c_com_nineclient_model_WccAnswer_answer" property="answer" z="CdgjKDvMclEEs7bXJ5UZOM1rZgQ="/>
+            <table:column id="c_com_nineclient_model_WccAnswer_isDeleted" property="isDeleted" z="Hik0R9PmZqpwPVH0C/Lz6/CDEls="/>
+            <table:column id="c_com_nineclient_model_WccAnswer_userName" property="userName" z="XBb/DGg9/sEhXMXd1G/Ry5Wf3ck="/>
+            <table:column id="c_com_nineclient_model_WccAnswer_userPhone" property="userPhone" z="y0rKjJHQ9BjGKJ0KwuxT8opJhYw="/>
+        </table:table>
+    </page:list>
+</div>

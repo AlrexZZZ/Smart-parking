@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default_pub" name="wcclotteryactivitys/list">
+        <put-attribute name="body" value="/WEB-INF/views/wcclotteryactivitys/list.jspx"/>
+    </definition>
+<definition extends="default_pub" name="wcclotteryactivitys/show">
+        <put-attribute name="body" value="/WEB-INF/views/wcclotteryactivitys/show.jspx"/>
+    </definition>
+<definition extends="default_pub" name="wcclotteryactivitys/create">
+        <put-attribute name="body" value="/WEB-INF/views/wcclotteryactivitys/create.jspx"/>
+    </definition>
+<definition extends="default_pub" name="wcclotteryactivitys/update">
+        <put-attribute name="body" value="/WEB-INF/views/wcclotteryactivitys/update.jspx"/>
+    </definition>
+<definition extends="lottery" name="wcclotteryactivitys/lotteryWeb">
+        <put-attribute name="body" value="/WEB-INF/views/wcclotteryactivitys/lotteryWeb.jspx"/>
+    </definition>
+    <definition extends="pub" name="wcclotteryactivitys/lotteryError">
+        <put-attribute name="body" value="/WEB-INF/views/wcclotteryactivitys/lotteryError.jspx"/>
+    </definition>
+     <definition extends="pub" name="wcclotteryactivitys/result">
+        <put-attribute name="body" value="/WEB-INF/views/wcclotteryactivitys/result.jspx"/>
+    </definition>
+</tiles-definitions>

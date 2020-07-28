@@ -1,0 +1,17 @@
+project --topLevelPackage com.nineclient --projectName ump --java 7 --packaging WAR
+jpa setup --database MYSQL --provider HIBERNATE 
+web mvc setup
+entity jpa --class com.nineclient.model.UmpCompany
+field string --fieldName name --notNull --comment ��˾���
+field boolean --fieldName isDeleted
+field boolean --fieldName isVisable
+field date --fieldName createTime --type java.util.Date --dateFormat MEDIUM 
+field string --fieldName companyCode --notNull --unique true
+field number --type int --fieldName maxAccount --notNull yes --value 0
+field date --fieldName serviceStartTime --type java.util.Date --dateFormat MEDIUM 
+field date --fieldName serviceEndTime --type java.util.Date --dateFormat MEDIUM 
+enum type --class ~.constant.UmpCompanyStatus
+enum constant --name RUNNING
+enum constant --name STOP
+focus --class ~.model.UmpCompany
+field enum --fieldName status --type ~.constant.UmpCompanyStatus

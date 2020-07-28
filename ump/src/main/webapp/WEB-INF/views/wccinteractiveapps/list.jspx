@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_nineclient_model_WccInterActiveApp" items="${wccinteractiveapps}" z="9xwo8MvMkV8BjNs7UlkSzQ7Z2zU=">
+        <table:table data="${wccinteractiveapps}" id="l_com_nineclient_model_WccInterActiveApp" path="/wccinteractiveapps" z="gT0PXiDKVizPmkLaj1/57mzq6yU=">
+            <table:column id="c_com_nineclient_model_WccInterActiveApp_isDeleted" property="isDeleted" z="4cb2MMH6Sz2uSBQzv+JRwLp/Lcs="/>
+            <table:column id="c_com_nineclient_model_WccInterActiveApp_name" property="name" z="bbH56wXzko+ySGh+C/SGjhzG7Sg="/>
+            <table:column id="c_com_nineclient_model_WccInterActiveApp_keyword" property="keyword" z="GslYMFF1rX/PlYrjjPDYO2NKbhc="/>
+            <table:column id="c_com_nineclient_model_WccInterActiveApp_isOpen" property="isOpen" z="LG6qwPUWKWFSNId2QeEbp2pCxMw="/>
+            <table:column id="c_com_nineclient_model_WccInterActiveApp_url" property="url" z="owzHTacTQZhkfMT189mIhxoW7xc="/>
+        </table:table>
+    </page:list>
+</div>

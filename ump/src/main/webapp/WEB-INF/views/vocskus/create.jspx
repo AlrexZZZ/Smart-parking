@@ -1,0 +1,89 @@
+<DIV style="display: none; width: 580px;" class="search"
+					id="add_sku_div">
+					<div class="close">
+						<img src="/ump/images/close.png" width="24" height="24"
+							onclick="javascript:closePage('add_sku_div');"
+							style="cursor: pointer;" />
+					</div>
+					<DIV class="title" style="border-bottom: solid 1px;">
+						<img src="/ump/images/add.png" width="14" height="14"
+							style="cursor: pointer;" />添加
+					</DIV>
+					<form id="addGoodsForm" action="">
+						<div class="grid">
+							<div class="row" style="margin-top: 5px;">
+								<div class="span1" style="margin-right: 0px; margin-left: 0px;">
+									子行业:</div>
+								<div class="span2" style="margin-right: 0px; margin-left: 0px;">
+									<SELECT style="width: 100%;" name="businessTypeId"
+										id="add_businessTypeId">
+										<OPTION selected="selected" value="-1">请选择</OPTION>
+
+									</SELECT>
+								</div>
+								<div class="span1" style="margin-left: 60px;">品牌:</div>
+								<div class="span2" style="margin-right: 0px; margin-left: 0px;">
+									<SELECT style="width: 100%;" name="vocBrandId"
+										id="add_umpBrandId">
+										<OPTION selected="selected" value="-1">请选择</OPTION>
+									</SELECT>
+								</div>
+							</div>
+							<div class="row" style="margin-top: 5px;">
+								<div class="span1" style="margin-left: 0px;">商品名称:</div>
+								<div class="span2" style="margin-right: 0px; margin-left: 0px;">
+									<input style="width: 100%;" id="add_goodsName" type="text"
+										name="goodsName" />
+								</div>
+								<div class="span1" style="margin-left: 60px;">sku编码:</div>
+								<div class="span2" style="margin-right: 0px; margin-left: 0px;">
+									<input style="width: 100%;" id="add_skuCode" type="text"
+										name="skuCode" />
+								</div>
+							</div>
+							<div class="row" style="margin-top: 5px;">
+								<div class="span1" style="margin-left: 0px;">型号:</div>
+								<div class="span2" style="margin-right: 0px; margin-left: 0px;">
+									<input style="width: 100%;" id="add_skuModel" type="text"
+										name="skuModel" />
+								</div>
+								<div class="span1" style="margin-left: 60px;">sku属性:</div>
+								<div class="span2" style="margin-right: 0px; margin-left: 0px;">
+									<SELECT style="width: 100%;" name="skuPropertyId"
+										id="add_vocSkuPropertyId">
+										<OPTION selected="selected" value="-1">请选择</OPTION>
+									</SELECT>
+								</div>
+							</div>
+							<div class="row" style="margin-top: 5px;">
+								<div class="span1" style="margin-left: 0px;">类型:</div>
+								<div class="span2" style="margin-right: 0px; margin-left: 0px;">
+									<input style="width: 100%;" id="add_skuType" type="text"
+										name="skuType" />
+								</div>
+								<div class="span1" style="margin-left: 60px;">包装:</div>
+								<div class="span2" style="margin-right: 0px; margin-left: 0px;">
+									<input style="width: 100%;" id="add_skuPackage" type="text"
+										name="skuPackage" />
+								</div>
+							</div>
+							<div class="row" style="margin-top: 5px;">
+								<div class="span1" style="margin-left: 0px;">产地:</div>
+								<div class="span2" style="margin-right: 0px; margin-left: 0px;">
+									<input style="width: 100%;" id="add_skuOrigin" type="text"
+										name="skuOrigin" />
+								</div>
+								<div class="span1" style="margin-left: 60px;">商品毛重:</div>
+								<div class="span2" style="margin-right: 0px; margin-left: 0px;">
+									<input style="width: 100%;" id="add_skuWeight" type="text"
+										name="skuWeight" />
+								</div>
+							</div>
+							<div class="form-actions" style="margin-top: 100px;">
+								<input type="button" class="info" value="保存"
+									onclick="addSkuGoods();"></input>
+								<button class="warning" type="button" onclick="$.Dialog.close()">取消</button>
+							</div>
+						</div>
+					</form>
+				</DIV>

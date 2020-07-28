@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+<style>
+@IMPORT url("/ump/ui/dtGrid/dependents/bootstrap/css/bootstrap.min.css");
+@IMPORT url("/ump/ui/dtGrid/dependents/fontAwesome/css/font-awesome.min.css");
+@IMPORT url("/ump/ui/dtGrid/jquery.dtGrid.css");
+@IMPORT url("/ump/ui/dtGrid/dependents/datePicker/skin/WdatePicker.css");
+@IMPORT url("/ump/ui/dtGrid/dependents/datePicker/skin/default/datepicker.css");
+</style>
+	<script type="text/javascript"
+		src="/ump/js/nineclient/vocreport/nineclient.js">
+		//---
+	</script>
+	<div class="grid" style="margin-left: 15px;">
+		<FORM id="queryForm">
+			<DIV class="row">
+				<div class="span3">
+				<LABEL>平台名称：</LABEL>
+					<SELECT id="channelName" name="channelName" class="publicSize"
+						onchange="selectChannel(this.value,'shopName')">
+						<OPTION value="-1" selected="selected">请选择</OPTION>
+						<c:forEach items="${channels}" var="item">
+							<OPTION value="${item.id}">${item.channelName}</OPTION>
+						</c:forEach>
+					</SELECT>
+				</div>
+				<div class="span3">
+				<LABEL>店铺名称：</LABEL>
+					<SELECT id="shopName" name="shopName" class="publicSize">
+						<OPTION value="-1" selected="selected">请选择</OPTION>
+					</SELECT>
+				</div>
+				<div class="span3">
+				   <LABEL>品牌名称：</LABEL>
+					<SELECT id="brandName" name="brandName" class="publicSize"
+						onchange="selectBrand(this.value,'skuName');">
+						<OPTION value="-1" selected="selected">请选择</OPTION>
+						<c:forEach items="${vocbrands}" var="item">
+							<OPTION value="${item.id}">${item.brandName}</OPTION>
+						</c:forEach>
+					</SELECT>
+				</div>
+				<div class="span3">
+				<LABEL>SKU名称：</LABEL>
+					<SELECT id="skuName" name="skuName" class="publicSize">
+						<OPTION value="-1">请选择</OPTION>
+					</SELECT>
+				</div>
+			</DIV>
+			<DIV class="row">
+				<div class="span3">
+				    <LABEL>时间：</LABEL>
+					<input type="text" name="startTimeStr" class="publicSize"
+						value="" id="startTimeStr"
+						onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',disabledDates:['%y-%M-%d {%H-1}\\:..\\:..','%y-%M-%d {%H+1}\\:..\\:..']})" />
+				</div>
+			</DIV>
+			<DIV class="row">
+			<div style="margin-left: 20px;" class="span6">
+					<input type="button" class="info" onclick="queryDataPie();" value="查询" />
+					<input type="button" class="warning" onclick="exportExcel();" value="导出" />
+			</div>		
+			</DIV>
+		</FORM>
+	</div>
+	<div id="content">
+	<div id="container"
+		style="min-width: 310px; height: 400px; margin: 0 auto">Loading...</div>
+	</div>
+	
+	<style>
+	
+	.metro .table th {
+height: 30px;
+line-height: 20px;
+padding-left: 10px;
+padding-right: 10px;
+font-size: 12px;
+background-color:#f8f8f8;
+border-bottom: 1px #e5e5e5 solid;
+}
+ .metro .table td{
+ background-color:white;
+ height: 30px;
+line-height: 20px;
+padding-left: 10px;
+padding-right: 10px;
+font-size: 12px;
+text-align:left;
+border-bottom: 1px #e5e5e5 solid;
+}
+
+.publicSize{
+	width: 135px;
+	height: 28px;
+	border:1px solid;
+	border-color:#e4e4e4;
+}
+	
+
+.metro label {
+display: block;
+margin: 5px 0;
+font-weight:normal;
+font-size:14px;
+text-align: right;
+}
+	
+	
+input {
+	width: 100%;
+}
+
+select {
+	width: 100%;
+}
+</style>
+
+	<SCRIPT type="text/javascript">
+		<![CDATA[
+		         //查询条件函数
+		function selectChannel(id, elementId) {
+			var url = "/ump/vocshops/queryVocShops";
+			var param = {};
+			param.umpChannelId = id;
+			dataAjax(url, param, null, null, createSelect, elementId);
+		}
+		function selectShop(id, elementId) {
+			var url = "/ump/vocshops/queryVocShops";
+			var param = {};
+			param.umpChannelId = id;
+			dataAjax(url, param, null, null, createSelect, elementId);
+		}
+		function selectBrand(id, elementId) {
+			var url = "/ump/vocskus/querySkuGoodsList";
+			var param = {};
+			param.vocBrandId = id;
+			dataAjax(url, param, null, null, createSelect, elementId);
+		}
+	//定义图表	
+		var option = {
+			    chart:{
+			        polar: true,
+			        renderTo:'container',
+			        type: 'line'
+			    },
+			    exporting: { enabled:false },
+			    title: {
+			        text: '购买动机分析',
+			        x: -80
+			    },
+			    pane: {
+			    	size: '80%'
+			    },
+			    xAxis: {
+			        categories: [],
+			 	        tickmarkPlacement: 'on',
+			 	        lineWidth: 0
+			 	    },
+			 	 yAxis: {
+				        gridLineInterpolation: 'polygon',
+				        lineWidth: 0,
+				        min: 0
+				 } ,
+				 tooltip: {
+				    	shared: true
+				    }, 
+				    legend: {
+				        align: 'right',
+				        verticalAlign: 'top',
+				        y: 70,
+				        layout: 'vertical'
+				    },
+				    
+				    series: [{
+				        name: '得分',
+				        data: [],
+				        pointPlacement: 'on'
+				    }]
+			};
+	
+	
+	//导出Excel 和查询事件
+		function exportExcel() {
+			var channelName = $("#channelName").val();
+			if (channelName != -1 && channelName) {
+				channelName = $("#channelName").find("option:selected").text();
+			}else{
+				channelName = "";
+			}
+			var shopName = $("#shopName").val();
+			if (shopName != -1 && shopName) {
+	         shopName = $("#shopName").find("option:selected").text();
+			}else{
+				shopName = "";
+			}
+			var brandName = $("#brandName").val();
+			if (brandName != -1 && brandName) {
+				brandName = $("#brandName").find("option:selected").text();
+			}else{
+				brandName = "";
+			}
+			var skuName = $("#skuName").val();
+			if (skuName != -1 && skuName) {
+				skuName = $("#skuName").find("option:selected").text();
+			}else{
+				skuName = "";
+				//Notify("请选择SKU");
+				//return;
+			}
+			var startTimeStr = $("#startTimeStr").val();
+			var url = "/ump/purchaeReport/exportExcel?";
+	url+="channelName="+channelName+"&shopName="+shopName+"&brandName="+brandName+"&skuName="+skuName+"&insertTime="+startTimeStr;
+			window.location.href = url;
+		}
+		function queryDataPie() {
+			option.xAxis.categories = [];
+			option.series[0].data = [];
+			var channelName = $("#channelName").val();
+			if (channelName != -1 && channelName) {
+				channelName = $("#channelName").find("option:selected").text();
+			}else{
+				channelName = "请选择";
+			}
+			var shopName = $("#shopName").val();
+			if (shopName != -1 && shopName) {
+	         shopName = $("#shopName").find("option:selected").text();
+			}else{
+				shopName = "请选择";
+			}
+			var brandName = $("#brandName").val();
+			if (brandName != -1 && brandName) {
+				brandName = $("#brandName").find("option:selected").text();
+			}else{
+				brandName = "请选择";
+			}
+			var skuName = $("#skuName").val();
+			if (skuName != -1 && skuName) {
+				skuName = $("#skuName").find("option:selected").text();
+			}else{
+				skuName = "";
+				//Notify("请选择SKU");
+				//return;
+			}
+			var startTimeStr = $("#startTimeStr").val();
+	 		$.ajax({
+				url:"/ump/purchaeReport/queryOper",
+				type:"Post",
+				data:{
+					        'channelName':channelName,
+							'shopName':shopName,
+							'brandName' :brandName,
+							'skuName': skuName,
+							'insertTime':startTimeStr
+					},
+				error:function(msg){
+				},
+				success:function(data){
+					//转为数组
+					 objs = eval('('+data+')');
+						if(objs.length > 0){
+							console.log(objs);
+							for(var i = 0;i < objs.length;i++){
+								//alert(parseFloat(objs[i].proportion).toFixed(2));
+								option.xAxis.categories.push(objs[i].labelName);
+							//	option.series[0].data.push(objs[i].proportion);
+								option.series[0].data.push(Math.round(objs[i].proportion));
+							}
+						}
+						
+						var chartBar = new Highcharts.Chart(option);
+				}
+			});
+	 		
+	 		
+	 		dtGridOption_2_1_4.params.channelName = channelName;
+	  		dtGridOption_2_1_4.params.shopName = shopName;
+	  		dtGridOption_2_1_4.params.brandName = brandName;
+	  		dtGridOption_2_1_4.params.insertTime = startTimeStr;
+	  		dtGridOption_2_1_4.params.skuName = skuName;
+	  		grid_2_1_4.load();
+		}
+		window.onload = queryDataPie;
+		]]>
+	</SCRIPT>
+	<SCRIPT type="text/javascript">
+	//定义表格
+	var z = 0;
+	var dtGridColumns_2_1_4 = [{
+		id : 'labelName',
+		title : '标签名称',
+		type : 'string',
+		columnClass : 'text-center',
+		fastQuery : true,
+		fastQueryType : 'eq',
+		headerStyle : 'background:white;text-align:center;'
+	
+	}, {
+		id : 'proportion',
+		title : '得分',
+		type : 'string',
+		columnClass : 'text-center',
+		fastQuery : true,
+		fastQueryType : 'eq',
+		headerStyle : 'background:white;text-align:center;',
+		resolution : function(record, value) {
+			
+			return value;
+		} 
+	}];
+	 dtGridOption_2_1_4 = {
+			ajaxLoad : true,
+			params:{
+				channelName:'请选择'
+			},
+			//loadAll : true,
+			loadURL : '/ump/purchaeReport/queryDataGrid',
+			columns : dtGridColumns_2_1_4,
+			gridContainer : 'dtGridContainer_2_1_1',
+			tools : '',
+			pageSize : 10
+		};
+	
+		var grid_2_1_4 = $.fn.DtGrid.init(dtGridOption_2_1_4);
+		$(function() {
+			grid_2_1_4.load();
+			
+		});
+
+	
+	</SCRIPT>
+		<div id="dtGridContainer_2_1_1" class="dt-grid-container">
+		<DIV>
+			<SPAN></SPAN>
+		</DIV>
+	</div>
+</div>

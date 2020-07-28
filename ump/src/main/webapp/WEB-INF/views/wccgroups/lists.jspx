@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<head>
+<style>
+.metro .treeview .active {
+    background-color: #fff;
+    font-weight: bold;
+}
+
+.metro .grid.fluid .row .span5 {
+	width: 380px !important;
+}
+
+.metro .grid.fluid .row .span3 {
+	width: 220px !important;
+}
+
+.metro .treeview {
+	background-color: #fff;
+	color: #333;
+	display: block;
+	list-style: outside none none;
+	margin: 0;
+	margin-left: 40px;
+}
+
+.metro .treeview .node-toggle {
+	display: inline-block;
+	float: none;
+	height: 10px;
+	margin-right: 3px;
+	position: relative;
+	width: 10px;
+}
+
+.metro .treeview .node-toggle:before {
+	border-bottom: 7px solid #1d1d1d;
+	border-left: 7px solid transparent;
+	border-top: 7px solid transparent;
+	content: "";
+	left: -18px;
+	position: absolute;
+	top: 0;
+	width: 0;
+}
+
+.metro .treeview .node>a {
+font-family:Arial,Microsoft Yahei;
+	color: #333;
+	font-size: 12px;
+	margin-bottom: 1px;
+	padding: 0 0 0 15px;
+	position: relative;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+</style>
+
+<SCRIPT type="text/javascript">
+<![CDATA[
+	var contentVar = "";
+	function bufu(name, id, gname, gid,groupId) {
+		if(groupId < 5){
+			alert(gname+"属于微信系统固定分组，无法进行编辑！");
+			return false;
+		}
+		if (contentVar) {
+			document.getElementById('group').innerHTML = contentVar;
+		} else {
+			contentVar = document.getElementById('group').innerHTML;
+		}
+		document.getElementById('platName').value = name;
+		document.getElementById('pid').value = id;
+		if (gid) {
+			document.getElementById('gid').value = gid;
+		}
+		$.Dialog({
+			overlay : true,
+			shadow : true,
+			flat : true,
+			icon : '<img src="/ump/resources/images/editor.png"/>',
+			title : 'Flat window',
+			content : '',
+			padding : 10,
+			onShow : function(_dialog) {
+				var content = document.getElementById('group').innerHTML;
+				document.getElementById('group').innerHTML = "";
+				var aa = content.split('disabled="disabled"');
+				var contents = aa[0] + " value='" + name
+						+ "' disabled='disabled'" + aa[1];//添加公众平台名
+				if (gname) {
+					aa = contents.split('name="name"');
+					contents = aa[0] + ' name="name" value=' + gname + " "
+							+ aa[1];//添加分组名
+				}
+				console.log(contents);
+				if(groupId){
+					$.Dialog.title("编辑分组");
+				}else{
+					$.Dialog.title("添加分组");
+				}
+				$.Dialog.content(contents);
+				$.Metro.initInputs();
+			}
+		});
+	};
+	function exit() {
+		$.Dialog.close();
+	}
+
+	function checkGName() {
+		var pid = $('#pid').val();
+		var gname = $("input[name='name']").val();
+		if (gname.trim().length == 0) {
+			$('#hint').html("分组名不允许为空！");
+			return false;
+		}
+		if (gname == '默认组' || gname == '星标组' || gname == '黑名单') {
+			$('#hint').html("当前分组名已存在，请勿重新添加！");
+			return false;
+		}
+		var strlength = strlen(gname);
+		if(strlength>30){
+			$('#hint').html("分组名过长，请修改后重新提交");
+			return false;
+		}
+		$.post("/ump/wccgroups/checkGName", {
+			"name" : gname,
+			"pid" : pid
+		}, function(data) {
+			if (data == 1) {
+				$('#hint').html("当前分组名已存在，请勿重新添加！");
+				return false;
+			} else if (data == 0) {
+				document.getElementById('wu').submit();
+			}
+		});
+	}
+	function goUrl(gid,gname,groupId) {
+		if(groupId<5){
+			alert(gname+"属于微信系统固定分组，无法进行删除！");
+			return false;
+		}
+		$.post("/ump/wccgroups/checkChildren", {
+			"gid" : gid
+		}, function(data) {
+			if (data == 1) {
+				if (confirm('删除分组将会把该组已有成员全部移动至默认分组里，确定删除么？')) {
+					location.href = "/ump/wccgroups/delete?gid="+gid;
+				}
+			} else {
+				if (confirm('确定要删除吗？')) {
+					location.href = "/ump/wccgroups/delete?gid="+gid;
+				}
+			}
+		});
+	}
+	 function strlen(str) {
+         var len = 0;
+         for (var i = 0; i < str.length; i++) {
+         var c = str.charCodeAt(i);
+                  //单字节加1 
+         if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) {
+                      len++;
+          } else {
+            len += 2;
+          }
+		}
+         return len;
+  }        
+		]]>
+</SCRIPT>
+	</head>
+	<body>
+		<div class="grid">
+			<div class="row" style="margin-top: 10px;">
+				<div class="span5">
+					<span style="font-weight: bold; margin-left: 40px;font-size: 13px;">分组名称</span>
+				</div>
+				<div class="span2">
+					<span style="font-weight: bold; margin-left: 35px;font-size: 13px;">操作</span>
+				</div>
+			</div>
+
+			<ul class="treeview" data-role="treeview" >
+				<c:forEach var="data" items="${wccplatformusers }">
+					<li class="node"><a href="#"> <span
+							class="node-toggle span3">${data.account }</span> <span
+							style="padding-left: 178px;"
+							onclick="bufu('${data.account }','${data.id }');"><img
+								alt="添加" src="/ump/images/add.png" title="添加" /></span>
+					</a>
+						<ul>
+							<c:forEach var="group" items="${data.groups }">
+								<li class="node" style="padding-left: 10px;height:30px;line-height:30px"><a href="#">
+										<span class="span5">${group.name }</span> <span
+										onclick="bufu('${data.account }','${data.id}','${group.name }','${group.id }',${group.groupId});"><img class="image" alt="更新 "
+												src="/ump/resources/images/update.png" title="编辑" /></span> <span
+										onclick="goUrl(${group.id },'${group.name}',${group.groupId});"><img class="image" alt="删除 "
+												src="/ump/resources/images/delete.png" title="删除 " /></span>
+								</a></li>
+							</c:forEach>
+						</ul></li>
+				</c:forEach>
+			</ul>
+		</div>
+		<div id="group" style="display: none;">
+			<form:form id="wu" modelAttribute="wccGroup"
+				action="/ump/wccgroups/submit" method="post">
+				<div class="grid">
+					<div class="row">
+						<div class="span4">
+							<label style="text-align: right;">公众平台:</label> <input
+								id="platName" type="text" name="account"
+								style="border: 1px solid #E4E4E4;margin-left: 10px;height:28px;" disabled="disabled" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="span4">
+							<label style="text-align: right;">分组名称: </label> <input
+								id="gname" name="name" type="text" style="border: 1px solid #E4E4E4;margin-left: 10px;height:28px;" /><font color="red"> *</font>
+								<div id="hint" style="color: red;margin-left: 40px;"><!-- hint --></div>
+						</div>
+					</div>
+					<div class="row">
+						<input type="hidden" id="pid" name="platformId" value="" /> <input
+							type="hidden" id="gid" name="gidn" value="" />
+						<div  style="width:160;margin:0px auto; text-align: center;">
+							<a class="button info" onclick="checkGName();"
+								>确 定</a><input type="button"
+								class="button warning" onclick="javascript:exit();"
+								style="margin-left: 30px;" value="取 消" />
+						</div>
+					</div>
+				</div>
+			</form:form>
+		</div>
+	</body>
+</div>

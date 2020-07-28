@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:spring="http://www.springframework.org/tags" version="2.0">
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:output omit-xml-declaration="yes" />
+	<style>
+.metro .button {
+	padding: 0px;
+}
+
+input, select {
+	width: 135px;
+	height: 28px;
+	background-color: #fff;
+	border: 1px solid #e4e4e4;
+}
+
+input[type="checkbox"] {
+	width: 14px;
+	height: 14px;
+}
+
+input[type="radio"] {
+	width: 5px;
+	height: 5px;
+}
+
+ul.ztree {
+	background: none repeat scroll 0 0 #fff;
+	border: 1px solid #E5E5E5;
+	overflow-x: auto;
+	overflow-y: scroll;
+}
+</style>
+<SCRIPT type="text/javascript">
+var msg ='${msg}';
+$(document).ready(function(){
+	if(msg){
+		alert("注册数据异常，请重新添加");
+	}
+});
+function checkCompanyCode() {
+	var companyCode = $('#companyCode').val();
+	$.post("/ump/checkCompanyCode", {
+		"companyCode" : companyCode,
+	}, function(data) {
+		if (companyCode.length != 0) {
+			if (data == 0) {
+				$("#hint1").html("公司ID已存在，重新输入公司ID");
+			} else {
+				isCheck(companyCode, /^[a-zA-Z0-9_.@-]+$/, 'hint1',
+						' 公司的唯一标识，仅能为英文字母、数字、_.-@');
+			}
+		} else {
+			$("#hint1").html("* 公司的唯一标识，仅能为英文字母、数字、_.-@");
+		}
+	});
+}
+function checkOperatorName() {
+	var operatorName = $('#operatorName').val();
+	isCheck(operatorName, /^[a-zA-Z0-9_.@-]+$/, 'hint3',
+			'超级管理员账号，仅能为字母、数字、_.-@');
+}
+function checkEmail() {
+
+	var email = $('#email').val();
+	$
+			.post(
+					"/ump/checkEmail",
+					{
+						"email" : email,
+					},
+					function(data) {
+						if (email.length != 0) {
+							if (data == 0) {
+								$("#hint4")
+										.html("Email已存在，重新输入公司Email");
+							} else {
+								isCheck(
+										email,
+										/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/,
+										'hint4', ' 请输入正确的邮箱');
+							}
+						} else {
+							$("#hint4").html("* 请输入正确的邮箱");
+						}
+					});
+
+}
+function checkMobilePhone() {
+	var mobilePhone = $('#mobilePhone').val();
+	isCheck(mobilePhone, /^1[3578][0-9]{9}$/, 'hint5', '请输入正确的手机号码');
+}
+function isCheck(str, reg, hintNum, hint) {
+	if (str.length != 0) {
+		if (!reg.test(str)) {
+			$("#" + hintNum).html("* " + hint);
+		} else {
+			$("#" + hintNum).html("");
+		}
+	} else {
+		$("#" + hintNum).html("* " + hint);
+	}
+}
+function checkPassword() {
+	var password = $('#password').val();
+	isCheck(password, /^[\@A-Za-z0-9\!\#\$\%\^\*\.\~]{6,}$/, 'hint6',
+			'字母、数字或者英文符号，最短6位，区分大小写');
+	var comfirmPassword = $('#comfirmPassword').val();
+	if (comfirmPassword.length > 0) {
+		checkComfirmPassword();
+	}
+	return false;
+}
+function checkComfirmPassword() {
+	var comfirmPassword = $('#comfirmPassword').val();
+
+	if (comfirmPassword != $('#password').val()) {
+		$("#hint7").html("* 密码不一致");
+	} else if (comfirmPassword.length == 0) {
+		$("#hint7").html("*");
+	} else {
+		$("#hint7").html("");
+	}
+}
+function submitForm() {
+	checkCompanyCode();
+	checkOperatorName();
+	checkEmail();
+	checkMobilePhone();
+	checkPassword();
+	checkComfirmPassword();
+	var parentBusinessType = $('#parentBusinessType').val();
+	if (parentBusinessType.length == 0) {
+		$("#hint9").html("* 请选择公司所在行业");
+		boo = false;
+	} else {
+		$("#hint9").html("");
+	}
+	var version = $('#version_').val();
+	if (version.length == 0) {
+		$("#hint12").html("* 请选择想要申请的版本");
+		boo = false;
+	} else {
+		$("#hint12").html("");
+	}
+	if ($("#hint1").text().length != 0) {
+		return false;
+	} else if ($("#hint3").text().length != 0) {
+		return false;
+	} else if ($("#hint4").text().length != 0) {
+		return false;
+	} else if ($("#hint5").text().length != 0) {
+		return false;
+	} else if ($("#hint6").text().length != 0) {
+		return false;
+	} else if ($("#hint7").text().length != 0) {
+		return false;
+	} else if ($('#hint9').text().length != 0) {
+		return false;
+	} 
+	document.forms[0].submit();
+}
+function checkParentBusinessType() {
+	var parentBusinessType = $('#parentBusinessType').val();
+	if (parentBusinessType.length == 0) {
+		$("#hint9").html("* 请选择公司所在行业");
+	} else {
+		$("#hint9").html("");
+	}
+}
+</SCRIPT>
+	<div class="pannel" style="width: 760px; margin: 0px auto;padding: 0px;padding-top: 20px;">
+		<form:form action="/ump/tmallRegister" method="POST"
+			modelAttribute="umpCompany">
+			
+			<div id="form1" class="grid">
+				<div class="row">
+					<LABEL style="width: auto;">请填写已下信息进行试用</LABEL>
+				</div>
+				<div class="row">
+					<label>公司ID：</label>
+					<div class="span3">
+						<div class="input-control text">
+							<form:input path="companyCode" autocomplete="off" value=""
+								onblur="checkCompanyCode();" cssStyle="width: 100%;" />
+						</div>
+					</div>
+					<div class="span5">
+						<FONT id="hint1" color="red">* <font color="black">公司的唯一标识，仅能为英文字母、数字、_.-@</font></FONT>
+					</div>
+				</div>
+				<div class="row">
+					<label>账号 ：</label>
+					<div class="span3">
+						<div class="input-control text">
+							<input type="text" name="operatorName" id="operatorName"
+								autocomplete="off" value="admin" onblur="checkOperatorName();"
+								style="width: 100%;" />
+						</div>
+					</div>
+					<div class="span4">
+						<FONT id="hint3" color="red">* <font color="black">超级管理员账号，仅能为字母、数字、_.-@</font></FONT>
+					</div>
+				</div>
+				<div class="row">
+					<label>Email：</label>
+					<div class="span3">
+						<div class="input-control text">
+							<form:input path="email" autocomplete="off" value=""
+								onblur="checkEmail()" cssStyle="width: 100%;" />
+						</div>
+					</div>
+					<div class="span4">
+						<FONT id="hint4" color="red">* <font color="black">请输入正确的邮箱</font></FONT>
+					</div>
+				</div>
+				<div class="row">
+					<label>手机号码：</label>
+					<div class="span3">
+						<div class="input-control text">
+							<form:input path="mobilePhone" autocomplete="off" value=""
+								onblur="checkMobilePhone();" cssStyle="width: 100%;" />
+						</div>
+					</div>
+					<div class="span4">
+						<FONT id="hint5" color="red">* <font color="black">请输入正确的手机号码</font></FONT>
+					</div>
+				</div>
+				<div class="row">
+					<label>密码：</label>
+					<div class="span3">
+						<div class="input-control text">
+							<input type="password" id="password" name="password"
+								autocomplete="off" value="" onblur="checkPassword();"
+								style="width: 100%;" />
+						</div>
+					</div>
+					<div class="span5">
+						<FONT id="hint6" color="red">* <font color="black">字母、数字或者英文符号，最短6位，区分大小写</font></FONT>
+					</div>
+				</div>
+				<div class="row">
+					<label>确认密码：</label>
+					<div class="span3">
+						<div class="input-control text">
+							<input type="password" id="comfirmPassword"
+								name="comfirmPassword" autocomplete="off" value=""
+								onblur="checkComfirmPassword();" style="width: 100%;" />
+						</div>
+					</div>
+					<div class="span4">
+						<FONT id="hint7" color="red">*</FONT>
+					</div>
+				</div>
+				<div class="row">
+					<label>所在行业：</label>
+					<div class="span3">
+						<div class="input-control select">
+							<select id="parentBusinessType" name="parentBusinessType"
+								onchange="checkParentBusinessType();" style="width: 100%;">
+								<option value="">请选择</option>
+								<c:forEach var="parentBusinessType"
+									items="${UmpParentBusinessTypeList}">
+									<option value="${parentBusinessType.id}">${parentBusinessType.businessName}</option>
+								</c:forEach>
+							</select>
+						</div>
+					</div>
+					<div class="span4">
+						<FONT id="hint9" color="red">* <font color="black">请选择公司所在行业</font></FONT>
+					</div>
+				</div>
+				<div class="row">
+					<label>申请版本：</label>
+					<div class="span3">
+						<div id="divVersionId_" class="input-control select">
+							<select id="version_" name="version_" style="width: 100%;">
+								<option value="">请选择</option>
+								<c:forEach var="version" items="${umpVersionList}">
+									<option value="${version.id}">${version.versionName}</option>
+								</c:forEach>
+							</select>
+						</div>
+					</div>
+					<div class="span4">
+						<FONT id="hint12" color="red">* <font color="black">请选择想要申请的版本</font></FONT>
+					</div>
+				</div>
+				<div class="row">
+					<label><INPUT class="info" type="button" value="开始试用" style="width: auto; padding: 4px;" onclick="submitForm();"/></label>
+				</div>
+				<!-- <div class="row" style="margin-left: 10%;">
+					<div class="span8">
+						<a class="button info" onclick="showForm();"
+							style="margin-left: 60px; margin-right: 180px; padding: 4px;">注
+							册</a> 已有注册账号？ <a href="/ump" onclick="goUrl();" style="color: blue;">重新登录</a>
+					</div>
+				</div> -->
+				
+				<div class="row" style="display: none;">
+					<label>申请产品：</label>
+					<div class="span3">
+						<div class="input-control select">
+							<select id="products" name="products" style="width: 100%;">
+								<c:forEach var="product" items="${products}">
+									<option value="${product.id}">${product.productName}</option>
+								</c:forEach>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="row" style="display: none;">
+					<label>接入渠道：</label>
+					<div class="span3">
+						<div id="divChannelId_" class="input-control select">
+							<select id="channels_" name="channels_" style="width: 100%;">
+								<c:forEach var="channel" items="${channelList}">
+									<c:if test="${channel.channelName eq '天猫商城'}">
+									<option value="${channel.id}">${channel.channelName}</option>
+									</c:if>
+								</c:forEach>
+							</select>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row" style="display: none;">
+					<label>公司名称 ：</label>
+					<div class="span3">
+						<div class="input-control text">
+							<form:input path="name" autocomplete="off" value="${taobao_user_nick}"
+								 cssStyle="width: 100%;" />
+						</div>
+					</div>
+					<div class="span4">
+						<FONT id="hint2" color="red">* <font color="black">请输入公司名称</font></FONT>
+					</div>
+				</div>
+				<div class="row" style="display: none;">
+					<label>公司地址 ： </label>
+					<div class="span3">
+						<div class="input-control text">
+							<form:input path="address" autocomplete="off" value=""
+								cssStyle="width: 100%;" />
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</form:form>
+	</div>
+	<div id="Dialog" style="display: none;">
+		<div class="grid" style="width: 800px; margin-bottom: 0px;">
+			<div class="row" style="width: 750px; margin: 0px auto;"
+				align="center">
+				<div style="overflow-y: scroll; height: 400px; width: 750px;">
+					&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;请您认真细致地阅读久科的全渠道营销服务平台注册规范（下称"注册规范"）和以下的全渠道营销服务平台注册服务条款（下称"服务条款"）。
+					客户只有在同意并愿意遵守服务条款后才能继续并完成全渠道营销服务平台在线注册程序。如果您申请注册了全渠道营销服务平台服务，
+					说明您已经同意并接受了我们的服务条款，否则，请退出全渠道营销服务平台在线注册系统。<BR /> <b>1. 术语解释
+						为了本服务条款之目的：</b><BR />
+					1.1."全渠道营销服务平台"是久科公司提供的一种基于互联网服务的网站实时交流与应用系统，用户通过注册并选购相应产品，使用对应服务；<BR />
+					1.2.
+					"客户"是指书面向久科或其代理商提出全渠道营销服务平台系统注册申请或签订全渠道营销服务平台系统服务合同的任何政府机构、企事业单位、社会团体、其他组织及个人。
+					<BR />1.3. "代理商"是指经由久科合法授权为客户提供注册、收费、续费、通知等服务的各级代理商。<BR /> 1.4.
+					"付费"是指客户在申请注册时支付全渠道营销服务平台服务费之行为，不论其采用代理商代缴或者由系统提交，久科以收到客户付费之日为准。 <BR />
+					1.5.
+					"续费"是指客户为在服务期届满后继续接受全渠道营销服务平台服务，而按照续费当时的价格继续支付费用以获得相应期限的服务期的行为。
+					其时间应以久科收到注册服务商或系统提交的客户续费确认之时为准。 <BR /> 1.6. "不可抗力"
+					是指不能预见、不能克服或避免的且对一方或双方当事人造成重大影响的客观事件，包括但不限于自然灾害如洪水、地震、瘟疫流行和风暴等以及社会事件如战争、动乱、立法，政府行为等；鉴于互联网的特殊性，
+					如黑客攻击、网络中断等，凡出现非久科过错之情形的，应当视为不可抗力。<BR /> <b>2. 客户的陈述与保证</b> <BR />
+					2.1. 承诺遵守久科的有关全渠道营销服务平台的全部规定及不时之修改，包括但不限于本条款、注册规范、及其他相关政策和规定。 <BR />
+					2.2.
+					对申请注册全渠道营销服务平台所服务的网站/网页（以下简称"对应网站/网页"）依法享有所有权或者已获得对应网站/网页所有权人的明确同意或授权。
+					<BR />2.3.
+					保证向久科提供的客户信息是真实、准确、完整的，并且没有任何引人误解或者虚假的陈述。保证同意本条款之效力如同亲自签字、盖章的书面条款一样，对客户具有法律约束力。
+					<BR /> 2.4.
+					根据注册规范的要求向久科提出全渠道营销服务平台注册的申请，并保证在申请时不违反中华人民共和国法律法规，或者对客户具有法律约束力的其他任何文件，
+					保证久科不会因接受该全渠道营销服务平台注册或为其提供全渠道营销服务平台服务而构成违法、违约或者对任何第三人的侵权。保证所申请注册的全渠道营销服务平台不会被用于任何非法目的；
+					注册或使用全渠道营销服务平台时不具有任何恶意。<BR /> 2.5.
+					知道并同意全渠道营销服务平台注册成功不意味着客户获得任何与该全渠道营销服务平台有关的知识产权、商誉或者其他权利。<BR />
+					2.6.
+					保证不会因为注册全渠道营销服务平台而影响久科及注册服务商的服务内容、服务质量和商业利益，不会影响到全渠道营销服务平台客户的使用感受等。
+					<BR /> <b>3. 费用标准及支付 </b><BR /> 3.1.
+					客户同意按照久科所公布的全渠道营销服务平台服务费收费标准和缴费时间向久科付费或续费，并同意每次续费都将适用续费当时久科所实施的费用标准。
+					<BR /> 3.2.
+					如客户未能在签订注册协议或以久科认可的其他方式提出全渠道营销服务平台注册申请之日起的五个工作日内付费，视为客户撤回其注册申请。<BR />
+					<b>4. 客户的权利和义务</b> <BR /> 4.1. 注册成功后按照本条款的规定依法接受久科提供的全渠道营销服务平台服务。<BR />
+					4.2. 客户在申请注册全渠道营销服务平台时应如实向久科提交如下信息： <BR /> 4.2.1. 客户的网站域名；<BR />
+					4.2.2. 客户信息，包括注册联系人、公司名称、地址、Email、电话和传真、客户名和密码等<BR /> 4.2.3.
+					申请产品信息，包括所在行业、申请产品、接入渠道、申请版本等<BR /> 4.2.4. 其他久科要求提交的信息。<BR />
+					4.3.
+					客户向久科提交的上述信息在服务条款有效期内发生任何变更，客户应在该信息变更之日起的十个工作日内书面通知久科或为其提供注册服务的注册服务商
+					。由于客户未能按时通知带来的一切不利后果应由客户自行承担。<BR /> 4.4.
+					客户充分认识到与注册服务商签订注册协议或以久科认可的其他方式提出注册申请并不代表全渠道营销服务平台的注册成功，
+					全渠道营销服务平台注册申请的成功与否是由申请本身以及申请提出的时间等因素决定的。<BR /> 4.5.
+					客户应完全履行其在本条款、注册协议和注册规范项下的义务，包括但不限于按时足额付费、按规定提供注册资料等。否则，客户应自行承担由此造成的一切不利后果。
+					<b>5. 服务期、服务的终止及违约责任</b><BR /> 5.1. 服务期自全渠道营销服务平台服务开通之日起算。<BR />
+					5.2. 客户未在服务期届满前续费，久科有权自服务期届满之日的第二日终止提供服务并注销有关全渠道营销服务平台服务。<BR />
+					5.3. 在服务期内，如果客户主动申请注销或终止全渠道营销服务平台服务，久科在本条款项下的义务即告终止，且不退还剩余服务费。<BR />
+					5.4. 因不可抗力导致久科不能履行其义务的，久科不承担任何责任。<BR /> 5.5.
+					在下列情形下，久科有权暂停或注销客户注册的全渠道营销服务平台而无需向客户发出任何通知：<BR /> 5.5.1.
+					客户违反注册规范、服务条款和久科的有关规定，包括但不限于违反客户的陈述与保证，以及在本条款中援引或者提到的任何其他规定和规章等。 <BR />
+					5.5.2. 客户和客户的网站/网页上存在违背国家法律法规、道德规范的情形，如含有反动、色情、暴力等内容。<BR /> 5.5.3.
+					对应网站/网页的内容毁损久科或其全渠道营销服务平台注册销售合作伙伴的服务品质或声誉，或者影响到全渠道营销服务平台注册访问的完整性和稳定性。
+					<BR /> 5.6. 凡久科依据第5.5条注销全渠道营销服务平台的，客户无权要求退款。<BR /> 5.7.
+					久科会不定期地对服务器进行升级和维护，为此带来的全渠道营销服务平台暂断服务终止，久科不负任何责任。<BR /> 5.8.
+					久科对由于自身原因造成客户经确认注册成功的全渠道营销服务平台服务被无故停止的，久科在知悉该等情况后，应及时对全渠道营销服务平台进行恢复，如果无法进行恢复的，
+					久科应按照第<BR /> 5.9条的规定承担赔偿责任。<BR /> 5.9.
+					无论因何种原因导致久科应当依法承担赔偿责任时，赔偿金的最高限额为有关全渠道营销服务平台一年服务期的服务费,以该全渠道营销服务平台申请注册时有效的价格为准。
+					<BR /> <b>6. 附 则</b><BR /> 6.1.
+					本服务条款的部分条款若被司法机关或仲裁机构认定为无效，不应影响其他条款的效力，也不影响本服务条款的解释、违约责任及争议解决的有关约定的效力。
+					<BR /> 6.2.
+					本服务条款的效力、解释、履行和争议解决均适用中华人民共和国法律，并应参照久科制定的有关全渠道营销服务平台的规定、政策以及计算机、互联网行业的规范。
+					<BR /> 6.3.
+					久科有权修改本条款、注册规范、全渠道营销服务平台服务形式等，并在全渠道营销服务平台网站上提示有关内容，但不另行通知客户。客户如果不同意改动内容，
+					可以主动取消获得的服务并不可以要求返还任何款项，除非客户能够提供证据证明该等改动确实对其造成损害；如果客户继续接受服务，则视为无条件接受有关变动。
+					<BR /> 6.4. 久科向客户发出的任何通知将由代理商负责送达。涉及重大变动的，久科将在其网站的显著位置予以公布。 <BR />
+					6.5. 对本条款的理解与解释应依据条款目的和文本原义以及业界通行的理解和惯例进行，标题仅供参考，不应在解释本条款时加以援引。 <BR />
+					6.6. 久科有权将本条款和注册规范项下的权利义务转让给第三人。若久科被收购或与第三人合并等情形时，其权利义务由承继者继承。
+				</div>
+			</div>
+			<div class="row">
+				<div style="width: 500px; margin: 0px auto; text-align: center;margin-left: 100px;">
+					<button class="warning" onclick="javascript:$.Dialog.close();">关闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <style>
+    @IMPORT url("/ump/styles/url.css");
+    </style>
+     <div id="editTagId" style="display: none">
+       <div class="grid">
+        <input type="hidden" id="tagsId"/>
+         <div class="row">
+           <div class="span gridTitle">子行业：</div>
+           <div class="span2">
+           <select id="bussinessTypeId" class="publicSize">
+           <option value="">请选择</option>
+           <c:forEach var="bussinessType" items="${bussinessTypes}">
+           <option value="${bussinessType.id}">${bussinessType.businessName}</option>
+           </c:forEach>
+           </select>
+           </div>
+         </div>
+         <div class="row">
+            <div class="span gridTitle">标签名：</div>
+            <div class="span2"><input id="nameId" type="text" class="publicSize"/></div>         
+         </div>    
+       </div>
+       <div class="btnCenter">
+          <input type="button" class="info" value="确定" onclick="editTags();"/>
+          <input type="button" class="warning" value="取消" onclick="$.Dialog.close()"/>
+         </div>   
+     </div>
+     
+     <div id="queryTagId" style="display: none">
+     <form id="tag_query_form">
+       <div class="grid">
+         <div class="row">
+           <div class="span gridTitle">子行业：</div>
+           <div class="span2">
+           <select id="queryBussinessTypeId" class="publicSize">
+           <option value="">请选择</option>
+           <c:forEach var="bussinessType" items="${bussinessTypes}">
+           <option value="${bussinessType.id}">${bussinessType.businessName}</option>
+           </c:forEach>
+           </select>
+           </div>
+         </div>
+         <div class="row">
+            <div class="span gridTitle">标签名：</div>
+            <div class="span2"><input id="queryNameId" type="text" class="publicSize"/></div>         
+         </div>    
+       </div>
+       </form>
+       <div class="btnCenter">
+          <input type="button" class="info" value="查询" onclick="doqueryTags();$.Dialog.close();"/>
+          <input type="button" class="warning" value="重置" onclick="$('#tag_query_form')[0].reset();"/>
+         </div>   
+     </div>
+     <input type="hidden" id="h_queryNameId" value=""/>
+     <input type="hidden" id="h_queryBussinessTypeId" value=""/>
+     
+   <script type="text/javascript">
+   $(document).ready(function() {
+		queryTags(1);
+	});
+   
+   
+   /**
+    *关闭查询条件
+    */
+   function closeQueryDialog(){
+	   saveQueryCondition();
+	   $.Dialog.close();
+   }
+   
+   /**
+    *保存查询条件
+    */
+   function saveQueryCondition(){
+	   $("#h_queryNameId").val($("#queryNameId").val());
+	   $("#h_queryBussinessTypeId").val($("#queryBussinessTypeId").val());
+   }
+   
+   /**
+    *设置查询条件
+    */
+   function initQueryCondition(){
+	   $("#queryNameId").val($("#h_queryNameId").val());
+	   $("#queryBussinessTypeId").val($("#h_queryBussinessTypeId").val());
+   }
+   
+   /*
+    *查询操作
+    */
+   function doqueryTags(){
+	   saveQueryCondition();
+	   queryTags();
+   }
+   
+   
+   /**
+    * 查询标签
+    */
+   function queryTags(pageNo) {
+		var start = 0;
+		var limit = 10;
+		if (pageNo > 0) {
+		  start = (pageNo - 1) * limit;
+		}
+		
+		var bussinessTypeId = $("#h_queryBussinessTypeId").val();
+		var name = $("#h_queryNameId").val();
+		
+		var parmam = {
+			start : start,
+			limit : limit,
+			name:name,
+			bussinessTypeId:bussinessTypeId
+		};
+
+		$.ajax({
+			url : "/ump/voctagses/getQueryTags",
+			type : "POST",
+			data : parmam,
+			error : function(msg) {
+				alert("error " + msg);
+			},
+			success : function(text) {
+				$("#showResult").html(text);
+			}
+		});
+	}
+   
+   /**
+    * 编辑标签
+    */
+   function editTags(){
+	var id = $("#tagsId").val();
+	var bussinessTypeId = $("#bussinessTypeId").val();
+	var name = $("#nameId").val();
+	
+	if(bussinessTypeId == ""){
+		alert("请选择子行业");
+		return;
+	}
+	
+	if(null == name || "" == name){
+		alert("请输入名称");
+		return;
+	}else{
+	  if(checkUnique(id,name,bussinessTypeId)){
+		 alert("标签  "+name+" 已存在");
+		 return;
+	  }
+	}
+	
+	  var parmam = {
+			  id:id,
+			  bussinessTypeId:bussinessTypeId,
+			  name:name	  
+    	  };
+	  
+	  $.ajax({
+			url : "/ump/voctagses/editTags",
+			type : "POST",
+			data : parmam,
+			error : function(msg) {
+				alert("error " + msg);
+			},
+			success : function(text) {
+			  var jsonStr = eval("("+text+")");
+			  if(jsonStr.success){
+				  alert("操作成功！");
+				  queryTags(1);
+				  $.Dialog.close();
+			  }else{
+				  alert("操作失败！");
+			  }
+			}
+	 }); 			
+ }
+   
+   function checkUnique(id,name,bussinessTypeId) {
+	   var flag = false;
+		var paramtersJson = '{"model":"VocTags","id":"'+id+'","name":"'+name+'","bussinessTypeId":"'+bussinessTypeId+'"}';
+		
+		var parmam = {
+			paramtersJson : paramtersJson,
+		};
+
+		$.ajax({
+			type : "post",
+			url : "/ump/voctagses/checkUnique",
+			data : parmam,
+			cache : false,
+			async : false,
+			success : function(text) {
+				var jsonStr = eval("(" + text + ")");
+				flag =  jsonStr.success;
+			}
+		});
+		
+		return flag;
+	}
+   
+    
+   </script>
+ <div id="showResult"></div>  
+ 
+ 
+ <script type="text/javascript">
+ var html = "";
+ function showAddDialog(title) {
+		$.Dialog({
+			overlay : true,
+			shadow : true,
+			flat : true,
+			icon : '<img src="images/add.png"/>',
+			title : title,
+			content : '',
+			padding : 20,
+			height : 240,
+			width : 300,
+			onShow : function(_dialog) {
+				if(html==""){
+				  html = $("#editTagId").html();
+				  $("#editTagId").remove();
+				}
+				$.Dialog.content(html);
+				$.Metro.initInputs();
+				metroOverFlow(true);
+			}
+		});
+  }
+ 
+ 
+ 
+ var queryHtml = "";
+ function showQueryDialog(title) {
+		$.Dialog({
+			overlay : true,
+			shadow : true,
+			flat : true,
+			icon : '<img src="images/add.png"/>',
+			title : title,
+			content : '',
+			padding : 20,
+			height : 240,
+			width : 300,
+			onShow : function(_dialog) {
+				if(queryHtml==""){
+					queryHtml = $("#queryTagId").html();
+				  $("#queryTagId").remove();
+				}
+				$.Dialog.content(queryHtml);
+				$.Metro.initInputs();
+				metroOverFlow(true);
+			}
+		});
+		initQueryCondition();
+  }
+ /**
+	 * 找到阴影 解绑click事件
+	 * 
+	 */
+	function metroOverFlow(isClose){
+			$(".window-overlay").unbind('click');
+	}
+
+ /**
+  * 编辑页面
+  */
+ function showEditDialog(title,tagsId,bussinessTypeId,name) {
+	 showAddDialog(title);
+	 $("#tagsId").val(tagsId);
+	 $("#bussinessTypeId").val(bussinessTypeId);
+	 $("#nameId").val(name);
+ }
+ 
+ 
+ 
+ 
+ /**
+  *删除标签
+  */
+ function deleteTags(id){
+	 if(confirm("确定要删除该条记录吗？")){
+		  var parmam = {
+				 id:id
+	    	  };
+		  
+		  $.ajax({
+				url : "/ump/voctagses/deleteTags",
+				type : "POST",
+				data : parmam,
+				error : function(msg) {
+					alert("error " + msg);
+				},
+				success : function(text) {
+				  var jsonStr = eval("("+text+")");
+				  if(jsonStr.success){
+					  alert("操作成功！");
+					  queryTags(1);
+					  $.Dialog.close();
+				  }else{
+					  alert("操作失败！");
+				  }
+				}
+		 }); 
+	 }
+	 
+ }
+ 
+
+ 
+ </script>
+</div>

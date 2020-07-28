@@ -1,0 +1,31 @@
+entity jpa --class ~.model.UmpChannel
+focus --class ~.model.UmpChannel
+field string --fieldName channelName --notNull yes
+field string --fieldName productPk --notNull yes
+field string --fieldName remark --notNull yes
+field boolean --fieldName isVisable
+field boolean --fieldName isDeleted
+field date --fieldName createTime --type java.util.Date
+entity jpa --class ~.model.UmpProduct
+focus --class ~.model.UmpProduct
+field string --fieldName productName --notNull yes
+field string --fieldName remark
+field boolean --fieldName isVisable
+field boolean --fieldName isDeleted
+field date --fieldName createTime --type java.util.Date 
+entity jpa --class ~.model.UmpVersion 
+focus --class ~.model.UmpVersion
+field string --fieldName remark
+
+entity jpa --class ~.model.UmpOperator
+focus --class ~.model.UmpOperator
+field string --fieldName email --regexp (^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$)
+field string --fieldName operatorName --notNull yes
+field string --fieldName account --notNull yes
+field string --fieldName password --notNull yes
+field string --fieldName telephone --regexp ((\d{3}-|\d{4}-)?(\d{8}|\d{7})?)
+field string --fieldName mobile --regexp (^[0-9]{11}$)
+field boolean --fieldName active
+field boolean autoAllocate
+field boolean --fieldName isDeleted
+field date --fieldName createTime --type java.util.Date
